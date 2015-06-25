@@ -1,0 +1,19 @@
+{
+  "eqeqeq": true,
+  "freeze": true,
+  "eqnull": true,
+  "funcscope": true,
+  "node": true,
+  "globals": {
+    "Promise": true,
+    "after": true,
+    "afterEach": true,
+    "before": true,
+    "beforeEach": true,
+    "describe": true,
+    "expect": true,
+    "should": true,
+    "it": true,
+    "require": true
+  }
+}

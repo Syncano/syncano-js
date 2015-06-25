@@ -1,0 +1,24 @@
+{
+  "name": "syncano",
+  "version": "0.1.0",
+  "description": "",
+  "main": "/src/syncano.js",
+  "author": "Kelly Andrews",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^2.9.30",
+    "browser-request": "^0.3.3",
+    "lodash": "^3.9.3",
+    "request": "^2.58.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-jscs": "^1.6.0",
+    "gulp-jshint": "^1.11.0",
+    "gulp-mocha": "^2.1.2",
+    "gulp-plumber": "^1.0.1",
+    "jshint-stylish": "^2.0.1",
+    "mocha": "^2.2.5",
+    "should": "^7.0.1"
+  }
+}
