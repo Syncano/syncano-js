@@ -26,11 +26,13 @@ var Syncano = function(options) {
   this.baseUrl = options.baseUrl;
   this.instances = new sObj.Instances(options);
 
+  return this;
+
 };
 
 var Instance = function(options) {
-  if (!(this instanceof Syncano)) {
-    return new Syncano(options);
+  if (!(this instanceof Instance)) {
+    return new Instance(options);
   }
 
   var self = this;
@@ -44,13 +46,13 @@ var Instance = function(options) {
   //create new instance or look up current instance.
 
   //set up all internal classes here.
-
+  return this;
 };
 
 
-Syncano.prototype.Class = function(options) {
-  if (!(this instanceof Syncano)) {
-    return new Syncano(options);
+var Class = function(options) {
+  if (!(this instanceof Class)) {
+    return new Class(options);
   }
 
   var self = this;
@@ -75,3 +77,5 @@ var validateOptions = function(options, req) {
 };
 
 module.exports = Syncano;
+module.exports.Instance = Instance;
+module.exports.Class = Class;
