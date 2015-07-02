@@ -3,11 +3,22 @@ var gulp = require('gulp'),
     jshint = require('gulp-jshint'),
     mocha = require('gulp-mocha'),
     plumber = require('gulp-plumber'),
+    istanbul = require('gulp-istanbul'),
     stylish = require('jshint-stylish');
 
-gulp.task('mocha', ['lint', 'jscs'], function () {
-    return gulp.src('test/specs/*.js', {read: false})
-        .pipe(mocha({reporter: 'spec'}));
+gulp.task('test', ['lint', 'jscs'], function () {
+    return gulp.src('src/**/*.js')
+      .pipe(istanbul({includeUntested: true}))
+      .pipe(istanbul.hookRequire())
+      .on('finish', function () {
+        gulp.src('test/specs/*.js')
+          .pipe(mocha({reporter: 'spec'}))
+          .pipe(istanbul.writeReports({
+              dir: 'test/coverage',
+              reporters: [ 'lcov' ],
+              reportOpts: { dir: 'test/coverage'}
+          }))
+        });
 });
 
 gulp.task('jscs', function() {
@@ -27,9 +38,9 @@ gulp.task('lint', function() {
 gulp.task('watch', function() {
   gulp.watch(
     ['src/*.js','test/specs/*.js', '.jscsrc', 'jshintrc'],
-    ['mocha','lint', 'jscs']
+    ['test','lint', 'jscs']
   );
 });
 
 
-gulp.task('default', ['mocha', 'watch']);
+gulp.task('default', ['test', 'watch']);

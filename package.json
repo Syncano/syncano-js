@@ -5,6 +5,9 @@
   "main": "/src/syncano.js",
   "author": "Kelly Andrews",
   "license": "ISC",
+  "scripts" : {
+    "coverage" : "CODECLIMATE_REPO_TOKEN=2fc62db4794c74bf7d733c365aed53960c0d7b7f9560674868f0e487ce36f2eb codeclimate-test-reporter < ./test/coverage/lcov.info"
+  },
   "dependencies": {
     "bluebird": "^2.9.30",
     "browser-request": "^0.3.3",
@@ -13,6 +16,7 @@
   },
   "devDependencies": {
     "gulp": "^3.9.0",
+    "gulp-istanbul": "^0.10.0",
     "gulp-jscs": "^1.6.0",
     "gulp-jshint": "^1.11.0",
     "gulp-mocha": "^2.1.2",
