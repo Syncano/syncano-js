@@ -19,7 +19,7 @@ var BaseClass = function(options) {
 
   var self = this;
 
-  var defaultRequest = request.defaults({
+  var defaultOptions = {
     qsStringifyOptions: {sep: ';', eq: ':', options: {}, arrayFormat: 'repeat'},
     baseUrl: options.baseUrl,
     headers: {
@@ -27,95 +27,135 @@ var BaseClass = function(options) {
       'Content-Type': 'application/json',
       'X-API-KEY': options.apiKey
     }
-  });
-
-  this.getAllRequest = function(filter, cb) {
-
-    if (arguments.length <= 1) {
-      var args = sortArgs(filter, cb);
-      filter = args.filter;
-      cb = args.cb;
-    }
-
-    var opt = _.merge({}, filter);
-    opt.qs = parseFilter(filter);
-    opt.url = '';
-
-    return apiRequest(opt, cb);
   };
 
-  this.getOneRequest = function(id, filter, cb) {
-    id = checkId(id);
+  var defaultRequest = request.defaults(defaultOptions);
 
-    if (arguments.length <= 2) {
-      var args = sortArgs(filter, cb);
-      filter = args.filter;
-      cb = args.cb;
-    }
+  this.filterReq = function(method, url) {
 
-    var opt = _.merge({}, filter);
+    url = url || '';
 
-    opt.qs = parseFilter(filter);
-    opt.url = id + '/';
+    return (function(filter, cb) {
 
-    return apiRequest(opt, cb);
-  };
+      if (arguments.length <= 1) {
+        var args = sortArgs(filter, cb);
+        filter = args.filter;
+        cb = args.cb;
+      }
 
-  this.postRequest = function(params, filter, cb) {
-    params = checkParams(params, self.type);
+      var opt = _.merge({}, filter);
+      opt.qs = parseFilter(filter);
+      opt.url = url;
+      opt.method = method;
 
-    if (arguments.length <= 2) {
-      var args = sortArgs(filter, cb);
-      filter = args.filter;
-      cb = args.cb;
-    }
-
-    var opt = _.merge({}, filter);
-    opt.qs = parseFilter(filter);
-    opt.json = params;
-    opt.url = '';
-    opt.method = 'POST';
-
-    return apiRequest(opt, cb);
+      return apiRequest(opt, cb);
+    });
 
   };
 
-  this.patchRequest = function(id, params, filter, cb) {
-    id = checkId(id);
-    params = checkParams(params, self.type);
+  this.idReq = function(method, url) {
 
-    if (arguments.length <= 3) {
-      var args = sortArgs(filter, cb);
-      filter = args.filter;
-      cb = args.cb;
-    }
+    url = url || '';
 
-    var opt = _.merge({}, filter);
-    opt.qs = parseFilter(filter);
-    opt.json = params;
-    opt.url = id + '/';
-    opt.method = 'PATCH';
+    return (function(id, cb) {
+      id = checkId(id);
 
-    return apiRequest(opt, cb);
+      var opt = {};
+      opt.url = (url !== '') ? id + '/' + url + '/' : id + '/';
+      opt.method = method;
+
+      return apiRequest(opt, cb);
+    });
+
   };
 
-  this.deleteRequest = function(id, cb) {
-    id = checkId(id);
+  this.filterIdReq = function(method, url) {
 
-    var opt = {};
-    opt.url = id + '/';
-    opt.method = 'DELETE';
+    url = url || '';
 
-    return apiRequest(opt, cb);
+    return (function(id, filter, cb) {
+      id = checkId(id);
+
+      if (arguments.length <= 2) {
+        var args = sortArgs(filter, cb);
+        filter = args.filter;
+        cb = args.cb;
+      }
+
+      var opt = _.merge({}, filter);
+
+      opt.qs = parseFilter(filter);
+      opt.url = (url !== '') ? id + '/' + url + '/' : id + '/';
+      opt.method = method;
+
+      return apiRequest(opt, cb);
+    });
+
+  };
+
+  this.paramReq = function(method, url) {
+
+    url = url || '';
+
+    return (function(params, filter, cb) {
+
+      params = checkParams(params, self.type);
+
+      if (arguments.length <= 2) {
+        var args = sortArgs(filter, cb);
+        filter = args.filter;
+        cb = args.cb;
+      }
+
+      var opt = _.merge({}, filter);
+      opt.qs = parseFilter(filter);
+      opt.json = params;
+      opt.url = url;
+      opt.method = method;
+
+      return apiRequest(opt, cb);
+
+    });
+
+  };
+
+  this.paramIdReq = function(method, url) {
+
+    url = url || '';
+
+    return (function(id, params, filter, cb) {
+      id = checkId(id);
+
+      params = checkParams(params, self.type, false);
+
+      if (arguments.length <= 3) {
+        var args = sortArgs(filter, cb);
+        filter = args.filter;
+        cb = args.cb;
+      }
+
+      var opt = _.merge({}, filter);
+      opt.qs = parseFilter(filter);
+      opt.json = params;
+      opt.url = (url !== '') ? id + '/' + url + '/' : id + '/';
+      opt.method = method;
+
+      return apiRequest(opt, cb);
+
+    });
+
   };
 
   var apiRequest = function(options, cb) {
+    //console.log(defaultOptions);
+    //console.log(options);
     return new Promise(function(resolve, reject) {
       defaultRequest(options.url, options, function(err, res) {
+        //console.log(res);
         var localError, restResponse;
 
         if (err || res.statusCode === 404) {
-          localError = err ? new Error(err) : new Error(res.body);
+          localError = err ? new Error(err) : new Error(JSON.stringify(res.body));
           reject(localError);
           return;
         }
@@ -126,22 +166,14 @@ var BaseClass = function(options) {
     }).nodeify(cb);
   };
 
-
   return this;
 
 };
 
-var checkUrl = function(url) {
-  if (typeof url !== 'string') {
-    throw new Error ('Please provide valid url.');
-  }
-
-  return;
-};
-
-var checkParams = function(p, t) {
+var checkParams = function(p, t, r) {
 
   var params, reqs, test;
+  r = (r !== 'undefined') ? r : true;
 
   if (typeof p !== 'object') {
     throw new Error('Invalid parameters object.');
@@ -151,25 +183,27 @@ var checkParams = function(p, t) {
 
   if (t) {
     reqs = addReqs[t];
-    if (!reqs) {
-      throw new Error('Unknown requirements for this object.');
-    } else {
+    if (r) {
+      if (!reqs) {
+        throw new Error('Unknown requirements for this object.');
+      } else {
 
-      test = reqs.every(function(val) {
+        test = reqs.every(function(val) {
+          return (params.indexOf(val) !== -1);
+        });
+
+        if (!test) {
+          throw new Error('Missing required parameters.');
+        }
+      }
+    } else {
+      test = reqs.some(function(val) {
         return (params.indexOf(val) !== -1);
       });
 
       if (!test) {
-        throw new Error('Missing required parameters.');
+        throw new Error('Inalid parameters passed and would result in no change.');
       }
-    }
-  } else {
-    test = reqs.some(function(val) {
-      return (params.indexOf(val) !== -1);
-    });
-
-    if (!test) {
-      throw new Error('Inalid parameters passed and would result in no change.');
     }
   }
 

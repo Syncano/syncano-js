@@ -14,8 +14,21 @@ var Accounts = function(options) {
   };
 
   var opt = _.merge({}, options, defaults);
-
   BaseClass.call(this, opt);
+
+  // this.login = this.postRequest();
+  // this.register = this.postRequest();
+  // this.resendEmail = this.postRequest();
+  // this.details = this.getAllRequest();
+  // this.update = this.patchRequest();
+  // this.resetAccountKey = this.postRequest();
+  // this.changePwd = this.postRequest();
+  // this.setPwd = this.postRequest();
+  // this.resetPwd = this.postRequest();
+  // this.confirmResetPwd = this.postRequest();
+  // this.activate = this.postRequest();
+
+  return objectCleanup(this);
 
 };
 
@@ -115,11 +128,19 @@ DataObjects.prototype.type = 'dataObjects';
 
 var Groups = function(options) {
   var defaults = {
+    baseUrl: options.baseUrl + '/groups/'
   };
 
   var opt = _.merge({}, options, defaults);
-
   BaseClass.call(this, opt);
+
+  this.list = this.filterReq('GET');
+  this.details = this.filterIdReq('GET');
+  this.add = this.paramReq('POST');
+  this.update = this.paramIdReq('PATCH');
+  this.delete = this.idReq('DELETE');
+
+  return objectCleanup(this);
 
 };
 
@@ -134,11 +155,11 @@ var Instances = function(options) {
   var opt = _.merge({}, options, defaults);
   BaseClass.call(this, opt);
 
-  this.list = this.getAllRequest;
-  this.detail = this.getOneRequest;
-  this.add = this.postRequest;
-  this.update = this.patchRequest;
-  this.delete = this.deleteRequest;
+  this.list = this.filterReq('GET');
+  this.detail = this.idReq('GET');
+  this.add = this.paramReq('POST');
+  this.update = this.paramIdReq('PATCH');
+  this.delete = this.idReq('DELETE');
 
   return objectCleanup(this);
 
@@ -214,11 +235,18 @@ Triggers.prototype.type = 'triggers';
 
 var User = function(options) {
   var defaults = {
+    baseUrl: options.baseUrl + '/user/'
   };
 
-  var opt = _.merge({}, options, defaults);
-
-  BaseClass.call(this, opt);
+  // var opt = _.merge({}, options, defaults);
+  // BaseClass.call(this, opt);
+  //
+  // this.login = this.postRequest('auth');
+  //
+  // opt.baseUrl = options.baseUrl + '/users/' + options.id + '/';
+  // BaseClass.call(this, opt);
+  // this.resetKey = this.postRequest('reset_key', true);
+  return objectCleanup(this);
 
 };
 
@@ -227,11 +255,19 @@ User.prototype.type = 'user';
 
 var Users = function(options) {
   var defaults = {
+    baseUrl: options.baseUrl + '/users/'
   };
 
   var opt = _.merge({}, options, defaults);
-
   BaseClass.call(this, opt);
+
+  this.list = this.filterReq('GET');
+  this.details = this.filterIdReq('GET');
+  this.add = this.paramReq('POST');
+  this.update = this.paramIdReq('PATCH');
+  this.delete = this.idReq('DELETE');
+
+  return objectCleanup(this);
 
 };
 
@@ -252,11 +288,11 @@ WebHooks.prototype = Object.create(BaseClass.prototype);
 WebHooks.prototype.type = 'webHooks';
 
 var objectCleanup = function(obj) {
-  delete obj.getAllRequest;
-  delete obj.getOneRequest;
-  delete obj.postRequest;
-  delete obj.patchRequest;
-  delete obj.deleteRequest;
+  delete obj.filterReq;
+  delete obj.idReq;
+  delete obj.filterIdReq;
+  delete obj.paramReq;
+  delete obj.paramIdReq;
 
   return obj;
 };
@@ -272,8 +308,8 @@ module.exports.CodeBoxes = CodeBoxes;
 module.exports.DataObjects = DataObjects;
 module.exports.Groups = Groups;
 module.exports.Instances = Instances;
-module.exports.Accounts = InvitesRec;
-module.exports.InvitesRec = InvitesSent;
+module.exports.InvitesRec = InvitesRec;
+module.exports.InvitesSent = InvitesSent;
 module.exports.Schedules = Schedules;
 //module.exports.Solutions = Solutions;
 module.exports.Triggers = Triggers;

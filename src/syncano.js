@@ -25,6 +25,12 @@ var Syncano = function(options) {
   this.apiKey = options.apiKey;
   this.baseUrl = options.baseUrl;
   this.instances = new sObj.Instances(options);
+  this.account = new sObj.Accounts(options);
+
+  this.instance = function(instance) {
+    options.instance = instance;
+    return new Instance(options);
+  };
 
   return this;
 
@@ -43,12 +49,37 @@ var Instance = function(options) {
     options.baseUrl = 'https://api.syncano.io';
   }
 
-  //create new instance or look up current instance.
+  options.baseUrl = options.baseUrl + '/v1/instances/' + options.instance;
 
-  //set up all internal classes here.
-  return this;
+  this.users = new sObj.Users(options);
+  this.groups = new sObj.Groups(options);
+
+  // this.user = function(id, userKey) {
+  //   options.id = id;
+  //   options.userKey = userKey;
+  //   return new User(options);
+  // };
+
 };
 
+var User = function(options) {
+  if (!(this instanceof User)) {
+    return new User(options);
+  }
+
+  var self = this;
+
+  validateOptions(options, ['apiKey', 'instance', 'id', 'userKey']);
+
+  if (options && !options.baseUrl) {
+    options.baseUrl = 'https://api.syncano.io';
+  }
+
+  options.baseUrl = options.baseUrl + '/v1/instances/' + options.instance;
+
+  this.user = new sObj.User(options);
+
+};
 
 var Class = function(options) {
   if (!(this instanceof Class)) {
@@ -71,7 +102,7 @@ var Class = function(options) {
 var validateOptions = function(options, req) {
   _.forEach(req, function(r) {
     if (!options || typeof options !== 'object' || !options[r]) {
-      throw new Error('"Options.' + r + '" is missing or invalid.');
+      throw new Error('"' + r + '" is missing or invalid.');
     }
   });
 };
