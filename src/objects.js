@@ -37,11 +37,18 @@ Accounts.prototype.type = 'account';
 
 var Admins = function(options) {
   var defaults = {
+    baseUrl: options.baseUrl + '/admins/'
   };
 
   var opt = _.merge({}, options, defaults);
-
   BaseClass.call(this, opt);
+
+  this.list = this.filterReq('GET');
+  this.detail = this.idReq('GET');
+  this.update = this.paramIdReq('PATCH');
+  this.delete = this.idReq('DELETE');
+
+  return objectCleanup(this);
 
 };
 
@@ -50,11 +57,21 @@ Admins.prototype.type = 'admin';
 
 var ApiKeys = function(options) {
   var defaults = {
+    baseUrl: options.baseUrl + '/api_keys/'
   };
 
   var opt = _.merge({}, options, defaults);
-
   BaseClass.call(this, opt);
+
+  this.list = this.filterReq('GET');
+  this.detail = this.idReq('GET');
+  this.add = this.paramReq('POST');
+  this.update = this.paramIdReq('PATCH');
+  // TODO
+  //this.reset = this.paramIdReq('POST', {url: 'reset_key'});
+  this.delete = this.idReq('DELETE');
+
+  return objectCleanup(this);
 
 };
 
@@ -138,16 +155,16 @@ var CodeBox = function(options) {
   var opt = _.merge({}, options, defaults);
   BaseClass.call(this, opt);
 
-  this.traces = this.filterReq('GET', {url: 'trace'});
-  this.trace = this.filterIdReq('GET', {url: 'trace'});
+  this.traces = this.filterReq('GET', {url: 'traces'});
+  this.trace = this.filterIdReq('GET', {url: 'traces'});
   this.run = this.paramReq('POST', {url: 'run'});
 
   return objectCleanup(this);
 
 };
 
-CodeBoxes.prototype = Object.create(BaseClass.prototype);
-CodeBoxes.prototype.type = 'codeBox';
+CodeBox.prototype = Object.create(BaseClass.prototype);
+CodeBox.prototype.type = 'codeBox';
 
 var DataObjects = function(options) {
   var defaults = {
@@ -287,8 +304,8 @@ var Schedule = function(options) {
   var opt = _.merge({}, options, defaults);
   BaseClass.call(this, opt);
 
-  this.traces = this.filterReq('GET', {url: 'trace'});
-  this.trace = this.filterIdReq('GET', {url: 'trace'});
+  this.traces = this.filterReq('GET', {url: 'traces'});
+  this.trace = this.filterIdReq('GET', {url: 'traces'});
 
   return objectCleanup(this);
 };
@@ -338,8 +355,8 @@ var Trigger = function(options) {
   var opt = _.merge({}, options, defaults);
   BaseClass.call(this, opt);
 
-  this.traces = this.filterReq('GET', {url: 'trace'});
-  this.trace = this.filterIdReq('GET', {url: 'trace'});
+  this.traces = this.filterReq('GET', {url: 'traces'});
+  this.trace = this.filterIdReq('GET', {url: 'traces'});
 
   return objectCleanup(this);
 
@@ -423,8 +440,9 @@ var WebHook = function(options) {
   var opt = _.merge({}, options, defaults);
   BaseClass.call(this, opt);
 
-  this.traces = this.filterReq('GET', {url: 'trace'});
-  this.trace = this.filterIdReq('GET', {url: 'trace'});
+  this.traces = this.filterReq('GET', {url: 'traces'});
+  this.trace = this.filterIdReq('GET', {url: 'traces'});
+  this.run = this.paramReq('POST', {url: 'run'});
 
   return objectCleanup(this);
 

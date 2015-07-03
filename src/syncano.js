@@ -19,7 +19,7 @@ var Syncano = function(options) {
   validateOptions(options, ['apiKey']);
 
   if (options && !options.baseUrl) {
-    options.baseUrl = 'https://api.syncano.io';
+    options.baseUrl = 'https://api.syncano.io/v1';
   }
 
   this.apiKey = options.apiKey;
@@ -46,15 +46,18 @@ var Instance = function(options) {
   validateOptions(options, ['apiKey', 'instance']);
 
   if (options && !options.baseUrl) {
-    options.baseUrl = 'https://api.syncano.io';
+    options.baseUrl = 'https://api.syncano.io/v1';
   }
 
   var opt = _.merge({}, options);
 
-  opt.baseUrl = opt.baseUrl + '/v1/instances/' + options.instance;
+  opt.baseUrl = opt.baseUrl + '/instances/' + options.instance;
 
   this.apiKey = opt.apiKey;
   this.baseUrl = opt.baseUrl;
+
+  this.admins = new sObj.Admins(opt);
+  this.apiKeys = new sObj.ApiKeys(opt);
   this.classes = new sObj.Classes(opt);
   this.codeboxes = new sObj.CodeBoxes(opt);
   this.groups = new sObj.Groups(opt);
@@ -110,11 +113,11 @@ var User = function(options) {
   validateOptions(options, ['apiKey', 'instance', 'userId']);
 
   if (options && !options.baseUrl) {
-    options.baseUrl = 'https://api.syncano.io';
+    options.baseUrl = 'https://api.syncano.io/v1';
   }
 
   var opt = _.merge({}, options);
-  opt.baseUrl = opt.baseUrl + '/v1/instances/' + opt.instance;
+  opt.baseUrl = opt.baseUrl + '/instances/' + opt.instance;
 
   this.apiKey = opt.apiKey;
   this.baseUrl = opt.baseUrl;
@@ -133,11 +136,11 @@ var Group = function(options) {
   validateOptions(options, ['apiKey', 'instance', 'groupId']);
 
   if (options && !options.baseUrl) {
-    options.baseUrl = 'https://api.syncano.io';
+    options.baseUrl = 'https://api.syncano.io/v1';
   }
 
   var opt = _.merge({}, options);
-  opt.baseUrl = opt.baseUrl + '/v1/instances/' + opt.instance;
+  opt.baseUrl = opt.baseUrl + '/instances/' + opt.instance;
 
   this.apiKey = opt.apiKey;
   this.baseUrl = opt.baseUrl;
@@ -156,11 +159,11 @@ var Class = function(options) {
   validateOptions(options, ['apiKey', 'instance', 'className']);
 
   if (options && !options.baseUrl) {
-    options.baseUrl = 'https://api.syncano.io';
+    options.baseUrl = 'https://api.syncano.io/v1';
   }
 
   var opt = _.merge({}, options);
-  opt.baseUrl = opt.baseUrl + '/v1/instances/' + opt.instance + '/classes/' + opt.className + '/';
+  opt.baseUrl = opt.baseUrl + '/instances/' + opt.instance + '/classes/' + opt.className + '/';
 
   this.apiKey = opt.apiKey;
   this.baseUrl = opt.baseUrl;
@@ -179,11 +182,11 @@ var CodeBox = function(options) {
   validateOptions(options, ['apiKey', 'instance', 'codeboxId']);
 
   if (options && !options.baseUrl) {
-    options.baseUrl = 'https://api.syncano.io';
+    options.baseUrl = 'https://api.syncano.io/v1';
   }
 
   var opt = _.merge({}, options);
-  opt.baseUrl = opt.baseUrl + '/v1/instances/' + opt.instance + '/codeboxes/' + opt.codeboxId + '/';
+  opt.baseUrl = opt.baseUrl + '/instances/' + opt.instance;
 
   this.apiKey = opt.apiKey;
   this.baseUrl = opt.baseUrl;
@@ -202,11 +205,11 @@ var Schedule = function(options) {
   validateOptions(options, ['apiKey', 'instance', 'scheduleId']);
 
   if (options && !options.baseUrl) {
-    options.baseUrl = 'https://api.syncano.io';
+    options.baseUrl = 'https://api.syncano.io/v1';
   }
 
   var opt = _.merge({}, options);
-  opt.baseUrl = opt.baseUrl + '/v1/instances/' + opt.instance + '/schedules/' + opt.scheduleId + '/';
+  opt.baseUrl = opt.baseUrl + '/instances/' + opt.instance;
 
   this.apiKey = opt.apiKey;
   this.baseUrl = opt.baseUrl;
@@ -225,11 +228,11 @@ var Trigger = function(options) {
   validateOptions(options, ['apiKey', 'instance', 'triggereId']);
 
   if (options && !options.baseUrl) {
-    options.baseUrl = 'https://api.syncano.io';
+    options.baseUrl = 'https://api.syncano.io/v1';
   }
 
   var opt = _.merge({}, options);
-  opt.baseUrl = opt.baseUrl + '/v1/instances/' + opt.instance + '/triggers/' + opt.triggereId + '/';
+  opt.baseUrl = opt.baseUrl + '/instances/' + opt.instance;
 
   this.apiKey = opt.apiKey;
   this.baseUrl = opt.baseUrl;
@@ -248,11 +251,11 @@ var WebHook = function(options) {
   validateOptions(options, ['apiKey', 'instance', 'webhookName']);
 
   if (options && !options.baseUrl) {
-    options.baseUrl = 'https://api.syncano.io';
+    options.baseUrl = 'https://api.syncano.io/v1';
   }
 
   var opt = _.merge({}, options);
-  opt.baseUrl = opt.baseUrl + '/v1/instances/' + opt.instance + '/webhooks/' + opt.webhookName + '/';
+  opt.baseUrl = opt.baseUrl + '/instances/' + opt.instance;
 
   this.apiKey = opt.apiKey;
   this.baseUrl = opt.baseUrl;
@@ -272,3 +275,9 @@ var validateOptions = function(options, req) {
 module.exports = Syncano;
 module.exports.Instance = Instance;
 module.exports.Class = Class;
+module.exports.CodeBox = CodeBox;
+module.exports.Group = Group;
+module.exports.Schedule = Schedule;
+module.exports.Trigger = Trigger;
+module.exports.User = User;
+module.exports.WebHook = WebHook;
