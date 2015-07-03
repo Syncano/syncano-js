@@ -9,7 +9,6 @@ var version  = require('../package.json').version;
 var request  = require('request');
 var _        = require('lodash');
 var Promise  = require('bluebird');
-var addReqs  = require('./addReqs.json');
 
 var BaseClass = function(options) {
 
@@ -173,48 +172,12 @@ var BaseClass = function(options) {
 };
 
 //CHECK PARAMS NEEDS FIXING :)
-var checkParams = function(p, t, r) {
-
-  //var params, reqs, test;
-
-  //r = (r !== 'undefined') ? r : true;
-
+var checkParams = function(p) {
   if (typeof p !== 'object') {
     throw new Error('Invalid parameters object.');
   }
 
-  // params = Object.keys(p);
-
-  // if (t) {
-  //
-  //   if (r) {
-  //     reqs = addReqs.required[t];
-  //     if (!reqs) {
-  //       throw new Error('Unknown requirements for this object.');
-  //     } else {
-  //
-  //       test = reqs.every(function(val) {
-  //         return (params.indexOf(val) !== -1);
-  //       });
-  //
-  //       if (!test) {
-  //         throw new Error('Missing required parameters.');
-  //       }
-  //     }
-  //   } else {
-  //     reqs = addReqs.optional[t];
-  //     test = reqs.some(function(val) {
-  //       return (params.indexOf(val) !== -1);
-  //     });
-  //
-  //     if (!test) {
-  //       throw new Error('Inalid parameters passed and would result in no change.');
-  //     }
-  //   }
-  // }
-
   return p;
-
 };
 
 var checkId = function(id) {

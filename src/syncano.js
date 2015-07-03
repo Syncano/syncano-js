@@ -24,7 +24,7 @@ var Syncano = function(options) {
 
   this.apiKey = options.apiKey;
   this.baseUrl = options.baseUrl;
-  this.instances = new sObj.Instances(options);
+  this.instances = new sObj.baseObj('instances', options);
   this.account = new sObj.Accounts(options);
 
   this.instance = function(instance) {
@@ -56,15 +56,15 @@ var Instance = function(options) {
   this.apiKey = opt.apiKey;
   this.baseUrl = opt.baseUrl;
 
-  this.admins = new sObj.Admins(opt);
-  this.apiKeys = new sObj.ApiKeys(opt);
-  this.classes = new sObj.Classes(opt);
-  this.codeboxes = new sObj.CodeBoxes(opt);
-  this.groups = new sObj.Groups(opt);
-  this.schedules = new sObj.Schedules(opt);
-  this.triggers = new sObj.Triggers(opt);
-  this.users = new sObj.Users(opt);
-  this.webhooks = new sObj.WebHooks(opt);
+  this.admins = new sObj.baseObj('admins', opt, ['add']);
+  this.apiKeys = new sObj.baseObj('api_keys', opt);
+  this.classes = new sObj.baseObj('classes', opt);
+  this.codeboxes = new sObj.baseObj('codeboxes', opt);
+  this.groups = new sObj.baseObj('groups', opt);
+  this.schedules = new sObj.baseObj('schedules', opt);
+  this.triggers = new sObj.baseObj('triggers', opt);
+  this.users = new sObj.baseObj('users', opt);
+  this.webhooks = new sObj.baseObj('webhooks', opt);
 
   this.class = function(id) {
     options.className = id;
@@ -168,7 +168,7 @@ var Class = function(options) {
   this.apiKey = opt.apiKey;
   this.baseUrl = opt.baseUrl;
 
-  return new sObj.DataObjects(opt);
+  return new sObj.baseObj('objects', opt);
 
 };
 
