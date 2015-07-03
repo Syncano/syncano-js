@@ -63,6 +63,11 @@ var Instance = function(options) {
     return new User(options);
   };
 
+  this.group = function(id) {
+    options.id = id;
+    return new Group(options);
+  };
+
 };
 
 var User = function(options) {
@@ -85,6 +90,29 @@ var User = function(options) {
   this.baseUrl = opt.baseUrl;
 
   return new sObj.User(opt);
+
+};
+
+var Group = function(options) {
+  if (!(this instanceof User)) {
+    return new Group(options);
+  }
+
+  var self = this;
+
+  validateOptions(options, ['apiKey', 'instance', 'id']);
+
+  if (options && !options.baseUrl) {
+    options.baseUrl = 'https://api.syncano.io';
+  }
+
+  var opt = _.merge({}, options);
+  opt.baseUrl = opt.baseUrl + '/v1/instances/' + opt.instance;
+
+  this.apiKey = opt.apiKey;
+  this.baseUrl = opt.baseUrl;
+
+  return new sObj.Group(opt);
 
 };
 
