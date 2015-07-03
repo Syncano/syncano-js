@@ -238,14 +238,20 @@ var User = function(options) {
     baseUrl: options.baseUrl + '/user/'
   };
 
-  // var opt = _.merge({}, options, defaults);
-  // BaseClass.call(this, opt);
-  //
-  // this.login = this.postRequest('auth');
-  //
-  // opt.baseUrl = options.baseUrl + '/users/' + options.id + '/';
-  // BaseClass.call(this, opt);
-  // this.resetKey = this.postRequest('reset_key', true);
+  var opt = _.merge({}, options, defaults);
+  BaseClass.call(this, opt);
+
+  this.login = this.paramReq('POST', 'auth');
+
+  opt.baseUrl = options.baseUrl + '/users/' + options.id + '/';
+  BaseClass.call(this, opt);
+
+  this.listGroups = this.filterReq('GET', 'groups');
+  this.addGroup = this.paramsReq('POST', 'groups');
+  this.removeGroup = this.idReq('DELETE', 'groups');
+  this.groupDetails = this.paramsIdReq('POST', 'groups');
+  this.resetKey = this.filterReq('POST', 'reset_key');
+
   return objectCleanup(this);
 
 };

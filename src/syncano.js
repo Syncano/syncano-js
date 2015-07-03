@@ -49,16 +49,19 @@ var Instance = function(options) {
     options.baseUrl = 'https://api.syncano.io';
   }
 
-  options.baseUrl = options.baseUrl + '/v1/instances/' + options.instance;
+  var opt = _.merge({}, options);
 
-  this.users = new sObj.Users(options);
-  this.groups = new sObj.Groups(options);
+  opt.baseUrl = opt.baseUrl + '/v1/instances/' + options.instance;
 
-  // this.user = function(id, userKey) {
-  //   options.id = id;
-  //   options.userKey = userKey;
-  //   return new User(options);
-  // };
+  this.apiKey = opt.apiKey;
+  this.baseUrl = opt.baseUrl;
+  this.users = new sObj.Users(opt);
+  this.groups = new sObj.Groups(opt);
+
+  this.user = function(id) {
+    options.id = id;
+    return new User(options);
+  };
 
 };
 
@@ -69,15 +72,19 @@ var User = function(options) {
 
   var self = this;
 
-  validateOptions(options, ['apiKey', 'instance', 'id', 'userKey']);
+  validateOptions(options, ['apiKey', 'instance', 'id']);
 
   if (options && !options.baseUrl) {
     options.baseUrl = 'https://api.syncano.io';
   }
 
-  options.baseUrl = options.baseUrl + '/v1/instances/' + options.instance;
+  var opt = _.merge({}, options);
+  opt.baseUrl = opt.baseUrl + '/v1/instances/' + opt.instance;
 
-  this.user = new sObj.User(options);
+  this.apiKey = opt.apiKey;
+  this.baseUrl = opt.baseUrl;
+
+  return new sObj.User(opt);
 
 };
 

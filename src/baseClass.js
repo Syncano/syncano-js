@@ -45,7 +45,7 @@ var BaseClass = function(options) {
 
       var opt = _.merge({}, filter);
       opt.qs = parseFilter(filter);
-      opt.url = url;
+      opt.url = (url !== '') ? url + '/' : '';
       opt.method = method;
 
       return apiRequest(opt, cb);
@@ -61,7 +61,7 @@ var BaseClass = function(options) {
       id = checkId(id);
 
       var opt = {};
-      opt.url = (url !== '') ? id + '/' + url + '/' : id + '/';
+      opt.url = (url !== '') ? url + '/' + id + '/' : id + '/';
       opt.method = method;
 
       return apiRequest(opt, cb);
@@ -85,7 +85,7 @@ var BaseClass = function(options) {
       var opt = _.merge({}, filter);
 
       opt.qs = parseFilter(filter);
-      opt.url = (url !== '') ? id + '/' + url + '/' : id + '/';
+      opt.url = (url !== '') ?  url + '/' + id + '/': id + '/';
       opt.method = method;
 
       return apiRequest(opt, cb);
@@ -110,7 +110,7 @@ var BaseClass = function(options) {
       var opt = _.merge({}, filter);
       opt.qs = parseFilter(filter);
       opt.json = params;
-      opt.url = url;
+      opt.url = (url !== '') ? url + '/' : '';
       opt.method = method;
 
       return apiRequest(opt, cb);
@@ -137,7 +137,7 @@ var BaseClass = function(options) {
       var opt = _.merge({}, filter);
       opt.qs = parseFilter(filter);
       opt.json = params;
-      opt.url = (url !== '') ? id + '/' + url + '/' : id + '/';
+      opt.url = (url !== '') ? url + '/' + id + '/' : id + '/';
       opt.method = method;
 
       return apiRequest(opt, cb);
