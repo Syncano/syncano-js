@@ -55,17 +55,47 @@ var Instance = function(options) {
 
   this.apiKey = opt.apiKey;
   this.baseUrl = opt.baseUrl;
-  this.users = new sObj.Users(opt);
+  this.classes = new sObj.Classes(opt);
+  this.codeboxes = new sObj.CodeBoxes(opt);
   this.groups = new sObj.Groups(opt);
+  this.schedules = new sObj.Schedules(opt);
+  this.triggers = new sObj.Triggers(opt);
+  this.users = new sObj.Users(opt);
+  this.webhooks = new sObj.WebHooks(opt);
 
-  this.user = function(id) {
-    options.id = id;
-    return new User(options);
+  this.class = function(id) {
+    options.className = id;
+    return new Class(options);
+  };
+
+  this.codebox = function(id) {
+    options.codeboxId = id;
+    return new CodeBox(options);
   };
 
   this.group = function(id) {
-    options.id = id;
+    options.groupId = id;
     return new Group(options);
+  };
+
+  this.schedule = function(id) {
+    options.scheduleId = id;
+    return new Schedule(options);
+  };
+
+  this.trigger = function(id) {
+    options.triggerId = id;
+    return new Trigger(options);
+  };
+
+  this.user = function(id) {
+    options.userId = id;
+    return new User(options);
+  };
+
+  this.webhook = function(id) {
+    options.webhookName = id;
+    return new WebHook(options);
   };
 
 };
@@ -77,7 +107,7 @@ var User = function(options) {
 
   var self = this;
 
-  validateOptions(options, ['apiKey', 'instance', 'id']);
+  validateOptions(options, ['apiKey', 'instance', 'userId']);
 
   if (options && !options.baseUrl) {
     options.baseUrl = 'https://api.syncano.io';
@@ -94,13 +124,13 @@ var User = function(options) {
 };
 
 var Group = function(options) {
-  if (!(this instanceof User)) {
+  if (!(this instanceof Group)) {
     return new Group(options);
   }
 
   var self = this;
 
-  validateOptions(options, ['apiKey', 'instance', 'id']);
+  validateOptions(options, ['apiKey', 'instance', 'groupId']);
 
   if (options && !options.baseUrl) {
     options.baseUrl = 'https://api.syncano.io';
@@ -123,15 +153,112 @@ var Class = function(options) {
 
   var self = this;
 
-  validateOptions(options, ['apiKey', 'instance', 'class']);
+  validateOptions(options, ['apiKey', 'instance', 'className']);
 
   if (options && !options.baseUrl) {
     options.baseUrl = 'https://api.syncano.io';
   }
 
-  //create new class or look up current instance.
+  var opt = _.merge({}, options);
+  opt.baseUrl = opt.baseUrl + '/v1/instances/' + opt.instance + '/classes/' + opt.className + '/';
 
-  //set up all internal classes.
+  this.apiKey = opt.apiKey;
+  this.baseUrl = opt.baseUrl;
+
+  return new sObj.DataObjects(opt);
+
+};
+
+var CodeBox = function(options) {
+  if (!(this instanceof CodeBox)) {
+    return new CodeBox(options);
+  }
+
+  var self = this;
+
+  validateOptions(options, ['apiKey', 'instance', 'codeboxId']);
+
+  if (options && !options.baseUrl) {
+    options.baseUrl = 'https://api.syncano.io';
+  }
+
+  var opt = _.merge({}, options);
+  opt.baseUrl = opt.baseUrl + '/v1/instances/' + opt.instance + '/codeboxes/' + opt.codeboxId + '/';
+
+  this.apiKey = opt.apiKey;
+  this.baseUrl = opt.baseUrl;
+
+  return new sObj.CodeBox(opt);
+
+};
+
+var Schedule = function(options) {
+  if (!(this instanceof Schedule)) {
+    return new Schedule(options);
+  }
+
+  var self = this;
+
+  validateOptions(options, ['apiKey', 'instance', 'scheduleId']);
+
+  if (options && !options.baseUrl) {
+    options.baseUrl = 'https://api.syncano.io';
+  }
+
+  var opt = _.merge({}, options);
+  opt.baseUrl = opt.baseUrl + '/v1/instances/' + opt.instance + '/schedules/' + opt.scheduleId + '/';
+
+  this.apiKey = opt.apiKey;
+  this.baseUrl = opt.baseUrl;
+
+  return new sObj.Schedule(opt);
+
+};
+
+var Trigger = function(options) {
+  if (!(this instanceof Trigger)) {
+    return new Trigger(options);
+  }
+
+  var self = this;
+
+  validateOptions(options, ['apiKey', 'instance', 'triggereId']);
+
+  if (options && !options.baseUrl) {
+    options.baseUrl = 'https://api.syncano.io';
+  }
+
+  var opt = _.merge({}, options);
+  opt.baseUrl = opt.baseUrl + '/v1/instances/' + opt.instance + '/triggers/' + opt.triggereId + '/';
+
+  this.apiKey = opt.apiKey;
+  this.baseUrl = opt.baseUrl;
+
+  return new sObj.Trigger(opt);
+
+};
+
+var WebHook = function(options) {
+  if (!(this instanceof WebHook)) {
+    return new WebHook(options);
+  }
+
+  var self = this;
+
+  validateOptions(options, ['apiKey', 'instance', 'webhookName']);
+
+  if (options && !options.baseUrl) {
+    options.baseUrl = 'https://api.syncano.io';
+  }
+
+  var opt = _.merge({}, options);
+  opt.baseUrl = opt.baseUrl + '/v1/instances/' + opt.instance + '/webhooks/' + opt.webhookName + '/';
+
+  this.apiKey = opt.apiKey;
+  this.baseUrl = opt.baseUrl;
+
+  return new sObj.WebHook(opt);
+
 };
 
 var validateOptions = function(options, req) {

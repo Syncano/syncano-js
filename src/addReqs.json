@@ -5,12 +5,12 @@
     "user" : ["username","password"],
     "group" : ["label"],
     "userGroup" : ["group"],
-    "groupUser" : ["user"],
+    "groupUser" : ["user"]
   },
   "optional": {
     "instance": ["name"],
-    "class": ["name","schema"],
+    "class": ["name","schema","description", "metadata", "group", "group_permissions", "other_permissions"],
     "user" : ["username","password"],
-    "group" : ["label"]
+    "group" : ["label", "description"]
   }
 }
