@@ -147,6 +147,26 @@ var Groups = function(options) {
 Groups.prototype = Object.create(BaseClass.prototype);
 Groups.prototype.type = 'group';
 
+var Group = function(options) {
+  var defaults = {
+    baseUrl: options.baseUrl + '/groups/' + options.id + '/'
+  };
+
+  var opt = _.merge({}, options, defaults);
+  BaseClass.call(this, opt);
+
+  this.listUsers = this.filterReq('GET', 'users');
+  this.addUser = this.paramReq('POST', 'users');
+  this.removeUser = this.idReq('DELETE', 'users');
+  this.userDetails = this.paramIdReq('POST', 'users');
+
+  return objectCleanup(this);
+
+};
+
+Group.prototype = Object.create(BaseClass.prototype);
+Group.prototype.type = 'groups';
+
 var Instances = function(options) {
   var defaults = {
     baseUrl: options.baseUrl + '/v1/instances/'
@@ -247,9 +267,9 @@ var User = function(options) {
   BaseClass.call(this, opt);
 
   this.listGroups = this.filterReq('GET', 'groups');
-  this.addGroup = this.paramsReq('POST', 'groups');
+  this.addGroup = this.paramReq('POST', 'groups');
   this.removeGroup = this.idReq('DELETE', 'groups');
-  this.groupDetails = this.paramsIdReq('POST', 'groups');
+  this.groupDetails = this.paramIdReq('POST', 'groups');
   this.resetKey = this.filterReq('POST', 'reset_key');
 
   return objectCleanup(this);
@@ -278,7 +298,7 @@ var Users = function(options) {
 };
 
 Users.prototype = Object.create(BaseClass.prototype);
-Users.prototype.type = 'user';
+Users.prototype.type = 'users';
 
 var WebHooks = function(options) {
   var defaults = {
@@ -313,6 +333,7 @@ module.exports.Classes = Classes;
 module.exports.CodeBoxes = CodeBoxes;
 module.exports.DataObjects = DataObjects;
 module.exports.Groups = Groups;
+module.exports.Group = Group;
 module.exports.Instances = Instances;
 module.exports.InvitesRec = InvitesRec;
 module.exports.InvitesSent = InvitesSent;
