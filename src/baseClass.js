@@ -31,9 +31,9 @@ var BaseClass = function(options) {
 
   var defaultRequest = request.defaults(defaultOptions);
 
-  this.filterReq = function(method, url) {
+  this.filterReq = function(method, options) {
 
-    url = url || '';
+    var url = (options && options.url) ? options.url : '';
 
     return (function(filter, cb) {
 
@@ -53,9 +53,9 @@ var BaseClass = function(options) {
 
   };
 
-  this.idReq = function(method, url) {
+  this.idReq = function(method, options) {
 
-    url = url || '';
+    var url = (options && options.url) ? options.url : '';
 
     return (function(id, cb) {
       id = checkId(id);
@@ -69,9 +69,9 @@ var BaseClass = function(options) {
 
   };
 
-  this.filterIdReq = function(method, url) {
+  this.filterIdReq = function(method, options) {
 
-    url = url || '';
+    var url = (options && options.url) ? options.url : '';
 
     return (function(id, filter, cb) {
       id = checkId(id);
@@ -93,13 +93,14 @@ var BaseClass = function(options) {
 
   };
 
-  this.paramReq = function(method, url) {
+  this.paramReq = function(method, options) {
 
-    url = url || '';
+    var url = (options && options.url) ? options.url : '';
+    var type = (options && options.type) ? options.type : self.type;
 
     return (function(params, filter, cb) {
 
-      params = checkParams(params, self.type);
+      params = checkParams(params, type);
 
       if (arguments.length <= 2) {
         var args = sortArgs(filter, cb);
@@ -119,14 +120,15 @@ var BaseClass = function(options) {
 
   };
 
-  this.paramIdReq = function(method, url) {
+  this.paramIdReq = function(method, options) {
 
-    url = url || '';
+    var url = (options && options.url) ? options.url : '';
+    var type = (options && options.type) ? options.type : self.type;
 
     return (function(id, params, filter, cb) {
       id = checkId(id);
 
-      params = checkParams(params, self.type, false);
+      params = checkParams(params, type, false);
 
       if (arguments.length <= 3) {
         var args = sortArgs(filter, cb);
@@ -173,6 +175,7 @@ var BaseClass = function(options) {
 var checkParams = function(p, t, r) {
 
   var params, reqs, test;
+
   r = (r !== 'undefined') ? r : true;
 
   if (typeof p !== 'object') {
@@ -182,8 +185,9 @@ var checkParams = function(p, t, r) {
   params = Object.keys(p);
 
   if (t) {
-    reqs = addReqs[t];
+
     if (r) {
+      reqs = addReqs.required[t];
       if (!reqs) {
         throw new Error('Unknown requirements for this object.');
       } else {
@@ -197,6 +201,7 @@ var checkParams = function(p, t, r) {
         }
       }
     } else {
+      reqs = addReqs.optional[t];
       test = reqs.some(function(val) {
         return (params.indexOf(val) !== -1);
       });

@@ -155,17 +155,17 @@ var Group = function(options) {
   var opt = _.merge({}, options, defaults);
   BaseClass.call(this, opt);
 
-  this.listUsers = this.filterReq('GET', 'users');
-  this.addUser = this.paramReq('POST', 'users');
-  this.removeUser = this.idReq('DELETE', 'users');
-  this.userDetails = this.paramIdReq('POST', 'users');
+  this.listUsers = this.filterReq('GET', {url: 'users'});
+  this.addUser = this.paramReq('POST', {url: 'users', type: 'groupUser'});
+  this.removeUser = this.idReq('DELETE', {url: 'users'});
+  this.userDetails = this.paramIdReq('POST', {url: 'users'});
 
   return objectCleanup(this);
 
 };
 
 Group.prototype = Object.create(BaseClass.prototype);
-Group.prototype.type = 'groups';
+Group.prototype.type = 'group';
 
 var Instances = function(options) {
   var defaults = {
@@ -266,11 +266,11 @@ var User = function(options) {
   opt.baseUrl = options.baseUrl + '/users/' + options.id + '/';
   BaseClass.call(this, opt);
 
-  this.listGroups = this.filterReq('GET', 'groups');
-  this.addGroup = this.paramReq('POST', 'groups');
-  this.removeGroup = this.idReq('DELETE', 'groups');
-  this.groupDetails = this.paramIdReq('POST', 'groups');
-  this.resetKey = this.filterReq('POST', 'reset_key');
+  this.listGroups = this.filterReq('GET', {url: 'groups'});
+  this.addGroup = this.paramReq('POST', {url: 'groups', type: 'userGroup'});
+  this.removeGroup = this.idReq('DELETE', {url: 'groups'});
+  this.groupDetails = this.paramIdReq('POST', {url: 'groups'});
+  this.resetKey = this.filterReq('POST', {url: 'reset_key'});
 
   return objectCleanup(this);
 
@@ -298,7 +298,7 @@ var Users = function(options) {
 };
 
 Users.prototype = Object.create(BaseClass.prototype);
-Users.prototype.type = 'users';
+Users.prototype.type = 'user';
 
 var WebHooks = function(options) {
   var defaults = {

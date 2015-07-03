@@ -1,6 +1,16 @@
 {
-  "instance": ["name"],
-  "class": ["name","schema"],
-  "user" : ["username","password"],
-  "group" : ["label"]
+  "required": {
+    "instance": ["name"],
+    "class": ["name","schema"],
+    "user" : ["username","password"],
+    "group" : ["label"],
+    "userGroup" : ["group"],
+    "groupUser" : ["user"],
+  },
+  "optional": {
+    "instance": ["name"],
+    "class": ["name","schema"],
+    "user" : ["username","password"],
+    "group" : ["label"]
+  }
 }
