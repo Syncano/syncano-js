@@ -61,13 +61,30 @@ var Channels = function(options) {
 Channels.prototype = Object.create(BaseClass.prototype);
 Channels.prototype.type = 'channels';
 
-var CodeBox = function(options) {
-  var defaults = {
-    baseUrl: options.baseUrl + '/codeboxes/' + options.codeboxId + '/'
-  };
+var Class = function(options) {
+  if (!(this instanceof Class)) {
+    return new Class(options);
+  }
 
-  var opt = _.merge({}, options, defaults);
-  BaseClass.call(this, opt);
+  BuildOpts.call(this, options, ['apiKey', 'instance', 'className']);
+  this.opt.baseUrl = this.opt.baseUrl + '/instances/' + this.opt.instance + '/classes/' + this.opt.className + '/';
+
+  var output = _.merge({}, this, new BaseObj('objects', this.opt));
+
+  return objectCleanup(output);
+
+};
+
+
+var CodeBox = function(options) {
+  if (!(this instanceof CodeBox)) {
+    return new CodeBox(options);
+  }
+
+  BuildOpts.call(this, options, ['apiKey', 'instance', 'codeboxId']);
+  this.opt.baseUrl = this.opt.baseUrl + '/instances/' + this.opt.instance + '/codeboxes/' + this.opt.codeboxId + '/';
+
+  BaseClass.call(this, this.opt);
 
   this.traces = this.filterReq('GET', {url: 'traces'});
   this.trace = this.filterIdReq('GET', {url: 'traces'});
@@ -78,27 +95,27 @@ var CodeBox = function(options) {
 };
 
 CodeBox.prototype = Object.create(BaseClass.prototype);
-CodeBox.prototype.type = 'codeBox';
 
 var Group = function(options) {
-  var defaults = {
-    baseUrl: options.baseUrl + '/groups/' + options.groupId + '/'
-  };
+  if (!(this instanceof Group)) {
+    return new Group(options);
+  }
 
-  var opt = _.merge({}, options, defaults);
-  BaseClass.call(this, opt);
+  BuildOpts.call(this, options, ['apiKey', 'instance', 'groupId']);
+  this.opt.baseUrl = this.opt.baseUrl + '/instances/' + this.opt.instance + '/groups/' + this.opt.groupId + '/';
+
+  BaseClass.call(this, this.opt);
 
   this.listUsers = this.filterReq('GET', {url: 'users'});
   this.addUser = this.paramReq('POST', {url: 'users', type: 'groupUser'});
   this.removeUser = this.idReq('DELETE', {url: 'users'});
-  this.userDetails = this.paramIdReq('POST', {url: 'users'});
+  this.userDetails = this.filterIdReq('GET', {url: 'users'});
 
   return objectCleanup(this);
 
 };
 
 Group.prototype = Object.create(BaseClass.prototype);
-Group.prototype.type = 'group';
 
 var InvitesRec = function(options) {
   var defaults = {
@@ -128,12 +145,14 @@ InvitesSent.prototype.type = 'invitesSent';
 
 
 var Schedule = function(options) {
-  var defaults = {
-    baseUrl: options.baseUrl + '/schedules/' + options.scheduleId + '/'
-  };
+  if (!(this instanceof Schedule)) {
+    return new Schedule(options);
+  }
 
-  var opt = _.merge({}, options, defaults);
-  BaseClass.call(this, opt);
+  BuildOpts.call(this, options, ['apiKey', 'instance', 'scheduleId']);
+  this.opt.baseUrl = this.opt.baseUrl + '/instances/' + this.opt.instance + '/schedules/' + this.opt.scheduleId + '/';
+
+  BaseClass.call(this, this.opt);
 
   this.traces = this.filterReq('GET', {url: 'traces'});
   this.trace = this.filterIdReq('GET', {url: 'traces'});
@@ -142,7 +161,6 @@ var Schedule = function(options) {
 };
 
 Schedule.prototype = Object.create(BaseClass.prototype);
-Schedule.prototype.type = 'schedule';
 
 // var Solutions = function(options) {
 //   var defaults = {
@@ -158,12 +176,14 @@ Schedule.prototype.type = 'schedule';
 // Solutions.prototype.type = 'solutions';
 
 var Trigger = function(options) {
-  var defaults = {
-    baseUrl: options.baseUrl + '/triggers/' + options.triggerId + '/'
-  };
+  if (!(this instanceof Trigger)) {
+    return new Trigger(options);
+  }
 
-  var opt = _.merge({}, options, defaults);
-  BaseClass.call(this, opt);
+  BuildOpts.call(this, options, ['apiKey', 'instance', 'triggerId']);
+  this.opt.baseUrl = this.opt.baseUrl + '/instances/' + this.opt.instance + '/triggers/' + this.opt.triggerId + '/';
+
+  BaseClass.call(this, this.opt);
 
   this.traces = this.filterReq('GET', {url: 'traces'});
   this.trace = this.filterIdReq('GET', {url: 'traces'});
@@ -173,25 +193,26 @@ var Trigger = function(options) {
 };
 
 Trigger.prototype = Object.create(BaseClass.prototype);
-Trigger.prototype.type = 'triggers';
 
 var User = function(options) {
-  var defaults = {
-    baseUrl: options.baseUrl + '/user/'
-  };
+  if (!(this instanceof User)) {
+    return new User(options);
+  }
 
-  var opt = _.merge({}, options, defaults);
-  BaseClass.call(this, opt);
+  BuildOpts.call(this, options, ['apiKey', 'instance', 'userId']);
+  this.opt.instanceUrl = this.opt.baseUrl + '/instances/' + this.opt.instance;
+  this.opt.baseUrl = this.opt.instanceUrl + '/user/';
 
+  BaseClass.call(this, this.opt);
   this.login = this.paramReq('POST', 'auth');
 
-  opt.baseUrl = options.baseUrl + '/users/' + options.userId + '/';
-  BaseClass.call(this, opt);
+  this.opt.baseUrl = this.opt.instanceUrl + '/users/' + options.userId + '/';
 
+  BaseClass.call(this, this.opt);
   this.listGroups = this.filterReq('GET', {url: 'groups'});
   this.addGroup = this.paramReq('POST', {url: 'groups', type: 'userGroup'});
   this.removeGroup = this.idReq('DELETE', {url: 'groups'});
-  this.groupDetails = this.paramIdReq('POST', {url: 'groups'});
+  this.groupDetails = this.filterIdReq('GET', {url: 'groups'});
   this.resetKey = this.filterReq('POST', {url: 'reset_key'});
 
   return objectCleanup(this);
@@ -199,16 +220,16 @@ var User = function(options) {
 };
 
 User.prototype = Object.create(BaseClass.prototype);
-User.prototype.type = 'user';
-
 
 var WebHook = function(options) {
-  var defaults = {
-    baseUrl: options.baseUrl + '/webhooks/' + options.webhookName + '/'
-  };
+  if (!(this instanceof WebHook)) {
+    return new WebHook(options);
+  }
 
-  var opt = _.merge({}, options, defaults);
-  BaseClass.call(this, opt);
+  BuildOpts.call(this, options, ['apiKey', 'instance', 'webhookName']);
+  this.opt.baseUrl = this.opt.baseUrl + '/instances/' + this.opt.instance + '/webhooks/' + this.opt.webhookName + '/';
+
+  BaseClass.call(this, this.opt);
 
   this.traces = this.filterReq('GET', {url: 'traces'});
   this.trace = this.filterIdReq('GET', {url: 'traces'});
@@ -219,12 +240,25 @@ var WebHook = function(options) {
 };
 
 WebHook.prototype = Object.create(BaseClass.prototype);
-WebHook.prototype.type = 'webHooks';
 
+var ExpObj = function(url, options, includes, excludes) {
 
-var baseObj = function(url, options, excludes) {
+  BaseObj.call(this, url, options, excludes);
+
+  // TODO
+  // this.runtimes = this.filterReq('GET', {url: 'runtimes'});
+  // this.reset = this.paramIdReq('POST', {url: 'reset_key'});
+  // this.send = this.paramIdReq('POST', {url: 'reset_key'});
+  // this.resend = this.paramIdReq('POST', {url: 'reset_key'});
+  // this.accept = this.paramIdReq('POST', {url: 'reset_key'});
+
+  return objectCleanup(this, excludes);
+
+};
+
+var BaseObj = function(url, options, excludes) {
   var defaults = {
-    baseUrl: options.baseUrl + '/' + options.url + '/'
+    baseUrl: options.baseUrl + '/' + url + '/'
   };
 
   var opt = _.merge({}, options, defaults);
@@ -241,18 +275,23 @@ var baseObj = function(url, options, excludes) {
 
 };
 
-baseObj.prototype = Object.create(BaseClass.prototype);
+BaseObj.prototype = Object.create(BaseClass.prototype);
 
 // this.runtimes = this.filterReq('GET', {url: 'runtimes'});
 // TODO
-//this.reset = this.paramIdReq('POST', {url: 'reset_key'});
+// this.reset = this.paramIdReq('POST', {url: 'reset_key'});
 
 var objectCleanup = function(obj, excludes) {
   if (excludes) {
-    excludes.map(function(exclude){
+    excludes.map(function(exclude) {
       delete obj[exclude];
     });
   }
+
+  if (obj.opt) {
+    delete obj.opt;
+  }
+
   delete obj.filterReq;
   delete obj.idReq;
   delete obj.filterIdReq;
@@ -262,11 +301,46 @@ var objectCleanup = function(obj, excludes) {
   return obj;
 };
 
-module.exports.baseObj = baseObj;
+var BuildOpts  = function(options, reqs) {
+
+  if (!reqs) {
+    reqs = [];
+  }
+
+  var self = this;
+
+  validateOptions(options, reqs);
+
+  if (options && options.baseUrl) {
+    this.baseUrl = options.baseUrl;
+  } else if (options && !options.baseUrl) {
+    options.baseUrl = 'https://api.syncano.io/v1';
+  } else {
+    options = {baseUrl: 'https://api.syncano.io/v1'};
+  }
+
+  this.opt = _.merge({}, options);
+
+  return this;
+
+};
+
+var validateOptions = function(options, req) {
+  _.forEach(req, function(r) {
+    if (!options || typeof options !== 'object' || !options[r]) {
+      throw new Error('"' + r + '" is missing or invalid.');
+    }
+  });
+};
+
+
+module.exports.BaseObj = BaseObj;
+module.exports.BuildOpts = BuildOpts;
+
 module.exports.Accounts = Accounts;
 //module.exports.Billing = Billing;
 module.exports.Channels = Channels;
-//module.exports.Classes = Classes;
+module.exports.Class = Class;
 module.exports.CodeBox = CodeBox;
 module.exports.Group = Group;
 module.exports.InvitesRec = InvitesRec;

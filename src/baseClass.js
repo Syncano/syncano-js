@@ -148,11 +148,8 @@ var BaseClass = function(options) {
   };
 
   var apiRequest = function(options, cb) {
-    //console.log(defaultOptions);
-    //console.log(options);
     return new Promise(function(resolve, reject) {
       defaultRequest(options.url, options, function(err, res) {
-        //console.log(res);
         var localError, restResponse;
 
         if (err || res.statusCode === 404) {
