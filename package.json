@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "bluebird": "^2.9.30",
-    "browser-request": "^0.3.3",
     "lodash": "^3.9.3",
     "request": "^2.58.0"
   },
