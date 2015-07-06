@@ -6,6 +6,7 @@
 'use strict';
 
 var version  = require('../package.json').version;
+var helpers  = require('./helpers.js');
 var request  = require('request');
 var _        = require('lodash');
 var Promise  = require('bluebird');
@@ -37,13 +38,13 @@ var BaseClass = function(options) {
     return (function(filter, cb) {
 
       if (arguments.length <= 1) {
-        var args = sortArgs(filter, cb);
+        var args = helpers.sortArgs(filter, cb);
         filter = args.filter;
         cb = args.cb;
       }
 
       var opt = _.merge({}, filter);
-      opt.qs = parseFilter(filter);
+      opt.qs = helpers.parseFilter(filter);
       opt.url = (url !== '') ? url + '/' : '';
       opt.method = method;
 
@@ -57,7 +58,7 @@ var BaseClass = function(options) {
     var url = (options && options.url) ? options.url : '';
 
     return (function(id, cb) {
-      id = checkId(id);
+      id = helpers.helpers.checkId(id);
 
       var opt = {};
       opt.url = (url !== '') ? url + '/' + id + '/' : id + '/';
@@ -73,17 +74,17 @@ var BaseClass = function(options) {
     var url = (options && options.url) ? options.url : '';
 
     return (function(id, filter, cb) {
-      id = checkId(id);
+      id = helpers.checkId(id);
 
       if (arguments.length <= 2) {
-        var args = sortArgs(filter, cb);
+        var args = helpers.sortArgs(filter, cb);
         filter = args.filter;
         cb = args.cb;
       }
 
       var opt = _.merge({}, filter);
 
-      opt.qs = parseFilter(filter);
+      opt.qs = helpers.parseFilter(filter);
       opt.url = (url !== '') ?  url + '/' + id + '/': id + '/';
       opt.method = method;
 
@@ -99,16 +100,16 @@ var BaseClass = function(options) {
 
     return (function(params, filter, cb) {
 
-      params = checkParams(params, type);
+      params = helpers.checkParams(params, type);
 
       if (arguments.length <= 2) {
-        var args = sortArgs(filter, cb);
+        var args = helpers.sortArgs(filter, cb);
         filter = args.filter;
         cb = args.cb;
       }
 
       var opt = _.merge({}, filter);
-      opt.qs = parseFilter(filter);
+      opt.qs = helpers.parseFilter(filter);
       opt.json = params;
       opt.url = (url !== '') ? url + '/' : '';
       opt.method = method;
@@ -125,18 +126,18 @@ var BaseClass = function(options) {
     var type = (options && options.type) ? options.type : self.type;
 
     return (function(id, params, filter, cb) {
-      id = checkId(id);
+      id = helpers.checkId(id);
 
-      params = checkParams(params, type, false);
+      params = helpers.checkParams(params, type, false);
 
       if (arguments.length <= 3) {
-        var args = sortArgs(filter, cb);
+        var args = helpers.sortArgs(filter, cb);
         filter = args.filter;
         cb = args.cb;
       }
 
       var opt = _.merge({}, filter);
-      opt.qs = parseFilter(filter);
+      opt.qs = helpers.parseFilter(filter);
       opt.json = params;
       opt.url = (url !== '') ? url + '/' + id + '/' : id + '/';
       opt.method = method;
@@ -158,7 +159,7 @@ var BaseClass = function(options) {
           return;
         }
 
-        resolve(res.body);
+        resolve(JSON.parse(res.body));
 
       });
     }).nodeify(cb);
@@ -168,59 +169,74 @@ var BaseClass = function(options) {
 
 };
 
-//CHECK PARAMS NEEDS FIXING :)
-var checkParams = function(p) {
-  if (typeof p !== 'object') {
-    throw new Error('Invalid parameters object.');
+var BuildOpts = function(options, reqs) {
+  if (!reqs) {
+    reqs = [];
   }
 
-  return p;
+  var self = this;
+
+  helpers.validateOptions(options, reqs);
+
+  if (options && options.baseUrl) {
+    this.baseUrl = options.baseUrl;
+  } else if (options && !options.baseUrl) {
+    options.baseUrl = 'https://api.syncano.io/v1';
+  } else {
+    options = {baseUrl: 'https://api.syncano.io/v1'};
+  }
+
+  this.opt = _.merge({}, options);
+
+  return this;
 };
 
-var checkId = function(id) {
-  if (typeof id !== 'string' && typeof id !== 'number') {
-    throw new Error('Valid ID must be provided');
+var BaseObj = function(url, options, funcArr) {
+  if (!(this instanceof BaseObj)) {
+    return new BaseObj(url, options, funcArr);
   }
 
-  return id;
+  var defaults = {
+    baseUrl: options.baseUrl + '/' + url + '/'
+  };
+
+  var self = this;
+
+  funcArr = funcArr || ['list', 'detail', 'add', 'update', 'delete'];
+  var opt = _.merge({}, options, defaults);
+  BaseClass.call(this, opt);
+
+  var functions = {
+    list: self.filterReq('GET'),
+    detail: self.idReq('GET'),
+    add: self.paramReq('POST'),
+    update: self.paramIdReq('PATCH'),
+    delete: self.idReq('DELETE'),
+    runtimes: self.filterReq('GET', {url: 'runtimes'}),
+    resetKey: self.paramIdReq('POST', {url: 'reset_key'}),
+    traces: self.filterReq('GET', {url: 'traces'}),
+    trace: self.filterIdReq('GET', {url: 'traces'}),
+    run: self.paramReq('POST', {url: 'run'}),
+    listGroups: self.filterReq('GET', {url: 'groups'}),
+    addGroup: self.paramReq('POST', {url: 'groups', type: 'userGroup'}),
+    removeGroup: self.idReq('DELETE', {url: 'groups'}),
+    groupDetails: self.filterIdReq('GET', {url: 'groups'}),
+    listUsers: self.filterReq('GET', {url: 'users'}),
+    addUser: self.paramReq('POST', {url: 'users', type: 'groupUser'}),
+    removeUser: self.idReq('DELETE', {url: 'users'}),
+    userDetails: self.filterIdReq('GET', {url: 'users'})
+  };
+
+  _.forEach(funcArr, function(func) {
+    self[func] = functions[func];
+  });
+
+  return helpers.objectCleanup(this);
+
 };
 
-var parseFilter = function(options) {
-  var parsedOptions = {};
+BaseObj.prototype = Object.create(BaseClass.prototype);
 
-  if (options.fields) {
-    if (options.fields.include) {
-      parsedOptions.fields = options.fields.include.join();
-    }
-
-    if (options.fields.exclude) {
-      parsedOptions.excluded_fields = options.fields.exclude.join();
-    }
-
-  }
-
-  if (options.filter) {
-    parsedOptions.query = options.filter;
-  }
-
-  if (options.orderBy) {
-    var key = Object.keys(options.orderBy)[0];
-    var prefix = (options.orderBy[key].toLowerCase() === 'desc') ? '-' : '';
-    parsedOptions.order_by = prefix + key;
-
-  }
-  if (options.pageSize) {
-    parsedOptions.page_size = options.pageSize;
-  }
-
-  return parsedOptions;
-};
-
-var sortArgs = function(o, f) {
-  var result = {};
-  result.cb = (_.isFunction(o)) ? o : null;
-  result.filter = (_.isPlainObject(o)) ? o : {};
-  return result;
-};
-
-module.exports = BaseClass;
+module.exports.BaseClass = BaseClass;
+module.exports.BuildOpts = BuildOpts;
+module.exports.BaseObj = BaseObj;

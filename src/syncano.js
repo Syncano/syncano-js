@@ -5,7 +5,9 @@
 
  'use strict';
 
-var BaseClass  = require('./baseClass.js');
+var BaseClass  = require('./core.js').BaseClass;
+var BuildOpts  = require('./core.js').BuildOpts;
+var BaseObj  = require('./core.js').BaseObj;
 var _    = require('lodash');
 
 var Instance = function(options) {
@@ -113,97 +115,6 @@ var WebHook = function(options) {
   return new BaseObj(url, this.opt, ['traces', 'trace', 'run']);
 };
 
-var BaseObj = function(url, options, funcArr) {
-  if (!(this instanceof BaseObj)) {
-    return new BaseObj(url, options, funcArr);
-  }
-
-  var defaults = {
-    baseUrl: options.baseUrl + '/' + url + '/'
-  };
-
-  var self = this;
-
-  funcArr = funcArr || ['list', 'detail', 'add', 'update', 'delete'];
-  var opt = _.merge({}, options, defaults);
-  BaseClass.call(this, opt);
-
-  var functions = {
-    list: self.filterReq('GET'),
-    detail: self.idReq('GET'),
-    add: self.paramReq('POST'),
-    update: self.paramIdReq('PATCH'),
-    delete: self.idReq('DELETE'),
-    runtimes: self.filterReq('GET', {url: 'runtimes'}),
-    resetKey: self.paramIdReq('POST', {url: 'reset_key'}),
-    traces: self.filterReq('GET', {url: 'traces'}),
-    trace: self.filterIdReq('GET', {url: 'traces'}),
-    run: self.paramReq('POST', {url: 'run'}),
-    listGroups: self.filterReq('GET', {url: 'groups'}),
-    addGroup: self.paramReq('POST', {url: 'groups', type: 'userGroup'}),
-    removeGroup: self.idReq('DELETE', {url: 'groups'}),
-    groupDetails: self.filterIdReq('GET', {url: 'groups'}),
-    listUsers: self.filterReq('GET', {url: 'users'}),
-    addUser: self.paramReq('POST', {url: 'users', type: 'groupUser'}),
-    removeUser: self.idReq('DELETE', {url: 'users'}),
-    userDetails: self.filterIdReq('GET', {url: 'users'})
-  };
-
-  _.forEach(funcArr, function(func) {
-    self[func] = functions[func];
-  });
-
-  return objectCleanup(this);
-
-};
-
-BaseObj.prototype = Object.create(BaseClass.prototype);
-
-var objectCleanup = function(obj) {
-  if (obj.opt) {
-    delete obj.opt;
-  }
-
-  delete obj.filterReq;
-  delete obj.idReq;
-  delete obj.filterIdReq;
-  delete obj.paramReq;
-  delete obj.paramIdReq;
-
-  return obj;
-};
-
-var BuildOpts  = function(options, reqs) {
-
-  if (!reqs) {
-    reqs = [];
-  }
-
-  var self = this;
-
-  validateOptions(options, reqs);
-
-  if (options && options.baseUrl) {
-    this.baseUrl = options.baseUrl;
-  } else if (options && !options.baseUrl) {
-    options.baseUrl = 'https://api.syncano.io/v1';
-  } else {
-    options = {baseUrl: 'https://api.syncano.io/v1'};
-  }
-
-  this.opt = _.merge({}, options);
-
-  return this;
-
-};
-
-var validateOptions = function(options, req) {
-  _.forEach(req, function(r) {
-    if (!options || typeof options !== 'object' || !options[r]) {
-      throw new Error('"' + r + '" is missing or invalid.');
-    }
-  });
-};
 
 module.exports.Class = Class;
 module.exports.CodeBox = CodeBox;
