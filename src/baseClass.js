@@ -158,7 +158,7 @@ var BaseClass = function(options) {
           return;
         }
 
-        resolve(res);
+        resolve(res.body);
 
       });
     }).nodeify(cb);
