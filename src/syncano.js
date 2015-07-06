@@ -34,18 +34,6 @@ var Instance = function(options) {
 
 };
 
-var Channel = function(options) {
-  var defaults = {
-  };
-
-  var opt = _.merge({}, options, defaults);
-
-  BaseClass.call(this, opt);
-
-};
-
-Channel.prototype = Object.create(BaseClass.prototype);
-
 var Class = function(options) {
   if (!(this instanceof Class)) {
     return new Class(options);
@@ -67,7 +55,6 @@ var CodeBox = function(options) {
   var url  = 'instances/' + this.opt.instance + '/codeboxes/' + this.opt.codeboxId;
 
   return new BaseObj(url, this.opt, ['traces', 'trace', 'run']);
-
 };
 
 var Group = function(options) {
@@ -80,31 +67,6 @@ var Group = function(options) {
 
   return new BaseObj(url, this.opt, ['listUsers', 'addUser', 'removeUser', 'userDetails']);
 };
-
-var InvitesRec = function(options) {
-  var defaults = {
-  };
-
-  var opt = _.merge({}, options, defaults);
-
-  BaseClass.call(this, opt);
-
-};
-
-InvitesRec.prototype = Object.create(BaseClass.prototype);
-
-var InvitesSent = function(options) {
-  var defaults = {
-  };
-
-  var opt = _.merge({}, options, defaults);
-
-  BaseClass.call(this, opt);
-
-};
-
-InvitesSent.prototype = Object.create(BaseClass.prototype);
-
 
 var Schedule = function(options) {
   if (!(this instanceof Schedule)) {
@@ -187,10 +149,6 @@ var BaseObj = function(url, options, funcArr) {
     userDetails: self.filterIdReq('GET', {url: 'users'})
   };
 
-  // this.send = this.paramIdReq('POST', {url: 'reset_key'});
-  // this.resend = this.paramIdReq('POST', {url: 'reset_key'});
-  // this.accept = this.paramIdReq('POST', {url: 'reset_key'});
-
   _.forEach(funcArr, function(func) {
     self[func] = functions[func];
   });
@@ -247,13 +205,10 @@ var validateOptions = function(options, req) {
   });
 };
 
-module.exports.Channel = Channel;
 module.exports.Class = Class;
 module.exports.CodeBox = CodeBox;
 module.exports.Group = Group;
 module.exports.Instance = Instance;
-module.exports.InvitesRec = InvitesRec;
-module.exports.InvitesSent = InvitesSent;
 module.exports.Schedule = Schedule;
 module.exports.Trigger = Trigger;
 module.exports.User = User;
