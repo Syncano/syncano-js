@@ -2,18 +2,6 @@
 
 [![Code Climate](https://codeclimate.com/repos/558ea6ad695680479a00276f/badges/97dca413d9b029dc5b01/gpa.svg)](https://codeclimate.com/repos/558ea6ad695680479a00276f/feed)  [![Test Coverage](https://codeclimate.com/github/Syncano/syncano-js-lib/badges/coverage.svg)](https://codeclimate.com/github/Syncano/syncano-js-lib/coverage)
 
-##This is still a **WIP**.
-
-If you wish to contribute, submit a pull request.
-
-###TO-DO
-+ Need more unit testing
-  + Async functions
-+ Finish class constructors
-  + Account level
-  + Instance level
-  + Class level
-+ Enable CI testing
 
 ###Contributors
 * Kelly Andrews - [twitter](https://twitter.com/kellyjandrews), [github](https://github.com/kellyjandrews)
