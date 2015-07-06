@@ -10,6 +10,6 @@
 
 ### ChangeLog
 
-* **0.1.6** - 2015-07-06
-    * added core functionality for instances
-    * unit testing for main functions included
+* **0.1.7** - 2015-07-06
+    * added core functionality for instance level operations
+    * unit testing for main functions started
