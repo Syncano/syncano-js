@@ -1,8 +1,8 @@
-# Syncano [![Code Climate](https://codeclimate.com/github/Syncano/syncano-js-lib/badges/gpa.svg)](https://codeclimate.com/github/Syncano/syncano-js-lib)
+# Syncano
 
 [![NPM](https://nodei.co/npm/syncano.png?compact=true)](https://www.npmjs.com/package/syncano)
 
-[![Test Coverage](https://codeclimate.com/github/Syncano/syncano-js-lib/badges/coverage.svg)](https://codeclimate.com/github/Syncano/syncano-js-lib/coverage)
+[![Code Climate](https://codeclimate.com/github/Syncano/syncano-js-lib/badges/gpa.svg)](https://codeclimate.com/github/Syncano/syncano-js-lib)  [![Test Coverage](https://codeclimate.com/github/Syncano/syncano-js-lib/badges/coverage.svg)](https://codeclimate.com/github/Syncano/syncano-js-lib/coverage)
 
 
 ### Contributors

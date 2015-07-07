@@ -74021,7 +74021,7 @@ module.exports = Request
 },{"./lib/auth":199,"./lib/cookies":200,"./lib/getProxyFromURI":201,"./lib/har":202,"./lib/helpers":203,"./lib/multipart":204,"./lib/oauth":205,"./lib/querystring":206,"./lib/redirect":207,"./lib/tunnel":208,"_process":174,"aws-sign2":209,"bl":210,"buffer":18,"caseless":219,"forever-agent":223,"form-data":224,"hawk":254,"http":166,"http-signature":255,"https":170,"mime-types":272,"stream":190,"stringstream":282,"url":192,"util":194,"zlib":17}],292:[function(require,module,exports){
 module.exports={
   "name": "syncano",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "A library to intereact with the Syncano API.",
   "main": "/src/syncano.js",
   "author": "Kelly Andrews",
