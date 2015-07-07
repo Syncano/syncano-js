@@ -22,10 +22,11 @@ var BaseClass = function(options) {
   var defaultOptions = {
     qsStringifyOptions: {sep: ';', eq: ':', options: {}, arrayFormat: 'repeat'},
     baseUrl: options.baseUrl,
+    withCredentials: false,
     headers: {
       'User-Agent': 'syncano/version:' + version,
       'Content-Type': 'application/json',
-      'X-API-KEY': options.apiKey
+      'Authorization': 'Bearer ' + options.apiKey
     }
   };
 
@@ -151,16 +152,14 @@ var BaseClass = function(options) {
   var apiRequest = function(options, cb) {
     return new Promise(function(resolve, reject) {
       defaultRequest(options.url, options, function(err, res) {
-        var localError, restResponse;
+        var localError;
 
         if (err || res.statusCode === 404) {
           localError = err ? new Error(err) : new Error(JSON.stringify(res.body));
           reject(localError);
           return;
         }
-
         resolve(JSON.parse(res.body));
-
       });
     }).nodeify(cb);
   };

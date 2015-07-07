@@ -1,9 +1,12 @@
+var browserify = require('browserify');
+var derequire = require('derequire');
 var gulp = require('gulp');
+var istanbul = require('gulp-istanbul');
 var jscs = require('gulp-jscs');
 var jshint = require('gulp-jshint');
 var mocha = require('gulp-mocha');
 var plumber = require('gulp-plumber');
-var istanbul = require('gulp-istanbul');
+var source = require('vinyl-source-stream');
 var stylish = require('jshint-stylish');
 
 gulp.task('test', ['lint', 'jscs'], function() {
@@ -38,9 +41,18 @@ gulp.task('lint', function() {
 gulp.task('watch', function() {
   gulp.watch(
     ['src/*.js', 'test/specs/*.js', '.jscsrc', '.jshintrc', 'Gulpfile.js'],
-    ['test', 'lint', 'jscs']
+    ['test', 'lint', 'jscs', 'dist']
   );
 });
 
+gulp.task('dist', function() {
+  return browserify('src/syncano.js', {
+    standalone: 'Syncano'
+  })
+		.bundle()
+		.pipe(plumber())
+		.pipe(source('syncano.js'))
+		.pipe(gulp.dest('./dist'));
+});
 
-gulp.task('default', ['test', 'watch']);
+gulp.task('default', ['test', 'dist', 'watch']);
