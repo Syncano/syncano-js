@@ -74022,36 +74022,35 @@ module.exports = Request
 module.exports={
   "name": "syncano",
   "version": "0.1.8",
-  "description": "",
+  "description": "A library to intereact with the Syncano API.",
   "main": "/src/syncano.js",
   "author": "Kelly Andrews",
   "license": "ISC",
   "scripts": {
     "coverage": "CODECLIMATE_REPO_TOKEN=2fc62db4794c74bf7d733c365aed53960c0d7b7f9560674868f0e487ce36f2eb codeclimate-test-reporter < ./test/coverage/lcov.info"
   },
-  "browser": {
-  },
   "dependencies": {
     "bluebird": "^2.9.30",
-    "browser-request": "^0.3.3",
     "lodash": "^3.9.3",
-    "request": "^2.58.0",
-    "xhr": "^2.0.2"
+    "request": "^2.58.0"
   },
   "devDependencies": {
     "browserify": "^10.2.4",
-    "derequire": "^2.0.0",
     "gulp": "^3.9.0",
+    "gulp-gzip": "^1.1.0",
     "gulp-istanbul": "^0.10.0",
     "gulp-jscs": "^1.6.0",
     "gulp-jshint": "^1.11.0",
     "gulp-mocha": "^2.1.2",
     "gulp-plumber": "^1.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^1.2.0",
     "jshint-stylish": "^2.0.1",
     "mocha": "^2.2.5",
     "should": "^7.0.1",
     "should-promised": "^0.3.0",
+    "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   }
 }
@@ -74085,7 +74084,7 @@ var BaseClass = function(options) {
     headers: {
       'User-Agent': 'syncano/version:' + version,
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + options.apiKey
+      Authorization: 'Bearer ' + options.apiKey
     }
   };
 

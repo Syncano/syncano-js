@@ -1,13 +1,18 @@
 var browserify = require('browserify');
-var derequire = require('derequire');
+var buffer = require('vinyl-buffer');
 var gulp = require('gulp');
+var gzip = require('gulp-gzip');
 var istanbul = require('gulp-istanbul');
 var jscs = require('gulp-jscs');
 var jshint = require('gulp-jshint');
 var mocha = require('gulp-mocha');
 var plumber = require('gulp-plumber');
+var rename = require('gulp-rename');
+var sourcemaps = require('gulp-sourcemaps');
 var source = require('vinyl-source-stream');
 var stylish = require('jshint-stylish');
+var uglify = require('gulp-uglify');
+
 
 gulp.task('test', ['lint', 'jscs'], function() {
   return gulp.src('src/**/*.js')
@@ -41,18 +46,40 @@ gulp.task('lint', function() {
 gulp.task('watch', function() {
   gulp.watch(
     ['src/*.js', 'test/specs/*.js', '.jscsrc', '.jshintrc', 'Gulpfile.js'],
-    ['test', 'lint', 'jscs', 'dist']
+    ['test', 'lint', 'jscs', 'browserify']
   );
 });
 
-gulp.task('dist', function() {
-  return browserify('src/syncano.js', {
+gulp.task('browserify', function() {
+  var b = browserify({
+    entries: './src/syncano.js',
     standalone: 'Syncano'
-  })
-		.bundle()
-		.pipe(plumber())
-		.pipe(source('syncano.js'))
-		.pipe(gulp.dest('./dist'));
+  });
+
+  return b.bundle()
+    .pipe(source('syncano.js'))
+    .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('default', ['test', 'dist', 'watch']);
+gulp.task('dist', function() {
+  var b = browserify({
+    entries: './src/syncano.js',
+    standalone: 'Syncano'
+  });
+
+  return b.bundle()
+    .pipe(source('syncano.js'))
+    .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('package', function() {
+  gulp.src('./dist/syncano.js')
+  .pipe(rename('syncano.min.js'))
+  .pipe(buffer())
+  .pipe(sourcemaps.init())
+    .pipe(uglify())
+  .pipe(sourcemaps.write('./'))
+  .pipe(gulp.dest('./dist'))
+});
+
+gulp.task('default', ['test', 'browserify', 'watch']);

@@ -26,7 +26,7 @@ var BaseClass = function(options) {
     headers: {
       'User-Agent': 'syncano/version:' + version,
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + options.apiKey
+      Authorization: 'Bearer ' + options.apiKey
     }
   };
 
