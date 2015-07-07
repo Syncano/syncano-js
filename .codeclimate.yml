@@ -5,3 +5,4 @@ exclude_paths:
  - "Gulpfile.js"
  - "README.md"
  - "package.json"
+ - "dist/**/*"
