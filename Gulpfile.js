@@ -46,7 +46,8 @@ gulp.task('lint', function() {
 gulp.task('watch', function() {
   gulp.watch(
     ['src/*.js', 'test/specs/*.js', '.jscsrc', '.jshintrc', 'Gulpfile.js'],
-    ['test', 'lint', 'jscs', 'browserify']
+    //['test', 'lint', 'jscs', 'browserify']
+    ['jscs']
   );
 });
 
@@ -65,21 +66,28 @@ gulp.task('dist', function() {
   var b = browserify({
     entries: './src/syncano.js',
     standalone: 'Syncano'
-  });
+  })
+  .ignore('bluebird')
+  .ignore('lodash');
 
   return b.bundle()
     .pipe(source('syncano.js'))
     .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('package', function() {
+gulp.task('package', ['dist'], function() {
   gulp.src('./dist/syncano.js')
   .pipe(rename('syncano.min.js'))
   .pipe(buffer())
   .pipe(sourcemaps.init())
-    .pipe(uglify())
+    .pipe(uglify({
+      unused: true,
+      dead_code: true,
+      drop_console: true,
+      comments: true
+    }))
   .pipe(sourcemaps.write('./'))
   .pipe(gulp.dest('./dist'))
 });
 
-gulp.task('default', ['test', 'browserify', 'watch']);
+gulp.task('default', ['jscs', 'watch']);

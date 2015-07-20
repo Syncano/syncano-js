@@ -74032,6 +74032,7 @@ module.exports={
   "dependencies": {
     "bluebird": "^2.9.30",
     "lodash": "^3.9.3",
+    "needle": "^0.10.0",
     "request": "^2.58.0"
   },
   "devDependencies": {
@@ -74069,160 +74070,31 @@ var request  = require('request');
 var _        = require('lodash');
 var Promise  = require('bluebird');
 
-var BaseClass = function(options) {
+var defaultOptions = {
+  qsStringifyOptions: {sep: ';', eq: ':', options: {}, arrayFormat: 'repeat'},
+  withCredentials: false,
+  headers: {
+    'User-Agent': 'syncano/version:' + version,
+    'Content-Type': 'application/json'
+  }
+};
 
-  if (!(this instanceof BaseClass)) {
-    return new BaseClass(options);
+var addAuth = function(options) {
+  var headers = {};
+
+  if (options.apiKey) {
+    headers['X-API-KEY'] = options.apiKey;
   }
 
-  var self = this;
+  if (options.userKey) {
+    headers['X-USER-KEY'] = options.userKey;
+  }
 
-  var defaultOptions = {
-    qsStringifyOptions: {sep: ';', eq: ':', options: {}, arrayFormat: 'repeat'},
-    baseUrl: options.baseUrl,
-    withCredentials: false,
-    headers: {
-      'User-Agent': 'syncano/version:' + version,
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + options.apiKey
-    }
-  };
+  if (options.socialToken) {
+    headers.Authorization = 'Bearer' + options.userKey;
+  }
 
-  var defaultRequest = request.defaults(defaultOptions);
-
-  this.filterReq = function(method, options) {
-
-    var url = (options && options.url) ? options.url : '';
-
-    return (function(filter, cb) {
-
-      if (arguments.length <= 1) {
-        var args = helpers.sortArgs(filter, cb);
-        filter = args.filter;
-        cb = args.cb;
-      }
-
-      var opt = _.merge({}, filter);
-      opt.qs = helpers.parseFilter(filter);
-      opt.url = (url !== '') ? url + '/' : '';
-      opt.method = method;
-
-      return apiRequest(opt, cb);
-    });
-
-  };
-
-  this.idReq = function(method, options) {
-
-    var url = (options && options.url) ? options.url : '';
-
-    return (function(id, cb) {
-      id = helpers.helpers.checkId(id);
-
-      var opt = {};
-      opt.url = (url !== '') ? url + '/' + id + '/' : id + '/';
-      opt.method = method;
-
-      return apiRequest(opt, cb);
-    });
-
-  };
-
-  this.filterIdReq = function(method, options) {
-
-    var url = (options && options.url) ? options.url : '';
-
-    return (function(id, filter, cb) {
-      id = helpers.checkId(id);
-
-      if (arguments.length <= 2) {
-        var args = helpers.sortArgs(filter, cb);
-        filter = args.filter;
-        cb = args.cb;
-      }
-
-      var opt = _.merge({}, filter);
-
-      opt.qs = helpers.parseFilter(filter);
-      opt.url = (url !== '') ?  url + '/' + id + '/': id + '/';
-      opt.method = method;
-
-      return apiRequest(opt, cb);
-    });
-
-  };
-
-  this.paramReq = function(method, options) {
-
-    var url = (options && options.url) ? options.url : '';
-    var type = (options && options.type) ? options.type : self.type;
-
-    return (function(params, filter, cb) {
-
-      params = helpers.checkParams(params, type);
-
-      if (arguments.length <= 2) {
-        var args = helpers.sortArgs(filter, cb);
-        filter = args.filter;
-        cb = args.cb;
-      }
-
-      var opt = _.merge({}, filter);
-      opt.qs = helpers.parseFilter(filter);
-      opt.json = params;
-      opt.url = (url !== '') ? url + '/' : '';
-      opt.method = method;
-
-      return apiRequest(opt, cb);
-
-    });
-
-  };
-
-  this.paramIdReq = function(method, options) {
-
-    var url = (options && options.url) ? options.url : '';
-    var type = (options && options.type) ? options.type : self.type;
-
-    return (function(id, params, filter, cb) {
-      id = helpers.checkId(id);
-
-      params = helpers.checkParams(params, type, false);
-
-      if (arguments.length <= 3) {
-        var args = helpers.sortArgs(filter, cb);
-        filter = args.filter;
-        cb = args.cb;
-      }
-
-      var opt = _.merge({}, filter);
-      opt.qs = helpers.parseFilter(filter);
-      opt.json = params;
-      opt.url = (url !== '') ? url + '/' + id + '/' : id + '/';
-      opt.method = method;
-
-      return apiRequest(opt, cb);
-
-    });
-
-  };
-
-  var apiRequest = function(options, cb) {
-    return new Promise(function(resolve, reject) {
-      defaultRequest(options.url, options, function(err, res) {
-        var localError;
-
-        if (err || res.statusCode === 404) {
-          localError = err ? new Error(err) : new Error(JSON.stringify(res.body));
-          reject(localError);
-          return;
-        }
-        resolve(JSON.parse(res.body));
-      });
-    }).nodeify(cb);
-  };
-
-  return this;
+  return (headers !== {}) ? {headers: headers}: headers;
 
 };
 
@@ -74235,17 +74107,56 @@ var BuildOpts = function(options, reqs) {
 
   helpers.validateOptions(options, reqs);
 
-  if (options && options.baseUrl) {
-    this.baseUrl = options.baseUrl;
+  if (!options && !options.baseUrl) {
+    options = {baseUrl: 'https://api.syncano.io/v1'};
   } else if (options && !options.baseUrl) {
     options.baseUrl = 'https://api.syncano.io/v1';
-  } else {
-    options = {baseUrl: 'https://api.syncano.io/v1'};
   }
 
-  this.opt = _.merge({}, options);
+  var opt = _.merge({}, options);
+
+  return opt;
+};
+
+var BaseSingleObj = function(url, options, funcArr) {
+  if (!(this instanceof BaseSingleObj)) {
+    return new BaseSingleObj(url, options, funcArr);
+  }
+
+  var defaults = {
+    baseUrl: options.baseUrl + '/' + url + '/'
+  };
+
+  var self = this;
+
+  funcArr = _.union(funcArr, ['detail', 'update']);
+  var opt = _.merge({}, options, defaults, addAuth(options));
+
+  var functions = {
+    detail: filterReq('GET', opt),
+    update: paramReq('PATCH', opt),
+    delete: filterReq('DELETE', opt),
+    runtimes: filterReq('GET', _.merge({}, opt, {url: 'runtimes'})),
+    resetKey: paramReq('POST', _.merge({}, opt, {url: 'reset_key'})),
+    traces: filterReq('GET', _.merge({}, opt, {url: 'traces'})),
+    trace: filterIdReq('GET', _.merge({}, opt, {url: 'traces'})),
+    run: paramReq('POST', _.merge({}, opt, {url: 'run'})),
+    listGroups: filterReq('GET', _.merge({}, opt, {url: 'groups'})),
+    addGroup: paramReq('POST', _.merge({}, opt, {url: 'groups', type: 'userGroup'})),
+    removeGroup: idReq('DELETE', _.merge({}, opt, {url: 'groups'})),
+    groupDetails: filterIdReq('GET', _.merge({}, opt, {url: 'groups'})),
+    listUsers: filterReq('GET', _.merge({}, opt, {url: 'users'})),
+    addUser: paramReq('POST', _.merge({}, opt, {url: 'users', type: 'groupUser'})),
+    removeUser: idReq('DELETE', _.merge({}, opt, {url: 'users'})),
+    userDetails: filterIdReq('GET', _.merge({}, opt, {url: 'users'}))
+  };
+
+  _.forEach(funcArr, function(func) {
+    self[func] = functions[func];
+  });
 
   return this;
+
 };
 
 var BaseObj = function(url, options, funcArr) {
@@ -74260,43 +74171,191 @@ var BaseObj = function(url, options, funcArr) {
   var self = this;
 
   funcArr = funcArr || ['list', 'detail', 'add', 'update', 'delete'];
-  var opt = _.merge({}, options, defaults);
-  BaseClass.call(this, opt);
+  var opt = _.merge({}, options, defaults, addAuth(options));
 
   var functions = {
-    list: self.filterReq('GET'),
-    detail: self.idReq('GET'),
-    add: self.paramReq('POST'),
-    update: self.paramIdReq('PATCH'),
-    delete: self.idReq('DELETE'),
-    runtimes: self.filterReq('GET', {url: 'runtimes'}),
-    resetKey: self.paramIdReq('POST', {url: 'reset_key'}),
-    traces: self.filterReq('GET', {url: 'traces'}),
-    trace: self.filterIdReq('GET', {url: 'traces'}),
-    run: self.paramReq('POST', {url: 'run'}),
-    listGroups: self.filterReq('GET', {url: 'groups'}),
-    addGroup: self.paramReq('POST', {url: 'groups', type: 'userGroup'}),
-    removeGroup: self.idReq('DELETE', {url: 'groups'}),
-    groupDetails: self.filterIdReq('GET', {url: 'groups'}),
-    listUsers: self.filterReq('GET', {url: 'users'}),
-    addUser: self.paramReq('POST', {url: 'users', type: 'groupUser'}),
-    removeUser: self.idReq('DELETE', {url: 'users'}),
-    userDetails: self.filterIdReq('GET', {url: 'users'})
+    list: filterReq('GET', opt),
+    detail: idReq('GET', opt),
+    add: paramReq('POST', opt),
+    update: paramIdReq('PATCH', opt),
+    delete: idReq('DELETE', opt),
+    runtimes: filterReq('GET', _.merge({}, opt, {url: 'runtimes'})),
+    resetKey: paramIdReq('POST', _.merge({}, opt, {url: 'reset_key'})),
+    poll: filterIdReq('GET', _.merge({}, opt, {url: 'poll'})),
+    history: filterIdReq('GET', _.merge({}, opt, {url: 'history'})),
+    publish: paramIdReq('POST', _.merge({}, opt, {url: 'publish'}))
   };
 
   _.forEach(funcArr, function(func) {
     self[func] = functions[func];
   });
 
-  return helpers.objectCleanup(this);
+  return this;
 
 };
 
-BaseObj.prototype = Object.create(BaseClass.prototype);
+var accountLogin = function(options, cb) {
+  var opt = _.merge({}, new BuildOpts(options, ['email', 'password']), addAuth(options));
+  opt.url = '/account/auth/';
+  opt.json = options;
+  opt.method = 'POST';
+  return apiRequest(opt, cb);
 
-module.exports.BaseClass = BaseClass;
+};
+
+var userLogin = function(options, cb) {
+  var opt = _.merge({}, new BuildOpts(options, ['username', 'password', 'instance', 'apiKey']), addAuth(options));
+  opt.json = options;
+  opt.url = '/instances/' + options.instance + '/user/auth/';
+  opt.method = 'POST';
+  return apiRequest(opt, cb);
+};
+
+var socialLogin = function(options, cb) {
+  var opt = _.merge({}, options);
+  opt.json = options;
+  opt.url = 'https://api.syncano.io/v1/instance/' + options.instance + '/user/auth/';
+  opt.method = 'POST';
+  return apiRequest(opt, cb);
+};
+
+var filterReq = function(method, options) {
+
+  var url = (options && options.url) ? options.url : '';
+
+  return (function(filter, cb) {
+
+    if (arguments.length <= 1) {
+      var args = helpers.sortArgs(filter, cb);
+      filter = args.filter;
+      cb = args.cb;
+    }
+
+    var opt = _.merge({}, options, filter);
+    opt.qs = helpers.parseFilter(filter);
+    opt.url = (url !== '') ? url + '/' : '';
+    opt.method = method;
+
+    return apiRequest(opt, cb);
+  });
+
+};
+
+var idReq = function(method, options) {
+
+  var url = (options && options.url) ? options.url : '';
+
+  return (function(id, cb) {
+    id = helpers.helpers.checkId(id);
+
+    var opt = _.merge({}, options);
+    opt.url = (url !== '') ? url + '/' + id + '/' : id + '/';
+    opt.method = method;
+
+    return apiRequest(opt, cb);
+  });
+
+};
+
+var filterIdReq = function(method, options) {
+
+  var url = (options && options.url) ? options.url : '';
+
+  return (function(id, filter, cb) {
+    id = helpers.checkId(id);
+
+    if (arguments.length <= 2) {
+      var args = helpers.sortArgs(filter, cb);
+      filter = args.filter;
+      cb = args.cb;
+    }
+
+    var opt = _.merge({}, options, filter);
+
+    opt.qs = helpers.parseFilter(filter);
+    opt.url = (url !== '') ?  url + '/' + id + '/': id + '/';
+    opt.method = method;
+
+    return apiRequest(opt, cb);
+  });
+
+};
+
+var paramReq = function(method, options) {
+
+  var url = (options && options.url) ? options.url : '';
+
+  return (function(params, filter, cb) {
+
+    params = helpers.checkParams(params);
+
+    if (arguments.length <= 2) {
+      var args = helpers.sortArgs(filter, cb);
+      filter = args.filter;
+      cb = args.cb;
+    }
+
+    var opt = _.merge({}, options, filter);
+    opt.qs = helpers.parseFilter(filter);
+    opt.json = params;
+    opt.url = (url !== '') ? url + '/' : '';
+    opt.method = method;
+
+    return apiRequest(opt, cb);
+
+  });
+
+};
+
+var paramIdReq = function(method, options) {
+
+  var url = (options && options.url) ? options.url : '';
+
+  return (function(id, params, filter, cb) {
+    id = helpers.checkId(id);
+
+    params = helpers.checkParams(params, false);
+
+    if (arguments.length <= 3) {
+      var args = helpers.sortArgs(filter, cb);
+      filter = args.filter;
+      cb = args.cb;
+    }
+
+    var opt = _.merge({}, options, filter);
+    opt.qs = helpers.parseFilter(filter);
+    opt.json = params;
+    opt.url = (url !== '') ? url + '/' + id + '/' : id + '/';
+    opt.method = method;
+
+    return apiRequest(opt, cb);
+
+  });
+
+};
+
+var apiRequest = function(options, cb) {
+  options = _.merge({}, defaultOptions, options);
+  return new Promise(function(resolve, reject) {
+    request(options.url, options, function(err, res) {
+      var localError;
+      if (err || res.statusCode === 404) {
+        localError = err ? new Error(err) : new Error(JSON.stringify(res.body));
+        reject(localError);
+        return;
+      }
+      var response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body;
+      resolve(response);
+    });
+  }).nodeify(cb);
+};
+
+
 module.exports.BuildOpts = BuildOpts;
 module.exports.BaseObj = BaseObj;
+module.exports.BaseSingleObj = BaseSingleObj;
+module.exports.accountLogin = accountLogin;
+module.exports.userLogin = userLogin;
 
 },{"../package.json":292,"./helpers.js":294,"bluebird":1,"lodash":197,"request":198}],294:[function(require,module,exports){
 /*
@@ -74309,23 +74368,10 @@ module.exports.BaseObj = BaseObj;
 var _        = require('lodash');
 
 module.exports = {
-  objectCleanup: function(obj) {
-    if (obj.opt) {
-      delete obj.opt;
-    }
-
-    delete obj.filterReq;
-    delete obj.idReq;
-    delete obj.filterIdReq;
-    delete obj.paramReq;
-    delete obj.paramIdReq;
-
-    return obj;
-  },
   validateOptions: function(options, req) {
     _.forEach(req, function(r) {
       if (!options || typeof options !== 'object' || !options[r]) {
-        throw new Error('"' + r + '" is missing or invalid.');
+        throw new Error('\'' + r + '\' is missing or invalid.');
       }
     });
   },
@@ -74381,40 +74427,66 @@ module.exports = {
 
 },{"lodash":197}],295:[function(require,module,exports){
 /*
+ * @license
  * Syncano JS Library
  * Copyright 2015 Syncano Inc.
  */
 
  'use strict';
 
-var BaseClass  = require('./core.js').BaseClass;
 var BuildOpts  = require('./core.js').BuildOpts;
 var BaseObj  = require('./core.js').BaseObj;
+var BaseSingleObj  = require('./core.js').BaseSingleObj;
 var _    = require('lodash');
+
+var Account = function(options) {
+  if (!(this instanceof Account)) {
+    return new Account(options);
+  }
+
+  var opt = new BuildOpts(options, ['apiKey']);
+
+  // Account - details
+  // Account - update
+  // Account - reset account key
+  // Account - change password
+  // Account - set password
+  // Account - confirm resetting password
+  // Account - activate
+
+
+  this.account = 'account object';
+  this.instances = new BaseObj('instances', opt);
+
+  return this;
+
+};
 
 var Instance = function(options) {
   if (!(this instanceof Instance)) {
     return new Instance(options);
   }
 
-  BuildOpts.call(this, options, ['apiKey', 'instance']);
+  var self = this;
 
-  this.opt.baseUrl = this.opt.baseUrl + '/instances/' + options.instance;
+  var opt = new BuildOpts(options, ['apiKey', 'instance']);
+  var url = 'instances/' + options.instance;
 
-  this.admins = new BaseObj('admins', this.opt, ['list', 'detail', 'update', 'delete']);
-  this.apiKeys = new BaseObj('api_keys', this.opt, ['list', 'detail', 'add', 'resetKey', 'delete']);
-  this.channels = new BaseObj('channels', this.opt);
-  this.classes = new BaseObj('classes', this.opt);
-  this.codeboxes = new BaseObj('codeboxes', this.opt, ['list', 'detail', 'add', 'update', 'delete', 'runtimes']);
-  this.groups = new BaseObj('groups', this.opt);
-  this.schedules = new BaseObj('schedules', this.opt);
-  this.triggers = new BaseObj('triggers', this.opt);
-  this.users = new BaseObj('users', this.opt, ['list', 'detail', 'add', 'update', 'delete', 'resetKey']);
-  this.webhooks = new BaseObj('webhooks', this.opt);
+  self = new BaseSingleObj(url, opt);
+  opt.baseUrl = opt.baseUrl + '/' + url;
 
-  delete this.opt;
+  this.admins = new BaseObj('admins', opt, ['list', 'detail', 'update', 'delete']);
+  this.apiKeys = new BaseObj('api_keys', opt, ['list', 'detail', 'add', 'resetKey', 'delete']);
+  this.channels = new BaseObj('channels', opt);
+  this.classes = new BaseObj('classes', opt);
+  this.codeboxes = new BaseObj('codeboxes', opt, ['list', 'detail', 'add', 'update', 'delete', 'runtimes']);
+  this.groups = new BaseObj('groups', opt);
+  this.schedules = new BaseObj('schedules', opt);
+  this.triggers = new BaseObj('triggers', opt);
+  this.users = new BaseObj('users', opt, ['list', 'detail', 'add', 'update', 'delete', 'resetKey']);
+  this.webhooks = new BaseObj('webhooks', opt);
 
-  return this;
+  return _.merge(this, self);
 
 };
 
@@ -74423,10 +74495,15 @@ var Class = function(options) {
     return new Class(options);
   }
 
-  BuildOpts.call(this, options, ['apiKey', 'instance', 'className']);
-  this.opt.baseUrl = this.opt.baseUrl + '/instances/' + this.opt.instance + '/classes/' + this.opt.className + '/';
+  var self = this;
 
-  return new BaseObj('objects', this.opt);
+  var opt = new BuildOpts(options, ['apiKey', 'instance', 'className']);
+  var url = 'instances/' + opt.instance + '/classes/' + opt.className + '/';
+
+  self = new BaseSingleObj(url, opt);
+  self.objects = new BaseObj(url + 'objects', opt);
+
+  return self;
 
 };
 
@@ -74435,10 +74512,10 @@ var CodeBox = function(options) {
     return new CodeBox(options);
   }
 
-  BuildOpts.call(this, options, ['apiKey', 'instance', 'codeboxId']);
-  var url  = 'instances/' + this.opt.instance + '/codeboxes/' + this.opt.codeboxId;
+  var opt = new BuildOpts(options, ['apiKey', 'instance', 'codeboxId']);
+  var url  = 'instances/' + opt.instance + '/codeboxes/' + opt.codeboxId;
 
-  return new BaseObj(url, this.opt, ['traces', 'trace', 'run']);
+  return new BaseSingleObj(url, opt, ['traces', 'trace', 'run']);
 };
 
 var Group = function(options) {
@@ -74446,10 +74523,10 @@ var Group = function(options) {
     return new Group(options);
   }
 
-  BuildOpts.call(this, options, ['apiKey', 'instance', 'groupId']);
-  var url  = 'instances/' + this.opt.instance + '/groups/' + this.opt.groupId;
+  var opt = new BuildOpts(options, ['apiKey', 'instance', 'groupId']);
+  var url  = 'instances/' + opt.instance + '/groups/' + opt.groupId;
 
-  return new BaseObj(url, this.opt, ['listUsers', 'addUser', 'removeUser', 'userDetails']);
+  return new BaseSingleObj(url, opt, ['listUsers', 'addUser', 'removeUser', 'userDetails']);
 };
 
 var Schedule = function(options) {
@@ -74457,10 +74534,10 @@ var Schedule = function(options) {
     return new Schedule(options);
   }
 
-  BuildOpts.call(this, options, ['apiKey', 'instance', 'scheduleId']);
-  var url  = 'instances/' + this.opt.instance + '/schedules/' + this.opt.scheduleId;
+  var opt = new BuildOpts(options, ['apiKey', 'instance', 'scheduleId']);
+  var url  = 'instances/' + opt.instance + '/schedules/' + opt.scheduleId;
 
-  return new BaseObj(url, this.opt, ['traces', 'trace']);
+  return new BaseSingleObj(url, opt, ['traces', 'trace']);
 };
 
 var Trigger = function(options) {
@@ -74468,10 +74545,10 @@ var Trigger = function(options) {
     return new Trigger(options);
   }
 
-  BuildOpts.call(this, options, ['apiKey', 'instance', 'triggerId']);
-  var url  = 'instances/' + this.opt.instance + '/triggers/' + this.opt.triggerId;
+  var opt = new BuildOpts(options, ['apiKey', 'instance', 'triggerId']);
+  var url  = 'instances/' + opt.instance + '/triggers/' + opt.triggerId;
 
-  return new BaseObj(url, this.opt, ['traces', 'trace']);
+  return new BaseSingleObj(url, opt, ['traces', 'trace']);
 
 };
 
@@ -74479,11 +74556,46 @@ var User = function(options) {
   if (!(this instanceof User)) {
     return new User(options);
   }
+  if (!options.userId && !options.userKey) {
+    throw new Error('Syncano.User requires a valid \'userId\' or \'userKey\'');
+  }
 
-  BuildOpts.call(this, options, ['apiKey', 'instance', 'userId']);
-  var url  = 'instances/' + this.opt.instance + '/users/' + this.opt.userId;
+  if (options.userId) {
+    return new UserGroupAdmin(options);
+  }
 
-  return new BaseObj(url, this.opt, ['listGroups', 'addGroup', 'removeGroup', 'groupDetails']);
+  if (options.userKey) {
+    return new UserAccess(options);
+  }
+};
+
+var UserGroupAdmin = function(options) {
+  var opt = new BuildOpts(options, ['apiKey', 'instance', 'userId']);
+  var url  = 'instances/' + opt.instance + '/users/' + opt.userId;
+
+  return new BaseSingleObj(url, opt, ['listGroups', 'addGroup', 'removeGroup', 'groupDetails']);
+};
+
+var UserAccess = function(options) {
+  var opt = new BuildOpts(options, ['apiKey', 'instance', 'userKey']);
+  var self = this;
+
+  opt.baseUrl  = 'instances/' + opt.instance;
+  self = new BaseSingleObj('user', opt);
+
+  this.Channel = function(options) {
+    if (!(this instanceof Channel)) {
+      return new Channel(options);
+    }
+
+    var opt = new BuildOpts(options, ['apiKey', 'instance', 'userKey', 'channel']);
+
+    var url  = 'instances/' + opt.instance + '/channels/' + opt.channel;
+
+    return new BaseSingleObj(url, opt, ['poll', 'history', 'publish']);
+  }
+
+  return _.merge(this, self);
 };
 
 var WebHook = function(options) {
@@ -74491,13 +74603,14 @@ var WebHook = function(options) {
     return new WebHook(options);
   }
 
-  BuildOpts.call(this, options, ['apiKey', 'instance', 'webhookName']);
-  var url  = 'instances/' + this.opt.instance + '/webhooks/' + this.opt.webhookName;
+  var opt = new BuildOpts(options, ['apiKey', 'instance', 'webhookName']);
+  var url  = 'instances/' + opt.instance + '/webhooks/' + opt.webhookName;
 
-  return new BaseObj(url, this.opt, ['traces', 'trace', 'run']);
+  return new BaseSingleObj(url, opt, ['traces', 'trace', 'run']);
 };
 
-
+module.exports.Account = Account;
+module.exports.Account.login = require('./core.js').accountLogin;
 module.exports.Class = Class;
 module.exports.CodeBox = CodeBox;
 module.exports.Group = Group;
@@ -74505,6 +74618,7 @@ module.exports.Instance = Instance;
 module.exports.Schedule = Schedule;
 module.exports.Trigger = Trigger;
 module.exports.User = User;
+module.exports.User.login = require('./core.js').userLogin;
 module.exports.WebHook = WebHook;
 
 },{"./core.js":293,"lodash":197}]},{},[295])(295)

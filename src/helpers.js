@@ -8,23 +8,10 @@
 var _        = require('lodash');
 
 module.exports = {
-  objectCleanup: function(obj) {
-    if (obj.opt) {
-      delete obj.opt;
-    }
-
-    delete obj.filterReq;
-    delete obj.idReq;
-    delete obj.filterIdReq;
-    delete obj.paramReq;
-    delete obj.paramIdReq;
-
-    return obj;
-  },
   validateOptions: function(options, req) {
     _.forEach(req, function(r) {
       if (!options || typeof options !== 'object' || !options[r]) {
-        throw new Error('"' + r + '" is missing or invalid.');
+        throw new Error('\'' + r + '\' is missing or invalid.');
       }
     });
   },
