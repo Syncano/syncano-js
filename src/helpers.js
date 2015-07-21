@@ -62,5 +62,22 @@ module.exports = {
     result.cb = (_.isFunction(o)) ? o : null;
     result.filter = (_.isPlainObject(o)) ? o : {};
     return result;
+  },
+  addAuth: function(options) {
+    var headers = {};
+
+    if (options.accountKey || options.apiKey) {
+      headers['X-API-KEY'] = options.accountKey || options.apiKey;
+    }
+
+    if (options.userKey) {
+      headers['X-USER-KEY'] = options.userKey;
+    }
+
+    if (options.socialToken) {
+      headers.Authorization = 'Bearer' + options.socialToken;
+    }
+
+    return (headers !== {}) ? {headers: headers} : headers;
   }
 };

@@ -20,64 +20,36 @@ var defaultOptions = {
   }
 };
 
-var functions = {
-  list: function list() {return 'something';},
-  add: function add() {return 'something';},
-  detail: function detail() {return 'something';},
-  update: function update() {return 'something';},
-  delete: function _delete() {return 'something';},
-  runtimes: function runtimes() {return 'something';},
-  resetKey: function resetKey() {return 'something';},
-  traces: function traces() {return 'something';},
-  trace: function trace() {return 'something';},
-  run: function run() {return 'something';},
-  poll: function poll() {return 'something';},
-  history: function history() {return 'something';},
-  publish: function publish() {return 'something';},
-  sendEmail: function sendEmail() {return 'something';},
-  accept: function accept() {return 'something';},
-  register: function register() {return 'something';},
-  resendEmail: function resendEmail() {return 'something';},
-  changePw: function changePw() {return 'something';},
-  setPw: function setPw() {return 'something';},
-  resetPw: function resetPw() {return 'something';},
-  confirmResetPw: function confirmResetPw() {return 'something';},
-  activate: function activate() {return 'something';},
-  login: function login() {return 'something';}
+var testReq = function(options) {
+  return (function (id, cb) {
+    options.type = this.type;
+    options.id = id;
+    return apiRequest(options);
+  });
 };
 
+var filterReq = function(options) {
 
-var SingleObj = function(config, funcArr) {
+  var opt = _.merge({}, options);
 
-  var self = this;
+  delete opt.func;
 
-  self.config = config;
+  return (function(filter, cb) {
 
-  funcArr = funcArr || ['detail', 'update', 'delete'];
+    opt.type = this.type;
 
-  _.forEach(funcArr, function(func) {
-    self[func] = functions[func];
+    if (arguments.length <= 1) {
+      var args = helpers.sortArgs(filter, cb);
+      filter = args.filter;
+      cb = args.cb;
+    }
+
+    opt.qs = helpers.parseFilter(filter);
+
+    return apiRequest(opt, cb);
   });
 
-  return this;
-
 };
-
-var PluralObj = function(config, funcArr) {
-
-  var self = this;
-
-  funcArr = funcArr || ['list', 'detail', 'add', 'update', 'delete'];
-
-  _.forEach(funcArr, function(func) {
-    self[func] = functions[func];
-  });
-
-  return this;
-
-
-};
-
 
 var idReq = function(method, options) {
 
@@ -97,25 +69,83 @@ var idReq = function(method, options) {
 
 var apiRequest = function(options, cb) {
 
-  options = _.merge({}, defaultOptions, options);
+  //options = _.merge({}, defaultOptions, options);
+  return options;
+  // return new Promise(function(resolve, reject) {
+  //
+  //   request(options.url, options, function(err, res) {
+  //
+  //     var localError;
+  //
+  //     if (err || res.statusCode === 404) {
+  //       localError = err ? new Error(err) : new Error(JSON.stringify(res.body));
+  //       reject(localError);
+  //       return;
+  //     }
+  //
+  //     var response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body;
+  //     resolve(response);
+  //
+  //   });
+  // }).nodeify(cb);
+};
 
-  return new Promise(function(resolve, reject) {
+var functions = {
+  list: {func: filterReq, method: 'GET', path: 'list'},
+  add: {func: filterReq, method: 'POST', path: 'add'},
+  detail: {func: filterReq, method: 'GET', path: 'detail'},
+  update: {func: filterReq, method: 'PATCH', path: 'update'},
+  delete: {func: filterReq, method: 'DELETE', path: 'delete'},
+  runtimes: {func: testReq, method: 'GET', path: 'something'},
+  resetKey: {func: testReq, method: 'GET', path: 'something'},
+  traces: {func: testReq, method: 'GET', path: 'something'},
+  trace: {func: testReq, method: 'GET', path: 'something'},
+  run: {func: testReq, method: 'GET', path: 'something'},
+  poll: {func: testReq, method: 'GET', path: 'something'},
+  history: {func: testReq, method: 'GET', path: 'something'},
+  publish: {func: testReq, method: 'GET', path: 'something'},
+  sendEmail: {func: testReq, method: 'GET', path: 'something'},
+  accept: {func: testReq, method: 'GET', path: 'something'},
+  register: {func: testReq, method: 'GET', path: 'something'},
+  resendEmail: {func: testReq, method: 'GET', path: 'something'},
+  changePw: {func: testReq, method: 'GET', path: 'something'},
+  setPw: {func: testReq, method: 'GET', path: 'something'},
+  resetPw: {func: testReq, method: 'GET', path: 'something'},
+  confirmResetPw: {func: testReq, method: 'GET', path: 'something'},
+  activate: {func: testReq, method: 'GET', path: 'something'},
+  login: {func: testReq, method: 'GET', path: 'something'}
+};
 
-    request(options.url, options, function(err, res) {
+var SingleObj = function(config, funcArr) {
 
-      var localError;
+  var self = this;
 
-      if (err || res.statusCode === 404) {
-        localError = err ? new Error(err) : new Error(JSON.stringify(res.body));
-        reject(localError);
-        return;
-      }
+  self.config = config;
 
-      var response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body;
-      resolve(response);
+  funcArr = funcArr || ['detail', 'update', 'delete'];
 
-    });
-  }).nodeify(cb);
+  _.forEach(funcArr, function(f) {
+    self[f] = functions[f].func(config);
+  });
+
+  return this;
+
+};
+
+var PluralObj = function(config, funcArr) {
+
+  var self = this;
+
+  funcArr = funcArr || ['list', 'detail', 'add', 'update', 'delete'];
+
+  _.forEach(funcArr, function(f) {
+    var options = _.merge(functions[f], config);
+    self[f] = functions[f].func(options);
+  });
+
+  return this;
+
+
 };
 
 module.exports.SingleObj  = SingleObj;

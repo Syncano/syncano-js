@@ -23,7 +23,7 @@ function Syncano(opt) {
  }
 
  if (apiKey) {
-   UserScope.call(this, instance, apiKey, userKey);
+   InstanceScope.call(this, instance, apiKey, userKey);
  }
 
  if (!accountKey && !apiKey) {
@@ -52,16 +52,15 @@ var AccountScope = function(accountKey) {
 
   Objects.Account.call(this, self.config);
 
-  this.invitations = new Objects.Invitation(self.config);
-
   this.instances = new Objects.Instance(self.config);
+  this.invitations = new Objects.Invitation(self.config);
 
   this.Instance = Objects.classBuilder(Objects.Instance, self.config);
 
   return this;
 };
 
-var UserScope = function(instance, apiKey, userKey) {
+var InstanceScope = function(instance, apiKey, userKey) {
   var self = this;
 
   this.config = {};
@@ -70,10 +69,6 @@ var UserScope = function(instance, apiKey, userKey) {
 
   if (userKey) {
     this.config.userKey = userKey;
-  }
-
-  if (!userKey) {
-    this.login = function() { return 'new user scoped syncano object' };
   }
 
   Objects.Instance.call(this, self.config);
