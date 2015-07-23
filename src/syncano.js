@@ -6,62 +6,62 @@
 
 var Objects = require('./objects.js');
 
-function Syncano(opt) {
- if (!(this instanceof Syncano)) {
-   return new Syncano(opt);
- }
+var Syncano = function Syncano(opt) {
+  if (!(this instanceof Syncano)) {
+    return new Syncano(opt);
+  }
 
- if (opt) {
-   var apiKey = opt.apiKey || opt.api_key;
-   var instance = opt.instance;
-   var userKey = opt.userKey || opt.user_key;
-   var accountKey = opt.accountKey || opt.account_key;
- }
+  if (opt) {
+    var apiKey = opt.apiKey || opt.api_key;
+    var instance = opt.instance;
+    var userKey = opt.userKey || opt.user_key;
+    var accountKey = opt.accountKey || opt.account_key;
+  }
 
- if (accountKey) {
-   AccountScope.call(this, accountKey);
- }
+  if (accountKey) {
+    return new AccountScope(accountKey);
+  }
 
- if (apiKey) {
-   InstanceScope.call(this, instance, apiKey, userKey);
- }
+  if (apiKey) {
+    return new InstanceScope(instance, apiKey, userKey);
+  }
 
- if (!accountKey && !apiKey) {
-   EmptyScope.call(this);
- }
-
- return Object.freeze(this);
+  if (!accountKey && !apiKey) {
+    return new EmptyScope(this);
+  }
 
 };
 
 Syncano.prototype.constructor = Syncano;
 
+
 var EmptyScope = function(opt) {
-  var self = this;
-
   Objects.Account.call(this, opt);
-
   return this;
 };
 
+EmptyScope.prototype = Object.create(Objects.Account.prototype);
+EmptyScope.prototype.constructor = EmptyScope;
+
 var AccountScope = function(accountKey) {
-  var self = this;
 
   this.config = {};
   this.config.accountKey = accountKey;
 
-  Objects.Account.call(this, self.config);
+  Objects.Account.call(this, this.config);
+  this.instance = new Objects.Instance(this.config);
+  this.invitation = new Objects.Invitation(this.config);
 
-  this.instances = new Objects.Instance(self.config);
-  this.invitations = new Objects.Invitation(self.config);
-
-  this.Instance = Objects.classBuilder(Objects.Instance, self.config);
+  this.Instance = Objects.classBuilder(Objects.Instance, this.config);
 
   return this;
 };
 
+AccountScope.prototype = Object.create(Objects.Account.prototype);
+AccountScope.prototype.constructor = AccountScope;
+
+
 var InstanceScope = function(instance, apiKey, userKey) {
-  var self = this;
 
   this.config = {};
   this.config.apiKey = apiKey;
@@ -71,10 +71,14 @@ var InstanceScope = function(instance, apiKey, userKey) {
     this.config.userKey = userKey;
   }
 
-  Objects.Instance.call(this, self.config);
+  Objects.Instance.call(this, this.config);
 
   return this;
 
 };
+
+InstanceScope.prototype = Object.create(Objects.Instance.prototype);
+InstanceScope.prototype.constructor = InstanceScope;
+
 
 module.exports = Syncano;

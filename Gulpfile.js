@@ -13,6 +13,10 @@ var source = require('vinyl-source-stream');
 var stylish = require('jshint-stylish');
 var uglify = require('gulp-uglify');
 
+var handleError = function handleError(err) {
+  console.log(err.toString());
+  this.emit('end');
+}
 
 gulp.task('test', ['lint', 'jscs'], function() {
   return gulp.src('src/**/*.js')
@@ -20,7 +24,8 @@ gulp.task('test', ['lint', 'jscs'], function() {
   .pipe(istanbul.hookRequire())
   .on('finish', function() {
     gulp.src('test/specs/*.js')
-    .pipe(mocha({reporter: 'spec'}))
+    .pipe(mocha({reporter: 'dot'}))
+    .on('error', handleError)
     .pipe(istanbul.writeReports({
       dir: 'test/coverage',
       reporters: [ 'lcov' ],
@@ -30,13 +35,13 @@ gulp.task('test', ['lint', 'jscs'], function() {
 });
 
 gulp.task('jscs', function() {
-  gulp.src(['src/*.js', 'test/specs/*.js', 'Gulpfile.js'])
+  gulp.src(['src/**/*.js', 'test/specs/**/*.js', 'Gulpfile.js'])
   .pipe(plumber())
   .pipe(jscs());
 });
 
 gulp.task('lint', function() {
-  gulp.src(['src/*.js', 'test/specs/*.js'])
+  gulp.src(['src/**/*.js', 'test/specs/**/*.js'])
   .pipe(plumber())
   .pipe(jshint('.jshintrc'))
   .pipe(jshint.reporter(stylish))
@@ -45,9 +50,8 @@ gulp.task('lint', function() {
 
 gulp.task('watch', function() {
   gulp.watch(
-    ['src/*.js', 'test/specs/*.js', '.jscsrc', '.jshintrc', 'Gulpfile.js'],
-    //['test', 'lint', 'jscs', 'browserify']
-    ['jscs']
+    ['src/**/*.js', 'test/specs/**/*.js', 'test/config.js', '.jscsrc', '.jshintrc', 'Gulpfile.js'],
+    ['test', 'lint', 'jscs']
   );
 });
 
@@ -90,4 +94,4 @@ gulp.task('package', ['dist'], function() {
   .pipe(gulp.dest('./dist'))
 });
 
-gulp.task('default', ['jscs', 'watch']);
+gulp.task('default', ['test', 'watch']);

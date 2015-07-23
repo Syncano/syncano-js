@@ -28,8 +28,10 @@
     "gulp-uglify": "^1.2.0",
     "jshint-stylish": "^2.0.1",
     "mocha": "^2.2.5",
+    "mockery": "^1.4.0",
     "should": "^7.0.1",
     "should-promised": "^0.3.0",
+    "sinon": "^1.15.4",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   }

@@ -24,7 +24,6 @@ var Account = function(config) {
 
 };
 
-Account.prototype.constructor = Account;
 Account.prototype.type = 'account';
 
 var Admin = function Admin(config, id) {
@@ -57,7 +56,7 @@ var ApiKey = function ApiKey(config, id) {
 };
 
 ApiKey.prototype.constructor = ApiKey;
-ApiKey.prototype.type = 'apiKey';
+ApiKey.prototype.type = 'apikey';
 
 var Channel = function Channel(config, id) {
 
@@ -93,9 +92,9 @@ var Class = function Class(config, id) {
   }
 
   if (id) {
-    opts.id = id;
+    opts.className = id;
     SingleObj.call(this, opts, singleFunc);
-    this.dataObjects = new DataObject(opts);
+    this.dataobject = new DataObject(opts);
     this.DataObject = classBuilder(DataObject, opts);
 
   } else {
@@ -113,7 +112,6 @@ var CodeBox = function CodeBox(config, id) {
 
   if (id) {
     opts.id = id;
-
     SingleObj.call(this, opts, ['detail', 'update', 'delete', 'run', 'traces', 'trace']);
   } else {
     PluralObj.call(this, opts);
@@ -129,11 +127,6 @@ var DataObject = function DataObject(config, id) {
   var singleFunc, pluralFunc;
   var opts = _.merge({}, config);
 
-  if (config && config.apiKey) {
-    singleFunc = ['detail'];
-    pluralFunc = ['list', 'detail'];
-  }
-
   if (id) {
     opts.id = id;
     SingleObj.call(this, opts);
@@ -145,9 +138,10 @@ var DataObject = function DataObject(config, id) {
 };
 
 DataObject.prototype.constructor = DataObject;
-DataObject.prototype.type = 'dataObject';
+DataObject.prototype.type = 'dataobject';
 
 var Instance = function(config, id) {
+
   var self = this;
   var singleFunc, pluralFunc;
 
@@ -158,44 +152,63 @@ var Instance = function(config, id) {
     pluralFunc = ['list', 'detail'];
   }
 
-
   if (id || opts.instance) {
 
     opts.instance = id || opts.instance;
-
     SingleObj.call(this, opts, singleFunc);
-
     var objArr;
 
-
+    // TODO evaluate arrays to ensure you have the right classes and constructors.
     if (opts && opts.accountKey) {
-      objArr = [Admin, ApiKey, Channel, Class, CodeBox, DataObject, Invitation, Group, Schedule, Trigger, WebHook, User];
+      objArr = [Admin, ApiKey, Channel, Class, CodeBox, Invitation, Group, Schedule, Trigger, WebHook, User];
     } else {
-      objArr = [Channel, Class, DataObject, Group, User];
+      objArr = [Channel, Class, Group, User];
     }
 
-    _.forEach(objArr, function(obj) {
-      var name = obj.toString().match(/^function\s*([^\s(]+)/)[1];
-      self[name.toLowerCase()] = new obj(opts);
+    _.forEach(objArr, function(Obj) {
+      var name = Obj.toString().match(/^function\s*([^\s(]+)/)[1];
+      self[name.toLowerCase()] = new Obj(opts);
     });
 
-    _.forEach(objArr, function(obj) {
-      var name = obj.toString().match(/^function\s*([^\s(]+)/)[1];
-      self[name] = classBuilder(obj, opts);
+    _.forEach(objArr, function(Obj) {
+      var name = Obj.toString().match(/^function\s*([^\s(]+)/)[1];
+      self[name] = classBuilder(Obj, opts);
     });
-
-
   } else {
-
     PluralObj.call(this, opts, pluralFunc);
   }
 
   return this;
-
-}
+};
 
 Instance.prototype.constructor = Instance;
 Instance.prototype.type = 'instance';
+
+
+var Group = function Group(config, id) {
+
+  var singleFunc, pluralFunc;
+  var opts = _.merge({}, config);
+
+  if (opts && opts.apiKey) {
+    singleFunc = ['detail'];
+    pluralFunc = ['list', 'detail'];
+  }
+
+  if (id) {
+    opts.id = id;
+    SingleObj.call(this, opts, singleFunc);
+    //TODO add methods for user/group membership
+
+  } else {
+    PluralObj.call(this, opts, pluralFunc);
+  }
+
+  return this;
+};
+
+Group.prototype.constructor = Group;
+Group.prototype.type = 'group';
 
 var Invitation = function Invitation(config, id) {
 
@@ -221,31 +234,6 @@ var Invitation = function Invitation(config, id) {
 
 Invitation.prototype.constructor = Invitation;
 Invitation.prototype.type = 'invitation';
-
-var Group = function Group(config, id) {
-
-  var singleFunc, pluralFunc;
-  var opts = _.merge({}, config);
-
-  if (opts && opts.apiKey) {
-    singleFunc = ['detail'];
-    pluralFunc = ['list', 'detail'];
-  }
-
-  if (id) {
-    opts.id = id;
-    SingleObj.call(this, opts, singleFunc);
-    //add methods for user/group membership
-
-  } else {
-    PluralObj.call(this, opts, pluralFunc);
-  }
-
-  return this;
-};
-
-Group.prototype.constructor = Group;
-Group.prototype.type = 'group';
 
 var Schedule = function Schedule(config, id) {
   var opts = _.merge({}, config);
@@ -290,7 +278,7 @@ var WebHook = function WebHook(config, id) {
 };
 
 WebHook.prototype.constructor = WebHook;
-WebHook.prototype.type = 'webHook';
+WebHook.prototype.type = 'webhook';
 
 var User = function User(config, id) {
 
@@ -307,8 +295,9 @@ var User = function User(config, id) {
 
   if (id) {
     opts.id = id;
+    SingleObj.call(this, opts, ['detail', 'update', 'resetKey', 'delete']);
+    //TODO add methods for user/group membership
 
-    SingleObj.call(this, opts, singleFunc);
   } else {
     PluralObj.call(this, opts, pluralFunc);
   }
@@ -319,10 +308,10 @@ var User = function User(config, id) {
 User.prototype.constructor = User;
 User.prototype.type = 'user';
 
-var classBuilder = function classBuilder(className, config) {
-  return(
-    function(id) { return new className(config, id)}
-  )
+var classBuilder = function classBuilder(ClassName, config) {
+  return (
+    function(id) { return new ClassName(config, id); }
+  );
 };
 
 var Objects = {

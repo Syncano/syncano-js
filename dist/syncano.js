@@ -74079,151 +74079,58 @@ var defaultOptions = {
   }
 };
 
-var addAuth = function(options) {
-  var headers = {};
 
-  if (options.apiKey) {
-    headers['X-API-KEY'] = options.apiKey;
-  }
+// TODO Complete buildURL functionality
+// TODO resolve the "user/users" url issues
+// TODO resolve account vs instance invites
+var url = function(config) {
 
-  if (options.userKey) {
-    headers['X-USER-KEY'] = options.userKey;
-  }
-
-  if (options.socialToken) {
-    headers.Authorization = 'Bearer' + options.userKey;
-  }
-
-  return (headers !== {}) ? {headers: headers}: headers;
-
-};
-
-var BuildOpts = function(options, reqs) {
-  if (!reqs) {
-    reqs = [];
-  }
-
-  var self = this;
-
-  helpers.validateOptions(options, reqs);
-
-  if (!options && !options.baseUrl) {
-    options = {baseUrl: 'https://api.syncano.io/v1'};
-  } else if (options && !options.baseUrl) {
-    options.baseUrl = 'https://api.syncano.io/v1';
-  }
-
-  var opt = _.merge({}, options);
-
-  return opt;
-};
-
-var BaseSingleObj = function(url, options, funcArr) {
-  if (!(this instanceof BaseSingleObj)) {
-    return new BaseSingleObj(url, options, funcArr);
-  }
-
-  var defaults = {
-    baseUrl: options.baseUrl + '/' + url + '/'
+  var urlTmpl = {
+    account: 'account/',
+    admin: 'instances/<%= instance %>/admins/',
+    apikey: 'instances/<%= instance %>/api_keys/',
+    channel: 'instances/<%= instance %>/channels/',
+    class: 'instances/<%= instance %>/classes/',
+    codebox: 'instances/<%= instance %>/codeboxes/',
+    dataobject: 'instances/<%= instance %>/classes/<%= className %>/objects/',
+    group: 'instances/<%= instance %>/groups/',
+    instance: 'instances/',
+    invitation: 'edge case',
+    schedule: 'instances/<%= instance %>/schedules/',
+    trigger: 'instances/<%= instance %>/triggers/',
+    webhook: 'instances/<%= instance %>/webhooks/',
+    user: 'edge case'
   };
 
-  var self = this;
+  var buildUrl = function urlAddOns(config) {
+    var tmpl;
+    tmpl = urlTmpl[config.type];
 
-  funcArr = _.union(funcArr, ['detail', 'update']);
-  var opt = _.merge({}, options, defaults, addAuth(options));
+    if (config.type === 'instance' && config.instance) {
+      tmpl += '<%= instance %>/';
+    }
+    if (config.type === 'class' && config.className) {
+      tmpl += '<%= className %>/';
+    }
+    if (config.id) {
+      tmpl += '<%= id %>/';
+    }
 
-  var functions = {
-    detail: filterReq('GET', opt),
-    update: paramReq('PATCH', opt),
-    delete: filterReq('DELETE', opt),
-    runtimes: filterReq('GET', _.merge({}, opt, {url: 'runtimes'})),
-    resetKey: paramReq('POST', _.merge({}, opt, {url: 'reset_key'})),
-    traces: filterReq('GET', _.merge({}, opt, {url: 'traces'})),
-    trace: filterIdReq('GET', _.merge({}, opt, {url: 'traces'})),
-    run: paramReq('POST', _.merge({}, opt, {url: 'run'})),
-    listGroups: filterReq('GET', _.merge({}, opt, {url: 'groups'})),
-    addGroup: paramReq('POST', _.merge({}, opt, {url: 'groups', type: 'userGroup'})),
-    removeGroup: idReq('DELETE', _.merge({}, opt, {url: 'groups'})),
-    groupDetails: filterIdReq('GET', _.merge({}, opt, {url: 'groups'})),
-    listUsers: filterReq('GET', _.merge({}, opt, {url: 'users'})),
-    addUser: paramReq('POST', _.merge({}, opt, {url: 'users', type: 'groupUser'})),
-    removeUser: idReq('DELETE', _.merge({}, opt, {url: 'users'})),
-    userDetails: filterIdReq('GET', _.merge({}, opt, {url: 'users'}))
+    var url = _.template(tmpl);
+
+    return url(config);
   };
 
-  _.forEach(funcArr, function(func) {
-    self[func] = functions[func];
-  });
-
-  return this;
-
+  return buildUrl(config);
 };
 
-var BaseObj = function(url, options, funcArr) {
-  if (!(this instanceof BaseObj)) {
-    return new BaseObj(url, options, funcArr);
-  }
-
-  var defaults = {
-    baseUrl: options.baseUrl + '/' + url + '/'
-  };
-
-  var self = this;
-
-  funcArr = funcArr || ['list', 'detail', 'add', 'update', 'delete'];
-  var opt = _.merge({}, options, defaults, addAuth(options));
-
-  var functions = {
-    list: filterReq('GET', opt),
-    detail: idReq('GET', opt),
-    add: paramReq('POST', opt),
-    update: paramIdReq('PATCH', opt),
-    delete: idReq('DELETE', opt),
-    runtimes: filterReq('GET', _.merge({}, opt, {url: 'runtimes'})),
-    resetKey: paramIdReq('POST', _.merge({}, opt, {url: 'reset_key'})),
-    poll: filterIdReq('GET', _.merge({}, opt, {url: 'poll'})),
-    history: filterIdReq('GET', _.merge({}, opt, {url: 'history'})),
-    publish: paramIdReq('POST', _.merge({}, opt, {url: 'publish'}))
-  };
-
-  _.forEach(funcArr, function(func) {
-    self[func] = functions[func];
-  });
-
-  return this;
-
-};
-
-var accountLogin = function(options, cb) {
-  var opt = _.merge({}, new BuildOpts(options, ['email', 'password']), addAuth(options));
-  opt.url = '/account/auth/';
-  opt.json = options;
-  opt.method = 'POST';
-  return apiRequest(opt, cb);
-
-};
-
-var userLogin = function(options, cb) {
-  var opt = _.merge({}, new BuildOpts(options, ['username', 'password', 'instance', 'apiKey']), addAuth(options));
-  opt.json = options;
-  opt.url = '/instances/' + options.instance + '/user/auth/';
-  opt.method = 'POST';
-  return apiRequest(opt, cb);
-};
-
-var socialLogin = function(options, cb) {
-  var opt = _.merge({}, options);
-  opt.json = options;
-  opt.url = 'https://api.syncano.io/v1/instance/' + options.instance + '/user/auth/';
-  opt.method = 'POST';
-  return apiRequest(opt, cb);
-};
-
-var filterReq = function(method, options) {
-
-  var url = (options && options.url) ? options.url : '';
+var filterReq = function(config) {
+  var opt = _.merge({}, config);
+  delete opt.func;
 
   return (function(filter, cb) {
+
+    opt.type = this.type;
 
     if (arguments.length <= 1) {
       var args = helpers.sortArgs(filter, cb);
@@ -74231,38 +74138,36 @@ var filterReq = function(method, options) {
       cb = args.cb;
     }
 
-    var opt = _.merge({}, options, filter);
     opt.qs = helpers.parseFilter(filter);
-    opt.url = (url !== '') ? url + '/' : '';
-    opt.method = method;
 
     return apiRequest(opt, cb);
   });
 
 };
 
-var idReq = function(method, options) {
+var idReq = function(config) {
 
-  var url = (options && options.url) ? options.url : '';
+  var opt = _.merge({}, config);
+  delete opt.func;
 
   return (function(id, cb) {
-    id = helpers.helpers.checkId(id);
 
-    var opt = _.merge({}, options);
-    opt.url = (url !== '') ? url + '/' + id + '/' : id + '/';
-    opt.method = method;
-
+    opt.type = this.type;
+    opt.id = helpers.checkId(id);
     return apiRequest(opt, cb);
   });
 
 };
 
-var filterIdReq = function(method, options) {
+var filterIdReq = function(config) {
 
-  var url = (options && options.url) ? options.url : '';
+  var opt = _.merge({}, config);
+  delete opt.func;
 
   return (function(id, filter, cb) {
-    id = helpers.checkId(id);
+
+    opt.type = this.type;
+    opt.id = helpers.checkId(id);
 
     if (arguments.length <= 2) {
       var args = helpers.sortArgs(filter, cb);
@@ -74270,23 +74175,20 @@ var filterIdReq = function(method, options) {
       cb = args.cb;
     }
 
-    var opt = _.merge({}, options, filter);
-
     opt.qs = helpers.parseFilter(filter);
-    opt.url = (url !== '') ?  url + '/' + id + '/': id + '/';
-    opt.method = method;
 
     return apiRequest(opt, cb);
   });
 
 };
 
-var paramReq = function(method, options) {
+var paramReq = function(config) {
 
-  var url = (options && options.url) ? options.url : '';
+  var opt = _.merge({}, config);
+  delete opt.func;
 
   return (function(params, filter, cb) {
-
+    opt.type = this.type;
     params = helpers.checkParams(params);
 
     if (arguments.length <= 2) {
@@ -74295,11 +74197,8 @@ var paramReq = function(method, options) {
       cb = args.cb;
     }
 
-    var opt = _.merge({}, options, filter);
     opt.qs = helpers.parseFilter(filter);
     opt.json = params;
-    opt.url = (url !== '') ? url + '/' : '';
-    opt.method = method;
 
     return apiRequest(opt, cb);
 
@@ -74307,12 +74206,14 @@ var paramReq = function(method, options) {
 
 };
 
-var paramIdReq = function(method, options) {
-
-  var url = (options && options.url) ? options.url : '';
+var paramIdReq = function(config) {
+  var opt = _.merge({}, config);
+  delete opt.func;
 
   return (function(id, params, filter, cb) {
-    id = helpers.checkId(id);
+
+    opt.type = this.type;
+    opt.id = helpers.checkId(id);
 
     params = helpers.checkParams(params, false);
 
@@ -74322,11 +74223,9 @@ var paramIdReq = function(method, options) {
       cb = args.cb;
     }
 
-    var opt = _.merge({}, options, filter);
     opt.qs = helpers.parseFilter(filter);
     opt.json = params;
-    opt.url = (url !== '') ? url + '/' + id + '/' : id + '/';
-    opt.method = method;
+
 
     return apiRequest(opt, cb);
 
@@ -74334,28 +74233,188 @@ var paramIdReq = function(method, options) {
 
 };
 
-var apiRequest = function(options, cb) {
-  options = _.merge({}, defaultOptions, options);
-  return new Promise(function(resolve, reject) {
-    request(options.url, options, function(err, res) {
-      var localError;
-      if (err || res.statusCode === 404) {
-        localError = err ? new Error(err) : new Error(JSON.stringify(res.body));
-        reject(localError);
-        return;
-      }
-      var response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body;
-      resolve(response);
-    });
-  }).nodeify(cb);
+// TODO Restore API Req functionality
+var apiRequest = function(config, cb) {
+  //var opts = _.merge({}, defaultOptions, options, helpers.addAuth(options));
+  var opt = _.merge({}, config);
+  opt.url = url(opt);
+  return opt;
+  // return new Promise(function(resolve, reject) {
+  //
+  //   request(options.url, options, function(err, res) {
+  //
+  //     var localError;
+  //
+  //     if (err || res.statusCode === 404) {
+  //       localError = err ? new Error(err) : new Error(JSON.stringify(res.body));
+  //       reject(localError);
+  //       return;
+  //     }
+  //
+  //     var response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body;
+  //     resolve(response);
+  //
+  //   });
+  // }).nodeify(cb);
+};
+
+// TODO Finish function calls and solve for single/plural issues
+// TODO solve for double id requirements - e.g. codeboxes/:id:/traces/:id:
+// TODO complete user/group and group/user functions
+
+var functions = {
+  list: {
+    method: 'GET',
+    func: {plural: filterReq}
+  },
+  add: {
+    method: 'POST',
+    func: {plural: paramReq}
+  },
+  detail: {
+    method: 'GET',
+    func: {single: filterReq, plural: filterIdReq}
+  },
+  update: {
+    method: 'PATCH',
+    func: {single: paramReq, plural: paramIdReq}
+  },
+  delete: {
+    method: 'DELETE',
+    func: {single: filterReq, plural: idReq}
+  },
+  runtimes: {
+    method: 'GET',
+    path: 'runtimes',
+    func: {single: filterReq, plural: filterReq}
+  },
+  resetKey: {
+    method: 'POST',
+    path: 'reset_key',
+    func: {single: paramReq, plural: paramIdReq}
+  },
+  traces: {
+    method: 'GET',
+    path: 'traces',
+    func: {single: filterReq, plural: filterIdReq}
+  },
+  trace: {
+    method: 'GET',
+    path: 'traces',
+    func: {single: filterIdReq, plural: filterIdReq}
+  },
+  run: {
+    method: 'POST',
+    path: 'run',
+    func: {single: paramReq, plural: paramIdReq}
+  },
+  poll: {
+    method: 'GET',
+    path: 'poll',
+    func: {single: filterReq, plural: filterIdReq}
+  },
+  history: {
+    method: 'GET',
+    path: 'history',
+    func: {single: filterReq, plural: filterIdReq}
+  },
+  publish: {
+    method: 'POST',
+    path: 'publish',
+    func: {single: filterReq, plural: filterIdReq}
+  },
+  sendEmail: {
+    method: 'POST',
+    func: {plural: paramReq}
+  },
+  accept: {
+    method: 'POST',
+    path: 'accept',
+    func: {plural: paramReq}
+  },
+  register: {
+    method: 'POST',
+    path: 'register',
+    func: {plural: paramReq}
+  },
+  resendEmail: {
+    method: 'POST',
+    path: 'resend_email',
+    func: {plural: paramReq}
+  },
+  changePw: {
+    method: 'POST',
+    path: 'password',
+    func: {single: paramReq}
+  },
+  setPw: {
+    method: 'POST',
+    path: 'password/set',
+    func: {single: paramReq}
+  },
+  resetPw: {
+    method: 'POST',
+    path: 'password/reset',
+    func: {plural: paramReq}
+  },
+  confirmResetPw: {
+    method: 'POST',
+    path: 'password/reset/confirm',
+    func: {plural: paramReq}
+  },
+  activate: {
+    method: 'POST',
+    path: 'activate',
+    func: {plural: paramReq}
+  },
+  login: {
+    method: 'POST',
+    path: 'auth',
+    func: {plural: paramReq}
+  }
 };
 
 
-module.exports.BuildOpts = BuildOpts;
-module.exports.BaseObj = BaseObj;
-module.exports.BaseSingleObj = BaseSingleObj;
-module.exports.accountLogin = accountLogin;
-module.exports.userLogin = userLogin;
+//TODO Write Login functions
+
+var SingleObj = function(config, funcArr) {
+
+  var self = this;
+
+  var opt = _.merge({}, config);
+
+  self.config = config;
+
+  funcArr = funcArr || ['detail', 'update', 'delete'];
+
+  _.forEach(funcArr, function(f) {
+    var options = _.merge({}, functions[f], opt);
+    self[f] = functions[f].func.single(options);
+  });
+
+  return self;
+
+};
+
+var PluralObj = function(config, funcArr) {
+
+  var self = this;
+  var opt = _.merge({}, config);
+
+  funcArr = funcArr || ['list', 'detail', 'add', 'update', 'delete'];
+
+  _.forEach(funcArr, function(f) {
+    var options = _.merge({}, functions[f], opt);
+    self[f] = functions[f].func.plural(options);
+  });
+
+  return self;
+
+
+};
+
+module.exports.SingleObj  = SingleObj;
+module.exports.PluralObj  = PluralObj;
 
 },{"../package.json":292,"./helpers.js":294,"bluebird":1,"lodash":197,"request":198}],294:[function(require,module,exports){
 /*
@@ -74422,204 +74481,442 @@ module.exports = {
     result.cb = (_.isFunction(o)) ? o : null;
     result.filter = (_.isPlainObject(o)) ? o : {};
     return result;
+  },
+  addAuth: function(options) {
+    var headers = {};
+
+    if (options.accountKey || options.apiKey) {
+      headers['X-API-KEY'] = options.accountKey || options.apiKey;
+    }
+
+    if (options.userKey) {
+      headers['X-USER-KEY'] = options.userKey;
+    }
+
+    if (options.socialToken) {
+      headers.Authorization = 'Bearer' + options.socialToken;
+    }
+
+    return (headers !== {}) ? {headers: headers} : headers;
   }
 };
 
 },{"lodash":197}],295:[function(require,module,exports){
+/*
+ * Syncano JS Library
+ * Copyright 2015 Syncano Inc.
+ */
+
+'use strict';
+
+var SingleObj  = require('./core.js').SingleObj;
+var PluralObj  = require('./core.js').PluralObj;
+var _        = require('lodash');
+
+
+var Account = function(config) {
+
+  var opts = _.merge({}, config);
+
+  if (opts && opts.accountKey) {
+    SingleObj.call(this, opts, ['detail', 'update', 'resetKey', 'changePw', 'setPw']);
+  } else {
+    PluralObj.call(this, {}, ['login', 'register', 'resendEmail', 'resetPw', 'confirmResetPw', 'activate']);
+  }
+
+  return this;
+
+};
+
+Account.prototype.type = 'account';
+
+var Admin = function Admin(config, id) {
+
+  var opts = _.merge({}, config);
+
+  if (id) {
+    opts.id = id;
+    SingleObj.call(this, opts);
+  } else {
+    PluralObj.call(this, opts, ['list', 'detail', 'update', 'delete']);
+  }
+  return this;
+};
+
+Admin.prototype.constructor = Admin;
+Admin.prototype.type = 'admin';
+
+var ApiKey = function ApiKey(config, id) {
+
+  var opts = _.merge({}, config);
+
+  if (id) {
+    opts.id = id;
+    SingleObj.call(this, opts, ['detail', 'resetKey', 'delete']);
+  } else {
+    PluralObj.call(this, opts, ['list', 'detail', 'add', 'resetKey', 'delete']);
+  }
+  return this;
+};
+
+ApiKey.prototype.constructor = ApiKey;
+ApiKey.prototype.type = 'apikey';
+
+var Channel = function Channel(config, id) {
+
+  var singleFunc, pluralFunc;
+  var opts = _.merge({}, config);
+
+  if (opts && opts.apiKey) {
+    singleFunc = ['detail', 'history', 'publish', 'poll'];
+    pluralFunc = ['list', 'detail', 'detail', 'history', 'publish', 'poll'];
+  }
+
+  if (id) {
+    opts.id = id;
+    SingleObj.call(this, opts, singleFunc);
+  } else {
+    PluralObj.call(this, opts, pluralFunc);
+  }
+
+  return this;
+};
+
+Channel.prototype.constructor = Channel;
+Channel.prototype.type = 'channel';
+
+var Class = function Class(config, id) {
+
+  var singleFunc, pluralFunc;
+  var opts = _.merge({}, config);
+
+  if (opts && opts.apiKey) {
+    singleFunc = ['detail'];
+    pluralFunc = ['list', 'detail'];
+  }
+
+  if (id) {
+    opts.className = id;
+    SingleObj.call(this, opts, singleFunc);
+    this.dataobject = new DataObject(opts);
+    this.DataObject = classBuilder(DataObject, opts);
+
+  } else {
+    PluralObj.call(this, opts, pluralFunc);
+  }
+
+  return this;
+};
+
+Class.prototype.constructor = Class;
+Class.prototype.type = 'class';
+
+var CodeBox = function CodeBox(config, id) {
+  var opts = _.merge({}, config);
+
+  if (id) {
+    opts.id = id;
+
+    SingleObj.call(this, opts, ['detail', 'update', 'delete', 'run', 'traces', 'trace']);
+  } else {
+    PluralObj.call(this, opts);
+  }
+  return this;
+};
+
+CodeBox.prototype.constructor = CodeBox;
+CodeBox.prototype.type = 'codeBox';
+
+var DataObject = function DataObject(config, id) {
+
+  var singleFunc, pluralFunc;
+  var opts = _.merge({}, config);
+
+  if (id) {
+    opts.id = id;
+    SingleObj.call(this, opts);
+  } else {
+    PluralObj.call(this, opts);
+  }
+
+  return this;
+};
+
+DataObject.prototype.constructor = DataObject;
+DataObject.prototype.type = 'dataobject';
+
+var Instance = function(config, id) {
+
+  var self = this;
+  var singleFunc, pluralFunc;
+
+  var opts = _.merge({}, config);
+
+  if (opts && opts.apiKey) {
+    singleFunc = ['detail'];
+    pluralFunc = ['list', 'detail'];
+  }
+
+  if (id || opts.instance) {
+
+    opts.instance = id || opts.instance;
+    SingleObj.call(this, opts, singleFunc);
+    var objArr;
+
+    if (opts && opts.accountKey) {
+      objArr = [Admin, ApiKey, Channel, Class, CodeBox, Invitation, Group, Schedule, Trigger, WebHook, User];
+    } else {
+      objArr = [Channel, Class, Group, User];
+    }
+
+    _.forEach(objArr, function(Obj) {
+      var name = Obj.toString().match(/^function\s*([^\s(]+)/)[1];
+      self[name.toLowerCase()] = new Obj(opts);
+    });
+
+    _.forEach(objArr, function(Obj) {
+      var name = Obj.toString().match(/^function\s*([^\s(]+)/)[1];
+      self[name] = classBuilder(Obj, opts);
+    });
+  } else {
+    PluralObj.call(this, opts, pluralFunc);
+  }
+
+  return this;
+};
+
+Instance.prototype.constructor = Instance;
+Instance.prototype.type = 'instance';
+
+
+var Group = function Group(config, id) {
+
+  var singleFunc, pluralFunc;
+  var opts = _.merge({}, config);
+
+  if (opts && opts.apiKey) {
+    singleFunc = ['detail'];
+    pluralFunc = ['list', 'detail'];
+  }
+
+  if (id) {
+    opts.id = id;
+    SingleObj.call(this, opts, singleFunc);
+    //TODO add methods for user/group membership
+
+  } else {
+    PluralObj.call(this, opts, pluralFunc);
+  }
+
+  return this;
+};
+
+Group.prototype.constructor = Group;
+Group.prototype.type = 'group';
+
+var Invitation = function Invitation(config, id) {
+
+  var singleFunc = ['detail', 'delete'];
+  var pluralFunc;
+  var opts = _.merge({}, config);
+
+  if (opts && opts.instance) {
+    pluralFunc = ['list', 'detail', 'sendEmail', 'resendEmail', 'delete'];
+  } else {
+    pluralFunc = ['list', 'detail', 'accept', 'delete'];
+  }
+
+  if (id) {
+    opts.id = id;
+    SingleObj.call(this, opts, singleFunc);
+  } else {
+    PluralObj.call(this, opts, pluralFunc);
+  }
+
+  return this;
+};
+
+Invitation.prototype.constructor = Invitation;
+Invitation.prototype.type = 'invitation';
+
+var Schedule = function Schedule(config, id) {
+  var opts = _.merge({}, config);
+
+  if (id) {
+    opts.id = id;
+    SingleObj.call(this, opts);
+  } else {
+    PluralObj.call(this, opts);
+  }
+  return this;
+};
+
+Schedule.prototype.constructor = Schedule;
+Schedule.prototype.type = 'schedule';
+
+var Trigger = function Trigger(config, id) {
+  var opts = _.merge({}, config);
+
+  if (id) {
+    opts.id = id;
+    SingleObj.call(this, opts);
+  } else {
+    PluralObj.call(this, opts);
+  }
+  return this;
+};
+
+Trigger.prototype.constructor = Trigger;
+Trigger.prototype.type = 'trigger';
+
+var WebHook = function WebHook(config, id) {
+  var opts = _.merge({}, config);
+
+  if (id) {
+    opts.id = id;
+    SingleObj.call(this, opts);
+  } else {
+    PluralObj.call(this, opts);
+  }
+  return this;
+};
+
+WebHook.prototype.constructor = WebHook;
+WebHook.prototype.type = 'webhook';
+
+var User = function User(config, id) {
+
+  var singleFunc, pluralFunc;
+  var opts = _.merge({}, config);
+
+  if (opts && opts.userKey) {
+    pluralFunc = ['add', 'detail', 'update', 'resetKey'];
+  }
+
+  if (opts && opts.apiKey && !opts.userKey) {
+    pluralFunc = ['add', 'login'];
+  }
+
+  if (id) {
+    opts.id = id;
+    SingleObj.call(this, opts, singleFunc);
+    //TODO add methods for user/group membership
+
+  } else {
+    PluralObj.call(this, opts, pluralFunc);
+  }
+
+  return this;
+};
+
+User.prototype.constructor = User;
+User.prototype.type = 'user';
+
+var classBuilder = function classBuilder(ClassName, config) {
+  return (
+    function(id) { return new ClassName(config, id)}
+  )
+};
+
+var Objects = {
+  Account: Account,
+  Channel: Channel,
+  Class: Class,
+  classBuilder: classBuilder,
+  DataObject: DataObject,
+  Group: Group,
+  Instance: Instance,
+  Invitation: Invitation,
+  User: User
+};
+
+module.exports = Objects;
+
+},{"./core.js":293,"lodash":197}],296:[function(require,module,exports){
 /*
  * @license
  * Syncano JS Library
  * Copyright 2015 Syncano Inc.
  */
 
- 'use strict';
+var Objects = require('./objects.js');
 
-var BuildOpts  = require('./core.js').BuildOpts;
-var BaseObj  = require('./core.js').BaseObj;
-var BaseSingleObj  = require('./core.js').BaseSingleObj;
-var _    = require('lodash');
-
-var Account = function(options) {
-  if (!(this instanceof Account)) {
-    return new Account(options);
+var Syncano = function Syncano(opt) {
+  if (!(this instanceof Syncano)) {
+    return new Syncano(opt);
   }
 
-  var opt = new BuildOpts(options, ['apiKey']);
+  if (opt) {
+    var apiKey = opt.apiKey || opt.api_key;
+    var instance = opt.instance;
+    var userKey = opt.userKey || opt.user_key;
+    var accountKey = opt.accountKey || opt.account_key;
+  }
 
-  // Account - details
-  // Account - update
-  // Account - reset account key
-  // Account - change password
-  // Account - set password
-  // Account - confirm resetting password
-  // Account - activate
+  if (accountKey) {
+    return new AccountScope(accountKey);
+  }
+
+  if (apiKey) {
+    return new InstanceScope(instance, apiKey, userKey);
+  }
+
+  if (!accountKey && !apiKey) {
+    return new EmptyScope(this);
+  }
+
+};
+
+Syncano.prototype.constructor = Syncano;
 
 
-  this.account = 'account object';
-  this.instances = new BaseObj('instances', opt);
+var EmptyScope = function(opt) {
+  Objects.Account.call(this, opt);
+  return this;
+};
+
+EmptyScope.prototype = Object.create(Objects.Account.prototype);
+EmptyScope.prototype.constructor = EmptyScope;
+
+var AccountScope = function(accountKey) {
+
+  this.config = {};
+  this.config.accountKey = accountKey;
+
+  Objects.Account.call(this, this.config);
+  this.instance = new Objects.Instance(this.config);
+  this.invitation = new Objects.Invitation(this.config);
+
+  this.Instance = Objects.classBuilder(Objects.Instance, this.config);
+
+  return this;
+};
+
+AccountScope.prototype = Object.create(Objects.Account.prototype);
+AccountScope.prototype.constructor = AccountScope;
+
+
+var InstanceScope = function(instance, apiKey, userKey) {
+
+  this.config = {};
+  this.config.apiKey = apiKey;
+  this.config.instance = instance;
+
+  if (userKey) {
+    this.config.userKey = userKey;
+  }
+
+  Objects.Instance.call(this, this.config);
 
   return this;
 
 };
 
-var Instance = function(options) {
-  if (!(this instanceof Instance)) {
-    return new Instance(options);
-  }
+InstanceScope.prototype = Object.create(Objects.Instance.prototype);
+InstanceScope.prototype.constructor = InstanceScope;
 
-  var self = this;
 
-  var opt = new BuildOpts(options, ['apiKey', 'instance']);
-  var url = 'instances/' + options.instance;
+module.exports = Syncano;
 
-  self = new BaseSingleObj(url, opt);
-  opt.baseUrl = opt.baseUrl + '/' + url;
-
-  this.admins = new BaseObj('admins', opt, ['list', 'detail', 'update', 'delete']);
-  this.apiKeys = new BaseObj('api_keys', opt, ['list', 'detail', 'add', 'resetKey', 'delete']);
-  this.channels = new BaseObj('channels', opt);
-  this.classes = new BaseObj('classes', opt);
-  this.codeboxes = new BaseObj('codeboxes', opt, ['list', 'detail', 'add', 'update', 'delete', 'runtimes']);
-  this.groups = new BaseObj('groups', opt);
-  this.schedules = new BaseObj('schedules', opt);
-  this.triggers = new BaseObj('triggers', opt);
-  this.users = new BaseObj('users', opt, ['list', 'detail', 'add', 'update', 'delete', 'resetKey']);
-  this.webhooks = new BaseObj('webhooks', opt);
-
-  return _.merge(this, self);
-
-};
-
-var Class = function(options) {
-  if (!(this instanceof Class)) {
-    return new Class(options);
-  }
-
-  var self = this;
-
-  var opt = new BuildOpts(options, ['apiKey', 'instance', 'className']);
-  var url = 'instances/' + opt.instance + '/classes/' + opt.className + '/';
-
-  self = new BaseSingleObj(url, opt);
-  self.objects = new BaseObj(url + 'objects', opt);
-
-  return self;
-
-};
-
-var CodeBox = function(options) {
-  if (!(this instanceof CodeBox)) {
-    return new CodeBox(options);
-  }
-
-  var opt = new BuildOpts(options, ['apiKey', 'instance', 'codeboxId']);
-  var url  = 'instances/' + opt.instance + '/codeboxes/' + opt.codeboxId;
-
-  return new BaseSingleObj(url, opt, ['traces', 'trace', 'run']);
-};
-
-var Group = function(options) {
-  if (!(this instanceof Group)) {
-    return new Group(options);
-  }
-
-  var opt = new BuildOpts(options, ['apiKey', 'instance', 'groupId']);
-  var url  = 'instances/' + opt.instance + '/groups/' + opt.groupId;
-
-  return new BaseSingleObj(url, opt, ['listUsers', 'addUser', 'removeUser', 'userDetails']);
-};
-
-var Schedule = function(options) {
-  if (!(this instanceof Schedule)) {
-    return new Schedule(options);
-  }
-
-  var opt = new BuildOpts(options, ['apiKey', 'instance', 'scheduleId']);
-  var url  = 'instances/' + opt.instance + '/schedules/' + opt.scheduleId;
-
-  return new BaseSingleObj(url, opt, ['traces', 'trace']);
-};
-
-var Trigger = function(options) {
-  if (!(this instanceof Trigger)) {
-    return new Trigger(options);
-  }
-
-  var opt = new BuildOpts(options, ['apiKey', 'instance', 'triggerId']);
-  var url  = 'instances/' + opt.instance + '/triggers/' + opt.triggerId;
-
-  return new BaseSingleObj(url, opt, ['traces', 'trace']);
-
-};
-
-var User = function(options) {
-  if (!(this instanceof User)) {
-    return new User(options);
-  }
-  if (!options.userId && !options.userKey) {
-    throw new Error('Syncano.User requires a valid \'userId\' or \'userKey\'');
-  }
-
-  if (options.userId) {
-    return new UserGroupAdmin(options);
-  }
-
-  if (options.userKey) {
-    return new UserAccess(options);
-  }
-};
-
-var UserGroupAdmin = function(options) {
-  var opt = new BuildOpts(options, ['apiKey', 'instance', 'userId']);
-  var url  = 'instances/' + opt.instance + '/users/' + opt.userId;
-
-  return new BaseSingleObj(url, opt, ['listGroups', 'addGroup', 'removeGroup', 'groupDetails']);
-};
-
-var UserAccess = function(options) {
-  var opt = new BuildOpts(options, ['apiKey', 'instance', 'userKey']);
-  var self = this;
-
-  opt.baseUrl  = 'instances/' + opt.instance;
-  self = new BaseSingleObj('user', opt);
-
-  this.Channel = function(options) {
-    if (!(this instanceof Channel)) {
-      return new Channel(options);
-    }
-
-    var opt = new BuildOpts(options, ['apiKey', 'instance', 'userKey', 'channel']);
-
-    var url  = 'instances/' + opt.instance + '/channels/' + opt.channel;
-
-    return new BaseSingleObj(url, opt, ['poll', 'history', 'publish']);
-  }
-
-  return _.merge(this, self);
-};
-
-var WebHook = function(options) {
-  if (!(this instanceof WebHook)) {
-    return new WebHook(options);
-  }
-
-  var opt = new BuildOpts(options, ['apiKey', 'instance', 'webhookName']);
-  var url  = 'instances/' + opt.instance + '/webhooks/' + opt.webhookName;
-
-  return new BaseSingleObj(url, opt, ['traces', 'trace', 'run']);
-};
-
-module.exports.Account = Account;
-module.exports.Account.login = require('./core.js').accountLogin;
-module.exports.Class = Class;
-module.exports.CodeBox = CodeBox;
-module.exports.Group = Group;
-module.exports.Instance = Instance;
-module.exports.Schedule = Schedule;
-module.exports.Trigger = Trigger;
-module.exports.User = User;
-module.exports.User.login = require('./core.js').userLogin;
-module.exports.WebHook = WebHook;
-
-},{"./core.js":293,"lodash":197}]},{},[295])(295)
+},{"./objects.js":295}]},{},[296])(296)
 });
