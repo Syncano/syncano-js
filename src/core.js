@@ -59,7 +59,7 @@ var BaseClass = function(options) {
     var url = (options && options.url) ? options.url : '';
 
     return (function(id, cb) {
-      id = helpers.helpers.checkId(id);
+      id = helpers.checkId(id);
 
       var opt = {};
       opt.url = (url !== '') ? url + '/' + id + '/' : id + '/';
