@@ -5,11 +5,6 @@
 
 'use strict';
 
-// TODO resolve the "user/users" url issues
-// TODO resolve account vs instance invites
-// TODO complete user/group and group/user functions
-// TODO Write Login functions
-
 var version  = require('../package.json').version;
 var helpers  = require('./helpers.js');
 var request  = require('request');
@@ -173,7 +168,7 @@ var apiRequest = function apiRequest(config, cb) {
   var opt = _.merge({}, defaultOptions, config, helpers.addAuth(config));
   opt.url = url(opt);
   // TODO get correct base url
-  opt.baseUrl = 'http://localhost:3000/v1/';
+  opt.baseUrl = 'https://api.syncano.io/v1/';
 
   return new Promise(function(resolve, reject) {
     request(opt.url, opt, function(err, res) {

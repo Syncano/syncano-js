@@ -9,9 +9,6 @@ var helpers  = require('./helpers.js');
 var _        = require('lodash');
 var core     = require('./core.js');
 
-// TODO resolve account vs instance invites
-// TODO Write Login functions
-
 var methods = {
   list: function list(config) {
       var opts = {
