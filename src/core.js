@@ -68,7 +68,6 @@ var filterReq = function(config) {
   var opt = _.merge({}, config);
   delete opt.func;
   return (function(filter, cb) {
-
     if (arguments.length <= 1) {
       var args = helpers.sortArgs(filter, cb);
       filter = args.filter;
