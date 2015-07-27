@@ -171,17 +171,20 @@ var apiRequest = function apiRequest(config, cb) {
 
   return new Promise(function(resolve, reject) {
     request(opt.url, opt, function(err, res) {
-      var localError;
+      var localError, response;
 
       if (err || res.statusCode === 404) {
         localError = err ? new Error(err) : new Error(JSON.stringify(res.body));
         reject(localError);
         return;
       }
+      if (res.statusCode === 204) {
+        response = res.statusMessage;
+      } else {
+        response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body;
+      }
 
-      var response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body;
       resolve(response);
-
     });
   }).nodeify(cb);
 };
