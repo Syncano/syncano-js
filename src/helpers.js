@@ -74,8 +74,8 @@ module.exports = {
       headers['X-USER-KEY'] = options.userKey;
     }
 
-    if (options.socialToken) {
-      headers.Authorization = 'Bearer' + options.socialToken;
+    if (options.json && options.json.socialToken) {
+      headers.Authorization = 'Bearer ' + options.json.socialToken;
     }
 
     return (headers !== {}) ? {headers: headers} : headers;

@@ -2,6 +2,8 @@ var config = {
   accountKey: 'EXAMPLEACCOUNTKEY',
   apiKey: 'EXAMPLEAPIKEY',
   userKey: 'EXAMPLEUSERKEY',
+  socialToken: 'SOCIALTOKEN',
+  backend: 'BACKENDNAME',
   instance: 'INSTANCENAME',
   className: 'CLASSNAME',
   channelId: 'CHANNELNAME',

@@ -296,6 +296,22 @@ describe('User', function() {
       });
     });
 
+    it('login() (social login) should recieve correct options', function(done) {
+      var func, res;
+      func = scope.user.login({socialToken: config.socialToken, backend: config.backend});
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('POST');
+        (res.url).should.equal('instances/' + config.instance + '/user/auth/' + config.backend + '/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY', 'Authorization']);
+        (res.headers['X-API-KEY']).should.equal(config.apiKey);
+        (res.headers.Authorization).should.equal('Bearer ' + config.socialToken);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
 
   });
 
