@@ -3,6 +3,7 @@
  * Syncano JS Library
  * Copyright 2015 Syncano Inc.
  */
+//TODO Tighten all tests to ensure proper objects are created
 
 var Objects = require('./objects.js');
 

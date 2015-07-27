@@ -5,13 +5,13 @@ var mockery = require('mockery');
 var config = require('../config.js');
 
 describe('Syncano (Account Scope)', function() {
-  var requestMock, Syncano, accountScope;
+  var requestMock, Syncano, scope;
   before(function() {
     mockery.enable(config.mockSettings);
     mockery.registerMock('request', config.requestMock);
     Syncano = require('../../src/syncano.js');
 
-    accountScope = new Syncano({
+    scope = new Syncano({
       accountKey: config.accountKey
     });
 
@@ -23,26 +23,26 @@ describe('Syncano (Account Scope)', function() {
   });
 
   it('should return account scope', function() {
-    (accountScope).should.be.type('object');
-    (accountScope.type).should.equal('account');
-    (accountScope.config).should.have.properties(['accountKey']);
-    (accountScope.config).should.not.have.properties(['apiKey', 'userKey', 'instance']);
-    (accountScope).should.have.property('detail').which.is.a.Function();
-    (accountScope).should.have.property('update').which.is.a.Function();
-    (accountScope).should.have.property('resetKey').which.is.a.Function();
-    (accountScope).should.have.property('changePw').which.is.a.Function();
-    (accountScope).should.have.property('setPw').which.is.a.Function();
-    (accountScope).should.have.property('invitation').which.is.an.Object();
-    (accountScope.invitation.type).should.equal('invitation');
-    (accountScope.invitation).should.have.properties(['list', 'detail', 'accept', 'delete']);
-    (accountScope).should.have.property('Instance').which.is.a.Function();
-    (accountScope).should.have.property('instance').which.is.an.Object();
-    (accountScope.instance.type).should.equal('instance');
-    (accountScope.instance).should.have.properties(['list', 'detail', 'update', 'add', 'delete']);
+    (scope).should.be.type('object');
+    (scope.type).should.equal('account');
+    (scope.config).should.have.properties(['accountKey']);
+    (scope.config).should.not.have.properties(['apiKey', 'userKey', 'instance']);
+    (scope).should.have.property('detail').which.is.a.Function();
+    (scope).should.have.property('update').which.is.a.Function();
+    (scope).should.have.property('resetKey').which.is.a.Function();
+    (scope).should.have.property('changePw').which.is.a.Function();
+    (scope).should.have.property('setPw').which.is.a.Function();
+    (scope).should.have.property('invitation').which.is.an.Object();
+    (scope.invitation.type).should.equal('invitation');
+    (scope.invitation).should.have.properties(['list', 'detail', 'accept', 'delete']);
+    (scope).should.have.property('Instance').which.is.a.Function();
+    (scope).should.have.property('instance').which.is.an.Object();
+    (scope.instance.type).should.equal('instance');
+    (scope.instance).should.have.properties(['list', 'detail', 'update', 'add', 'delete']);
   });
   it('detail() should recieve correct options', function(done) {
     var func, res;
-    func = accountScope.detail();
+    func = scope.detail();
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('GET');
@@ -56,7 +56,7 @@ describe('Syncano (Account Scope)', function() {
   });
   it('update() should recieve correct options', function(done) {
     var func, res;
-    func = accountScope.update({});
+    func = scope.update({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('PATCH');
@@ -70,7 +70,7 @@ describe('Syncano (Account Scope)', function() {
   });
   it('resetKey() should recieve correct options', function(done) {
     var func, res;
-    func = accountScope.resetKey({});
+    func = scope.resetKey({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
@@ -84,7 +84,7 @@ describe('Syncano (Account Scope)', function() {
   });
   it('changePw() should recieve correct options', function(done) {
     var func, res;
-    func = accountScope.changePw({});
+    func = scope.changePw({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
@@ -98,7 +98,7 @@ describe('Syncano (Account Scope)', function() {
   });
   it('setPw() should recieve correct options', function(done) {
     var func, res;
-    func = accountScope.setPw({});
+    func = scope.setPw({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');

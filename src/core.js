@@ -5,6 +5,11 @@
 
 'use strict';
 
+// TODO resolve the "user/users" url issues
+// TODO resolve account vs instance invites
+// TODO complete user/group and group/user functions
+// TODO Write Login functions
+
 var version  = require('../package.json').version;
 var helpers  = require('./helpers.js');
 var request  = require('request');
@@ -20,49 +25,41 @@ var defaultOptions = {
   }
 };
 
-
-// TODO Complete buildURL functionality
-// TODO resolve the "user/users" url issues
-// TODO resolve account vs instance invites
 var url = function(config) {
 
   var urlTmpl = {
     account: 'account/',
-    admin: 'instances/<%= instance %>/admins/',
-    apikey: 'instances/<%= instance %>/api_keys/',
-    channel: 'instances/<%= instance %>/channels/',
-    class: 'instances/<%= instance %>/classes/',
-    codebox: 'instances/<%= instance %>/codeboxes/',
-    dataobject: 'instances/<%= instance %>/classes/<%= className %>/objects/',
-    group: 'instances/<%= instance %>/groups/',
-    instance: 'instances/',
-    invitation: 'edge case',
-    schedule: 'instances/<%= instance %>/schedules/',
-    trigger: 'instances/<%= instance %>/triggers/',
-    webhook: 'instances/<%= instance %>/webhooks/',
-    user: 'edge case'
+    admin: (config.adminId) ? 'instances/<%= instance %>/admins/<%= adminId %>/' : 'instances/<%= instance %>/admins/',
+    apikey: (config.apikeyId) ? 'instances/<%= instance %>/api_keys/<%= apikeyId %>/' : 'instances/<%= instance %>/api_keys/',
+    channel: (config.channelId) ? 'instances/<%= instance %>/channels/<%= channelId %>/' : 'instances/<%= instance %>/channels/',
+    class: (config.className) ? 'instances/<%= instance %>/classes/<%= className %>/' : 'instances/<%= instance %>/classes/',
+    codebox: (config.codeboxId) ? 'instances/<%= instance %>/codeboxes/<%= codeboxId %>/' : 'instances/<%= instance %>/codeboxes/',
+    dataobject: (config.dataobjectId) ? 'instances/<%= instance %>/classes/<%= className %>/objects/<%= dataobjectId %>/' : 'instances/<%= instance %>/classes/<%= className %>/objects/',
+    group: (config.groupId) ? 'instances/<%= instance %>/groups/<%= groupId %>/' : 'instances/<%= instance %>/groups/',
+    instance: (config.instance) ? 'instances/<%= instance %>/' : 'instances/',
+    invitation: (config.instance) ? 'instances/<%= instance %>/invitations/' : 'account/invitations/',
+    schedule: (config.scheduleId) ? 'instances/<%= instance %>/schedules/<%= scheduleId %>/' : 'instances/<%= instance %>/schedules/',
+    trigger: (config.triggerId) ? 'instances/<%= instance %>/triggers/<%= triggerId %>/' : 'instances/<%= instance %>/triggers/',
+    webhook: (config.webhookId) ? 'instances/<%= instance %>/webhooks/<%= webhookId %>/' : 'instances/<%= instance %>/webhooks/',
+    user: (config.userId) ? 'instances/<%= instance %>/users/<%= userId %>/' : 'instances/<%= instance %>/users/'
   };
 
   var buildUrl = function urlAddOns(config) {
-    var tmpl;
-    tmpl = urlTmpl[config.type];
+    var tmpl = config.tmpl || urlTmpl[config.type];
 
-    if (config.type === 'instance' && config.instance) {
-      tmpl += '<%= instance %>/';
+    if (config.inviteId) {
+      tmpl += '<%= inviteId %>/';
     }
-    if (config.type === 'class' && config.className) {
-      tmpl += '<%= className %>/';
-    }
-    if (config.id) {
+
+    if (config.id && config.path) {
+      tmpl += (config.pathFirst) ? '<%= path %>/<%= id %>/' : '<%= id %>/<%= path %>/';
+    } else if (config.id && !config.path) {
       tmpl += '<%= id %>/';
-    }
-    if (config.path) {
-      tmpl += config.path + '/';
+    } else if (config.path) {
+      tmpl += '<%= path %>/';
     }
 
-    var url = _.template(tmpl);
-
-    return url(config);
+    return _.template(tmpl)(config);
   };
 
   return buildUrl(config);
@@ -71,10 +68,7 @@ var url = function(config) {
 var filterReq = function(config) {
   var opt = _.merge({}, config);
   delete opt.func;
-
   return (function(filter, cb) {
-
-    opt.type = this.type;
 
     if (arguments.length <= 1) {
       var args = helpers.sortArgs(filter, cb);
@@ -95,8 +89,6 @@ var idReq = function(config) {
   delete opt.func;
 
   return (function(id, cb) {
-
-    opt.type = this.type;
     opt.id = helpers.checkId(id);
     return apiRequest(opt, cb);
   });
@@ -110,9 +102,7 @@ var filterIdReq = function(config) {
 
   return (function(id, filter, cb) {
 
-    opt.type = this.type;
     opt.id = helpers.checkId(id);
-
     if (arguments.length <= 2) {
       var args = helpers.sortArgs(filter, cb);
       filter = args.filter;
@@ -132,7 +122,6 @@ var paramReq = function(config) {
   delete opt.func;
 
   return (function(params, filter, cb) {
-    opt.type = this.type;
     params = helpers.checkParams(params);
 
     if (arguments.length <= 2) {
@@ -156,7 +145,6 @@ var paramIdReq = function(config) {
 
   return (function(id, params, filter, cb) {
 
-    opt.type = this.type;
     opt.id = helpers.checkId(id);
 
     params = helpers.checkParams(params, false);
@@ -200,160 +188,12 @@ var apiRequest = function apiRequest(config, cb) {
   }).nodeify(cb);
 };
 
-// TODO Finish function calls and solve for single/plural issues
-// TODO solve for double id requirements - e.g. codeboxes/:id:/traces/:id:
-// TODO complete user/group and group/user functions
-
-var functions = {
-  list: {
-    method: 'GET',
-    func: {plural: filterReq}
-  },
-  add: {
-    method: 'POST',
-    func: {plural: paramReq}
-  },
-  detail: {
-    method: 'GET',
-    func: {single: filterReq, plural: filterIdReq}
-  },
-  update: {
-    method: 'PATCH',
-    func: {single: paramReq, plural: paramIdReq}
-  },
-  delete: {
-    method: 'DELETE',
-    func: {single: filterReq, plural: idReq}
-  },
-  runtimes: {
-    method: 'GET',
-    path: 'runtimes',
-    func: {single: filterReq, plural: filterReq}
-  },
-  resetKey: {
-    method: 'POST',
-    path: 'reset_key',
-    func: {single: paramReq, plural: paramIdReq}
-  },
-  traces: {
-    method: 'GET',
-    path: 'traces',
-    func: {single: filterReq, plural: filterIdReq}
-  },
-  trace: {
-    method: 'GET',
-    path: 'traces',
-    func: {single: filterIdReq, plural: filterIdReq}
-  },
-  run: {
-    method: 'POST',
-    path: 'run',
-    func: {single: paramReq, plural: paramIdReq}
-  },
-  poll: {
-    method: 'GET',
-    path: 'poll',
-    func: {single: filterReq, plural: filterIdReq}
-  },
-  history: {
-    method: 'GET',
-    path: 'history',
-    func: {single: filterReq, plural: filterIdReq}
-  },
-  publish: {
-    method: 'POST',
-    path: 'publish',
-    func: {single: filterReq, plural: filterIdReq}
-  },
-  sendEmail: {
-    method: 'POST',
-    func: {plural: paramReq}
-  },
-  accept: {
-    method: 'POST',
-    path: 'accept',
-    func: {plural: paramReq}
-  },
-  register: {
-    method: 'POST',
-    path: 'register',
-    func: {plural: paramReq}
-  },
-  resendEmail: {
-    method: 'POST',
-    path: 'resend_email',
-    func: {plural: paramReq}
-  },
-  changePw: {
-    method: 'POST',
-    path: 'password',
-    func: {single: paramReq}
-  },
-  setPw: {
-    method: 'POST',
-    path: 'password/set',
-    func: {single: paramReq}
-  },
-  resetPw: {
-    method: 'POST',
-    path: 'password/reset',
-    func: {plural: paramReq}
-  },
-  confirmResetPw: {
-    method: 'POST',
-    path: 'password/reset/confirm',
-    func: {plural: paramReq}
-  },
-  activate: {
-    method: 'POST',
-    path: 'activate',
-    func: {plural: paramReq}
-  },
-  login: {
-    method: 'POST',
-    path: 'auth',
-    func: {plural: paramReq}
-  }
+var core = {
+  filterReq: filterReq,
+  filterIdReq: filterIdReq,
+  idReq: idReq,
+  paramReq: paramReq,
+  paramIdReq: paramIdReq
 };
 
-
-//TODO Write Login functions
-
-var SingleObj = function(config, funcArr) {
-
-  var self = this;
-
-  var opt = _.merge({}, config);
-
-  self.config = config;
-
-  funcArr = funcArr || ['detail', 'update', 'delete'];
-
-  _.forEach(funcArr, function(f) {
-    var options = _.merge({}, functions[f], opt);
-    self[f] = functions[f].func.single(options);
-  });
-
-  return self;
-
-};
-
-var PluralObj = function(config, funcArr) {
-
-  var self = this;
-  var opt = _.merge({}, config);
-
-  funcArr = funcArr || ['list', 'detail', 'add', 'update', 'delete'];
-
-  _.forEach(funcArr, function(f) {
-    var options = _.merge({}, functions[f], opt);
-    self[f] = functions[f].func.plural(options);
-  });
-
-  return self;
-
-
-};
-
-module.exports.SingleObj  = SingleObj;
-module.exports.PluralObj  = PluralObj;
+module.exports = core;

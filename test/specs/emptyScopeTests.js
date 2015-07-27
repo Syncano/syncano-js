@@ -5,13 +5,13 @@ var mockery = require('mockery');
 var config = require('../config.js');
 
 describe('Syncano (Empty Scope)', function() {
-  var requestMock, Syncano, emptyScope;
+  var requestMock, Syncano, scope;
 
   before(function() {
     mockery.enable(config.mockSettings);
     mockery.registerMock('request', config.requestMock);
     Syncano = require('../../src/syncano.js');
-    emptyScope = new Syncano();
+    scope = new Syncano();
   });
 
   after(function() {
@@ -20,19 +20,19 @@ describe('Syncano (Empty Scope)', function() {
   });
 
   it('should return account scope', function() {
-    (emptyScope).should.be.type('object');
-    (emptyScope.type).should.equal('account');
-    (emptyScope).should.have.property('login').which.is.a.Function();
-    (emptyScope).should.have.property('register').which.is.a.Function();
-    (emptyScope).should.have.property('resendEmail').which.is.a.Function();
-    (emptyScope).should.have.property('resetPw').which.is.a.Function();
-    (emptyScope).should.have.property('confirmResetPw').which.is.a.Function();
-    (emptyScope).should.have.property('activate').which.is.a.Function();
+    (scope).should.be.type('object');
+    (scope.type).should.equal('account');
+    (scope).should.have.property('login').which.is.a.Function();
+    (scope).should.have.property('register').which.is.a.Function();
+    (scope).should.have.property('resendEmail').which.is.a.Function();
+    (scope).should.have.property('resetPw').which.is.a.Function();
+    (scope).should.have.property('confirmResetPw').which.is.a.Function();
+    (scope).should.have.property('activate').which.is.a.Function();
   });
 
   it('login()', function(done) {
     var func, res;
-    func = emptyScope.login({});
+    func = scope.login({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
@@ -46,7 +46,7 @@ describe('Syncano (Empty Scope)', function() {
 
   it('register()', function(done) {
     var func, res;
-    func = emptyScope.register({});
+    func = scope.register({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
@@ -60,7 +60,7 @@ describe('Syncano (Empty Scope)', function() {
 
   it('resendEmail()', function(done) {
     var func, res;
-    func = emptyScope.resendEmail({});
+    func = scope.resendEmail({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
@@ -74,7 +74,7 @@ describe('Syncano (Empty Scope)', function() {
 
   it('resetPw() should recieve correct options', function(done) {
     var func, res;
-    func = emptyScope.resetPw({});
+    func = scope.resetPw({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
@@ -88,7 +88,7 @@ describe('Syncano (Empty Scope)', function() {
 
   it('confirmResetPw() should recieve correct options', function(done) {
     var func, res;
-    func = emptyScope.confirmResetPw({});
+    func = scope.confirmResetPw({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
@@ -102,7 +102,7 @@ describe('Syncano (Empty Scope)', function() {
 
   it('activate() should recieve correct options', function(done) {
     var func, res;
-    func = emptyScope.activate({});
+    func = scope.activate({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');

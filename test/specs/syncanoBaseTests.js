@@ -5,13 +5,13 @@ var mockery = require('mockery');
 var config = require('../config.js');
 
 describe('Syncano', function() {
-  var requestMock, Syncano, emptyScope;
+  var requestMock, Syncano, scope;
 
   before(function() {
     mockery.enable(config.mockSettings);
     mockery.registerMock('request', config.requestMock);
     Syncano = require('../../src/syncano.js');
-    emptyScope = new Syncano();
+    scope = new Syncano();
   });
 
   after(function() {
@@ -21,7 +21,7 @@ describe('Syncano', function() {
 
   it('should be a constructor', function() {
     (Syncano).should.be.a.Function();
-    (emptyScope.constructor).should.be.a.Function();
-    (emptyScope).should.be.an.Object();
+    (scope.constructor).should.be.a.Function();
+    (scope).should.be.an.Object();
   });
 });

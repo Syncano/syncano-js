@@ -5,8 +5,8 @@
 
 'use strict';
 
-var SingleObj  = require('./core.js').SingleObj;
-var PluralObj  = require('./core.js').PluralObj;
+var SingleObj  = require('./methods.js').SingleObj;
+var PluralObj  = require('./methods.js').PluralObj;
 var _        = require('lodash');
 
 
@@ -31,7 +31,7 @@ var Admin = function Admin(config, id) {
   var opts = _.merge({}, config);
 
   if (id) {
-    opts.id = id;
+    opts.adminId = id;
     SingleObj.call(this, opts);
   } else {
     PluralObj.call(this, opts, ['list', 'detail', 'update', 'delete']);
@@ -47,7 +47,7 @@ var ApiKey = function ApiKey(config, id) {
   var opts = _.merge({}, config);
 
   if (id) {
-    opts.id = id;
+    opts.apikeyId = id;
     SingleObj.call(this, opts, ['detail', 'resetKey', 'delete']);
   } else {
     PluralObj.call(this, opts, ['list', 'detail', 'add', 'resetKey', 'delete']);
@@ -65,11 +65,11 @@ var Channel = function Channel(config, id) {
 
   if (opts && opts.apiKey) {
     singleFunc = ['detail', 'history', 'publish', 'poll'];
-    pluralFunc = ['list', 'detail', 'detail', 'history', 'publish', 'poll'];
+    pluralFunc = ['list', 'detail', 'history', 'publish', 'poll'];
   }
 
   if (id) {
-    opts.id = id;
+    opts.channelId = id;
     SingleObj.call(this, opts, singleFunc);
   } else {
     PluralObj.call(this, opts, pluralFunc);
@@ -111,7 +111,7 @@ var CodeBox = function CodeBox(config, id) {
   var opts = _.merge({}, config);
 
   if (id) {
-    opts.id = id;
+    opts.codeboxId = id;
     SingleObj.call(this, opts, ['detail', 'update', 'delete', 'run', 'traces', 'trace']);
   } else {
     PluralObj.call(this, opts);
@@ -120,7 +120,7 @@ var CodeBox = function CodeBox(config, id) {
 };
 
 CodeBox.prototype.constructor = CodeBox;
-CodeBox.prototype.type = 'codeBox';
+CodeBox.prototype.type = 'codebox';
 
 var DataObject = function DataObject(config, id) {
 
@@ -128,7 +128,7 @@ var DataObject = function DataObject(config, id) {
   var opts = _.merge({}, config);
 
   if (id) {
-    opts.id = id;
+    opts.dataobjectId = id;
     SingleObj.call(this, opts);
   } else {
     PluralObj.call(this, opts);
@@ -140,6 +140,7 @@ var DataObject = function DataObject(config, id) {
 DataObject.prototype.constructor = DataObject;
 DataObject.prototype.type = 'dataobject';
 
+//TODO Remove the single constructors when INSTANCE/USER scoped
 var Instance = function(config, id) {
 
   var self = this;
@@ -184,7 +185,6 @@ var Instance = function(config, id) {
 Instance.prototype.constructor = Instance;
 Instance.prototype.type = 'instance';
 
-
 var Group = function Group(config, id) {
 
   var singleFunc, pluralFunc;
@@ -195,11 +195,14 @@ var Group = function Group(config, id) {
     pluralFunc = ['list', 'detail'];
   }
 
-  if (id) {
-    opts.id = id;
-    SingleObj.call(this, opts, singleFunc);
-    //TODO add methods for user/group membership
+  if (opts && opts.userId) {
+    pluralFunc = ['list', 'detail', 'add', 'delete'];
+  }
 
+  if (id) {
+    opts.groupId = id;
+    SingleObj.call(this, opts, singleFunc);
+    this.user = new User(opts);
   } else {
     PluralObj.call(this, opts, pluralFunc);
   }
@@ -223,7 +226,7 @@ var Invitation = function Invitation(config, id) {
   }
 
   if (id) {
-    opts.id = id;
+    opts.inviteId = id;
     SingleObj.call(this, opts, singleFunc);
   } else {
     PluralObj.call(this, opts, pluralFunc);
@@ -239,8 +242,8 @@ var Schedule = function Schedule(config, id) {
   var opts = _.merge({}, config);
 
   if (id) {
-    opts.id = id;
-    SingleObj.call(this, opts);
+    opts.scheduleId = id;
+    SingleObj.call(this, opts, ['detail', 'update', 'delete', 'traces', 'trace']);
   } else {
     PluralObj.call(this, opts);
   }
@@ -254,8 +257,8 @@ var Trigger = function Trigger(config, id) {
   var opts = _.merge({}, config);
 
   if (id) {
-    opts.id = id;
-    SingleObj.call(this, opts);
+    opts.triggerId = id;
+    SingleObj.call(this, opts, ['detail', 'update', 'delete', 'traces', 'trace']);
   } else {
     PluralObj.call(this, opts);
   }
@@ -269,8 +272,8 @@ var WebHook = function WebHook(config, id) {
   var opts = _.merge({}, config);
 
   if (id) {
-    opts.id = id;
-    SingleObj.call(this, opts);
+    opts.webhookId = id;
+    SingleObj.call(this, opts, ['detail', 'update', 'delete', 'run', 'traces', 'trace']);
   } else {
     PluralObj.call(this, opts);
   }
@@ -285,19 +288,24 @@ var User = function User(config, id) {
   var singleFunc, pluralFunc;
   var opts = _.merge({}, config);
 
-  if (opts && opts.userKey) {
-    pluralFunc = ['add', 'detail', 'update', 'resetKey'];
+  pluralFunc = ['list', 'add', 'detail', 'update', 'delete', 'resetKey'];
+
+  if (opts && opts.apiKey) {
+    if (opts.userKey) {
+      pluralFunc = ['add', 'detail', 'update'];
+    } else {
+      pluralFunc = ['add', 'login'];
+    }
   }
 
-  if (opts && opts.apiKey && !opts.userKey) {
-    pluralFunc = ['add', 'login'];
+  if (opts && opts.groupId) {
+    pluralFunc = ['list', 'detail', 'add', 'delete'];
   }
 
   if (id) {
-    opts.id = id;
+    opts.userId = id;
     SingleObj.call(this, opts, ['detail', 'update', 'resetKey', 'delete']);
-    //TODO add methods for user/group membership
-
+    this.group = new Group(opts);
   } else {
     PluralObj.call(this, opts, pluralFunc);
   }
@@ -314,7 +322,7 @@ var classBuilder = function classBuilder(ClassName, config) {
   );
 };
 
-var Objects = {
+var objects = {
   Account: Account,
   Channel: Channel,
   Class: Class,
@@ -326,4 +334,4 @@ var Objects = {
   User: User
 };
 
-module.exports = Objects;
+module.exports = objects;

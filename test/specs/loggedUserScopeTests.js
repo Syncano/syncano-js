@@ -11,14 +11,14 @@ var cb = function() {
 
 
 describe('Syncano (Logged User Scope)', function() {
-  var requestMock, Syncano, loggedUserScope;
+  var requestMock, Syncano, scope;
 
   before(function() {
     mockery.enable(config.mockSettings);
     mockery.registerMock('request', config.requestMock);
     Syncano = require('../../src/syncano.js');
 
-    loggedUserScope = new Syncano({
+    scope = new Syncano({
       apiKey: config.apiKey,
       instance: config.instance,
       userKey: config.userKey
@@ -31,28 +31,28 @@ describe('Syncano (Logged User Scope)', function() {
   });
 
   it('should return instance scope', function() {
-    (loggedUserScope).should.be.type('object');
-    (loggedUserScope.type).should.equal('instance');
-    (loggedUserScope.config).should.have.properties(['apiKey', 'userKey', 'instance']);
-    (loggedUserScope.config).should.not.have.properties(['accountKey']);
-    (loggedUserScope).should.have.property('detail').which.is.a.Function();
-    (loggedUserScope).should.have.property('Channel').which.is.a.Function();
-    (loggedUserScope).should.have.property('channel').which.is.an.Object();
-    (loggedUserScope.channel.type).should.equal('channel');
-    (loggedUserScope).should.have.property('Class').which.is.a.Function();
-    (loggedUserScope).should.have.property('class').which.is.an.Object();
-    (loggedUserScope.class.type).should.equal('class');
-    (loggedUserScope).should.have.property('Group').which.is.a.Function();
-    (loggedUserScope).should.have.property('group').which.is.an.Object();
-    (loggedUserScope.group.type).should.equal('group');
-    (loggedUserScope).should.have.property('User').which.is.a.Function();
-    (loggedUserScope).should.have.property('user').which.is.an.Object();
-    (loggedUserScope.user.type).should.equal('user');
+    (scope).should.be.type('object');
+    (scope.type).should.equal('instance');
+    (scope.config).should.have.properties(['apiKey', 'userKey', 'instance']);
+    (scope.config).should.not.have.properties(['accountKey']);
+    (scope).should.have.property('detail').which.is.a.Function();
+    (scope).should.have.property('Channel').which.is.a.Function();
+    (scope).should.have.property('channel').which.is.an.Object();
+    (scope.channel.type).should.equal('channel');
+    (scope).should.have.property('Class').which.is.a.Function();
+    (scope).should.have.property('class').which.is.an.Object();
+    (scope.class.type).should.equal('class');
+    (scope).should.have.property('Group').which.is.a.Function();
+    (scope).should.have.property('group').which.is.an.Object();
+    (scope.group.type).should.equal('group');
+    (scope).should.have.property('User').which.is.a.Function();
+    (scope).should.have.property('user').which.is.an.Object();
+    (scope.user.type).should.equal('user');
   });
 
   it('detail() should recieve correct options', function(done) {
     var func, res;
-    func = loggedUserScope.detail();
+    func = scope.detail();
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('GET');
