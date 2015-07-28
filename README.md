@@ -7,7 +7,7 @@
 ## Getting Started
 This library is inteded to be used with a [Syncano](http://www.syncano.com/) account. If you don't already have one - you can sign up [here](https://dashboard.syncano.io/?utm_source=syncano-js&utm_medium=readme&utm_campaign=github).
 
-`syncano` is available as a client-side or server-side library. Depending on your requirements, you can use `bower` or `npm`.  Once downloaded, you can use in your project.
+`syncano` is available as a client-side or server-side library. Depending on your requirements, you can use `bower` or `npm`.  Once downloaded, you can use it in your project.
 
 **Install from Bower**
 
@@ -59,7 +59,7 @@ var account = new Syncano({accountKey : "MY_ACCOUNT_KEY"});
 var instance = new Syncano({apiKey : "MY_INSTANCE_KEY", instance: "MY_INSTANCE_NAME"}); 
 ```
 
-Once you have created, your initial object, all subsequent calls will be scoped under the initial object, until a new one is created. This should eliminate confusion around what your objects currently are responsible for. 
+Once you have created your initial object, all subsequent calls will be scoped under the initial object, until a new one is created. This should eliminate confusion around what your objects currently are responsible for. 
 
 #### Account.Instance vs Instance Scope
 
@@ -118,7 +118,19 @@ You can also continue to chain, passing in `id`s to get to correct object you ne
 account.instance(MY_INSTANCE_NAME).class(MY_CLASS_NAME).dataobject(ID).detail(); //return a promise with the details of DataObject 'id' in class 'MY_CLASS_NAME', in the instance 'MY_INSTANCE_NAME`
 ```
 
+#### Using as a Constructor
 
+Every object is a `constructor` method, and will return a scoped object that you can store in memory for later usage. To invoke, simply use the `new` keyword to initialize.
+
+```js
+var my_instance = new account.instance(MY_INSTANCE_NAME)//returns an object scoped to 'MY_INSTANCE_NAME'
+```
+You can then continue the chaining as normal, and all promises and callbacks work as expected. The above `dataobject` example could look something like this, if you wanted to have a scoped object to that class in memory:
+
+```js
+var my_class = new account.instance(MY_INSTANCE_NAME).class(MY_CLASS_NAME) //return a class object scoped to 'MY_CLASS_NAME'
+my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - returns a promise with the data object's details. 
+```
 
 
 ### Contributors
