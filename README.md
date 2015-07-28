@@ -45,7 +45,7 @@ With the Syncano platform, there are two basic ways to interact with your accoun
  * **Account Level Scope** - Interact with your account as the super admin (recommended for server side interaction) 
  * **Instance Level Scope** - Connects to a specific app instance, and has limited permissions. This is what your app will utilize most, as the user specific methods are accessible here using the `userKey`.
 
-Each of these scopes have different types of functionality, and utilize different apiKeys.  Be sure to check the [full documentation] (http://docs.syncano.com/v4.0/docs/authentication) on authentication to be sure you get the appropriate key.
+Each of these scopes have different types of functionality, and utilize different apiKeys. Check out the [full documentation] (http://docs.syncano.com/v4.0/docs/authentication) on authentication to be sure you get the appropriate key.
 
 ### Create a New Connection
 
@@ -60,12 +60,6 @@ var instance = new Syncano({apiKey : "MY_INSTANCE_KEY", instance: "MY_INSTANCE_N
 ```
 
 Once you have created your initial object, all subsequent calls will be scoped under the initial object, until a new one is created. This should eliminate confusion around what your objects currently are responsible for. 
-
-#### Account.Instance vs Instance Scope
-
-It is important to note the difference between the Account Scope `instance` method, and the Instance scope.  `account.instance` allows you to manage _every_ instance in your Syncano account. This is something you need to be very cautious with, as the permissions are completely open with your `accountKey`. We recommend using this server side to act as a proxy to Syncano. 
-
-The Instance scope, however, uses the `apiKey` and should be used from your applications client side.
 
 ### General Syncano Object Info
 
@@ -104,7 +98,7 @@ scope.object().method()
 
 #### Passing `id`
 
-The `object` never requires `id`, however, if passed allows the chain to be scoped to a specific object in your account. Scoped objects like this, typically produce a different set of functionality than the non-scoped objects (since they are now tied to a specific item in your account).
+The `object` never requires `id`, however, if passed it allows the chain to be scoped to a specific object in your account. Scoped objects like this, typically produce a different set of functionality than the non-scoped objects (since they are now tied to a specific item in your account).
 
 For example, methods like `detail()` could be celled with the `id` in the object place or the method place. This is mostly a preference based on how you are getting your data.
 
@@ -112,7 +106,7 @@ For example, methods like `detail()` could be celled with the `id` in the object
 account.instance().detail(MY_INSTANCE_NAME); //return a promise with MY_INSTANCE_NAME details
 account.instance(MY_INSTANCE_NAME).detail(); //return a promise with MY_INSTANCE_NAME details
 ```
-You can also continue to chain, passing in `id`s to get to correct object you need:
+You can also continue to chain by passing in `id`s to get to the correct object.
 
 ```js
 account.instance(MY_INSTANCE_NAME).class(MY_CLASS_NAME).dataobject(ID).detail(); //return a promise with the details of DataObject 'id' in class 'MY_CLASS_NAME', in the instance 'MY_INSTANCE_NAME`
@@ -137,6 +131,7 @@ my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - ret
 
 * Kelly Andrews  - [twitter](https://twitter.com/kellyjandrews), [github](https://github.com/kellyjandrews)
 * Patrick Devivo - [twitter](https://twitter.com/patrickdevivo), [github](https://github.com/patrickdevivo)
+* Jhishan Khan - [twitter](https://twitter.com/jhishan), [github](https://github.com/jhishan)
 
 ### ChangeLog
 * **0.2.0** - 2015-07-28
