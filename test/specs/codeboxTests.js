@@ -4,7 +4,7 @@ var should = require('should');
 var mockery = require('mockery');
 var config = require('../config.js');
 
-describe('Instance', function() {
+describe('CodeBox', function() {
   describe('(Account Scope)', function() {
     var requestMock, Syncano, scope;
     before(function() {
@@ -14,7 +14,6 @@ describe('Instance', function() {
       scope = new Syncano({
         accountKey: config.accountKey
       });
-      scope = new scope.Instance(config.instance);
     });
 
     after(function() {
@@ -23,18 +22,20 @@ describe('Instance', function() {
     });
 
     it('instance.codebox is an codebox object', function() {
-      (scope.codebox.type).should.equal('codebox');
-      (scope.codebox).should.have.properties(['list', 'add', 'detail', 'update', 'delete']);
-      (scope.codebox.list).should.be.a.Function();
-      (scope.codebox.add).should.be.a.Function();
-      (scope.codebox.detail).should.be.a.Function();
-      (scope.codebox.delete).should.be.a.Function();
-      (scope.codebox.update).should.be.a.Function();
+      (scope.instance(config.instance).codebox()).should.be.an.Object();
+      (scope.instance(config.instance).codebox().type).should.equal('codebox');
+      (scope.instance(config.instance).codebox()).should.have.keys(['list', 'add', 'detail', 'update', 'delete', 'runtimes']);
+      (scope.instance(config.instance).codebox().list).should.be.a.Function();
+      (scope.instance(config.instance).codebox().add).should.be.a.Function();
+      (scope.instance(config.instance).codebox().detail).should.be.a.Function();
+      (scope.instance(config.instance).codebox().delete).should.be.a.Function();
+      (scope.instance(config.instance).codebox().update).should.be.a.Function();
+      (scope.instance(config.instance).codebox().runtimes).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.codebox.list();
+      func = scope.instance(config.instance).codebox().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -49,7 +50,7 @@ describe('Instance', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.codebox.detail(config.codeboxId);
+      func = scope.instance(config.instance).codebox().detail(config.codeboxId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -64,7 +65,7 @@ describe('Instance', function() {
 
     it('update() should recieve correct options', function(done) {
       var func, res;
-      func = scope.codebox.update(config.codeboxId, {});
+      func = scope.instance(config.instance).codebox().update(config.codeboxId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
@@ -79,7 +80,7 @@ describe('Instance', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.codebox.delete(config.codeboxId);
+      func = scope.instance(config.instance).codebox().delete(config.codeboxId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
@@ -92,9 +93,24 @@ describe('Instance', function() {
       });
     });
 
+    it('runtimes() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.instance(config.instance).codebox().runtimes();
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('GET');
+        (res.url).should.equal('instances/' + config.instance + '/codeboxes/runtimes/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.accountKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
 
     it('should create a new codebox object', function() {
-      scope = new scope.CodeBox(config.codeboxId);
+      scope = new scope.instance(config.instance).codebox(config.codeboxId);
       (scope.type).should.equal('codebox');
       (scope).should.have.properties(['detail', 'update', 'delete', 'run', 'trace', 'traces']);
       (scope.detail).should.be.a.Function();
@@ -184,6 +200,21 @@ describe('Instance', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/traces/' + config.traceId + '/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.accountKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it('runtimes() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.runtimes();
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('GET');
+        (res.url).should.equal('instances/' + config.instance + '/codeboxes/runtimes/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();

@@ -4,7 +4,7 @@ var should = require('should');
 var mockery = require('mockery');
 var config = require('../config.js');
 
-describe('Instance', function() {
+describe('Trigger', function() {
   describe('(Account Scope)', function() {
     var requestMock, Syncano, scope;
     before(function() {
@@ -14,7 +14,6 @@ describe('Instance', function() {
       scope = new Syncano({
         accountKey: config.accountKey
       });
-      scope = new scope.Instance(config.instance);
     });
 
     after(function() {
@@ -23,18 +22,18 @@ describe('Instance', function() {
     });
 
     it('instance.trigger is an trigger object', function() {
-      (scope.trigger.type).should.equal('trigger');
-      (scope.trigger).should.have.properties(['list', 'add', 'detail', 'update', 'delete']);
-      (scope.trigger.list).should.be.a.Function();
-      (scope.trigger.add).should.be.a.Function();
-      (scope.trigger.detail).should.be.a.Function();
-      (scope.trigger.delete).should.be.a.Function();
-      (scope.trigger.update).should.be.a.Function();
+      (scope.instance(config.instance).trigger().type).should.equal('trigger');
+      (scope.instance(config.instance).trigger()).should.have.keys(['list', 'add', 'detail', 'update', 'delete']);
+      (scope.instance(config.instance).trigger().list).should.be.a.Function();
+      (scope.instance(config.instance).trigger().add).should.be.a.Function();
+      (scope.instance(config.instance).trigger().detail).should.be.a.Function();
+      (scope.instance(config.instance).trigger().delete).should.be.a.Function();
+      (scope.instance(config.instance).trigger().update).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.trigger.list();
+      func = scope.instance(config.instance).trigger().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -49,7 +48,7 @@ describe('Instance', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.trigger.detail(config.triggerId);
+      func = scope.instance(config.instance).trigger().detail(config.triggerId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -64,7 +63,7 @@ describe('Instance', function() {
 
     it('update() should recieve correct options', function(done) {
       var func, res;
-      func = scope.trigger.update(config.triggerId, {});
+      func = scope.instance(config.instance).trigger().update(config.triggerId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
@@ -79,7 +78,7 @@ describe('Instance', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.trigger.delete(config.triggerId);
+      func = scope.instance(config.instance).trigger().delete(config.triggerId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
@@ -94,9 +93,9 @@ describe('Instance', function() {
 
 
     it('should create a new trigger object', function() {
-      scope = new scope.Trigger(config.triggerId);
+      scope = new scope.instance(config.instance).trigger(config.triggerId);
       (scope.type).should.equal('trigger');
-      (scope).should.have.properties(['detail', 'update', 'delete', 'traces', 'trace']);
+      (scope).should.have.keys(['config', 'detail', 'update', 'delete', 'traces', 'trace']);
       (scope.detail).should.be.a.Function();
       (scope.delete).should.be.a.Function();
       (scope.update).should.be.a.Function();

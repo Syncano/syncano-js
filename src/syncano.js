@@ -50,10 +50,6 @@ var AccountScope = function(accountKey) {
   this.config.accountKey = accountKey;
 
   Objects.Account.call(this, this.config);
-  this.instance = new Objects.Instance(this.config);
-  this.invitation = new Objects.Invitation(this.config);
-
-  this.Instance = Objects.classBuilder(Objects.Instance, this.config);
 
   return this;
 };

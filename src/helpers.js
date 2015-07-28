@@ -8,13 +8,6 @@
 var _        = require('lodash');
 
 module.exports = {
-  validateOptions: function(options, req) {
-    _.forEach(req, function(r) {
-      if (!options || typeof options !== 'object' || !options[r]) {
-        throw new Error('\'' + r + '\' is missing or invalid.');
-      }
-    });
-  },
   checkParams: function(p) {
     if (typeof p !== 'object') {
       throw new Error('Invalid parameters object.');
@@ -23,7 +16,7 @@ module.exports = {
   },
   checkId: function(id) {
     if (typeof id !== 'string' && typeof id !== 'number') {
-      throw new Error('Valid ID must be provided');
+      throw new Error('Valid ID must be provided.');
     }
     return id;
   },

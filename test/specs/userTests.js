@@ -3,7 +3,6 @@
 var should = require('should');
 var mockery = require('mockery');
 var config = require('../config.js');
-// TODO Finish testing specs
 
 describe('User', function() {
   describe('(Account Scope)', function() {
@@ -15,7 +14,6 @@ describe('User', function() {
       scope = new Syncano({
         accountKey: config.accountKey
       });
-      scope = new scope.Instance(config.instance);
     });
 
     after(function() {
@@ -24,19 +22,19 @@ describe('User', function() {
     });
 
     it('instance.user is an user object', function() {
-      (scope.user.type).should.equal('user');
-      (scope.user).should.have.keys(['list', 'add', 'detail', 'update', 'delete', 'resetKey']);
-      (scope.user.list).should.be.a.Function();
-      (scope.user.add).should.be.a.Function();
-      (scope.user.detail).should.be.a.Function();
-      (scope.user.delete).should.be.a.Function();
-      (scope.user.update).should.be.a.Function();
-      (scope.user.resetKey).should.be.a.Function();
+      (scope.instance(config.instance).user().type).should.equal('user');
+      (scope.instance(config.instance).user()).should.have.keys(['list', 'add', 'detail', 'update', 'delete', 'resetKey']);
+      (scope.instance(config.instance).user().list).should.be.a.Function();
+      (scope.instance(config.instance).user().add).should.be.a.Function();
+      (scope.instance(config.instance).user().detail).should.be.a.Function();
+      (scope.instance(config.instance).user().delete).should.be.a.Function();
+      (scope.instance(config.instance).user().update).should.be.a.Function();
+      (scope.instance(config.instance).user().resetKey).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.user.list();
+      func = scope.instance(config.instance).user().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -51,7 +49,7 @@ describe('User', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.user.detail(config.userId);
+      func = scope.instance(config.instance).user().detail(config.userId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -66,7 +64,7 @@ describe('User', function() {
 
     it('update() should recieve correct options', function(done) {
       var func, res;
-      func = scope.user.update(config.userId, {});
+      func = scope.instance(config.instance).user().update(config.userId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
@@ -81,7 +79,7 @@ describe('User', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.user.delete(config.userId);
+      func = scope.instance(config.instance).user().delete(config.userId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
@@ -96,7 +94,7 @@ describe('User', function() {
 
     it('resetKey() should recieve correct options', function(done) {
       var func, res;
-      func = scope.user.resetKey(config.userId);
+      func = scope.instance(config.instance).user().resetKey(config.userId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
@@ -111,7 +109,7 @@ describe('User', function() {
 
 
     it('should create a new user object', function() {
-      scope = new scope.User(config.userId);
+      scope = new scope.instance(config.instance).user(config.userId);
       (scope.type).should.equal('user');
       (scope).should.have.keys(['config', 'detail', 'update', 'delete', 'resetKey', 'group']);
       (scope.detail).should.be.a.Function();
@@ -260,15 +258,15 @@ describe('User', function() {
     });
 
     it('this.user should be user object', function() {
-      (scope.user.type).should.equal('user');
-      (scope.user).should.have.keys(['add', 'login']);
-      (scope.user.add).should.be.a.Function();
-      (scope.user.login).should.be.a.Function();
+      (scope.user().type).should.equal('user');
+      (scope.user()).should.have.keys(['add', 'login']);
+      (scope.user().add).should.be.a.Function();
+      (scope.user().login).should.be.a.Function();
     });
 
     it('add() should recieve correct options', function(done) {
       var func, res;
-      func = scope.user.add({});
+      func = scope.user().add({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
@@ -283,7 +281,7 @@ describe('User', function() {
 
     it('login() should recieve correct options', function(done) {
       var func, res;
-      func = scope.user.login({});
+      func = scope.user().login({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
@@ -298,7 +296,7 @@ describe('User', function() {
 
     it('login() (social login) should recieve correct options', function(done) {
       var func, res;
-      func = scope.user.login({socialToken: config.socialToken, backend: config.backend});
+      func = scope.user().login({socialToken: config.socialToken, backend: config.backend});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
@@ -334,16 +332,16 @@ describe('User', function() {
     });
 
     it('this.user should be user object', function() {
-      (scope.user.type).should.equal('user');
-      (scope.user).should.have.keys(['add', 'detail', 'update']);
-      (scope.user.add).should.be.a.Function();
-      (scope.user.detail).should.be.a.Function();
-      (scope.user.update).should.be.a.Function();
+      (scope.user().type).should.equal('user');
+      (scope.user()).should.have.keys(['add', 'detail', 'update']);
+      (scope.user().add).should.be.a.Function();
+      (scope.user().detail).should.be.a.Function();
+      (scope.user().update).should.be.a.Function();
     });
 
     it('add() should recieve correct options', function(done) {
       var func, res;
-      func = scope.user.add({});
+      func = scope.user().add({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
@@ -359,7 +357,7 @@ describe('User', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.user.detail();
+      func = scope.user().detail();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -374,7 +372,7 @@ describe('User', function() {
 
     it('update() should recieve correct options', function(done) {
       var func, res;
-      func = scope.user.update({});
+      func = scope.user().update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');

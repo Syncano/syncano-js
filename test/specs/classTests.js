@@ -13,7 +13,6 @@ describe('Class', function() {
       scope = new Syncano({
         accountKey: config.accountKey
       });
-      scope = new scope.Instance(config.instance);
     });
 
     after(function() {
@@ -21,19 +20,19 @@ describe('Class', function() {
       mockery.disable();
     });
 
-    it('instance.class is an class object', function() {
-      (scope.class.type).should.equal('class');
-      (scope.class).should.have.properties(['list', 'add', 'detail', 'update', 'delete']);
-      (scope.class.list).should.be.a.Function();
-      (scope.class.add).should.be.a.Function();
-      (scope.class.detail).should.be.a.Function();
-      (scope.class.delete).should.be.a.Function();
-      (scope.class.update).should.be.a.Function();
+    it('is a class object', function() {
+      (scope.instance(config.instance).class().type).should.equal('class');
+      (scope.instance(config.instance).class()).should.have.keys(['list', 'add', 'detail', 'update', 'delete']);
+      (scope.instance(config.instance).class().list).should.be.a.Function();
+      (scope.instance(config.instance).class().add).should.be.a.Function();
+      (scope.instance(config.instance).class().detail).should.be.a.Function();
+      (scope.instance(config.instance).class().delete).should.be.a.Function();
+      (scope.instance(config.instance).class().update).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.class.list();
+      func = scope.instance(config.instance).class().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -48,7 +47,7 @@ describe('Class', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.class.detail(config.className);
+      func = scope.instance(config.instance).class().detail(config.className);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -63,7 +62,7 @@ describe('Class', function() {
 
     it('update() should recieve correct options', function(done) {
       var func, res;
-      func = scope.class.update(config.className, {});
+      func = scope.instance(config.instance).class().update(config.className, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
@@ -78,7 +77,7 @@ describe('Class', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.class.delete(config.className);
+      func = scope.instance(config.instance).class().delete(config.className);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
@@ -93,14 +92,13 @@ describe('Class', function() {
 
 
     it('should create a new class object', function() {
-      scope = new scope.Class(config.className);
+      scope = new scope.instance(config.instance).class(config.className);
       (scope.type).should.equal('class');
-      (scope).should.have.properties(['detail', 'update', 'delete', 'dataobject', 'DataObject']);
+      (scope).should.have.keys(['config', 'detail', 'update', 'delete', 'dataobject']);
       (scope.detail).should.be.a.Function();
       (scope.delete).should.be.a.Function();
       (scope.update).should.be.a.Function();
-      (scope.dataobject).should.be.an.Object();
-      (scope.DataObject).should.be.an.Function();
+      (scope.dataobject).should.be.an.Function();
     });
 
     it('detail() should recieve correct options', function(done) {
@@ -168,13 +166,13 @@ describe('Class', function() {
     });
 
     it('this.class should be class object', function() {
-      (scope.class.type).should.equal('class');
-      (scope.class).should.have.properties(['list', 'detail']);
+      (scope.class().type).should.equal('class');
+      (scope.class()).should.have.keys(['list', 'detail']);
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.class.list();
+      func = scope.class().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -189,7 +187,7 @@ describe('Class', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.class.detail(config.className);
+      func = scope.class().detail(config.className);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -203,9 +201,9 @@ describe('Class', function() {
     });
 
     it('should return new Class', function() {
-      scope = new scope.Class(config.className);
+      scope = new scope.class(config.className);
       (scope.type).should.equal('class');
-      (scope).should.have.properties(['detail']);
+      (scope).should.have.keys(['config', 'detail', 'dataobject']);
     });
 
   });
@@ -228,15 +226,15 @@ describe('Class', function() {
       mockery.disable();
     });
 
-    it('this.class should be class object', function() {
-      (scope.class.type).should.equal('class');
-      (scope.class).should.have.properties(['list', 'detail']);
+    it('is a class object', function() {
+      (scope.class().type).should.equal('class');
+      (scope.class()).should.have.keys(['list', 'detail']);
     });
 
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.class.list();
+      func = scope.class().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -252,7 +250,7 @@ describe('Class', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.class.detail(config.className);
+      func = scope.class().detail(config.className);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -267,9 +265,9 @@ describe('Class', function() {
     });
 
     it('should return new Class', function() {
-      scope = new scope.Class(config.className);
+      scope = new scope.class(config.className);
       (scope.type).should.equal('class');
-      (scope).should.have.properties(['detail']);
+      (scope).should.have.keys(['config', 'detail', 'dataobject']);
     });
 
   });

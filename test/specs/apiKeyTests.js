@@ -4,7 +4,7 @@ var should = require('should');
 var mockery = require('mockery');
 var config = require('../config.js');
 
-describe('Instance', function() {
+describe('ApiKey', function() {
   describe('(Account Scope)', function() {
     var requestMock, Syncano, scope;
     before(function() {
@@ -14,7 +14,6 @@ describe('Instance', function() {
       scope = new Syncano({
         accountKey: config.accountKey
       });
-      scope = new scope.Instance(config.instance);
     });
 
     after(function() {
@@ -22,18 +21,18 @@ describe('Instance', function() {
       mockery.disable();
     });
 
-    it('instance.apikey should be apikey object', function() {
-      (scope.apikey.type).should.equal('apikey');
-      (scope.apikey).should.have.properties(['list', 'detail', 'resetKey', 'delete']);
-      (scope.apikey.list).should.be.a.Function();
-      (scope.apikey.detail).should.be.a.Function();
-      (scope.apikey.delete).should.be.a.Function();
-      (scope.apikey.resetKey).should.be.a.Function();
+    it('should be apikey object', function() {
+      (scope.instance(config.instance).apikey().type).should.equal('apikey');
+      (scope.instance(config.instance).apikey()).should.have.keys(['list', 'detail', 'add', 'resetKey', 'delete']);
+      (scope.instance(config.instance).apikey().list).should.be.a.Function();
+      (scope.instance(config.instance).apikey().detail).should.be.a.Function();
+      (scope.instance(config.instance).apikey().delete).should.be.a.Function();
+      (scope.instance(config.instance).apikey().resetKey).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.apikey.list();
+      func = scope.instance(config.instance).apikey().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -48,7 +47,7 @@ describe('Instance', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.apikey.detail(config.apiKeyId);
+      func = scope.instance(config.instance).apikey().detail(config.apiKeyId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -61,9 +60,24 @@ describe('Instance', function() {
       });
     });
 
+    it('add() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.instance(config.instance).apikey().add({});
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('POST');
+        (res.url).should.equal('instances/' + config.instance + '/api_keys/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.accountKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
     it('resetKey() should recieve correct options', function(done) {
       var func, res;
-      func = scope.apikey.resetKey(config.apiKeyId);
+      func = scope.instance(config.instance).apikey().resetKey(config.apiKeyId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
@@ -78,7 +92,7 @@ describe('Instance', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.apikey.delete(config.apiKeyId);
+      func = scope.instance(config.instance).apikey().delete(config.apiKeyId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
@@ -92,7 +106,7 @@ describe('Instance', function() {
     });
 
     it('should create new ApiKey object', function() {
-      scope = new scope.ApiKey(config.apiKeyId);
+      scope = new scope.instance(config.instance).apikey(config.apiKeyId);
       (scope.type).should.equal('apikey');
       (scope).should.have.properties(['detail', 'resetKey', 'delete']);
       (scope.detail).should.be.a.Function();

@@ -16,6 +16,8 @@ var Account = function(config) {
 
   if (opts && opts.accountKey) {
     SingleObj.call(this, opts, ['detail', 'update', 'resetKey', 'changePw', 'setPw']);
+    this.invitation = classBuilder(Invitation, opts);
+    this.instance = classBuilder(Instance, opts);
   } else {
     PluralObj.call(this, {}, ['login', 'register', 'resendEmail', 'resetPw', 'confirmResetPw', 'activate']);
   }
@@ -94,8 +96,7 @@ var Class = function Class(config, id) {
   if (id) {
     opts.className = id;
     SingleObj.call(this, opts, singleFunc);
-    this.dataobject = new DataObject(opts);
-    this.DataObject = classBuilder(DataObject, opts);
+    this.dataobject = classBuilder(DataObject, opts);
 
   } else {
     PluralObj.call(this, opts, pluralFunc);
@@ -107,14 +108,16 @@ var Class = function Class(config, id) {
 Class.prototype.constructor = Class;
 Class.prototype.type = 'class';
 
+// TODO Add runtimes() to codebox;
+
 var CodeBox = function CodeBox(config, id) {
   var opts = _.merge({}, config);
 
   if (id) {
     opts.codeboxId = id;
-    SingleObj.call(this, opts, ['detail', 'update', 'delete', 'run', 'traces', 'trace']);
+    SingleObj.call(this, opts, ['detail', 'update', 'delete', 'run', 'traces', 'trace', 'runtimes']);
   } else {
-    PluralObj.call(this, opts);
+    PluralObj.call(this, opts, ['list', 'detail', 'add', 'update', 'delete', 'runtimes']);
   }
   return this;
 };
@@ -168,13 +171,9 @@ var Instance = function(config, id) {
 
     _.forEach(objArr, function(Obj) {
       var name = Obj.toString().match(/^function\s*([^\s(]+)/)[1];
-      self[name.toLowerCase()] = new Obj(opts);
+      self[name.toLowerCase()] = classBuilder(Obj, opts);
     });
 
-    _.forEach(objArr, function(Obj) {
-      var name = Obj.toString().match(/^function\s*([^\s(]+)/)[1];
-      self[name] = classBuilder(Obj, opts);
-    });
   } else {
     PluralObj.call(this, opts, pluralFunc);
   }
@@ -202,7 +201,9 @@ var Group = function Group(config, id) {
   if (id) {
     opts.groupId = id;
     SingleObj.call(this, opts, singleFunc);
-    this.user = new User(opts);
+    if (opts.accountKey) {
+      this.user = new User(opts);
+    }
   } else {
     PluralObj.call(this, opts, pluralFunc);
   }

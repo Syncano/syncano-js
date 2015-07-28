@@ -3,7 +3,7 @@
 var should = require('should');
 var mockery = require('mockery');
 var config = require('../config.js');
-// TODO Finish testing specs
+
 describe('Group', function() {
   describe('(Account Scope)', function() {
     var requestMock, Syncano, scope;
@@ -14,7 +14,6 @@ describe('Group', function() {
       scope = new Syncano({
         accountKey: config.accountKey
       });
-      scope = new scope.Instance(config.instance);
     });
 
     after(function() {
@@ -23,18 +22,18 @@ describe('Group', function() {
     });
 
     it('instance.group should be group object', function() {
-      (scope.group.type).should.equal('group');
-      (scope.group).should.have.properties(['list', 'add', 'detail', 'update', 'delete']);
-      (scope.group.list).should.be.a.Function();
-      (scope.group.add).should.be.a.Function();
-      (scope.group.detail).should.be.a.Function();
-      (scope.group.delete).should.be.a.Function();
-      (scope.group.update).should.be.a.Function();
+      (scope.instance(config.instance).group().type).should.equal('group');
+      (scope.instance(config.instance).group()).should.have.properties(['list', 'add', 'detail', 'update', 'delete']);
+      (scope.instance(config.instance).group().list).should.be.a.Function();
+      (scope.instance(config.instance).group().add).should.be.a.Function();
+      (scope.instance(config.instance).group().detail).should.be.a.Function();
+      (scope.instance(config.instance).group().delete).should.be.a.Function();
+      (scope.instance(config.instance).group().update).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.group.list();
+      func = scope.instance(config.instance).group().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -49,7 +48,7 @@ describe('Group', function() {
 
     it('add() should recieve correct options', function(done) {
       var func, res;
-      func = scope.group.add({});
+      func = scope.instance(config.instance).group().add({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
@@ -64,7 +63,7 @@ describe('Group', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.group.detail(config.groupId);
+      func = scope.instance(config.instance).group().detail(config.groupId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -79,7 +78,7 @@ describe('Group', function() {
 
     it('update() should recieve correct options', function(done) {
       var func, res;
-      func = scope.group.update(config.groupId, {});
+      func = scope.instance(config.instance).group().update(config.groupId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
@@ -94,7 +93,7 @@ describe('Group', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.group.delete(config.groupId);
+      func = scope.instance(config.instance).group().delete(config.groupId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
@@ -108,7 +107,7 @@ describe('Group', function() {
     });
 
     it('should return new Group', function() {
-      scope = new scope.Group(config.groupId);
+      scope = new scope.instance(config.instance).group(config.groupId);
       (scope.type).should.equal('group');
       (scope).should.have.properties(['detail', 'update', 'delete', 'user']);
       (scope.detail).should.be.a.Function();
@@ -241,13 +240,13 @@ describe('Group', function() {
       mockery.disable();
     });
     it('this.group should be group object', function() {
-      (scope.group.type).should.equal('group');
-      (scope.group).should.have.properties(['list', 'detail']);
+      (scope.group().type).should.equal('group');
+      (scope.group()).should.have.properties(['list', 'detail']);
     });
     it('should return new Group', function() {
-      scope = new scope.Group(config.groupId);
+      scope = new scope.group(config.groupId);
       (scope.type).should.equal('group');
-      (scope).should.have.properties(['detail']);
+      (scope).should.have.keys(['config', 'detail']);
     });
   });
 
@@ -269,13 +268,13 @@ describe('Group', function() {
       mockery.disable();
     });
     it('this.group should be group object', function() {
-      (scope.group.type).should.equal('group');
-      (scope.group).should.have.properties(['list', 'detail']);
+      (scope.group().type).should.equal('group');
+      (scope.group()).should.have.properties(['list', 'detail']);
     });
     it('should return new Group', function() {
-      scope = new scope.Group(config.groupId);
+      scope = new scope.group(config.groupId);
       (scope.type).should.equal('group');
-      (scope).should.have.properties(['detail']);
+      (scope).should.have.keys(['config', 'detail']);
     });
   });
 });

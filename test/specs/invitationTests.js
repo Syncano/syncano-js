@@ -3,7 +3,6 @@
 var should = require('should');
 var mockery = require('mockery');
 var config = require('../config.js');
-// TODO Finish testing specs
 
 describe('Invitation', function() {
   describe('(Account Scope)', function() {
@@ -22,18 +21,18 @@ describe('Invitation', function() {
       mockery.disable();
     });
 
-    it('invitation is an invitation object', function() {
-      (scope.invitation.type).should.equal('invitation');
-      (scope.invitation).should.have.keys(['list', 'detail', 'accept', 'delete']);
-      (scope.invitation.list).should.be.a.Function();
-      (scope.invitation.detail).should.be.a.Function();
-      (scope.invitation.delete).should.be.a.Function();
-      (scope.invitation.accept).should.be.a.Function();
+    it('is an invitation object', function() {
+      (scope.invitation().type).should.equal('invitation');
+      (scope.invitation()).should.have.keys(['list', 'detail', 'accept', 'delete']);
+      (scope.invitation().list).should.be.a.Function();
+      (scope.invitation().detail).should.be.a.Function();
+      (scope.invitation().delete).should.be.a.Function();
+      (scope.invitation().accept).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.invitation.list();
+      func = scope.invitation().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -48,7 +47,7 @@ describe('Invitation', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.invitation.detail(config.inviteId);
+      func = scope.invitation().detail(config.inviteId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -63,7 +62,7 @@ describe('Invitation', function() {
 
     it('accept() should recieve correct options', function(done) {
       var func, res;
-      func = scope.invitation.accept({});
+      func = scope.invitation().accept({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
@@ -78,7 +77,7 @@ describe('Invitation', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.invitation.delete(config.inviteId);
+      func = scope.invitation().delete(config.inviteId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
@@ -102,7 +101,6 @@ describe('Invitation', function() {
       scope = new Syncano({
         accountKey: config.accountKey
       });
-      scope = new scope.Instance(config.instance);
     });
 
     after(function() {
@@ -110,19 +108,19 @@ describe('Invitation', function() {
       mockery.disable();
     });
 
-    it('invitation is an invitation object', function() {
-      (scope.invitation.type).should.equal('invitation');
-      (scope.invitation).should.have.keys(['list', 'detail', 'sendEmail', 'resendEmail','delete']);
-      (scope.invitation.list).should.be.a.Function();
-      (scope.invitation.detail).should.be.a.Function();
-      (scope.invitation.delete).should.be.a.Function();
-      (scope.invitation.sendEmail).should.be.a.Function();
-      (scope.invitation.resendEmail).should.be.a.Function();
+    it('is an invitation object', function() {
+      (scope.instance(config.instance).invitation().type).should.equal('invitation');
+      (scope.instance(config.instance).invitation()).should.have.keys(['list', 'detail', 'sendEmail', 'resendEmail','delete']);
+      (scope.instance(config.instance).invitation().list).should.be.a.Function();
+      (scope.instance(config.instance).invitation().detail).should.be.a.Function();
+      (scope.instance(config.instance).invitation().delete).should.be.a.Function();
+      (scope.instance(config.instance).invitation().sendEmail).should.be.a.Function();
+      (scope.instance(config.instance).invitation().resendEmail).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.invitation.list();
+      func = scope.instance(config.instance).invitation().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -137,7 +135,7 @@ describe('Invitation', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.invitation.detail(config.inviteId);
+      func = scope.instance(config.instance).invitation().detail(config.inviteId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -152,7 +150,7 @@ describe('Invitation', function() {
 
     it('sendEmail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.invitation.sendEmail({});
+      func = scope.instance(config.instance).invitation().sendEmail({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
@@ -167,7 +165,7 @@ describe('Invitation', function() {
 
     it('resendEmail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.invitation.resendEmail({});
+      func = scope.instance(config.instance).invitation().resendEmail({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
@@ -182,7 +180,7 @@ describe('Invitation', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.invitation.delete(config.inviteId);
+      func = scope.instance(config.instance).invitation().delete(config.inviteId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');

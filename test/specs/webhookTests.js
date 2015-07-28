@@ -4,7 +4,7 @@ var should = require('should');
 var mockery = require('mockery');
 var config = require('../config.js');
 
-describe('Instance', function() {
+describe('Webhook', function() {
   describe('(Account Scope)', function() {
     var requestMock, Syncano, scope;
     before(function() {
@@ -14,7 +14,6 @@ describe('Instance', function() {
       scope = new Syncano({
         accountKey: config.accountKey
       });
-      scope = new scope.Instance(config.instance);
     });
 
     after(function() {
@@ -23,18 +22,18 @@ describe('Instance', function() {
     });
 
     it('instance.webhook is an webhook object', function() {
-      (scope.webhook.type).should.equal('webhook');
-      (scope.webhook).should.have.properties(['list', 'add', 'detail', 'update', 'delete']);
-      (scope.webhook.list).should.be.a.Function();
-      (scope.webhook.add).should.be.a.Function();
-      (scope.webhook.detail).should.be.a.Function();
-      (scope.webhook.delete).should.be.a.Function();
-      (scope.webhook.update).should.be.a.Function();
+      (scope.instance(config.instance).webhook().type).should.equal('webhook');
+      (scope.instance(config.instance).webhook()).should.have.keys(['list', 'add', 'detail', 'update', 'delete']);
+      (scope.instance(config.instance).webhook().list).should.be.a.Function();
+      (scope.instance(config.instance).webhook().add).should.be.a.Function();
+      (scope.instance(config.instance).webhook().detail).should.be.a.Function();
+      (scope.instance(config.instance).webhook().delete).should.be.a.Function();
+      (scope.instance(config.instance).webhook().update).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.webhook.list();
+      func = scope.instance(config.instance).webhook().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -49,7 +48,7 @@ describe('Instance', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.webhook.detail(config.webhookId);
+      func = scope.instance(config.instance).webhook().detail(config.webhookId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -64,7 +63,7 @@ describe('Instance', function() {
 
     it('update() should recieve correct options', function(done) {
       var func, res;
-      func = scope.webhook.update(config.webhookId, {});
+      func = scope.instance(config.instance).webhook().update(config.webhookId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
@@ -79,7 +78,7 @@ describe('Instance', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.webhook.delete(config.webhookId);
+      func = scope.instance(config.instance).webhook().delete(config.webhookId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
@@ -94,9 +93,9 @@ describe('Instance', function() {
 
 
     it('should create a new webhook object', function() {
-      scope = new scope.WebHook(config.webhookId);
+      scope = new scope.instance(config.instance).webhook(config.webhookId);
       (scope.type).should.equal('webhook');
-      (scope).should.have.properties(['detail', 'update', 'delete', 'run', 'traces', 'trace']);
+      (scope).should.have.keys(['config', 'detail', 'update', 'delete', 'run', 'traces', 'trace']);
       (scope.detail).should.be.a.Function();
       (scope.delete).should.be.a.Function();
       (scope.update).should.be.a.Function();

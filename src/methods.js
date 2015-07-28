@@ -74,14 +74,6 @@ var methods = {
         opts.tmpl = 'instances/<%= instance %>/user/';
       }
 
-      if (config.groupId && config.type === "user") {
-        opts.tmpl = 'instances/<%= instance %>/groups/<%= groupId %>/users/';
-      }
-
-      if (config.userId && config.type === "group") {
-        opts.tmpl = 'instances/<%= instance %>/users/<%= userId %>/groups/';
-      }
-
       return opts;
   },
   delete: function _delete(config) {
@@ -106,6 +98,9 @@ var methods = {
         path: 'runtimes',
         func: {single: core.filterReq, plural: core.filterReq}
       };
+
+      opts.tmpl = 'instances/<%= instance %>/codeboxes/';
+
       return opts;
   },
   resetKey: function resetKey(config) {

@@ -23,28 +23,18 @@ describe('Syncano (Instance Scope)', function() {
     mockery.deregisterMock('request');
     mockery.disable();
   });
-  it('should return instance scope', function() {
+  
+  it('should return instance object', function() {
     (scope).should.be.type('object');
     (scope.type).should.equal('instance');
-    (scope.config).should.have.properties(['apiKey', 'instance']);
-    (scope.config).should.not.have.properties(['accountKey', 'userKey']);
-    (scope).should.have.property('detail').which.is.a.Function();
-    (scope).should.have.property('Channel').which.is.a.Function();
-    (scope).should.have.property('channel').which.is.an.Object();
-    (scope.channel).should.have.properties(['list', 'detail', 'detail', 'history', 'publish', 'poll']);
-    (scope.channel.type).should.equal('channel');
-    (scope).should.have.property('Class').which.is.a.Function();
-    (scope).should.have.property('class').which.is.an.Object();
-    (scope.class).should.have.properties(['list', 'detail']);
-    (scope.class.type).should.equal('class');
-    (scope).should.have.property('Group').which.is.a.Function();
-    (scope).should.have.property('group').which.is.an.Object();
-    (scope.group).should.have.properties(['list', 'detail']);
-    (scope.group.type).should.equal('group');
-    (scope).should.have.property('User').which.is.a.Function();
-    (scope).should.have.property('user').which.is.an.Object();
-    (scope.user).should.have.properties(['add', 'login']);
-    (scope.user.type).should.equal('user');
+    (scope).should.have.keys(['config', 'detail', 'channel', 'class', 'group', 'user']);
+    (scope.config).should.have.keys(['apiKey', 'instance']);
+    (scope.detail).should.be.a.Function();
+    (scope.channel).should.be.a.Function();
+    (scope.class).should.be.a.Function();
+    (scope.group).should.be.a.Function();
+    (scope.user).should.be.a.Function();
+
   });
   it('detail() should recieve correct options', function(done) {
     var func, res;

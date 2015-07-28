@@ -4,7 +4,7 @@ var should = require('should');
 var mockery = require('mockery');
 var config = require('../config.js');
 
-describe('Instance', function() {
+describe('Admin', function() {
   describe('(Account Scope)', function() {
     var requestMock, Syncano, scope;
     before(function() {
@@ -14,7 +14,6 @@ describe('Instance', function() {
       scope = new Syncano({
         accountKey: config.accountKey
       });
-      scope = new scope.Instance(config.instance);
     });
 
     after(function() {
@@ -23,17 +22,17 @@ describe('Instance', function() {
     });
 
     it('instance.admin is an admin object', function() {
-      (scope.admin.type).should.equal('admin');
-      (scope.admin).should.have.properties(['list', 'detail', 'update', 'delete']);
-      (scope.admin.list).should.be.a.Function();
-      (scope.admin.detail).should.be.a.Function();
-      (scope.admin.delete).should.be.a.Function();
-      (scope.admin.update).should.be.a.Function();
+      (scope.instance(config.instance).admin().type).should.equal('admin');
+      (scope.instance(config.instance).admin()).should.have.keys(['list', 'detail', 'update', 'delete']);
+      (scope.instance(config.instance).admin().list).should.be.a.Function();
+      (scope.instance(config.instance).admin().detail).should.be.a.Function();
+      (scope.instance(config.instance).admin().delete).should.be.a.Function();
+      (scope.instance(config.instance).admin().update).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.admin.list();
+      func = scope.instance(config.instance).admin().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -48,7 +47,7 @@ describe('Instance', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.admin.detail(config.adminId);
+      func = scope.instance(config.instance).admin().detail(config.adminId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -63,7 +62,7 @@ describe('Instance', function() {
 
     it('update() should recieve correct options', function(done) {
       var func, res;
-      func = scope.admin.update(config.adminId, {});
+      func = scope.instance(config.instance).admin().update(config.adminId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
@@ -78,7 +77,7 @@ describe('Instance', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.admin.delete(config.adminId);
+      func = scope.instance(config.instance).admin().delete(config.adminId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
@@ -93,9 +92,9 @@ describe('Instance', function() {
 
 
     it('should create a new admin object', function() {
-      scope = new scope.Admin(config.adminId);
+      scope = new scope.instance(config.instance).admin(config.adminId);
       (scope.type).should.equal('admin');
-      (scope).should.have.properties(['detail', 'update', 'delete']);
+      (scope).should.have.keys(['config', 'detail', 'update', 'delete']);
       (scope.detail).should.be.a.Function();
       (scope.delete).should.be.a.Function();
       (scope.update).should.be.a.Function();

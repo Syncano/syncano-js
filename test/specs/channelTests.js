@@ -14,7 +14,7 @@ describe('Channel', function() {
       scope = new Syncano({
         accountKey: config.accountKey
       });
-      scope = new scope.Instance(config.instance);
+
     });
 
     after(function() {
@@ -23,18 +23,18 @@ describe('Channel', function() {
     });
 
     it('instance.channel is an channel object', function() {
-      (scope.channel.type).should.equal('channel');
-      (scope.channel).should.have.properties(['list', 'add', 'detail', 'update', 'delete']);
-      (scope.channel.list).should.be.a.Function();
-      (scope.channel.add).should.be.a.Function();
-      (scope.channel.detail).should.be.a.Function();
-      (scope.channel.delete).should.be.a.Function();
-      (scope.channel.update).should.be.a.Function();
+      (scope.instance(config.instance).channel().type).should.equal('channel');
+      (scope.instance(config.instance).channel()).should.have.keys(['list', 'add', 'detail', 'update', 'delete']);
+      (scope.instance(config.instance).channel().list).should.be.a.Function();
+      (scope.instance(config.instance).channel().add).should.be.a.Function();
+      (scope.instance(config.instance).channel().detail).should.be.a.Function();
+      (scope.instance(config.instance).channel().delete).should.be.a.Function();
+      (scope.instance(config.instance).channel().update).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.channel.list();
+      func = scope.instance(config.instance).channel().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -49,7 +49,7 @@ describe('Channel', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.channel.detail(config.channelId);
+      func = scope.instance(config.instance).channel().detail(config.channelId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -64,7 +64,7 @@ describe('Channel', function() {
 
     it('update() should recieve correct options', function(done) {
       var func, res;
-      func = scope.channel.update(config.channelId, {});
+      func = scope.instance(config.instance).channel().update(config.channelId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
@@ -79,7 +79,7 @@ describe('Channel', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.channel.delete(config.channelId);
+      func = scope.instance(config.instance).channel().delete(config.channelId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
@@ -94,9 +94,9 @@ describe('Channel', function() {
 
 
     it('should create a new channel object', function() {
-      scope = new scope.Channel(config.channelId);
+      scope = new scope.instance(config.instance).channel(config.channelId);
       (scope.type).should.equal('channel');
-      (scope).should.have.properties(['detail', 'update', 'delete']);
+      (scope).should.have.keys(['config', 'detail', 'update', 'delete']);
       (scope.detail).should.be.a.Function();
       (scope.delete).should.be.a.Function();
       (scope.update).should.be.a.Function();
@@ -165,14 +165,15 @@ describe('Channel', function() {
       mockery.deregisterMock('request');
       mockery.disable();
     });
-    it('this.channel should be channel object', function() {
-      (scope.channel.type).should.equal('channel');
-      (scope.channel).should.have.properties(['list', 'detail', 'detail', 'history', 'publish', 'poll']);
+    it('should be channel object', function() {
+      (scope.channel().type).should.equal('channel');
+      (scope.channel()).should.have.keys(['list', 'detail', 'detail', 'history', 'publish', 'poll']);
     });
+
     it('should return new Channel', function() {
-      var test = new scope.Channel(config.channel);
-      (test.type).should.equal('channel');
-      (test).should.have.properties(['detail', 'history', 'publish', 'poll']);
+      scope = new scope.channel(config.channelId);
+      (scope.type).should.equal('channel');
+      (scope).should.have.keys(['config', 'detail', 'history', 'publish', 'poll']);
     });
   });
 
@@ -193,14 +194,14 @@ describe('Channel', function() {
       mockery.deregisterMock('request');
       mockery.disable();
     });
-    it('this.channel should be channel object', function() {
-      (scope.channel.type).should.equal('channel');
-      (scope.channel).should.have.properties(['list', 'detail', 'detail', 'history', 'publish', 'poll']);
+    it('should be channel object', function() {
+      (scope.channel().type).should.equal('channel');
+      (scope.channel()).should.have.keys(['list', 'detail', 'detail', 'history', 'publish', 'poll']);
     });
     it('should return new Channel', function() {
-      var test = new scope.Channel(config.channel);
-      (test.type).should.equal('channel');
-      (test).should.have.properties(['detail', 'history', 'publish', 'poll']);
+      scope = new scope.channel(config.channelId);
+      (scope.type).should.equal('channel');
+      (scope).should.have.keys(['config', 'detail', 'history', 'publish', 'poll']);
     });
 
   });

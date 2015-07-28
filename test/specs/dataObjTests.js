@@ -4,7 +4,7 @@ var should = require('should');
 var mockery = require('mockery');
 var config = require('../config.js');
 
-describe('Instance', function() {
+describe('DataObject', function() {
   describe('(Account Scope)', function() {
     var requestMock, Syncano, scope;
     before(function() {
@@ -14,8 +14,6 @@ describe('Instance', function() {
       scope = new Syncano({
         accountKey: config.accountKey
       });
-      scope = new scope.Instance(config.instance);
-      scope = new scope.Class(config.className);
     });
 
     after(function() {
@@ -24,18 +22,18 @@ describe('Instance', function() {
     });
 
     it('instance.dataobject is an dataobject object', function() {
-      (scope.dataobject.type).should.equal('dataobject');
-      (scope.dataobject).should.have.properties(['list', 'add', 'detail', 'update', 'delete']);
-      (scope.dataobject.list).should.be.a.Function();
-      (scope.dataobject.add).should.be.a.Function();
-      (scope.dataobject.detail).should.be.a.Function();
-      (scope.dataobject.delete).should.be.a.Function();
-      (scope.dataobject.update).should.be.a.Function();
+      (scope.instance(config.instance).class(config.className).dataobject().type).should.equal('dataobject');
+      (scope.instance(config.instance).class(config.className).dataobject()).should.have.keys(['list', 'add', 'detail', 'update', 'delete']);
+      (scope.instance(config.instance).class(config.className).dataobject().list).should.be.a.Function();
+      (scope.instance(config.instance).class(config.className).dataobject().add).should.be.a.Function();
+      (scope.instance(config.instance).class(config.className).dataobject().detail).should.be.a.Function();
+      (scope.instance(config.instance).class(config.className).dataobject().delete).should.be.a.Function();
+      (scope.instance(config.instance).class(config.className).dataobject().update).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.dataobject.list();
+      func = scope.instance(config.instance).class(config.className).dataobject().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -50,7 +48,7 @@ describe('Instance', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.dataobject.detail(config.dataobjectId);
+      func = scope.instance(config.instance).class(config.className).dataobject().detail(config.dataobjectId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -65,7 +63,7 @@ describe('Instance', function() {
 
     it('update() should recieve correct options', function(done) {
       var func, res;
-      func = scope.dataobject.update(config.dataobjectId, {});
+      func = scope.instance(config.instance).class(config.className).dataobject().update(config.dataobjectId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
@@ -80,7 +78,7 @@ describe('Instance', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.dataobject.delete(config.dataobjectId);
+      func = scope.instance(config.instance).class(config.className).dataobject().delete(config.dataobjectId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
@@ -95,9 +93,9 @@ describe('Instance', function() {
 
 
     it('should create a new dataobject object', function() {
-      scope = new scope.DataObject(config.dataobjectId);
+      scope = new scope.instance(config.instance).class(config.className).dataobject(config.dataobjectId);
       (scope.type).should.equal('dataobject');
-      (scope).should.have.properties(['detail', 'update', 'delete']);
+      (scope).should.have.keys(['config', 'detail', 'update', 'delete']);
       (scope.detail).should.be.a.Function();
       (scope.delete).should.be.a.Function();
       (scope.update).should.be.a.Function();

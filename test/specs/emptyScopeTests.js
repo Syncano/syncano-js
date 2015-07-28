@@ -19,15 +19,16 @@ describe('Syncano (Empty Scope)', function() {
     mockery.disable();
   });
 
-  it('should return account scope', function() {
-    (scope).should.be.type('object');
+  it('should return account object', function() {
+    (scope).should.be.an.Object();
     (scope.type).should.equal('account');
-    (scope).should.have.property('login').which.is.a.Function();
-    (scope).should.have.property('register').which.is.a.Function();
-    (scope).should.have.property('resendEmail').which.is.a.Function();
-    (scope).should.have.property('resetPw').which.is.a.Function();
-    (scope).should.have.property('confirmResetPw').which.is.a.Function();
-    (scope).should.have.property('activate').which.is.a.Function();
+    (scope).should.have.keys(['login', 'register', 'resendEmail', 'resetPw', 'confirmResetPw', 'activate']);
+    (scope.login).should.be.a.Function();
+    (scope.register).should.be.a.Function();
+    (scope.resendEmail).should.be.a.Function();
+    (scope.resetPw).should.be.a.Function();
+    (scope.confirmResetPw).should.be.a.Function();
+    (scope.activate).should.be.a.Function();
   });
 
   it('login()', function(done) {

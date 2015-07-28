@@ -22,24 +22,20 @@ describe('Syncano (Account Scope)', function() {
     mockery.disable();
   });
 
-  it('should return account scope', function() {
-    (scope).should.be.type('object');
+  it('should return account object', function() {
+    (scope).should.be.an.Object();
     (scope.type).should.equal('account');
-    (scope.config).should.have.properties(['accountKey']);
-    (scope.config).should.not.have.properties(['apiKey', 'userKey', 'instance']);
-    (scope).should.have.property('detail').which.is.a.Function();
-    (scope).should.have.property('update').which.is.a.Function();
-    (scope).should.have.property('resetKey').which.is.a.Function();
-    (scope).should.have.property('changePw').which.is.a.Function();
-    (scope).should.have.property('setPw').which.is.a.Function();
-    (scope).should.have.property('invitation').which.is.an.Object();
-    (scope.invitation.type).should.equal('invitation');
-    (scope.invitation).should.have.properties(['list', 'detail', 'accept', 'delete']);
-    (scope).should.have.property('Instance').which.is.a.Function();
-    (scope).should.have.property('instance').which.is.an.Object();
-    (scope.instance.type).should.equal('instance');
-    (scope.instance).should.have.properties(['list', 'detail', 'update', 'add', 'delete']);
+    (scope).should.have.keys(['config', 'detail', 'update', 'resetKey', 'changePw', 'setPw', 'invitation', 'instance']);
+    (scope.config).should.have.keys(['accountKey']);
+    (scope.detail).should.be.a.Function();
+    (scope.update).should.be.a.Function();
+    (scope.resetKey).should.be.a.Function();
+    (scope.changePw).should.be.a.Function();
+    (scope.setPw).should.be.a.Function();
+    (scope.invitation).should.be.a.Function();
+    (scope.instance).should.be.an.Function();
   });
+
   it('detail() should recieve correct options', function(done) {
     var func, res;
     func = scope.detail();
@@ -54,6 +50,7 @@ describe('Syncano (Account Scope)', function() {
       done(err);
     });
   });
+
   it('update() should recieve correct options', function(done) {
     var func, res;
     func = scope.update({});
@@ -68,6 +65,7 @@ describe('Syncano (Account Scope)', function() {
       done(err);
     });
   });
+
   it('resetKey() should recieve correct options', function(done) {
     var func, res;
     func = scope.resetKey({});
@@ -82,6 +80,7 @@ describe('Syncano (Account Scope)', function() {
       done(err);
     });
   });
+
   it('changePw() should recieve correct options', function(done) {
     var func, res;
     func = scope.changePw({});
@@ -96,6 +95,7 @@ describe('Syncano (Account Scope)', function() {
       done(err);
     });
   });
+
   it('setPw() should recieve correct options', function(done) {
     var func, res;
     func = scope.setPw({});

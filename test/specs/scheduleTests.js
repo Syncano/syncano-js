@@ -4,7 +4,7 @@ var should = require('should');
 var mockery = require('mockery');
 var config = require('../config.js');
 
-describe('Instance', function() {
+describe('Schedule', function() {
   describe('(Account Scope)', function() {
     var requestMock, Syncano, scope;
     before(function() {
@@ -14,7 +14,6 @@ describe('Instance', function() {
       scope = new Syncano({
         accountKey: config.accountKey
       });
-      scope = new scope.Instance(config.instance);
     });
 
     after(function() {
@@ -23,18 +22,18 @@ describe('Instance', function() {
     });
 
     it('instance.schedule is an schedule object', function() {
-      (scope.schedule.type).should.equal('schedule');
-      (scope.schedule).should.have.properties(['list', 'add', 'detail', 'update', 'delete']);
-      (scope.schedule.list).should.be.a.Function();
-      (scope.schedule.add).should.be.a.Function();
-      (scope.schedule.detail).should.be.a.Function();
-      (scope.schedule.delete).should.be.a.Function();
-      (scope.schedule.update).should.be.a.Function();
+      (scope.instance(config.instance).schedule().type).should.equal('schedule');
+      (scope.instance(config.instance).schedule()).should.have.keys(['list', 'add', 'detail', 'update', 'delete']);
+      (scope.instance(config.instance).schedule().list).should.be.a.Function();
+      (scope.instance(config.instance).schedule().add).should.be.a.Function();
+      (scope.instance(config.instance).schedule().detail).should.be.a.Function();
+      (scope.instance(config.instance).schedule().delete).should.be.a.Function();
+      (scope.instance(config.instance).schedule().update).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.schedule.list();
+      func = scope.instance(config.instance).schedule().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -49,7 +48,7 @@ describe('Instance', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.schedule.detail(config.scheduleId);
+      func = scope.instance(config.instance).schedule().detail(config.scheduleId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -64,7 +63,7 @@ describe('Instance', function() {
 
     it('update() should recieve correct options', function(done) {
       var func, res;
-      func = scope.schedule.update(config.scheduleId, {});
+      func = scope.instance(config.instance).schedule().update(config.scheduleId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
@@ -79,7 +78,7 @@ describe('Instance', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.schedule.delete(config.scheduleId);
+      func = scope.instance(config.instance).schedule().delete(config.scheduleId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
@@ -94,9 +93,9 @@ describe('Instance', function() {
 
 
     it('should create a new schedule object', function() {
-      scope = new scope.Schedule(config.scheduleId);
+      scope = new scope.instance(config.instance).schedule(config.scheduleId);
       (scope.type).should.equal('schedule');
-      (scope).should.have.properties(['detail', 'update', 'delete', 'traces', 'trace']);
+      (scope).should.have.keys(['config', 'detail', 'update', 'delete', 'traces', 'trace']);
       (scope.detail).should.be.a.Function();
       (scope.delete).should.be.a.Function();
       (scope.update).should.be.a.Function();
