@@ -16,5 +16,9 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "bluebird": "~2.9.34",
+    "lodash": "~3.10.0"
+  }
 }
