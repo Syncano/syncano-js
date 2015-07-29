@@ -100,7 +100,7 @@ scope.object().method()
 
 The `object` never requires `id`, however, if passed it allows the chain to be scoped to a specific object in your account. Scoped objects like this, typically produce a different set of functionality than the non-scoped objects (since they are now tied to a specific item in your account).
 
-For example, methods like `detail()` could be celled with the `id` in the object place or the method place. This is mostly a preference based on how you are getting your data.
+For example, methods like `detail()` could be called with the `id` in the object place or the method place. This is mostly a preference based on how you are getting your data.
 
 ```js
 account.instance().detail(MY_INSTANCE_NAME); //return a promise with MY_INSTANCE_NAME details
