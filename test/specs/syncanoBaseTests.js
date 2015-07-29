@@ -42,7 +42,7 @@ describe('Syncano', function() {
       (res.qs).should.have.keys(['fields', 'excluded_fields', 'query', 'order_by', 'page_size']);
       (res.qs.fields).should.equal('included');
       (res.qs.excluded_fields).should.equal('excluded');
-      (res.qs.query).should.be.an.Object().which.has.property('some').which.is.exactly('filter');
+      (res.qs.query).should.be.an.String().which.is.equal('{"some":"filter"}');
       (res.qs.order_by).should.equal('-field');
       (res.qs.page_size).should.equal(10);
       done();

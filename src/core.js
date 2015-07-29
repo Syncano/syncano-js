@@ -12,7 +12,7 @@ var _        = require('lodash');
 var Promise  = require('bluebird');
 
 var defaultOptions = {
-  qsStringifyOptions: {sep: ';', eq: ':', options: {}, arrayFormat: 'repeat'},
+  qsStringifyOptions: {arrayFormat: 'repeat'},
   withCredentials: false,
   headers: {
     'User-Agent': 'syncano/version:' + version,
@@ -182,6 +182,9 @@ var apiRequest = function apiRequest(config, cb) {
         response = res.statusMessage;
       } else {
         response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body;
+        if (opt.debug) {
+          response.debug = res;
+        }
       }
 
       resolve(response);

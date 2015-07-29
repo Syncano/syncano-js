@@ -17,18 +17,19 @@ var Syncano = function Syncano(opt) {
     var instance = opt.instance;
     var userKey = opt.userKey || opt.user_key;
     var accountKey = opt.accountKey || opt.account_key;
+    var debug = opt.debug;
   }
 
   if (accountKey) {
-    return new AccountScope(accountKey);
+    return new AccountScope(accountKey, debug);
   }
 
   if (apiKey) {
-    return new InstanceScope(instance, apiKey, userKey);
+    return new InstanceScope(instance, apiKey, userKey, debug);
   }
 
   if (!accountKey && !apiKey) {
-    return new EmptyScope(this);
+    return new EmptyScope(this, debug);
   }
 
 };
@@ -36,7 +37,11 @@ var Syncano = function Syncano(opt) {
 Syncano.prototype.constructor = Syncano;
 
 
-var EmptyScope = function(opt) {
+var EmptyScope = function(opt, debug) {
+  if (debug) {
+    this.config = {};
+    this.config.debug = debug;
+  }
   Objects.Account.call(this, opt);
   return this;
 };
@@ -44,10 +49,14 @@ var EmptyScope = function(opt) {
 EmptyScope.prototype = Object.create(Objects.Account.prototype);
 EmptyScope.prototype.constructor = EmptyScope;
 
-var AccountScope = function(accountKey) {
+var AccountScope = function(accountKey, debug) {
 
   this.config = {};
   this.config.accountKey = accountKey;
+
+  if (debug) {
+    this.config.debug = debug;
+  }
 
   Objects.Account.call(this, this.config);
 
@@ -58,7 +67,7 @@ AccountScope.prototype = Object.create(Objects.Account.prototype);
 AccountScope.prototype.constructor = AccountScope;
 
 
-var InstanceScope = function(instance, apiKey, userKey) {
+var InstanceScope = function(instance, apiKey, userKey, debug) {
 
   this.config = {};
   this.config.apiKey = apiKey;
@@ -66,6 +75,10 @@ var InstanceScope = function(instance, apiKey, userKey) {
 
   if (userKey) {
     this.config.userKey = userKey;
+  }
+
+  if (debug) {
+    this.config.debug = debug;
   }
 
   Objects.Instance.call(this, this.config);

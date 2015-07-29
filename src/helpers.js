@@ -33,9 +33,13 @@ module.exports = {
       }
 
     }
-
-    if (options.filter) {
-      parsedOptions.query = options.filter;
+// TODO Add check for query
+    if (options.filter || options.query) {
+      parsedOptions.query = options.filter || options.query;
+      if (typeof parsedOptions.query !== "object") {
+        throw new Error('Filter must be an object');
+      }
+      parsedOptions.query = JSON.stringify(parsedOptions.query);
     }
 
     if (options.orderBy) {
