@@ -52,10 +52,8 @@ describe('Syncano', function() {
   });
 
   it('should accept a base url', function() {
-    scope = new Syncano({baseUrl: "http://www.google.com"});
-    (Syncano).should.be.a.Function();
-    (scope.constructor).should.be.a.Function();
-    (scope).should.be.an.Object();
+    scope = new Syncano({baseUrl: 'http://www.google.com'});
+    (scope.config).should.have.property('baseUrl').which.is.equal('http://www.google.com');
   });
 
 });

@@ -42,7 +42,7 @@ var Syncano = require('syncano');
 ## Using the Library
 
 With the Syncano platform, there are two basic ways to interact with your account.
- * **Account Level Scope** - Interact with your account as the super admin (recommended for server side interaction) 
+ * **Account Level Scope** - Interact with your account as the super admin (recommended for server side interaction)
  * **Instance Level Scope** - Connects to a specific app instance, and has limited permissions. This is what your app will utilize most, as the user specific methods are accessible here using the `userKey`.
 
 Each of these scopes have different types of functionality, and utilize different apiKeys. Check out the [full documentation] (http://docs.syncano.com/v4.0/docs/authentication) on authentication to be sure you get the appropriate key.
@@ -56,10 +56,10 @@ Based on the type of authentication you need, you can initialize `syncano` with 
 var account = new Syncano({accountKey : "MY_ACCOUNT_KEY"});  
 
 //returns an instance scoped object
-var instance = new Syncano({apiKey : "MY_INSTANCE_KEY", instance: "MY_INSTANCE_NAME"}); 
+var instance = new Syncano({apiKey : "MY_INSTANCE_KEY", instance: "MY_INSTANCE_NAME"});
 ```
 
-Once you have created your initial object, all subsequent calls will be scoped under the initial object, until a new one is created. This should eliminate confusion around what your objects currently are responsible for. 
+Once you have created your initial object, all subsequent calls will be scoped under the initial object, until a new one is created. This should eliminate confusion around what your objects currently are responsible for.
 
 ### General Syncano Object Info
 
@@ -70,7 +70,7 @@ All types of `syncano` objects use a method chaining pattern.  The typical patte
 scope.object([id]).method([id, params, filter {, callback}]); //return a promise
 ```
 
-Depending on the method, `id`, `params`, or both may be required.  `filter` is never required, and `callback` is only required if you are not using promises. 
+Depending on the method, `id`, `params`, or both may be required.  `filter` is never required, and `callback` is only required if you are not using promises.
 
 #### Callbacks/Promises
 
@@ -80,18 +80,18 @@ For clarity - both of these patterns are acceptable:
 //Using Callbacks
 scope.object().method(function(err, res){
    if (err) {console.log(err); return;}
-   console.log(res); 
+   console.log(res);
    return;
 });
 
 //Using Promises - you must handle your errors!
 scope.object().method()
 .then(function(res){
-   console.log(res); 
+   console.log(res);
    return;
 })
 .catch(function(err){
-   console.log(err); 
+   console.log(err);
    return;
 });
 ```
@@ -123,7 +123,7 @@ You can then continue the chaining as normal, and all promises and callbacks wor
 
 ```js
 var my_class = new account.instance(MY_INSTANCE_NAME).class(MY_CLASS_NAME) //return a class object scoped to 'MY_CLASS_NAME'
-my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - returns a promise with the data object's details. 
+my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - returns a promise with the data object's details.
 ```
 
 
@@ -133,7 +133,18 @@ my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - ret
 * Patrick Devivo - [twitter](https://twitter.com/patrickdevivo), [github](https://github.com/patrickdevivo)
 * Jhishan Khan - [twitter](https://twitter.com/jhishan), [github](https://github.com/jhishan)
 
-### ChangeLog
+### Change Log
+* **0.2.2** - 2015-07-30
+    * Added `baseUrl` to config
+        * `new Syncano({baseUrl: 'http://newurl.com'});`
+        * allows for testing with sandbox acocunt
+    * Updated testing
+* **0.2.1** - 2015-07-29
+    * Added debug feature
+        * `new Syncano({debug: true});``
+        * Returns request response object in res.debug
+    * Added check for query or filter when filtering data objects.
+    * Fixed bug with query being encoded incorrectly
 * **0.2.0** - 2015-07-28
     * complete overhaul of the library
     * removed dependancies from syncnano.js
