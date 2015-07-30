@@ -37,7 +37,7 @@ describe('Webhook', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/webhooks/');
+        (res.url).should.equal('/instances/' + config.instance + '/webhooks/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -52,7 +52,7 @@ describe('Webhook', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -67,7 +67,7 @@ describe('Webhook', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -82,7 +82,7 @@ describe('Webhook', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -110,7 +110,7 @@ describe('Webhook', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -125,7 +125,7 @@ describe('Webhook', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -140,7 +140,7 @@ describe('Webhook', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -154,7 +154,7 @@ describe('Webhook', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
-        (res.url).should.equal('instances/' + config.instance + '/webhooks/' + config.webhookId + '/run/');
+        (res.url).should.equal('/instances/' + config.instance + '/webhooks/' + config.webhookId + '/run/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -169,7 +169,7 @@ describe('Webhook', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/webhooks/' + config.webhookId + '/traces/');
+        (res.url).should.equal('/instances/' + config.instance + '/webhooks/' + config.webhookId + '/traces/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -184,7 +184,7 @@ describe('Webhook', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/webhooks/' + config.webhookId + '/traces/' + config.traceId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/webhooks/' + config.webhookId + '/traces/' + config.traceId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();

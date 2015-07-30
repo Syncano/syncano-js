@@ -36,7 +36,7 @@ describe('Admin', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/admins/');
+        (res.url).should.equal('/instances/' + config.instance + '/admins/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -51,7 +51,7 @@ describe('Admin', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/admins/' + config.adminId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/admins/' + config.adminId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -66,7 +66,7 @@ describe('Admin', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('instances/' + config.instance + '/admins/' + config.adminId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/admins/' + config.adminId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -81,7 +81,7 @@ describe('Admin', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('instances/' + config.instance + '/admins/' + config.adminId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/admins/' + config.adminId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -106,7 +106,7 @@ describe('Admin', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/admins/' + config.adminId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/admins/' + config.adminId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -121,7 +121,7 @@ describe('Admin', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('instances/' + config.instance + '/admins/' + config.adminId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/admins/' + config.adminId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -136,7 +136,7 @@ describe('Admin', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('instances/' + config.instance + '/admins/' + config.adminId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/admins/' + config.adminId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();

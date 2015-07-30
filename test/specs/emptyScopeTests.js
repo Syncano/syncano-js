@@ -20,6 +20,8 @@ describe('Syncano (Empty Scope)', function() {
   });
 
   it('should return account object', function() {
+    console.log(scope);
+
     (scope).should.be.an.Object();
     (scope.type).should.equal('account');
     (scope).should.have.keys(['login', 'register', 'resendEmail', 'resetPw', 'confirmResetPw', 'activate']);
@@ -37,7 +39,7 @@ describe('Syncano (Empty Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
-      (res.url).should.equal('account/auth/');
+      (res.url).should.equal('/account/auth/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type']);
       done();
     }).catch(function(err) {
@@ -51,7 +53,7 @@ describe('Syncano (Empty Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
-      (res.url).should.equal('account/register/');
+      (res.url).should.equal('/account/register/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type']);
       done();
     }).catch(function(err) {
@@ -65,7 +67,7 @@ describe('Syncano (Empty Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
-      (res.url).should.equal('account/resend_email/');
+      (res.url).should.equal('/account/resend_email/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type']);
       done();
     }).catch(function(err) {
@@ -79,7 +81,7 @@ describe('Syncano (Empty Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
-      (res.url).should.equal('account/password/reset/');
+      (res.url).should.equal('/account/password/reset/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type']);
       done();
     }).catch(function(err) {
@@ -93,7 +95,7 @@ describe('Syncano (Empty Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
-      (res.url).should.equal('account/password/reset/confirm/');
+      (res.url).should.equal('/account/password/reset/confirm/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type']);
       done();
     }).catch(function(err) {
@@ -107,7 +109,7 @@ describe('Syncano (Empty Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
-      (res.url).should.equal('account/activate/');
+      (res.url).should.equal('/account/activate/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type']);
       done();
     }).catch(function(err) {

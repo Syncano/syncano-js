@@ -23,20 +23,20 @@ var defaultOptions = {
 var url = function(config) {
 
   var urlTmpl = {
-    account: 'account/',
-    admin: (config.adminId) ? 'instances/<%= instance %>/admins/<%= adminId %>/' : 'instances/<%= instance %>/admins/',
-    apikey: (config.apikeyId) ? 'instances/<%= instance %>/api_keys/<%= apikeyId %>/' : 'instances/<%= instance %>/api_keys/',
-    channel: (config.channelId) ? 'instances/<%= instance %>/channels/<%= channelId %>/' : 'instances/<%= instance %>/channels/',
-    class: (config.className) ? 'instances/<%= instance %>/classes/<%= className %>/' : 'instances/<%= instance %>/classes/',
-    codebox: (config.codeboxId) ? 'instances/<%= instance %>/codeboxes/<%= codeboxId %>/' : 'instances/<%= instance %>/codeboxes/',
-    dataobject: (config.dataobjectId) ? 'instances/<%= instance %>/classes/<%= className %>/objects/<%= dataobjectId %>/' : 'instances/<%= instance %>/classes/<%= className %>/objects/',
-    group: (config.groupId) ? 'instances/<%= instance %>/groups/<%= groupId %>/' : 'instances/<%= instance %>/groups/',
-    instance: (config.instance) ? 'instances/<%= instance %>/' : 'instances/',
-    invitation: (config.instance) ? 'instances/<%= instance %>/invitations/' : 'account/invitations/',
-    schedule: (config.scheduleId) ? 'instances/<%= instance %>/schedules/<%= scheduleId %>/' : 'instances/<%= instance %>/schedules/',
-    trigger: (config.triggerId) ? 'instances/<%= instance %>/triggers/<%= triggerId %>/' : 'instances/<%= instance %>/triggers/',
-    webhook: (config.webhookId) ? 'instances/<%= instance %>/webhooks/<%= webhookId %>/' : 'instances/<%= instance %>/webhooks/',
-    user: (config.userId) ? 'instances/<%= instance %>/users/<%= userId %>/' : 'instances/<%= instance %>/users/'
+    account: '/account/',
+    admin: (config.adminId) ? '/instances/<%= instance %>/admins/<%= adminId %>/' : '/instances/<%= instance %>/admins/',
+    apikey: (config.apikeyId) ? '/instances/<%= instance %>/api_keys/<%= apikeyId %>/' : '/instances/<%= instance %>/api_keys/',
+    channel: (config.channelId) ? '/instances/<%= instance %>/channels/<%= channelId %>/' : '/instances/<%= instance %>/channels/',
+    class: (config.className) ? '/instances/<%= instance %>/classes/<%= className %>/' : '/instances/<%= instance %>/classes/',
+    codebox: (config.codeboxId) ? '/instances/<%= instance %>/codeboxes/<%= codeboxId %>/' : '/instances/<%= instance %>/codeboxes/',
+    dataobject: (config.dataobjectId) ? '/instances/<%= instance %>/classes/<%= className %>/objects/<%= dataobjectId %>/' : '/instances/<%= instance %>/classes/<%= className %>/objects/',
+    group: (config.groupId) ? '/instances/<%= instance %>/groups/<%= groupId %>/' : '/instances/<%= instance %>/groups/',
+    instance: (config.instance) ? '/instances/<%= instance %>/' : '/instances/',
+    invitation: (config.instance) ? '/instances/<%= instance %>/invitations/' : '/account/invitations/',
+    schedule: (config.scheduleId) ? '/instances/<%= instance %>/schedules/<%= scheduleId %>/' : '/instances/<%= instance %>/schedules/',
+    trigger: (config.triggerId) ? '/instances/<%= instance %>/triggers/<%= triggerId %>/' : '/instances/<%= instance %>/triggers/',
+    webhook: (config.webhookId) ? '/instances/<%= instance %>/webhooks/<%= webhookId %>/' : '/instances/<%= instance %>/webhooks/',
+    user: (config.userId) ? '/instances/<%= instance %>/users/<%= userId %>/' : '/instances/<%= instance %>/users/'
   };
 
   var buildUrl = function urlAddOns(config) {
@@ -166,8 +166,7 @@ var paramIdReq = function(config) {
 var apiRequest = function apiRequest(config, cb) {
   var opt = _.merge({}, defaultOptions, config, helpers.addAuth(config));
   opt.url = url(opt);
-  // TODO get correct base url
-  opt.baseUrl = 'https://api.syncano.io/v1/';
+  opt.baseUrl = config.baseUrl || 'https://api.syncano.io/v1';
 
   return new Promise(function(resolve, reject) {
     request(opt.url, opt, function(err, res) {

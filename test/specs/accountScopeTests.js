@@ -23,6 +23,7 @@ describe('Syncano (Account Scope)', function() {
   });
 
   it('should return account object', function() {
+    console.log(scope);
     (scope).should.be.an.Object();
     (scope.type).should.equal('account');
     (scope).should.have.keys(['config', 'detail', 'update', 'resetKey', 'changePw', 'setPw', 'invitation', 'instance']);
@@ -42,7 +43,7 @@ describe('Syncano (Account Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('GET');
-      (res.url).should.equal('account/');
+      (res.url).should.equal('/account/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
       (res.headers['X-API-KEY']).should.equal(config.accountKey);
       done();
@@ -57,7 +58,7 @@ describe('Syncano (Account Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('PATCH');
-      (res.url).should.equal('account/');
+      (res.url).should.equal('/account/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
       (res.headers['X-API-KEY']).should.equal(config.accountKey);
       done();
@@ -72,7 +73,7 @@ describe('Syncano (Account Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
-      (res.url).should.equal('account/reset_key/');
+      (res.url).should.equal('/account/reset_key/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
       (res.headers['X-API-KEY']).should.equal(config.accountKey);
       done();
@@ -87,7 +88,7 @@ describe('Syncano (Account Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
-      (res.url).should.equal('account/password/');
+      (res.url).should.equal('/account/password/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
       (res.headers['X-API-KEY']).should.equal(config.accountKey);
       done();
@@ -102,7 +103,7 @@ describe('Syncano (Account Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
-      (res.url).should.equal('account/password/set/');
+      (res.url).should.equal('/account/password/set/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
       (res.headers['X-API-KEY']).should.equal(config.accountKey);
       done();

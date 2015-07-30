@@ -36,7 +36,7 @@ describe('Invitation', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('account/invitations/');
+        (res.url).should.equal('/account/invitations/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -51,7 +51,7 @@ describe('Invitation', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('account/invitations/' + config.inviteId + '/');
+        (res.url).should.equal('/account/invitations/' + config.inviteId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -66,7 +66,7 @@ describe('Invitation', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
-        (res.url).should.equal('account/invitations/accept/');
+        (res.url).should.equal('/account/invitations/accept/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -81,7 +81,7 @@ describe('Invitation', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('account/invitations/' + config.inviteId + '/');
+        (res.url).should.equal('/account/invitations/' + config.inviteId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -124,7 +124,7 @@ describe('Invitation', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/invitations/');
+        (res.url).should.equal('/instances/' + config.instance + '/invitations/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -139,7 +139,7 @@ describe('Invitation', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/invitations/' + config.inviteId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/invitations/' + config.inviteId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -154,7 +154,7 @@ describe('Invitation', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
-        (res.url).should.equal('instances/' + config.instance + '/invitations/');
+        (res.url).should.equal('/instances/' + config.instance + '/invitations/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -169,7 +169,7 @@ describe('Invitation', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
-        (res.url).should.equal('instances/' + config.instance + '/invitations/resend/');
+        (res.url).should.equal('/instances/' + config.instance + '/invitations/resend/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -184,7 +184,7 @@ describe('Invitation', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('instances/' + config.instance + '/invitations/' + config.inviteId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/invitations/' + config.inviteId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();

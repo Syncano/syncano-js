@@ -39,7 +39,7 @@ describe('CodeBox', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/codeboxes/');
+        (res.url).should.equal('/instances/' + config.instance + '/codeboxes/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -54,7 +54,7 @@ describe('CodeBox', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -69,7 +69,7 @@ describe('CodeBox', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -84,7 +84,7 @@ describe('CodeBox', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -99,7 +99,7 @@ describe('CodeBox', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/codeboxes/runtimes/');
+        (res.url).should.equal('/instances/' + config.instance + '/codeboxes/runtimes/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -124,7 +124,7 @@ describe('CodeBox', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -139,7 +139,7 @@ describe('CodeBox', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -154,7 +154,7 @@ describe('CodeBox', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -169,7 +169,7 @@ describe('CodeBox', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
-        (res.url).should.equal('instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/run/');
+        (res.url).should.equal('/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/run/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -184,7 +184,7 @@ describe('CodeBox', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/traces/');
+        (res.url).should.equal('/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/traces/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -199,7 +199,7 @@ describe('CodeBox', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/traces/' + config.traceId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/traces/' + config.traceId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -214,7 +214,7 @@ describe('CodeBox', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/codeboxes/runtimes/');
+        (res.url).should.equal('/instances/' + config.instance + '/codeboxes/runtimes/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();

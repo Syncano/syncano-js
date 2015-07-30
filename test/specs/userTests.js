@@ -38,7 +38,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/users/');
+        (res.url).should.equal('/instances/' + config.instance + '/users/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -53,7 +53,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/users/' + config.userId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/users/' + config.userId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -68,7 +68,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('instances/' + config.instance + '/users/' + config.userId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/users/' + config.userId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -83,7 +83,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('instances/' + config.instance + '/users/' + config.userId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/users/' + config.userId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -98,7 +98,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
-        (res.url).should.equal('instances/' + config.instance + '/users/' + config.userId + '/reset_key/');
+        (res.url).should.equal('/instances/' + config.instance + '/users/' + config.userId + '/reset_key/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -125,7 +125,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/users/' + config.userId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/users/' + config.userId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -140,7 +140,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('instances/' + config.instance + '/users/' + config.userId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/users/' + config.userId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -155,7 +155,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('instances/' + config.instance + '/users/' + config.userId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/users/' + config.userId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -170,7 +170,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
-        (res.url).should.equal('instances/' + config.instance + '/users/' + config.userId + '/reset_key/');
+        (res.url).should.equal('/instances/' + config.instance + '/users/' + config.userId + '/reset_key/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -185,7 +185,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/users/' + config.userId + '/groups/');
+        (res.url).should.equal('/instances/' + config.instance + '/users/' + config.userId + '/groups/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -200,7 +200,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
-        (res.url).should.equal('instances/' + config.instance + '/users/' + config.userId + '/groups/');
+        (res.url).should.equal('/instances/' + config.instance + '/users/' + config.userId + '/groups/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -215,7 +215,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/users/' + config.userId + '/groups/' + config.groupId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/users/' + config.userId + '/groups/' + config.groupId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -230,7 +230,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('instances/' + config.instance + '/users/' + config.userId + '/groups/' + config.groupId + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/users/' + config.userId + '/groups/' + config.groupId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -270,7 +270,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
-        (res.url).should.equal('instances/' + config.instance + '/users/');
+        (res.url).should.equal('/instances/' + config.instance + '/users/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         done();
@@ -285,7 +285,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
-        (res.url).should.equal('instances/' + config.instance + '/user/auth/');
+        (res.url).should.equal('/instances/' + config.instance + '/user/auth/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         done();
@@ -300,7 +300,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
-        (res.url).should.equal('instances/' + config.instance + '/user/auth/' + config.backend + '/');
+        (res.url).should.equal('/instances/' + config.instance + '/user/auth/' + config.backend + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY', 'Authorization']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         (res.headers.Authorization).should.equal('Bearer ' + config.socialToken);
@@ -345,7 +345,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
-        (res.url).should.equal('instances/' + config.instance + '/users/');
+        (res.url).should.equal('/instances/' + config.instance + '/users/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY', 'X-USER-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         (res.headers['X-USER-KEY']).should.equal(config.userKey);
@@ -361,7 +361,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('instances/' + config.instance + '/user/');
+        (res.url).should.equal('/instances/' + config.instance + '/user/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         done();
@@ -376,7 +376,7 @@ describe('User', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('instances/' + config.instance + '/user/');
+        (res.url).should.equal('/instances/' + config.instance + '/user/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         done();

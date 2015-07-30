@@ -13,23 +13,39 @@ var Syncano = function Syncano(opt) {
   }
 
   if (opt) {
+    this.config = {};
     var apiKey = opt.apiKey || opt.api_key;
     var instance = opt.instance;
     var userKey = opt.userKey || opt.user_key;
     var accountKey = opt.accountKey || opt.account_key;
     var debug = opt.debug;
+
+    if (opt.baseUrl) {
+      this.config.baseUrl = opt.baseUrl;
+    }
+
+    if (opt.debug) {
+      this.config.debug = opt.debug;
+    }
+
   }
 
   if (accountKey) {
-    return new AccountScope(accountKey, debug);
+    this.config.accountKey = accountKey;
+    return new AccountScope(this.config);
   }
 
   if (apiKey) {
-    return new InstanceScope(instance, apiKey, userKey, debug);
+    this.config.apiKey = apiKey;
+    this.config.instance = instance;
+    if (userKey) {
+      this.config.userKey = userKey;
+    }
+    return new InstanceScope(this.config);
   }
 
   if (!accountKey && !apiKey) {
-    return new EmptyScope(this, debug);
+    return new EmptyScope(this.config);
   }
 
 };
@@ -37,29 +53,19 @@ var Syncano = function Syncano(opt) {
 Syncano.prototype.constructor = Syncano;
 
 
-var EmptyScope = function(opt, debug) {
-  if (debug) {
-    this.config = {};
-    this.config.debug = debug;
+var EmptyScope = function(config) {
+  if (config !== undefined) {
+    this.config = config;
   }
-  Objects.Account.call(this, opt);
+  Objects.Account.call(this);
   return this;
 };
 
 EmptyScope.prototype = Object.create(Objects.Account.prototype);
 EmptyScope.prototype.constructor = EmptyScope;
 
-var AccountScope = function(accountKey, debug) {
-
-  this.config = {};
-  this.config.accountKey = accountKey;
-
-  if (debug) {
-    this.config.debug = debug;
-  }
-
-  Objects.Account.call(this, this.config);
-
+var AccountScope = function(config) {
+  Objects.Account.call(this, config);
   return this;
 };
 
@@ -67,24 +73,9 @@ AccountScope.prototype = Object.create(Objects.Account.prototype);
 AccountScope.prototype.constructor = AccountScope;
 
 
-var InstanceScope = function(instance, apiKey, userKey, debug) {
-
-  this.config = {};
-  this.config.apiKey = apiKey;
-  this.config.instance = instance;
-
-  if (userKey) {
-    this.config.userKey = userKey;
-  }
-
-  if (debug) {
-    this.config.debug = debug;
-  }
-
-  Objects.Instance.call(this, this.config);
-
+var InstanceScope = function(config) {
+  Objects.Instance.call(this, config);
   return this;
-
 };
 
 InstanceScope.prototype = Object.create(Objects.Instance.prototype);

@@ -17,11 +17,11 @@ var methods = {
       };
 
       if (config.groupId && config.type === "user") {
-        opts.tmpl = 'instances/<%= instance %>/groups/<%= groupId %>/users/';
+        opts.tmpl = '/instances/<%= instance %>/groups/<%= groupId %>/users/';
       }
 
       if (config.userId && config.type === "group") {
-        opts.tmpl = 'instances/<%= instance %>/users/<%= userId %>/groups/';
+        opts.tmpl = '/instances/<%= instance %>/users/<%= userId %>/groups/';
       }
 
       return opts;
@@ -33,11 +33,11 @@ var methods = {
       };
 
       if (config.groupId && config.type === "user") {
-        opts.tmpl = 'instances/<%= instance %>/groups/<%= groupId %>/users/';
+        opts.tmpl = '/instances/<%= instance %>/groups/<%= groupId %>/users/';
       }
 
       if (config.userId && config.type === "group") {
-        opts.tmpl = 'instances/<%= instance %>/users/<%= userId %>/groups/';
+        opts.tmpl = '/instances/<%= instance %>/users/<%= userId %>/groups/';
       }
 
       return opts;
@@ -50,15 +50,15 @@ var methods = {
 
       if (config.userKey && config.type === "user") {
         opts.func.plural = core.filterReq;
-        opts.tmpl = 'instances/<%= instance %>/user/';
+        opts.tmpl = '/instances/<%= instance %>/user/';
       }
 
       if (config.groupId && config.type === "user") {
-        opts.tmpl = 'instances/<%= instance %>/groups/<%= groupId %>/users/';
+        opts.tmpl = '/instances/<%= instance %>/groups/<%= groupId %>/users/';
       }
 
       if (config.userId && config.type === "group") {
-        opts.tmpl = 'instances/<%= instance %>/users/<%= userId %>/groups/';
+        opts.tmpl = '/instances/<%= instance %>/users/<%= userId %>/groups/';
       }
 
       return opts;
@@ -71,7 +71,7 @@ var methods = {
 
       if (config.userKey && config.type === "user") {
         opts.func.plural = core.filterReq;
-        opts.tmpl = 'instances/<%= instance %>/user/';
+        opts.tmpl = '/instances/<%= instance %>/user/';
       }
 
       return opts;
@@ -83,11 +83,11 @@ var methods = {
       };
 
       if (config.groupId && config.type === "user") {
-        opts.tmpl = 'instances/<%= instance %>/groups/<%= groupId %>/users/';
+        opts.tmpl = '/instances/<%= instance %>/groups/<%= groupId %>/users/';
       }
 
       if (config.userId && config.type === "group") {
-        opts.tmpl = 'instances/<%= instance %>/users/<%= userId %>/groups/';
+        opts.tmpl = '/instances/<%= instance %>/users/<%= userId %>/groups/';
       }
 
       return opts;
@@ -99,7 +99,7 @@ var methods = {
         func: {single: core.filterReq, plural: core.filterReq}
       };
 
-      opts.tmpl = 'instances/<%= instance %>/codeboxes/';
+      opts.tmpl = '/instances/<%= instance %>/codeboxes/';
 
       return opts;
   },
@@ -242,7 +242,7 @@ var methods = {
       };
 
       if (config.apiKey && config.type === "user") {
-        opts.tmpl = 'instances/<%= instance %>/user/';
+        opts.tmpl = '/instances/<%= instance %>/user/';
       }
 
       return opts;
@@ -273,7 +273,7 @@ var PluralObj = function(config, funcArr) {
   var opt = _.merge({}, config);
 
   opt.type = this.type;
-
+  
   funcArr = funcArr || ['list', 'detail', 'add', 'update', 'delete'];
 
   _.forEach(funcArr, function(f) {

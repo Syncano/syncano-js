@@ -13,13 +13,12 @@ var _        = require('lodash');
 var Account = function(config) {
 
   var opts = _.merge({}, config);
-
   if (opts && opts.accountKey) {
     SingleObj.call(this, opts, ['detail', 'update', 'resetKey', 'changePw', 'setPw']);
     this.invitation = classBuilder(Invitation, opts);
     this.instance = classBuilder(Instance, opts);
   } else {
-    PluralObj.call(this, {}, ['login', 'register', 'resendEmail', 'resetPw', 'confirmResetPw', 'activate']);
+    PluralObj.call(this, opts, ['login', 'register', 'resendEmail', 'resetPw', 'confirmResetPw', 'activate']);
   }
 
   return this;

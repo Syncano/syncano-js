@@ -48,7 +48,7 @@ describe('Syncano (Logged User Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('GET');
-      (res.url).should.equal('instances/' + config.instance + '/');
+      (res.url).should.equal('/instances/' + config.instance + '/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY', 'X-USER-KEY']);
       (res.headers['X-API-KEY']).should.equal(config.apiKey);
       (res.headers['X-USER-KEY']).should.equal(config.userKey);
