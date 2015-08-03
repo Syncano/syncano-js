@@ -142,7 +142,6 @@ var DataObject = function DataObject(config, id) {
 DataObject.prototype.constructor = DataObject;
 DataObject.prototype.type = 'dataobject';
 
-//TODO Remove the single constructors when INSTANCE/USER scoped
 var Instance = function(config, id) {
 
   var self = this;
@@ -193,17 +192,20 @@ var Group = function Group(config, id) {
     pluralFunc = ['list', 'detail'];
   }
 
-  if (opts && opts.userId) {
-    pluralFunc = ['list', 'detail', 'add', 'delete'];
-  }
 
   if (id) {
     opts.groupId = id;
+    if (opts && opts.userId) {
+      singleFunc = ['detail', 'delete'];
+    }
     SingleObj.call(this, opts, singleFunc);
-    if (opts.accountKey) {
-      this.user = new User(opts);
+    if (opts.accountKey && !opts.userId) {
+      this.user = classBuilder(User, opts);
     }
   } else {
+    if (opts && opts.userId) {
+      pluralFunc = ['list', 'detail', 'add', 'delete'];
+    }
     PluralObj.call(this, opts, pluralFunc);
   }
 
@@ -289,6 +291,7 @@ var User = function User(config, id) {
   var opts = _.merge({}, config);
 
   pluralFunc = ['list', 'add', 'detail', 'update', 'delete', 'resetKey'];
+  singleFunc = ['detail', 'update', 'resetKey', 'delete'];
 
   if (opts && opts.apiKey) {
     if (opts.userKey) {
@@ -298,15 +301,19 @@ var User = function User(config, id) {
     }
   }
 
-  if (opts && opts.groupId) {
-    pluralFunc = ['list', 'detail', 'add', 'delete'];
-  }
-
   if (id) {
     opts.userId = id;
-    SingleObj.call(this, opts, ['detail', 'update', 'resetKey', 'delete']);
-    this.group = new Group(opts);
+    if (opts && opts.groupId) {
+      singleFunc = ['detail', 'delete'];
+    }
+    SingleObj.call(this, opts, singleFunc);
+    if (opts.accountKey && !opts.groupId) {
+      this.group = classBuilder(Group, opts);
+    }
   } else {
+    if (opts && opts.groupId) {
+      pluralFunc = ['list', 'detail', 'add', 'delete'];
+    }
     PluralObj.call(this, opts, pluralFunc);
   }
 

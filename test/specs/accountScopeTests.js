@@ -23,7 +23,6 @@ describe('Syncano (Account Scope)', function() {
   });
 
   it('should return account object', function() {
-    console.log(scope);
     (scope).should.be.an.Object();
     (scope.type).should.equal('account');
     (scope).should.have.keys(['config', 'detail', 'update', 'resetKey', 'changePw', 'setPw', 'invitation', 'instance']);

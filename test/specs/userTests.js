@@ -116,7 +116,7 @@ describe('User', function() {
       (scope.delete).should.be.a.Function();
       (scope.update).should.be.a.Function();
       (scope.resetKey).should.be.a.Function();
-      (scope.group).should.be.an.Object().which.has.properties('list','add','detail', 'delete');
+      (scope.group).should.be.an.Function();
     });
 
     it('detail() should recieve correct options', function(done) {
@@ -179,9 +179,9 @@ describe('User', function() {
       });
     });
 
-    it('group.list() should recieve correct options', function(done) {
+    it('group().list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.group.list();
+      func = scope.group().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -194,9 +194,9 @@ describe('User', function() {
       });
     });
 
-    it('group.add() should recieve correct options', function(done) {
+    it('group().add() should recieve correct options', function(done) {
       var func, res;
-      func = scope.group.add({});
+      func = scope.group().add({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
@@ -209,9 +209,9 @@ describe('User', function() {
       });
     });
 
-    it('group.detail() should recieve correct options', function(done) {
+    it('group().detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.group.detail(config.groupId);
+      func = scope.group().detail(config.groupId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
@@ -224,9 +224,9 @@ describe('User', function() {
       });
     });
 
-    it('group.delete() should recieve correct options', function(done) {
+    it('group().delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.group.delete(config.groupId);
+      func = scope.group().delete(config.groupId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
@@ -237,6 +237,13 @@ describe('User', function() {
       }).catch(function(err) {
         done(err);
       });
+    });
+    it('user().group() should return a group object', function() {
+      scope = scope.group(config.groupId);
+      (scope.type).should.equal('group');
+      (scope).should.have.keys(['config', 'detail', 'delete']);
+      (scope.detail).should.be.a.Function();
+      (scope.delete).should.be.a.Function();
     });
   });
 

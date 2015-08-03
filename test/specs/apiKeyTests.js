@@ -24,6 +24,7 @@ describe('ApiKey', function() {
     it('should be apikey object', function() {
       (scope.instance(config.instance).apikey().type).should.equal('apikey');
       (scope.instance(config.instance).apikey()).should.have.keys(['list', 'detail', 'add', 'resetKey', 'delete']);
+      (scope.instance(config.instance).apikey().add).should.be.a.Function();
       (scope.instance(config.instance).apikey().list).should.be.a.Function();
       (scope.instance(config.instance).apikey().detail).should.be.a.Function();
       (scope.instance(config.instance).apikey().delete).should.be.a.Function();

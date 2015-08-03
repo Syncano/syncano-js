@@ -273,7 +273,7 @@ var PluralObj = function(config, funcArr) {
   var opt = _.merge({}, config);
 
   opt.type = this.type;
-  
+
   funcArr = funcArr || ['list', 'detail', 'add', 'update', 'delete'];
 
   _.forEach(funcArr, function(f) {

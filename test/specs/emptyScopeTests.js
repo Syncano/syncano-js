@@ -20,8 +20,6 @@ describe('Syncano (Empty Scope)', function() {
   });
 
   it('should return account object', function() {
-    console.log(scope);
-
     (scope).should.be.an.Object();
     (scope.type).should.equal('account');
     (scope).should.have.keys(['login', 'register', 'resendEmail', 'resetPw', 'confirmResetPw', 'activate']);
