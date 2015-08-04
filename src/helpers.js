@@ -31,7 +31,14 @@ module.exports = {
       if (options.fields.exclude) {
         parsedOptions.excluded_fields = options.fields.exclude.join();
       }
+    }
 
+    if (options.lastId) {
+      parsedOptions.last_id = options.lastId;
+    }
+
+    if (options.room) {
+      parsedOptions.room = options.room;
     }
 
     if (options.filter || options.query) {

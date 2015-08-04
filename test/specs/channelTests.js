@@ -186,6 +186,28 @@ describe('Channel', function() {
       });
     });
 
+    it('poll() accepts lastId in filter', function(done) {
+      var func, res;
+      func = scope.channel(config.channelId).poll({lastId: 1});
+      func.then(function(res) {
+        (res.qs).should.have.property('last_id').which.is.equal(1);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it('poll() accepts room name in filter', function(done) {
+      var func, res;
+      func = scope.channel(config.channelId).poll({room: "room name"});
+      func.then(function(res) {
+        (res.qs).should.have.property('room').which.is.equal("room name");
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
     it('history() should recieve correct options', function(done) {
       var func, res;
       func = scope.channel(config.channelId).history();
@@ -201,9 +223,20 @@ describe('Channel', function() {
       });
     });
 
+    it('history() accepts room name in filter', function(done) {
+      var func, res;
+      func = scope.channel(config.channelId).history({room: "room name"});
+      func.then(function(res) {
+        (res.qs).should.have.property('room').which.is.equal("room name");
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
     it('publish() should recieve correct options', function(done) {
       var func, res;
-      func = scope.channel(config.channelId).publish();
+      func = scope.channel(config.channelId).publish({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
