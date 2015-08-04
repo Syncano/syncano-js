@@ -25,6 +25,11 @@ describe('Syncano', function() {
     (scope).should.be.an.Object();
   });
 
+  it('should accept debug parameter', function() {
+    var test = new Syncano({debug:true});
+    (test).should.be.an.Object();
+  });
+
   it('should check for required parameters', function() {
     (function() {scope.register();}).should.throw('Invalid parameters object.');
   });

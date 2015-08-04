@@ -68,7 +68,7 @@ describe('Syncano (Account Scope)', function() {
 
   it('resetKey() should recieve correct options', function(done) {
     var func, res;
-    func = scope.resetKey({});
+    func = scope.resetKey();
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');

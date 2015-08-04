@@ -33,7 +33,7 @@ module.exports = {
       }
 
     }
-// TODO Add check for query
+
     if (options.filter || options.query) {
       parsedOptions.query = options.filter || options.query;
       if (typeof parsedOptions.query !== "object") {
@@ -72,7 +72,7 @@ module.exports = {
     }
 
     if (options.json && options.json.socialToken) {
-      headers.Authorization = 'Bearer ' + options.json.socialToken;
+      headers.Authorization = 'token ' + options.json.socialToken;
     }
 
     return (headers !== {}) ? {headers: headers} : headers;

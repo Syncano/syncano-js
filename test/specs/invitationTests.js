@@ -90,6 +90,44 @@ describe('Invitation', function() {
       });
     });
 
+    it('invitation() returns an invitation object', function() {
+      scope = scope.invitation(config.inviteId);
+      (scope.type).should.equal('invitation');
+      (scope).should.have.keys(['config', 'detail', 'delete']);
+      (scope.detail).should.be.a.Function();
+      (scope.delete).should.be.a.Function();
+    });
+
+    it('detail() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.detail();
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('GET');
+        (res.url).should.equal('/account/invitations/' + config.inviteId + '/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.accountKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it('delete() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.delete();
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('DELETE');
+        (res.url).should.equal('/account/invitations/' + config.inviteId + '/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.accountKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
   });
 
   describe('(Account.Instance Scope)', function() {

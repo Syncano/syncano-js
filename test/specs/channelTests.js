@@ -165,9 +165,55 @@ describe('Channel', function() {
       mockery.deregisterMock('request');
       mockery.disable();
     });
+
     it('should be channel object', function() {
       (scope.channel().type).should.equal('channel');
       (scope.channel()).should.have.keys(['list', 'detail', 'detail', 'history', 'publish', 'poll']);
+    });
+
+    it('poll() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.channel(config.channelId).poll();
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('GET');
+        (res.url).should.equal('/instances/' + config.instance + '/channels/' + config.channelId + '/poll/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.apiKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it('history() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.channel(config.channelId).history();
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('GET');
+        (res.url).should.equal('/instances/' + config.instance + '/channels/' + config.channelId + '/history/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.apiKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it('publish() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.channel(config.channelId).publish();
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('POST');
+        (res.url).should.equal('/instances/' + config.instance + '/channels/' + config.channelId + '/publish/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.apiKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
     });
 
     it('should return new Channel', function() {

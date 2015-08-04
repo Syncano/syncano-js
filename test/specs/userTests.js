@@ -310,7 +310,7 @@ describe('User', function() {
         (res.url).should.equal('/instances/' + config.instance + '/user/auth/' + config.backend + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY', 'Authorization']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
-        (res.headers.Authorization).should.equal('Bearer ' + config.socialToken);
+        (res.headers.Authorization).should.equal('token ' + config.socialToken);
         done();
       }).catch(function(err) {
         done(err);

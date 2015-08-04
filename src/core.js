@@ -120,6 +120,7 @@ var paramReq = function(config) {
   delete opt.func;
 
   return (function(params, filter, cb) {
+    // TODO Add check for optional params - respond accordingly
     params = helpers.checkParams(params);
 
     if (arguments.length <= 2) {
@@ -142,7 +143,7 @@ var paramIdReq = function(config) {
   delete opt.func;
 
   return (function(id, params, filter, cb) {
-
+    // TODO Add check for optional params - respond accordingly
     opt.id = helpers.checkId(id);
 
     params = helpers.checkParams(params, false);
