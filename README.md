@@ -45,7 +45,7 @@ With the Syncano platform, there are two basic ways to interact with your accoun
  * **Account Level Scope** - Interact with your account as the super admin (recommended for server side interaction)
  * **Instance Level Scope** - Connects to a specific app instance, and has limited permissions. This is what your app will utilize most, as the user specific methods are accessible here using the `userKey`.
 
-Each of these scopes have different types of functionality, and utilize different apiKeys. Check out the [full documentation] (http://docs.syncano.com/v4.0/docs/authentication) on authentication to be sure you get the appropriate key.
+Each of these scopes have different types of functionality, and utilize different apiKeys. Check out the [full documentation] (http://docs.syncano.com/v1.0/docs/authentication) on authentication to be sure you get the appropriate key.
 
 ### Create a New Connection
 
