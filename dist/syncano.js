@@ -56651,7 +56651,7 @@ module.exports = Request
 },{"./lib/auth":197,"./lib/cookies":198,"./lib/getProxyFromURI":199,"./lib/har":200,"./lib/helpers":201,"./lib/multipart":202,"./lib/oauth":203,"./lib/querystring":204,"./lib/redirect":205,"./lib/tunnel":206,"_process":173,"aws-sign2":207,"bl":208,"buffer":17,"caseless":217,"forever-agent":221,"form-data":222,"hawk":252,"http":165,"http-signature":253,"https":169,"mime-types":270,"stream":189,"stringstream":280,"url":191,"util":193,"zlib":16}],290:[function(require,module,exports){
 module.exports={
   "name": "syncano",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "A library to intereact with the Syncano API.",
   "main": "src/syncano.js",
   "author": "Kelly Andrews",
@@ -56659,13 +56659,25 @@ module.exports={
   "scripts": {
     "coverage": "CODECLIMATE_REPO_TOKEN=2fc62db4794c74bf7d733c365aed53960c0d7b7f9560674868f0e487ce36f2eb codeclimate-test-reporter < ./test/coverage/lcov.info"
   },
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/Syncano/syncano-js-lib"
+  },
   "dependencies": {
     "bluebird": "^2.9.30",
     "lodash": "^3.9.3",
     "request": "^2.58.0"
   },
+  "browserify-shim": {
+    "bluebird": "global:Promise",
+    "lodash": "global:_"
+  },
+  "browserify": {
+    "transform": [ "browserify-shim" ]
+  },
   "devDependencies": {
     "browserify": "^10.2.4",
+    "browserify-shim": "^3.8.10",
     "gulp": "^3.9.0",
     "gulp-gzip": "^1.1.0",
     "gulp-istanbul": "^0.10.0",
@@ -56687,6 +56699,7 @@ module.exports={
 }
 
 },{}],291:[function(require,module,exports){
+(function (global){
 /*
  * Syncano JS Library
  * Copyright 2015 Syncano Inc.
@@ -56697,8 +56710,8 @@ module.exports={
 var version  = require('../package.json').version;
 var helpers  = require('./helpers.js');
 var request  = require('request');
-var _        = require('lodash');
-var Promise  = require('bluebird');
+var _        = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+var Promise  = (typeof window !== "undefined" ? window['Promise'] : typeof global !== "undefined" ? global['Promise'] : null);
 
 var defaultOptions = {
   qsStringifyOptions: {arrayFormat: 'repeat'},
@@ -56712,20 +56725,20 @@ var defaultOptions = {
 var url = function(config) {
 
   var urlTmpl = {
-    account: 'account/',
-    admin: (config.adminId) ? 'instances/<%= instance %>/admins/<%= adminId %>/' : 'instances/<%= instance %>/admins/',
-    apikey: (config.apikeyId) ? 'instances/<%= instance %>/api_keys/<%= apikeyId %>/' : 'instances/<%= instance %>/api_keys/',
-    channel: (config.channelId) ? 'instances/<%= instance %>/channels/<%= channelId %>/' : 'instances/<%= instance %>/channels/',
-    class: (config.className) ? 'instances/<%= instance %>/classes/<%= className %>/' : 'instances/<%= instance %>/classes/',
-    codebox: (config.codeboxId) ? 'instances/<%= instance %>/codeboxes/<%= codeboxId %>/' : 'instances/<%= instance %>/codeboxes/',
-    dataobject: (config.dataobjectId) ? 'instances/<%= instance %>/classes/<%= className %>/objects/<%= dataobjectId %>/' : 'instances/<%= instance %>/classes/<%= className %>/objects/',
-    group: (config.groupId) ? 'instances/<%= instance %>/groups/<%= groupId %>/' : 'instances/<%= instance %>/groups/',
-    instance: (config.instance) ? 'instances/<%= instance %>/' : 'instances/',
-    invitation: (config.instance) ? 'instances/<%= instance %>/invitations/' : 'account/invitations/',
-    schedule: (config.scheduleId) ? 'instances/<%= instance %>/schedules/<%= scheduleId %>/' : 'instances/<%= instance %>/schedules/',
-    trigger: (config.triggerId) ? 'instances/<%= instance %>/triggers/<%= triggerId %>/' : 'instances/<%= instance %>/triggers/',
-    webhook: (config.webhookId) ? 'instances/<%= instance %>/webhooks/<%= webhookId %>/' : 'instances/<%= instance %>/webhooks/',
-    user: (config.userId) ? 'instances/<%= instance %>/users/<%= userId %>/' : 'instances/<%= instance %>/users/'
+    account: '/account/',
+    admin: (config.adminId) ? '/instances/<%= instance %>/admins/<%= adminId %>/' : '/instances/<%= instance %>/admins/',
+    apikey: (config.apikeyId) ? '/instances/<%= instance %>/api_keys/<%= apikeyId %>/' : '/instances/<%= instance %>/api_keys/',
+    channel: (config.channelId) ? '/instances/<%= instance %>/channels/<%= channelId %>/' : '/instances/<%= instance %>/channels/',
+    class: (config.className) ? '/instances/<%= instance %>/classes/<%= className %>/' : '/instances/<%= instance %>/classes/',
+    codebox: (config.codeboxId) ? '/instances/<%= instance %>/codeboxes/<%= codeboxId %>/' : '/instances/<%= instance %>/codeboxes/',
+    dataobject: (config.dataobjectId) ? '/instances/<%= instance %>/classes/<%= className %>/objects/<%= dataobjectId %>/' : '/instances/<%= instance %>/classes/<%= className %>/objects/',
+    group: (config.groupId) ? '/instances/<%= instance %>/groups/<%= groupId %>/' : '/instances/<%= instance %>/groups/',
+    instance: (config.instance) ? '/instances/<%= instance %>/' : '/instances/',
+    invitation: (config.instance) ? '/instances/<%= instance %>/invitations/' : '/account/invitations/',
+    schedule: (config.scheduleId) ? '/instances/<%= instance %>/schedules/<%= scheduleId %>/' : '/instances/<%= instance %>/schedules/',
+    trigger: (config.triggerId) ? '/instances/<%= instance %>/triggers/<%= triggerId %>/' : '/instances/<%= instance %>/triggers/',
+    webhook: (config.webhookId) ? '/instances/<%= instance %>/webhooks/<%= webhookId %>/' : '/instances/<%= instance %>/webhooks/',
+    user: (config.userId) ? '/instances/<%= instance %>/users/<%= userId %>/' : '/instances/<%= instance %>/users/'
   };
 
   var buildUrl = function urlAddOns(config) {
@@ -56809,6 +56822,7 @@ var paramReq = function(config) {
   delete opt.func;
 
   return (function(params, filter, cb) {
+    // TODO Add check for optional params - respond accordingly
     params = helpers.checkParams(params);
 
     if (arguments.length <= 2) {
@@ -56831,7 +56845,7 @@ var paramIdReq = function(config) {
   delete opt.func;
 
   return (function(id, params, filter, cb) {
-
+    // TODO Add check for optional params - respond accordingly
     opt.id = helpers.checkId(id);
 
     params = helpers.checkParams(params, false);
@@ -56855,8 +56869,7 @@ var paramIdReq = function(config) {
 var apiRequest = function apiRequest(config, cb) {
   var opt = _.merge({}, defaultOptions, config, helpers.addAuth(config));
   opt.url = url(opt);
-  // TODO get correct base url
-  opt.baseUrl = 'https://api.syncano.io/v1/';
+  opt.baseUrl = config.baseUrl || 'https://api.syncano.io/v1';
 
   return new Promise(function(resolve, reject) {
     request(opt.url, opt, function(err, res) {
@@ -56891,7 +56904,9 @@ var core = {
 
 module.exports = core;
 
-},{"../package.json":290,"./helpers.js":292,"bluebird":1,"lodash":1,"request":196}],292:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../package.json":290,"./helpers.js":292,"request":196}],292:[function(require,module,exports){
+(function (global){
 /*
  * Syncano JS Library
  * Copyright 2015 Syncano Inc.
@@ -56899,7 +56914,7 @@ module.exports = core;
 
  'use strict';
 
-var _        = require('lodash');
+var _        = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
 
 module.exports = {
   checkParams: function(p) {
@@ -56925,9 +56940,16 @@ module.exports = {
       if (options.fields.exclude) {
         parsedOptions.excluded_fields = options.fields.exclude.join();
       }
-
     }
-// TODO Add check for query
+
+    if (options.lastId) {
+      parsedOptions.last_id = options.lastId;
+    }
+
+    if (options.room) {
+      parsedOptions.room = options.room;
+    }
+
     if (options.filter || options.query) {
       parsedOptions.query = options.filter || options.query;
       if (typeof parsedOptions.query !== "object") {
@@ -56966,14 +56988,16 @@ module.exports = {
     }
 
     if (options.json && options.json.socialToken) {
-      headers.Authorization = 'Bearer ' + options.json.socialToken;
+      headers.Authorization = 'token ' + options.json.socialToken;
     }
 
     return (headers !== {}) ? {headers: headers} : headers;
   }
 };
 
-},{"lodash":1}],293:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],293:[function(require,module,exports){
+(function (global){
 /*
  * Syncano JS Library
  * Copyright 2015 Syncano Inc.
@@ -56982,7 +57006,7 @@ module.exports = {
 'use strict';
 
 var helpers  = require('./helpers.js');
-var _        = require('lodash');
+var _        = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
 var core     = require('./core.js');
 
 var methods = {
@@ -56993,11 +57017,11 @@ var methods = {
       };
 
       if (config.groupId && config.type === "user") {
-        opts.tmpl = 'instances/<%= instance %>/groups/<%= groupId %>/users/';
+        opts.tmpl = '/instances/<%= instance %>/groups/<%= groupId %>/users/';
       }
 
       if (config.userId && config.type === "group") {
-        opts.tmpl = 'instances/<%= instance %>/users/<%= userId %>/groups/';
+        opts.tmpl = '/instances/<%= instance %>/users/<%= userId %>/groups/';
       }
 
       return opts;
@@ -57009,11 +57033,11 @@ var methods = {
       };
 
       if (config.groupId && config.type === "user") {
-        opts.tmpl = 'instances/<%= instance %>/groups/<%= groupId %>/users/';
+        opts.tmpl = '/instances/<%= instance %>/groups/<%= groupId %>/users/';
       }
 
       if (config.userId && config.type === "group") {
-        opts.tmpl = 'instances/<%= instance %>/users/<%= userId %>/groups/';
+        opts.tmpl = '/instances/<%= instance %>/users/<%= userId %>/groups/';
       }
 
       return opts;
@@ -57026,15 +57050,15 @@ var methods = {
 
       if (config.userKey && config.type === "user") {
         opts.func.plural = core.filterReq;
-        opts.tmpl = 'instances/<%= instance %>/user/';
+        opts.tmpl = '/instances/<%= instance %>/user/';
       }
 
       if (config.groupId && config.type === "user") {
-        opts.tmpl = 'instances/<%= instance %>/groups/<%= groupId %>/users/';
+        opts.tmpl = '/instances/<%= instance %>/groups/<%= groupId %>/users/';
       }
 
       if (config.userId && config.type === "group") {
-        opts.tmpl = 'instances/<%= instance %>/users/<%= userId %>/groups/';
+        opts.tmpl = '/instances/<%= instance %>/users/<%= userId %>/groups/';
       }
 
       return opts;
@@ -57047,7 +57071,7 @@ var methods = {
 
       if (config.userKey && config.type === "user") {
         opts.func.plural = core.filterReq;
-        opts.tmpl = 'instances/<%= instance %>/user/';
+        opts.tmpl = '/instances/<%= instance %>/user/';
       }
 
       return opts;
@@ -57059,11 +57083,11 @@ var methods = {
       };
 
       if (config.groupId && config.type === "user") {
-        opts.tmpl = 'instances/<%= instance %>/groups/<%= groupId %>/users/';
+        opts.tmpl = '/instances/<%= instance %>/groups/<%= groupId %>/users/';
       }
 
       if (config.userId && config.type === "group") {
-        opts.tmpl = 'instances/<%= instance %>/users/<%= userId %>/groups/';
+        opts.tmpl = '/instances/<%= instance %>/users/<%= userId %>/groups/';
       }
 
       return opts;
@@ -57075,7 +57099,7 @@ var methods = {
         func: {single: core.filterReq, plural: core.filterReq}
       };
 
-      opts.tmpl = 'instances/<%= instance %>/codeboxes/';
+      opts.tmpl = '/instances/<%= instance %>/codeboxes/';
 
       return opts;
   },
@@ -57132,7 +57156,7 @@ var methods = {
       var opts = {
         method: 'POST',
         path: 'publish',
-        func: {single: core.filterReq, plural: core.filterIdReq}
+        func: {single: core.paramReq, plural: core.paramIdReq}
       };
       return opts;
   },
@@ -57218,7 +57242,7 @@ var methods = {
       };
 
       if (config.apiKey && config.type === "user") {
-        opts.tmpl = 'instances/<%= instance %>/user/';
+        opts.tmpl = '/instances/<%= instance %>/user/';
       }
 
       return opts;
@@ -57265,7 +57289,9 @@ var PluralObj = function(config, funcArr) {
 module.exports.SingleObj  = SingleObj;
 module.exports.PluralObj  = PluralObj;
 
-},{"./core.js":291,"./helpers.js":292,"lodash":1}],294:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./core.js":291,"./helpers.js":292}],294:[function(require,module,exports){
+(function (global){
 /*
  * Syncano JS Library
  * Copyright 2015 Syncano Inc.
@@ -57275,19 +57301,18 @@ module.exports.PluralObj  = PluralObj;
 
 var SingleObj  = require('./methods.js').SingleObj;
 var PluralObj  = require('./methods.js').PluralObj;
-var _        = require('lodash');
+var _        = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
 
 
 var Account = function(config) {
 
   var opts = _.merge({}, config);
-
   if (opts && opts.accountKey) {
     SingleObj.call(this, opts, ['detail', 'update', 'resetKey', 'changePw', 'setPw']);
     this.invitation = classBuilder(Invitation, opts);
     this.instance = classBuilder(Instance, opts);
   } else {
-    PluralObj.call(this, {}, ['login', 'register', 'resendEmail', 'resetPw', 'confirmResetPw', 'activate']);
+    PluralObj.call(this, opts, ['login', 'register', 'resendEmail', 'resetPw', 'confirmResetPw', 'activate']);
   }
 
   return this;
@@ -57411,7 +57436,6 @@ var DataObject = function DataObject(config, id) {
 DataObject.prototype.constructor = DataObject;
 DataObject.prototype.type = 'dataobject';
 
-//TODO Remove the single constructors when INSTANCE/USER scoped
 var Instance = function(config, id) {
 
   var self = this;
@@ -57462,17 +57486,20 @@ var Group = function Group(config, id) {
     pluralFunc = ['list', 'detail'];
   }
 
-  if (opts && opts.userId) {
-    pluralFunc = ['list', 'detail', 'add', 'delete'];
-  }
 
   if (id) {
     opts.groupId = id;
+    if (opts && opts.userId) {
+      singleFunc = ['detail', 'delete'];
+    }
     SingleObj.call(this, opts, singleFunc);
-    if (opts.accountKey) {
-      this.user = new User(opts);
+    if (opts.accountKey && !opts.userId) {
+      this.user = classBuilder(User, opts);
     }
   } else {
+    if (opts && opts.userId) {
+      pluralFunc = ['list', 'detail', 'add', 'delete'];
+    }
     PluralObj.call(this, opts, pluralFunc);
   }
 
@@ -57558,6 +57585,7 @@ var User = function User(config, id) {
   var opts = _.merge({}, config);
 
   pluralFunc = ['list', 'add', 'detail', 'update', 'delete', 'resetKey'];
+  singleFunc = ['detail', 'update', 'resetKey', 'delete'];
 
   if (opts && opts.apiKey) {
     if (opts.userKey) {
@@ -57567,15 +57595,19 @@ var User = function User(config, id) {
     }
   }
 
-  if (opts && opts.groupId) {
-    pluralFunc = ['list', 'detail', 'add', 'delete'];
-  }
-
   if (id) {
     opts.userId = id;
-    SingleObj.call(this, opts, ['detail', 'update', 'resetKey', 'delete']);
-    this.group = new Group(opts);
+    if (opts && opts.groupId) {
+      singleFunc = ['detail', 'delete'];
+    }
+    SingleObj.call(this, opts, singleFunc);
+    if (opts.accountKey && !opts.groupId) {
+      this.group = classBuilder(Group, opts);
+    }
   } else {
+    if (opts && opts.groupId) {
+      pluralFunc = ['list', 'detail', 'add', 'delete'];
+    }
     PluralObj.call(this, opts, pluralFunc);
   }
 
@@ -57605,7 +57637,8 @@ var objects = {
 
 module.exports = objects;
 
-},{"./methods.js":293,"lodash":1}],295:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./methods.js":293}],295:[function(require,module,exports){
 /*
  * @license
  * Syncano JS Library
@@ -57621,23 +57654,39 @@ var Syncano = function Syncano(opt) {
   }
 
   if (opt) {
+    this.config = {};
     var apiKey = opt.apiKey || opt.api_key;
     var instance = opt.instance;
     var userKey = opt.userKey || opt.user_key;
     var accountKey = opt.accountKey || opt.account_key;
     var debug = opt.debug;
+
+    if (opt.baseUrl) {
+      this.config.baseUrl = opt.baseUrl;
+    }
+
+    if (opt.debug) {
+      this.config.debug = opt.debug;
+    }
+
   }
 
   if (accountKey) {
-    return new AccountScope(accountKey, debug);
+    this.config.accountKey = accountKey;
+    return new AccountScope(this.config);
   }
 
   if (apiKey) {
-    return new InstanceScope(instance, apiKey, userKey, debug);
+    this.config.apiKey = apiKey;
+    this.config.instance = instance;
+    if (userKey) {
+      this.config.userKey = userKey;
+    }
+    return new InstanceScope(this.config);
   }
 
   if (!accountKey && !apiKey) {
-    return new EmptyScope(this, debug);
+    return new EmptyScope(this.config);
   }
 
 };
@@ -57645,29 +57694,19 @@ var Syncano = function Syncano(opt) {
 Syncano.prototype.constructor = Syncano;
 
 
-var EmptyScope = function(opt, debug) {
-  if (debug) {
-    this.config = {};
-    this.config.debug = debug;
+var EmptyScope = function(config) {
+  if (config !== undefined) {
+    this.config = config;
   }
-  Objects.Account.call(this, opt);
+  Objects.Account.call(this);
   return this;
 };
 
 EmptyScope.prototype = Object.create(Objects.Account.prototype);
 EmptyScope.prototype.constructor = EmptyScope;
 
-var AccountScope = function(accountKey, debug) {
-
-  this.config = {};
-  this.config.accountKey = accountKey;
-
-  if (debug) {
-    this.config.debug = debug;
-  }
-
-  Objects.Account.call(this, this.config);
-
+var AccountScope = function(config) {
+  Objects.Account.call(this, config);
   return this;
 };
 
@@ -57675,24 +57714,9 @@ AccountScope.prototype = Object.create(Objects.Account.prototype);
 AccountScope.prototype.constructor = AccountScope;
 
 
-var InstanceScope = function(instance, apiKey, userKey, debug) {
-
-  this.config = {};
-  this.config.apiKey = apiKey;
-  this.config.instance = instance;
-
-  if (userKey) {
-    this.config.userKey = userKey;
-  }
-
-  if (debug) {
-    this.config.debug = debug;
-  }
-
-  Objects.Instance.call(this, this.config);
-
+var InstanceScope = function(config) {
+  Objects.Instance.call(this, config);
   return this;
-
 };
 
 InstanceScope.prototype = Object.create(Objects.Instance.prototype);
