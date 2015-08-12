@@ -160,17 +160,24 @@ var Instance = function(config, id) {
     SingleObj.call(this, opts, singleFunc);
     var objArr;
 
-    // TODO evaluate arrays to ensure you have the right classes and constructors.
     if (opts && opts.accountKey) {
-      objArr = [Admin, ApiKey, Channel, Class, CodeBox, Invitation, Group, Schedule, Trigger, WebHook, User];
+      this.admin = classBuilder(Admin, opts);
+      this.apikey = classBuilder(ApiKey, opts);
+      this.channel = classBuilder(Channel, opts);
+      this.class = classBuilder(Class, opts);
+      this.codebox = classBuilder(CodeBox, opts);
+      this.invitation = classBuilder(Invitation, opts);
+      this.group = classBuilder(Group, opts);
+      this.schedule = classBuilder(Schedule, opts);
+      this.trigger = classBuilder(Trigger, opts);
+      this.webhook = classBuilder(WebHook, opts);
+      this.user = classBuilder(User, opts);
     } else {
-      objArr = [Channel, Class, Group, User];
+      this.channel = classBuilder(Channel, opts);
+      this.class = classBuilder(Class, opts);
+      this.group = classBuilder(Group, opts);
+      this.user = classBuilder(User, opts);
     }
-
-    _.forEach(objArr, function(Obj) {
-      var name = Obj.toString().match(/^function\s*([^\s(]+)/)[1];
-      self[name.toLowerCase()] = classBuilder(Obj, opts);
-    });
 
   } else {
     PluralObj.call(this, opts, pluralFunc);

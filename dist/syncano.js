@@ -56651,7 +56651,7 @@ module.exports = Request
 },{"./lib/auth":197,"./lib/cookies":198,"./lib/getProxyFromURI":199,"./lib/har":200,"./lib/helpers":201,"./lib/multipart":202,"./lib/oauth":203,"./lib/querystring":204,"./lib/redirect":205,"./lib/tunnel":206,"_process":173,"aws-sign2":207,"bl":208,"buffer":17,"caseless":217,"forever-agent":221,"form-data":222,"hawk":252,"http":165,"http-signature":253,"https":169,"mime-types":270,"stream":189,"stringstream":280,"url":191,"util":193,"zlib":16}],290:[function(require,module,exports){
 module.exports={
   "name": "syncano",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A library to intereact with the Syncano API.",
   "main": "src/syncano.js",
   "author": "Kelly Andrews",
@@ -56659,9 +56659,9 @@ module.exports={
   "scripts": {
     "coverage": "CODECLIMATE_REPO_TOKEN=2fc62db4794c74bf7d733c365aed53960c0d7b7f9560674868f0e487ce36f2eb codeclimate-test-reporter < ./test/coverage/lcov.info"
   },
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/Syncano/syncano-js-lib"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Syncano/syncano-js-lib"
   },
   "dependencies": {
     "bluebird": "^2.9.30",
@@ -56673,7 +56673,9 @@ module.exports={
     "lodash": "global:_"
   },
   "browserify": {
-    "transform": [ "browserify-shim" ]
+    "transform": [
+      "browserify-shim"
+    ]
   },
   "devDependencies": {
     "browserify": "^10.2.4",
@@ -57454,17 +57456,24 @@ var Instance = function(config, id) {
     SingleObj.call(this, opts, singleFunc);
     var objArr;
 
-    // TODO evaluate arrays to ensure you have the right classes and constructors.
     if (opts && opts.accountKey) {
-      objArr = [Admin, ApiKey, Channel, Class, CodeBox, Invitation, Group, Schedule, Trigger, WebHook, User];
+      this.admin = classBuilder(Admin, opts);
+      this.apikey = classBuilder(ApiKey, opts);
+      this.channel = classBuilder(Channel, opts);
+      this.class = classBuilder(Class, opts);
+      this.codebox = classBuilder(CodeBox, opts);
+      this.invitation = classBuilder(Invitation, opts);
+      this.group = classBuilder(Group, opts);
+      this.schedule = classBuilder(Schedule, opts);
+      this.trigger = classBuilder(Trigger, opts);
+      this.webhook = classBuilder(WebHook, opts);
+      this.user = classBuilder(User, opts);
     } else {
-      objArr = [Channel, Class, Group, User];
+      this.channel = classBuilder(Channel, opts);
+      this.class = classBuilder(Class, opts);
+      this.group = classBuilder(Group, opts);
+      this.user = classBuilder(User, opts);
     }
-
-    _.forEach(objArr, function(Obj) {
-      var name = Obj.toString().match(/^function\s*([^\s(]+)/)[1];
-      self[name.toLowerCase()] = classBuilder(Obj, opts);
-    });
 
   } else {
     PluralObj.call(this, opts, pluralFunc);
