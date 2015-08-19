@@ -1,5 +1,6 @@
 var browserify = require('browserify');
 var buffer = require('vinyl-buffer');
+var bump = require('gulp-bump');
 var gulp = require('gulp');
 var gzip = require('gulp-gzip');
 var istanbul = require('gulp-istanbul');
@@ -12,11 +13,53 @@ var sourcemaps = require('gulp-sourcemaps');
 var source = require('vinyl-source-stream');
 var stylish = require('jshint-stylish');
 var uglify = require('gulp-uglify');
+var argv = require('yargs').argv;
 
 var handleError = function handleError(err) {
   console.log(err.toString());
   this.emit('end');
 }
+
+gulp.task('bump', function(){
+  var type;
+  if (argv.major) { type = "major"};
+  if (argv.minor) { type = "minor"};
+  if (argv.patch) { type = "patch"};
+  if (argv.prerelease) { type = "prerelease"};
+
+  gulp.src(['./bower.json', './package.json'])
+  .pipe(bump({type:type}))
+  .pipe(gulp.dest('./'));
+});
+
+gulp.task('browserify', function() {
+  var b = browserify({
+    entries: './src/syncano.js',
+    standalone: 'Syncano'
+  })
+  .ignore('Bluebird')
+  .ignore('lodash');
+
+  return b.bundle()
+    .pipe(source('syncano.js'))
+    .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('package', ['browserify'], function() {
+  gulp.src('./dist/syncano.js')
+  .pipe(rename('syncano.min.js'))
+  .pipe(buffer())
+  .pipe(sourcemaps.init())
+    .pipe(uglify({
+      unused: true,
+      dead_code: true,
+      drop_console: true,
+      comments: true
+    }))
+  .pipe(sourcemaps.write('./'))
+  .pipe(gulp.dest('./dist'))
+});
+
 
 gulp.task('test', ['lint', 'jscs'], function() {
   return gulp.src('src/**/*.js')

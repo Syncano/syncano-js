@@ -134,6 +134,23 @@ my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - ret
 * Jhishan Khan - [twitter](https://twitter.com/jhishan), [github](https://github.com/jhishan)
 
 ### Change Log
+* **0.2.6** - 2015-08-19
+    * Added gulp-bump for versioning
+* **0.2.5** - 2015-08-12
+    * Fixes minification error with instances
+* **0.2.4** - 2015-08-06
+    * Fixed bug in standalone `syncano.js`
+      * Added `browserify-shim` to get global modules for `Promise` and `_`
+    * Updated `package.json` with additinal fields
+    * Corrected version mismatch in bower module.
+* **0.2.3** - 2015-08-04
+    * Fixed token bug with social login
+    * Corrected `user().group` and `group().user` pattern
+      * Did not follow chainable method pattern
+      * Now `user().group()` and `group().user()`
+    * Added filter options `lastId` and `room`
+      * Used with `channel().poll()` and `channel().history()`
+    * Updated testing
 * **0.2.2** - 2015-07-30
     * Added `baseUrl` to config
         * `new Syncano({baseUrl: 'http://newurl.com'});`
