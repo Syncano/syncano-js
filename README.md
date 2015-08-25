@@ -1,8 +1,9 @@
 # Syncano
 
-[![NPM](https://nodei.co/npm/syncano.png?compact=true)](https://www.npmjs.com/package/syncano)
+[![NPM](https://img.shields.io/npm/v/syncano.svg)](https://www.npmjs.com/package/syncano)
 
-[![Code Climate](https://codeclimate.com/github/Syncano/syncano-js-lib/badges/gpa.svg)](https://codeclimate.com/github/Syncano/syncano-js-lib)  [![Test Coverage](https://codeclimate.com/github/Syncano/syncano-js-lib/badges/coverage.svg)](https://codeclimate.com/github/Syncano/syncano-js-lib/coverage)
+[![Code Climate](https://img.shields.io/codeclimate/github/Syncano/syncano-js-lib.svg)](https://codeclimate.com/github/Syncano/syncano-js-lib)  [![Test Coverage](https://img.shields.io/codeclimate/coverage/github/Syncano/syncano-js-lib.svg)](https://codeclimate.com/github/Syncano/syncano-js-lib/coverage)
+
 
 ## Getting Started
 This library is inteded to be used with a [Syncano](http://www.syncano.com/) account. If you don't already have one - you can sign up [here](https://dashboard.syncano.io/?utm_source=syncano-js&utm_medium=readme&utm_campaign=github).
@@ -17,11 +18,9 @@ bower install syncano --save
 
 **Client-Side Usage**
 
-Bower will install both [`bluebird`](https://github.com/petkaantonov/bluebird) and [`lodash`](https://lodash.com/) as dependencies. You will need to include those prior to `syncano.min.js`.
+Bower will install Syncano - simply include in your project like this:
 
 ```html
-<script src="path/to/bower_components/bluebird/js/browser/bluebird.min.js"></script>
-<script src="path/to/bower_components/lodash/lodash.min.js"></script>
 <script src="path/to/bower_components/syncano/dist/syncano.min.js"></script>
 ```
 
@@ -130,10 +129,22 @@ my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - ret
 ### Contributors
 
 * Kelly Andrews  - [twitter](https://twitter.com/kellyjandrews), [github](https://github.com/kellyjandrews)
+* Devin Visslailli - [twitter](https://twitter.com/devintyler9), [github](https://github.com/devintyler)
 * Patrick Devivo - [twitter](https://twitter.com/patrickdevivo), [github](https://github.com/patrickdevivo)
 * Jhishan Khan - [twitter](https://twitter.com/jhishan), [github](https://github.com/jhishan)
 
 ### Change Log
+* **0.3.0** - 2015-10-26
+    * Added `watch()` functionality for channels
+      * Using the watch() function now emits events for channel updates.
+    * Dependency reduction
+      * Implemented changes to remove lodash and request deps.
+      * Reduced overall size of library
+    * Paging Support
+      * Results with multiple pages now return a `next()` and `prev()` function for paging results.
+    * Fixed Various Small Bugs
+      * BaseUrl with Empty Scope not working
+      * Some errors not being properly returned
 * **0.2.6** - 2015-08-19
     * Added gulp-bump for versioning
 * **0.2.5** - 2015-08-12

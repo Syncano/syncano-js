@@ -1,6 +1,6 @@
 {
   "name": "syncano",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "description": "A library to intereact with the Syncano API.",
   "homepage": "https://github.com/Syncano/syncano-js-lib",
   "authors": [
@@ -18,7 +18,6 @@
     "tests"
   ],
   "dependencies": {
-    "bluebird": "~2.9.34",
-    "lodash": "~3.10.0"
+    "bluebird": "~2.9.34"
   }
 }

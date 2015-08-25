@@ -7,9 +7,10 @@
 
 var version  = require('../package.json').version;
 var helpers  = require('./helpers.js');
-var request  = require('request');
-var _        = require('lodash');
+var request  = require('./request.js');
 var Promise  = require('bluebird');
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
 
 var defaultOptions = {
   qsStringifyOptions: {arrayFormat: 'repeat'},
@@ -41,6 +42,9 @@ var url = function(config) {
 
   var buildUrl = function urlAddOns(config) {
     var tmpl = config.tmpl || urlTmpl[config.type];
+    if (tmpl.substring(1) !== 'v') {
+      tmpl = '/v1' + tmpl;
+    }
 
     if (config.inviteId) {
       tmpl += '<%= inviteId %>/';
@@ -58,14 +62,49 @@ var url = function(config) {
       tmpl += '<%= json.backend %>/';
     }
 
-    return _.template(tmpl)(config);
+    return helpers.template(tmpl, config);
   };
 
   return buildUrl(config);
 };
 
-var filterReq = function(config) {
-  var opt = _.merge({}, config);
+var watch = function(config) {
+  var opt = helpers.merge({}, config);
+  delete opt.func;
+  var reqId = (opt.channelId) ? false : true;
+  return (function(id, filter) {
+    if (reqId) {
+      opt.id = helpers.checkId(id);
+    } else {
+      filter = id;
+    }
+    filter = filter || {};
+    opt.qs = helpers.parseFilter(filter);
+    var events = new EventEmitter();
+    watchRec(opt, apiRequest, events);
+    return events;
+  });
+
+};
+
+var watchRec = function(config, func, events) {
+  var opt = helpers.merge({}, config);
+  func(opt).then(function(res){
+    if (res !== undefined) {
+      events.emit(res.action, res.payload);
+      opt.qs.last_id = res.id;
+    }
+    watchRec(opt, func, events);
+  }).catch(function(err) {
+    events.emit('error', err);
+    watchRec(opt, func, events);
+  });
+
+};
+
+
+var filterReq = function filterReq(config) {
+  var opt = helpers.merge({}, config);
   delete opt.func;
   return (function(filter, cb) {
     if (arguments.length <= 1) {
@@ -81,9 +120,9 @@ var filterReq = function(config) {
 
 };
 
-var idReq = function(config) {
+var idReq = function idReq(config) {
 
-  var opt = _.merge({}, config);
+  var opt = helpers.merge({}, config);
   delete opt.func;
 
   return (function(id, cb) {
@@ -93,9 +132,9 @@ var idReq = function(config) {
 
 };
 
-var filterIdReq = function(config) {
+var filterIdReq = function filterIdReq(config) {
 
-  var opt = _.merge({}, config);
+  var opt = helpers.merge({}, config);
   delete opt.func;
 
   return (function(id, filter, cb) {
@@ -114,9 +153,9 @@ var filterIdReq = function(config) {
 
 };
 
-var paramReq = function(config) {
+var paramReq = function paramReq(config) {
 
-  var opt = _.merge({}, config);
+  var opt = helpers.merge({}, config);
   delete opt.func;
 
   return (function(params, filter, cb) {
@@ -138,8 +177,8 @@ var paramReq = function(config) {
 
 };
 
-var paramIdReq = function(config) {
-  var opt = _.merge({}, config);
+var paramIdReq = function paramIdReq(config) {
+  var opt = helpers.merge({}, config);
   delete opt.func;
 
   return (function(id, params, filter, cb) {
@@ -165,26 +204,56 @@ var paramIdReq = function(config) {
 };
 
 var apiRequest = function apiRequest(config, cb) {
-  var opt = _.merge({}, defaultOptions, config, helpers.addAuth(config));
-  opt.url = url(opt);
-  opt.baseUrl = config.baseUrl || 'https://api.syncano.io/v1';
+  var opt = helpers.merge({}, defaultOptions, config, helpers.addAuth(config));
+  if (!opt.url) {
+    opt.url = url(opt);
+  }
+
+  opt.baseUrl = config.baseUrl || 'https://api.syncano.io';
 
   return new Promise(function(resolve, reject) {
-    request(opt.url, opt, function(err, res) {
+    request(opt, function(err, res) {
       var localError, response;
 
-      if (err || res.statusCode === 404) {
+      if (err || !(res.statusCode === 200 || res.statusCode === 201 || res.statusCode === 204)) { // Errors
         localError = err ? new Error(err) : new Error(JSON.stringify(res.body));
         reject(localError);
         return;
       }
-      if (res.statusCode === 204) {
-        response = res.statusMessage;
-      } else {
-        response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body;
-        if (opt.debug) {
-          response.debug = res;
-        }
+      switch (res.statusCode) {
+        case 204:
+          response = res.statusMessage; // NO CONTENT message
+          break;
+
+        case 201:
+          response = res.body; // convert to JSON
+          break;
+
+        case 200:
+          response = res.body; // convert to JSON
+          if (response.next) { // if there's a next URL
+            var resNext = response.next; // set to next URL so it's not overwritten
+            response.next = function(cb) { // NEXT function call
+              var nextConfig = helpers.merge({}, config); // create config obj
+              nextConfig.url = resNext;
+              return apiRequest(nextConfig, cb);
+            };
+          }
+          if (response.prev) { // if there's a prev URL
+            var resPrev = response.prev; // set to prev URL so it's not overwritten
+            response.prev = function(cb) { // PREV function call
+              var prevConfig = helpers.merge({}, config); // create config obj
+              prevConfig.url = resPrev;
+              return apiRequest(prevConfig, cb);
+            };
+          } else if (response.prev && response.objects.length < 1) {
+            return; // returning nothing (otherwise would be 0 objects)
+          }
+          break;
+      }
+
+      if (opt.debug) {
+        response.debug = res;
       }
 
       resolve(response);
@@ -197,7 +266,8 @@ var core = {
   filterIdReq: filterIdReq,
   idReq: idReq,
   paramReq: paramReq,
-  paramIdReq: paramIdReq
+  paramIdReq: paramIdReq,
+  watch: watch
 };
 
 module.exports = core;

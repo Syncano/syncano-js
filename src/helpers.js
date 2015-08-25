@@ -5,22 +5,21 @@
 
  'use strict';
 
-var _        = require('lodash');
-
-module.exports = {
-  checkParams: function(p) {
+var checkParams = function(p) {
     if (typeof p !== 'object') {
       throw new Error('Invalid parameters object.');
     }
     return p;
-  },
-  checkId: function(id) {
+};
+
+var checkId = function(id) {
     if (typeof id !== 'string' && typeof id !== 'number') {
       throw new Error('Valid ID must be provided.');
     }
     return id;
-  },
-  parseFilter: function(options) {
+};
+
+var parseFilter = function(options) {
     var parsedOptions = {};
 
     if (options.fields) {
@@ -60,14 +59,16 @@ module.exports = {
     }
 
     return parsedOptions;
-  },
-  sortArgs: function(o, f) {
+};
+
+var sortArgs = function(o, f) {
     var result = {};
-    result.cb = (_.isFunction(o)) ? o : null;
-    result.filter = (_.isPlainObject(o)) ? o : {};
+    result.cb = (isFunction(o)) ? o : null;
+    result.filter = (isPlainObject(o)) ? o : {};
     return result;
-  },
-  addAuth: function(options) {
+};
+
+var addAuth = function(options) {
     var headers = {};
 
     if (options.accountKey || options.apiKey) {
@@ -83,5 +84,115 @@ module.exports = {
     }
 
     return (headers !== {}) ? {headers: headers} : headers;
-  }
 };
+
+
+//lodash replacements
+var objToString = Object.prototype.toString;
+var objectTag = '[object Object]';
+var MAX_SAFE_INTEGER = 9007199254740991;
+var funcTag = '[object Function]';
+
+var isObject = function(value) {
+  var type = typeof value;
+  return !!value && (type === 'object' || type === 'function');
+};
+
+var isObjectLike = function(value) {
+    return !!value && typeof value === 'object';
+};
+
+var isHostObject = (function() {
+  try {
+    Object({ 'toString': 0 } + '');
+  } catch(e) {
+    return function() { return false; };
+  }
+  return function(value) {
+    return typeof value.toString !== 'function' && typeof (value + '') === 'string';
+  };
+}());
+
+function isLength(value) {
+  return typeof value === 'number' && value > -1 && value % 1 === 0 && value <= MAX_SAFE_INTEGER;
+}
+
+var isArrayLike = function(value) {
+  return value !== null && isLength(value.length);
+};
+
+var isArguments = function(value) {
+  return isObjectLike(value) && isArrayLike(value) && hasOwnProperty.call(value, 'callee');
+};
+
+var isPlainObject = function(value) {
+  var Ctor;
+
+  if (!(isObjectLike(value) && objToString.call(value) === objectTag && !isHostObject(value) && !isArguments(value)) ||
+      (!hasOwnProperty.call(value, 'constructor') && (Ctor = value.constructor, typeof Ctor === 'function' && !(Ctor instanceof Ctor)))) {
+    return false;
+  }
+
+  var result;
+
+  for (var key in value) {
+    result = key;
+  }
+  return hasOwnProperty.call(value, result);
+};
+
+var isFunction = function(value) {
+  return isObject(value) && objToString(value) === funcTag;
+};
+
+var extend = function extend(destination, source) {
+  for (var property in source) {
+    if (source[property] && source[property].constructor &&
+     source[property].constructor === Object) {
+      destination[property] = destination[property] || {};
+      extend(destination[property], source[property]);
+    } else {
+      destination[property] = source[property];
+    }
+  }
+  return destination;
+};
+
+var merge = function(obj) {
+  var args = Array.prototype.slice.call(arguments, 1);
+  for (var i = 0; i < args.length; i++) {
+      obj = extend(obj, args[i]);
+  }
+  return obj;
+};
+
+var template = function(tmpl, data) {
+    var re = /(?:<%=)([\s\S]+?)(?:%>)/g;
+    tmpl = tmpl.replace(re, function replacer(match, value){
+       var key = value.trim();
+       if (key.indexOf('.') !== -1) {
+         var deepProp = key.split('.');
+         var tmp = merge({}, data);
+         for (var i = 0; i < deepProp.length; i++) {
+           tmp = tmp[deepProp[i]];
+         }
+         return tmp;
+       }
+       return data[key];
+    });
+
+    return tmpl;
+};
+
+
+var helpers = {
+  checkParams: checkParams,
+  checkId: checkId,
+  parseFilter: parseFilter,
+  sortArgs: sortArgs,
+  addAuth: addAuth,
+  merge: merge,
+  template: template
+};
+
+module.exports = helpers;

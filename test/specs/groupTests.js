@@ -9,7 +9,8 @@ describe('Group', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
-      mockery.registerMock('request', config.requestMock);
+      mockery.registerMock('./request.js', config.requestMock);
+
       Syncano = require('../../src/syncano.js');
       scope = new Syncano({
         accountKey: config.accountKey
@@ -37,7 +38,7 @@ describe('Group', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/groups/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/groups/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -52,7 +53,7 @@ describe('Group', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
-        (res.url).should.equal('/instances/' + config.instance + '/groups/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/groups/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -67,7 +68,7 @@ describe('Group', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/groups/' + config.groupId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/groups/' + config.groupId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -82,7 +83,7 @@ describe('Group', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('/instances/' + config.instance + '/groups/' + config.groupId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/groups/' + config.groupId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -97,7 +98,7 @@ describe('Group', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/instances/' + config.instance + '/groups/' + config.groupId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/groups/' + config.groupId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -122,7 +123,7 @@ describe('Group', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/groups/' + config.groupId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/groups/' + config.groupId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -137,7 +138,7 @@ describe('Group', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('/instances/' + config.instance + '/groups/' + config.groupId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/groups/' + config.groupId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -152,7 +153,7 @@ describe('Group', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/instances/' + config.instance + '/groups/' + config.groupId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/groups/' + config.groupId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -167,7 +168,7 @@ describe('Group', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/groups/' + config.groupId + '/users/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/groups/' + config.groupId + '/users/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -182,7 +183,7 @@ describe('Group', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
-        (res.url).should.equal('/instances/' + config.instance + '/groups/' + config.groupId + '/users/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/groups/' + config.groupId + '/users/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -197,7 +198,7 @@ describe('Group', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/groups/' + config.groupId + '/users/' + config.userId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/groups/' + config.groupId + '/users/' + config.userId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -212,7 +213,7 @@ describe('Group', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/instances/' + config.instance + '/groups/' + config.groupId + '/users/' + config.userId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/groups/' + config.groupId + '/users/' + config.userId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -233,7 +234,8 @@ describe('Group', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
-      mockery.registerMock('request', config.requestMock);
+      mockery.registerMock('./request.js', config.requestMock);
+
       Syncano = require('../../src/syncano.js');
       scope = new Syncano({
         apiKey: config.apiKey,
@@ -260,7 +262,8 @@ describe('Group', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
-      mockery.registerMock('request', config.requestMock);
+      mockery.registerMock('./request.js', config.requestMock);
+
       Syncano = require('../../src/syncano.js');
       scope = new Syncano({
         apiKey: config.apiKey,

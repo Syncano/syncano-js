@@ -1,6 +1,6 @@
 {
   "name": "syncano",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "description": "A library to intereact with the Syncano API.",
   "main": "src/syncano.js",
   "author": "Kelly Andrews",
@@ -13,22 +13,10 @@
     "url": "https://github.com/Syncano/syncano-js-lib.git"
   },
   "dependencies": {
-    "bluebird": "^2.9.30",
-    "lodash": "^3.9.3",
-    "request": "^2.58.0"
-  },
-  "browserify-shim": {
-    "bluebird": "global:Promise",
-    "lodash": "global:_"
-  },
-  "browserify": {
-    "transform": [
-      "browserify-shim"
-    ]
+    "bluebird": "^2.9.30"
   },
   "devDependencies": {
     "browserify": "^10.2.4",
-    "browserify-shim": "^3.8.10",
     "gulp": "^3.9.0",
     "gulp-bump": "^0.3.1",
     "gulp-gzip": "^1.1.0",

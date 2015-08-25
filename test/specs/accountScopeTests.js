@@ -8,7 +8,8 @@ describe('Syncano (Account Scope)', function() {
   var requestMock, Syncano, scope;
   before(function() {
     mockery.enable(config.mockSettings);
-    mockery.registerMock('request', config.requestMock);
+    mockery.registerMock('./request.js', config.requestMock);
+
     Syncano = require('../../src/syncano.js');
 
     scope = new Syncano({
@@ -42,7 +43,7 @@ describe('Syncano (Account Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('GET');
-      (res.url).should.equal('/account/');
+      (res.url).should.equal('/v1/account/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
       (res.headers['X-API-KEY']).should.equal(config.accountKey);
       done();
@@ -57,7 +58,7 @@ describe('Syncano (Account Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('PATCH');
-      (res.url).should.equal('/account/');
+      (res.url).should.equal('/v1/account/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
       (res.headers['X-API-KEY']).should.equal(config.accountKey);
       done();
@@ -72,7 +73,7 @@ describe('Syncano (Account Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
-      (res.url).should.equal('/account/reset_key/');
+      (res.url).should.equal('/v1/account/reset_key/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
       (res.headers['X-API-KEY']).should.equal(config.accountKey);
       done();
@@ -87,7 +88,7 @@ describe('Syncano (Account Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
-      (res.url).should.equal('/account/password/');
+      (res.url).should.equal('/v1/account/password/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
       (res.headers['X-API-KEY']).should.equal(config.accountKey);
       done();
@@ -102,7 +103,7 @@ describe('Syncano (Account Scope)', function() {
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
-      (res.url).should.equal('/account/password/set/');
+      (res.url).should.equal('/v1/account/password/set/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
       (res.headers['X-API-KEY']).should.equal(config.accountKey);
       done();

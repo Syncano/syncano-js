@@ -6,7 +6,6 @@
 'use strict';
 
 var helpers  = require('./helpers.js');
-var _        = require('lodash');
 var core     = require('./core.js');
 
 var methods = {
@@ -144,6 +143,14 @@ var methods = {
       };
       return opts;
   },
+  watch: function poll(config) {
+      var opts = {
+        method: 'GET',
+        path: 'poll',
+        func: {single: core.watch, plural: core.watch}
+      };
+      return opts;
+  },
   history: function history(config) {
       var opts = {
         method: 'GET',
@@ -249,38 +256,38 @@ var methods = {
   }
 };
 
-
 var SingleObj = function(config, funcArr) {
   var self = this;
-  var opt = _.merge({}, config);
+  var opt = helpers.merge({}, config);
 
   opt.type = this.type;
 
   self.config = config;
   funcArr = funcArr || ['detail', 'update', 'delete'];
 
-  _.forEach(funcArr, function(f) {
+  for (var i = 0; i < funcArr.length; i++) {
+    var f = funcArr[i];
     var method = methods[f].call(null, opt);
-    var options = _.merge({}, method, opt);
+    var options = helpers.merge({}, method, opt);
     self[f] = method.func.single(options);
-  });
-
+  }
   return self;
 };
 
 var PluralObj = function(config, funcArr) {
   var self = this;
-  var opt = _.merge({}, config);
+  var opt = helpers.merge({}, config);
 
   opt.type = this.type;
 
   funcArr = funcArr || ['list', 'detail', 'add', 'update', 'delete'];
 
-  _.forEach(funcArr, function(f) {
+  for (var i = 0; i < funcArr.length; i++) {
+    var f = funcArr[i];
     var method = methods[f].call(null, opt);
-    var options = _.merge({}, method, opt);
+    var options = helpers.merge({}, method, opt);
     self[f] = method.func.plural(options);
-  });
+  }
 
   return self;
 };

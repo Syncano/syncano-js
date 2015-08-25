@@ -7,12 +7,12 @@
 
 var SingleObj  = require('./methods.js').SingleObj;
 var PluralObj  = require('./methods.js').PluralObj;
-var _        = require('lodash');
+var helpers  = require('./helpers.js');
 
 
 var Account = function(config) {
 
-  var opts = _.merge({}, config);
+  var opts = helpers.merge({}, config);
   if (opts && opts.accountKey) {
     SingleObj.call(this, opts, ['detail', 'update', 'resetKey', 'changePw', 'setPw']);
     this.invitation = classBuilder(Invitation, opts);
@@ -29,7 +29,7 @@ Account.prototype.type = 'account';
 
 var Admin = function Admin(config, id) {
 
-  var opts = _.merge({}, config);
+  var opts = helpers.merge({}, config);
 
   if (id) {
     opts.adminId = id;
@@ -45,7 +45,7 @@ Admin.prototype.type = 'admin';
 
 var ApiKey = function ApiKey(config, id) {
 
-  var opts = _.merge({}, config);
+  var opts = helpers.merge({}, config);
 
   if (id) {
     opts.apikeyId = id;
@@ -62,11 +62,11 @@ ApiKey.prototype.type = 'apikey';
 var Channel = function Channel(config, id) {
 
   var singleFunc, pluralFunc;
-  var opts = _.merge({}, config);
+  var opts = helpers.merge({}, config);
 
   if (opts && opts.apiKey) {
-    singleFunc = ['detail', 'history', 'publish', 'poll'];
-    pluralFunc = ['list', 'detail', 'history', 'publish', 'poll'];
+    singleFunc = ['detail', 'history', 'publish', 'poll', 'watch'];
+    pluralFunc = ['list', 'detail', 'history', 'publish', 'poll', 'watch'];
   }
 
   if (id) {
@@ -85,7 +85,7 @@ Channel.prototype.type = 'channel';
 var Class = function Class(config, id) {
 
   var singleFunc, pluralFunc;
-  var opts = _.merge({}, config);
+  var opts = helpers.merge({}, config);
 
   if (opts && opts.apiKey) {
     singleFunc = ['detail'];
@@ -107,10 +107,8 @@ var Class = function Class(config, id) {
 Class.prototype.constructor = Class;
 Class.prototype.type = 'class';
 
-// TODO Add runtimes() to codebox;
-
 var CodeBox = function CodeBox(config, id) {
-  var opts = _.merge({}, config);
+  var opts = helpers.merge({}, config);
 
   if (id) {
     opts.codeboxId = id;
@@ -127,7 +125,7 @@ CodeBox.prototype.type = 'codebox';
 var DataObject = function DataObject(config, id) {
 
   var singleFunc, pluralFunc;
-  var opts = _.merge({}, config);
+  var opts = helpers.merge({}, config);
 
   if (id) {
     opts.dataobjectId = id;
@@ -147,7 +145,7 @@ var Instance = function(config, id) {
   var self = this;
   var singleFunc, pluralFunc;
 
-  var opts = _.merge({}, config);
+  var opts = helpers.merge({}, config);
 
   if (opts && opts.apiKey) {
     singleFunc = ['detail'];
@@ -192,7 +190,7 @@ Instance.prototype.type = 'instance';
 var Group = function Group(config, id) {
 
   var singleFunc, pluralFunc;
-  var opts = _.merge({}, config);
+  var opts = helpers.merge({}, config);
 
   if (opts && opts.apiKey) {
     singleFunc = ['detail'];
@@ -226,7 +224,7 @@ var Invitation = function Invitation(config, id) {
 
   var singleFunc = ['detail', 'delete'];
   var pluralFunc;
-  var opts = _.merge({}, config);
+  var opts = helpers.merge({}, config);
 
   if (opts && opts.instance) {
     pluralFunc = ['list', 'detail', 'sendEmail', 'resendEmail', 'delete'];
@@ -248,7 +246,7 @@ Invitation.prototype.constructor = Invitation;
 Invitation.prototype.type = 'invitation';
 
 var Schedule = function Schedule(config, id) {
-  var opts = _.merge({}, config);
+  var opts = helpers.merge({}, config);
 
   if (id) {
     opts.scheduleId = id;
@@ -263,7 +261,7 @@ Schedule.prototype.constructor = Schedule;
 Schedule.prototype.type = 'schedule';
 
 var Trigger = function Trigger(config, id) {
-  var opts = _.merge({}, config);
+  var opts = helpers.merge({}, config);
 
   if (id) {
     opts.triggerId = id;
@@ -278,7 +276,7 @@ Trigger.prototype.constructor = Trigger;
 Trigger.prototype.type = 'trigger';
 
 var WebHook = function WebHook(config, id) {
-  var opts = _.merge({}, config);
+  var opts = helpers.merge({}, config);
 
   if (id) {
     opts.webhookId = id;
@@ -295,7 +293,7 @@ WebHook.prototype.type = 'webhook';
 var User = function User(config, id) {
 
   var singleFunc, pluralFunc;
-  var opts = _.merge({}, config);
+  var opts = helpers.merge({}, config);
 
   pluralFunc = ['list', 'add', 'detail', 'update', 'delete', 'resetKey'];
   singleFunc = ['detail', 'update', 'resetKey', 'delete'];

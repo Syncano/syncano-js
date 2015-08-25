@@ -9,7 +9,8 @@ describe('Syncano', function() {
 
   before(function() {
     mockery.enable(config.mockSettings);
-    mockery.registerMock('request', config.requestMock);
+    mockery.registerMock('./request.js', config.requestMock);
+
     Syncano = require('../../src/syncano.js');
     scope = new Syncano();
   });

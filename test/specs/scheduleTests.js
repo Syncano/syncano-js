@@ -9,7 +9,8 @@ describe('Schedule', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
-      mockery.registerMock('request', config.requestMock);
+      mockery.registerMock('./request.js', config.requestMock);
+
       Syncano = require('../../src/syncano.js');
       scope = new Syncano({
         accountKey: config.accountKey
@@ -37,7 +38,7 @@ describe('Schedule', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/schedules/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/schedules/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -52,7 +53,7 @@ describe('Schedule', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/schedules/' + config.scheduleId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/schedules/' + config.scheduleId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -67,7 +68,7 @@ describe('Schedule', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('/instances/' + config.instance + '/schedules/' + config.scheduleId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/schedules/' + config.scheduleId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -82,7 +83,7 @@ describe('Schedule', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/instances/' + config.instance + '/schedules/' + config.scheduleId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/schedules/' + config.scheduleId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -109,7 +110,7 @@ describe('Schedule', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/schedules/' + config.scheduleId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/schedules/' + config.scheduleId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -124,7 +125,7 @@ describe('Schedule', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('/instances/' + config.instance + '/schedules/' + config.scheduleId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/schedules/' + config.scheduleId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -139,7 +140,7 @@ describe('Schedule', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/instances/' + config.instance + '/schedules/' + config.scheduleId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/schedules/' + config.scheduleId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -153,7 +154,7 @@ describe('Schedule', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/schedules/' + config.scheduleId + '/traces/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/schedules/' + config.scheduleId + '/traces/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -168,7 +169,7 @@ describe('Schedule', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/schedules/' + config.scheduleId + '/traces/' + config.traceId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/schedules/' + config.scheduleId + '/traces/' + config.traceId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();

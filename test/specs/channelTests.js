@@ -9,7 +9,8 @@ describe('Channel', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
-      mockery.registerMock('request', config.requestMock);
+      mockery.registerMock('./request.js', config.requestMock);
+
       Syncano = require('../../src/syncano.js');
       scope = new Syncano({
         accountKey: config.accountKey
@@ -38,7 +39,7 @@ describe('Channel', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/channels/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/channels/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -53,7 +54,7 @@ describe('Channel', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/channels/' + config.channelId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/channels/' + config.channelId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -68,7 +69,7 @@ describe('Channel', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('/instances/' + config.instance + '/channels/' + config.channelId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/channels/' + config.channelId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -83,7 +84,7 @@ describe('Channel', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/instances/' + config.instance + '/channels/' + config.channelId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/channels/' + config.channelId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -108,7 +109,7 @@ describe('Channel', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/channels/' + config.channelId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/channels/' + config.channelId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -123,7 +124,7 @@ describe('Channel', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('/instances/' + config.instance + '/channels/' + config.channelId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/channels/' + config.channelId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -138,7 +139,7 @@ describe('Channel', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/instances/' + config.instance + '/channels/' + config.channelId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/channels/' + config.channelId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -153,7 +154,8 @@ describe('Channel', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
-      mockery.registerMock('request', config.requestMock);
+      mockery.registerMock('./request.js', config.requestMock);
+
       Syncano = require('../../src/syncano.js');
       scope = new Syncano({
         apiKey: config.apiKey,
@@ -168,7 +170,7 @@ describe('Channel', function() {
 
     it('should be channel object', function() {
       (scope.channel().type).should.equal('channel');
-      (scope.channel()).should.have.keys(['list', 'detail', 'detail', 'history', 'publish', 'poll']);
+      (scope.channel()).should.have.keys(['list', 'detail', 'detail', 'history', 'publish', 'poll', 'watch']);
     });
 
     it('poll() should recieve correct options', function(done) {
@@ -177,7 +179,7 @@ describe('Channel', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/channels/' + config.channelId + '/poll/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/channels/' + config.channelId + '/poll/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         done();
@@ -214,7 +216,7 @@ describe('Channel', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/channels/' + config.channelId + '/history/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/channels/' + config.channelId + '/history/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         done();
@@ -240,7 +242,7 @@ describe('Channel', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
-        (res.url).should.equal('/instances/' + config.instance + '/channels/' + config.channelId + '/publish/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/channels/' + config.channelId + '/publish/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         done();
@@ -252,7 +254,7 @@ describe('Channel', function() {
     it('should return new Channel', function() {
       scope = new scope.channel(config.channelId);
       (scope.type).should.equal('channel');
-      (scope).should.have.keys(['config', 'detail', 'history', 'publish', 'poll']);
+      (scope).should.have.keys(['config', 'detail', 'history', 'publish', 'poll', 'watch']);
     });
   });
 
@@ -260,7 +262,8 @@ describe('Channel', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
-      mockery.registerMock('request', config.requestMock);
+      mockery.registerMock('./request.js', config.requestMock);
+
       Syncano = require('../../src/syncano.js');
       scope = new Syncano({
         apiKey: config.apiKey,
@@ -275,12 +278,12 @@ describe('Channel', function() {
     });
     it('should be channel object', function() {
       (scope.channel().type).should.equal('channel');
-      (scope.channel()).should.have.keys(['list', 'detail', 'detail', 'history', 'publish', 'poll']);
+      (scope.channel()).should.have.keys(['list', 'detail', 'detail', 'history', 'publish', 'poll', 'watch']);
     });
     it('should return new Channel', function() {
       scope = new scope.channel(config.channelId);
       (scope.type).should.equal('channel');
-      (scope).should.have.keys(['config', 'detail', 'history', 'publish', 'poll']);
+      (scope).should.have.keys(['config', 'detail', 'history', 'publish', 'poll', 'watch']);
     });
 
   });

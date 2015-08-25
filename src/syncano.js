@@ -57,7 +57,8 @@ var EmptyScope = function(config) {
   if (config !== undefined) {
     this.config = config;
   }
-  Objects.Account.call(this);
+
+  Objects.Account.call(this, config);
   return this;
 };
 

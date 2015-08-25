@@ -18,10 +18,11 @@ var config = {
   dataobjectId: 123,
   traceId: 456,
   inviteId: 123,
-  requestMock: function(uri, options, callback) {
+  requestMock: function(opts, cb) {
     var res = {};
-    res.body = options;
-    callback(null, res);
+    res.body = opts;
+    res.statusCode = 200;
+    cb(null, res);
     return;
   },
   mockSettings: {

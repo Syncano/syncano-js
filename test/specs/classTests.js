@@ -8,7 +8,8 @@ describe('Class', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
-      mockery.registerMock('request', config.requestMock);
+      mockery.registerMock('./request.js', config.requestMock);
+
       Syncano = require('../../src/syncano.js');
       scope = new Syncano({
         accountKey: config.accountKey
@@ -36,7 +37,7 @@ describe('Class', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/classes/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -51,7 +52,7 @@ describe('Class', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/classes/' + config.className + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -66,7 +67,7 @@ describe('Class', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('/instances/' + config.instance + '/classes/' + config.className + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -81,7 +82,7 @@ describe('Class', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/instances/' + config.instance + '/classes/' + config.className + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -107,7 +108,7 @@ describe('Class', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/classes/' + config.className + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -122,7 +123,7 @@ describe('Class', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('/instances/' + config.instance + '/classes/' + config.className + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -137,7 +138,7 @@ describe('Class', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/instances/' + config.instance + '/classes/' + config.className + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -152,7 +153,8 @@ describe('Class', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
-      mockery.registerMock('request', config.requestMock);
+      mockery.registerMock('./request.js', config.requestMock);
+
       Syncano = require('../../src/syncano.js');
       scope = new Syncano({
         apiKey: config.apiKey,
@@ -176,7 +178,7 @@ describe('Class', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/classes/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         done();
@@ -191,7 +193,7 @@ describe('Class', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/classes/' + config.className + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         done();
@@ -212,7 +214,8 @@ describe('Class', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
-      mockery.registerMock('request', config.requestMock);
+      mockery.registerMock('./request.js', config.requestMock);
+
       Syncano = require('../../src/syncano.js');
       scope = new Syncano({
         apiKey: config.apiKey,
@@ -238,7 +241,7 @@ describe('Class', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/classes/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         (res.headers['X-USER-KEY']).should.equal(config.userKey);
@@ -254,7 +257,7 @@ describe('Class', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/instances/' + config.instance + '/classes/' + config.className + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         (res.headers['X-USER-KEY']).should.equal(config.userKey);

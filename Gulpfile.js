@@ -18,14 +18,14 @@ var argv = require('yargs').argv;
 var handleError = function handleError(err) {
   console.log(err.toString());
   this.emit('end');
-}
+};
 
 gulp.task('bump', function(){
   var type;
-  if (argv.major) { type = "major"};
-  if (argv.minor) { type = "minor"};
-  if (argv.patch) { type = "patch"};
-  if (argv.prerelease) { type = "prerelease"};
+  if (argv.major) { type = "major"; }
+  if (argv.minor) { type = "minor"; }
+  if (argv.patch) { type = "patch"; }
+  if (argv.prerelease) { type = "prerelease"; }
 
   gulp.src(['./bower.json', './package.json'])
   .pipe(bump({type:type}))
@@ -36,9 +36,7 @@ gulp.task('browserify', function() {
   var b = browserify({
     entries: './src/syncano.js',
     standalone: 'Syncano'
-  })
-  .ignore('Bluebird')
-  .ignore('lodash');
+  });
 
   return b.bundle()
     .pipe(source('syncano.js'))
@@ -57,7 +55,7 @@ gulp.task('package', ['browserify'], function() {
       comments: true
     }))
   .pipe(sourcemaps.write('./'))
-  .pipe(gulp.dest('./dist'))
+  .pipe(gulp.dest('./dist'));
 });
 
 
@@ -96,34 +94,6 @@ gulp.task('watch', function() {
     ['src/**/*.js', 'test/specs/**/*.js', 'test/config.js', '.jscsrc', '.jshintrc', 'Gulpfile.js'],
     ['test', 'lint', 'jscs']
   );
-});
-
-gulp.task('browserify', function() {
-  var b = browserify({
-    entries: './src/syncano.js',
-    standalone: 'Syncano'
-  })
-  .ignore('Bluebird')
-  .ignore('lodash');
-
-  return b.bundle()
-    .pipe(source('syncano.js'))
-    .pipe(gulp.dest('./dist'));
-});
-
-gulp.task('package', ['browserify'], function() {
-  gulp.src('./dist/syncano.js')
-  .pipe(rename('syncano.min.js'))
-  .pipe(buffer())
-  .pipe(sourcemaps.init())
-    .pipe(uglify({
-      unused: true,
-      dead_code: true,
-      drop_console: true,
-      comments: true
-    }))
-  .pipe(sourcemaps.write('./'))
-  .pipe(gulp.dest('./dist'))
 });
 
 gulp.task('default', ['test', 'watch']);
