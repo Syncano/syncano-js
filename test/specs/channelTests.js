@@ -168,7 +168,7 @@ describe('Channel', function() {
 
     it('should be channel object', function() {
       (scope.channel().type).should.equal('channel');
-      (scope.channel()).should.have.keys(['list', 'detail', 'detail', 'history', 'publish', 'poll']);
+      (scope.channel()).should.have.keys(['list', 'detail', 'detail', 'history', 'publish', 'poll', 'watch']);
     });
 
     it('poll() should recieve correct options', function(done) {
@@ -252,7 +252,7 @@ describe('Channel', function() {
     it('should return new Channel', function() {
       scope = new scope.channel(config.channelId);
       (scope.type).should.equal('channel');
-      (scope).should.have.keys(['config', 'detail', 'history', 'publish', 'poll']);
+      (scope).should.have.keys(['config', 'detail', 'history', 'publish', 'poll', 'watch']);
     });
   });
 
@@ -275,12 +275,12 @@ describe('Channel', function() {
     });
     it('should be channel object', function() {
       (scope.channel().type).should.equal('channel');
-      (scope.channel()).should.have.keys(['list', 'detail', 'detail', 'history', 'publish', 'poll']);
+      (scope.channel()).should.have.keys(['list', 'detail', 'detail', 'history', 'publish', 'poll', 'watch']);
     });
     it('should return new Channel', function() {
       scope = new scope.channel(config.channelId);
       (scope.type).should.equal('channel');
-      (scope).should.have.keys(['config', 'detail', 'history', 'publish', 'poll']);
+      (scope).should.have.keys(['config', 'detail', 'history', 'publish', 'poll', 'watch']);
     });
 
   });

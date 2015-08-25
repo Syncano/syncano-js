@@ -65,8 +65,8 @@ var Channel = function Channel(config, id) {
   var opts = _.merge({}, config);
 
   if (opts && opts.apiKey) {
-    singleFunc = ['detail', 'history', 'publish', 'poll'];
-    pluralFunc = ['list', 'detail', 'history', 'publish', 'poll'];
+    singleFunc = ['detail', 'history', 'publish', 'poll', 'watch'];
+    pluralFunc = ['list', 'detail', 'history', 'publish', 'poll', 'watch'];
   }
 
   if (id) {

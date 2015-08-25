@@ -144,6 +144,14 @@ var methods = {
       };
       return opts;
   },
+  watch: function poll(config) {
+      var opts = {
+        method: 'GET',
+        path: 'poll',
+        func: {single: core.watch, plural: core.watch}
+      };
+      return opts;
+  },
   history: function history(config) {
       var opts = {
         method: 'GET',

@@ -64,7 +64,35 @@ var url = function(config) {
   return buildUrl(config);
 };
 
-var filterReq = function(config) {
+var watch = function(config) {
+  var opt = _.merge({}, config);
+  delete opt.func;
+  var reqId = (opt.channelId) ? false : true;
+  return (function(id, filter) {
+    if (reqId) {
+      opt.id = helpers.checkId(id);
+    } else {
+      filter = id;
+    }
+    filter = filter || {};
+    opt.qs = helpers.parseFilter(filter);
+    watchRec(opt, apiRequest);
+  });
+};
+
+var watchRec = function(config, func) {
+  var opt = _.merge({}, config);
+  func(opt).then(function(res){
+    if (res !== undefined) {
+      console.log(res);
+      opt.qs.last_id = res.id;
+    }
+    watchRec(opt, func);
+  });
+
+};
+
+var filterReq = function filterReq(config) {
   var opt = _.merge({}, config);
   delete opt.func;
   return (function(filter, cb) {
@@ -81,7 +109,7 @@ var filterReq = function(config) {
 
 };
 
-var idReq = function(config) {
+var idReq = function idReq(config) {
 
   var opt = _.merge({}, config);
   delete opt.func;
@@ -93,7 +121,7 @@ var idReq = function(config) {
 
 };
 
-var filterIdReq = function(config) {
+var filterIdReq = function filterIdReq(config) {
 
   var opt = _.merge({}, config);
   delete opt.func;
@@ -114,7 +142,7 @@ var filterIdReq = function(config) {
 
 };
 
-var paramReq = function(config) {
+var paramReq = function paramReq(config) {
 
   var opt = _.merge({}, config);
   delete opt.func;
@@ -138,7 +166,7 @@ var paramReq = function(config) {
 
 };
 
-var paramIdReq = function(config) {
+var paramIdReq = function paramIdReq(config) {
   var opt = _.merge({}, config);
   delete opt.func;
 
@@ -197,7 +225,8 @@ var core = {
   filterIdReq: filterIdReq,
   idReq: idReq,
   paramReq: paramReq,
-  paramIdReq: paramIdReq
+  paramIdReq: paramIdReq,
+  watch: watch
 };
 
 module.exports = core;
