@@ -56651,7 +56651,7 @@ module.exports = Request
 },{"./lib/auth":197,"./lib/cookies":198,"./lib/getProxyFromURI":199,"./lib/har":200,"./lib/helpers":201,"./lib/multipart":202,"./lib/oauth":203,"./lib/querystring":204,"./lib/redirect":205,"./lib/tunnel":206,"_process":173,"aws-sign2":207,"bl":208,"buffer":17,"caseless":217,"forever-agent":221,"form-data":222,"hawk":252,"http":165,"http-signature":253,"https":169,"mime-types":270,"stream":189,"stringstream":280,"url":191,"util":193,"zlib":16}],290:[function(require,module,exports){
 module.exports={
   "name": "syncano",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "description": "A library to intereact with the Syncano API.",
   "main": "src/syncano.js",
   "author": "Kelly Andrews",
@@ -56661,7 +56661,7 @@ module.exports={
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Syncano/syncano-js-lib"
+    "url": "https://github.com/Syncano/syncano-js-lib.git"
   },
   "dependencies": {
     "bluebird": "^2.9.30",
@@ -56681,7 +56681,9 @@ module.exports={
     "browserify": "^10.2.4",
     "browserify-shim": "^3.8.10",
     "gulp": "^3.9.0",
+    "gulp-bump": "^0.3.1",
     "gulp-gzip": "^1.1.0",
+    "gulp-if": "^1.2.5",
     "gulp-istanbul": "^0.10.0",
     "gulp-jscs": "^1.6.0",
     "gulp-jshint": "^1.11.0",
@@ -56696,7 +56698,8 @@ module.exports={
     "should": "^7.0.1",
     "should-promised": "^0.3.0",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "yargs": "^3.19.0"
   }
 }
 
@@ -56714,6 +56717,8 @@ var helpers  = require('./helpers.js');
 var request  = require('request');
 var _        = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
 var Promise  = (typeof window !== "undefined" ? window['Promise'] : typeof global !== "undefined" ? global['Promise'] : null);
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
 
 var defaultOptions = {
   qsStringifyOptions: {arrayFormat: 'repeat'},
@@ -56768,7 +56773,39 @@ var url = function(config) {
   return buildUrl(config);
 };
 
-var filterReq = function(config) {
+var watch = function(config) {
+  var opt = _.merge({}, config);
+  delete opt.func;
+  var reqId = (opt.channelId) ? false : true;
+  return (function(id, filter) {
+    if (reqId) {
+      opt.id = helpers.checkId(id);
+    } else {
+      filter = id;
+    }
+    filter = filter || {};
+    opt.qs = helpers.parseFilter(filter);
+    var events = new EventEmitter();
+    watchRec(opt, apiRequest, events);
+    return events;
+  });
+
+};
+
+var watchRec = function(config, func, events) {
+  var opt = _.merge({}, config);
+  func(opt).then(function(res){
+    if (res !== undefined) {
+      events.emit(res.action, res.payload);
+      opt.qs.last_id = res.id;
+    }
+    watchRec(opt, func, events);
+  });
+
+};
+
+
+var filterReq = function filterReq(config) {
   var opt = _.merge({}, config);
   delete opt.func;
   return (function(filter, cb) {
@@ -56785,7 +56822,7 @@ var filterReq = function(config) {
 
 };
 
-var idReq = function(config) {
+var idReq = function idReq(config) {
 
   var opt = _.merge({}, config);
   delete opt.func;
@@ -56797,7 +56834,7 @@ var idReq = function(config) {
 
 };
 
-var filterIdReq = function(config) {
+var filterIdReq = function filterIdReq(config) {
 
   var opt = _.merge({}, config);
   delete opt.func;
@@ -56818,7 +56855,7 @@ var filterIdReq = function(config) {
 
 };
 
-var paramReq = function(config) {
+var paramReq = function paramReq(config) {
 
   var opt = _.merge({}, config);
   delete opt.func;
@@ -56842,7 +56879,7 @@ var paramReq = function(config) {
 
 };
 
-var paramIdReq = function(config) {
+var paramIdReq = function paramIdReq(config) {
   var opt = _.merge({}, config);
   delete opt.func;
 
@@ -56901,13 +56938,14 @@ var core = {
   filterIdReq: filterIdReq,
   idReq: idReq,
   paramReq: paramReq,
-  paramIdReq: paramIdReq
+  paramIdReq: paramIdReq,
+  watch: watch
 };
 
 module.exports = core;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../package.json":290,"./helpers.js":292,"request":196}],292:[function(require,module,exports){
+},{"../package.json":290,"./helpers.js":292,"events":164,"request":196,"util":193}],292:[function(require,module,exports){
 (function (global){
 /*
  * Syncano JS Library
@@ -57146,6 +57184,14 @@ var methods = {
       };
       return opts;
   },
+  watch: function poll(config) {
+      var opts = {
+        method: 'GET',
+        path: 'poll',
+        func: {single: core.watch, plural: core.watch}
+      };
+      return opts;
+  },
   history: function history(config) {
       var opts = {
         method: 'GET',
@@ -57361,8 +57407,8 @@ var Channel = function Channel(config, id) {
   var opts = _.merge({}, config);
 
   if (opts && opts.apiKey) {
-    singleFunc = ['detail', 'history', 'publish', 'poll'];
-    pluralFunc = ['list', 'detail', 'history', 'publish', 'poll'];
+    singleFunc = ['detail', 'history', 'publish', 'poll', 'watch'];
+    pluralFunc = ['list', 'detail', 'history', 'publish', 'poll', 'watch'];
   }
 
   if (id) {
