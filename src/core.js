@@ -93,6 +93,9 @@ var watchRec = function(config, func, events) {
       opt.qs.last_id = res.id;
     }
     watchRec(opt, func, events);
+  }).catch(function(err) {
+    events.emit('error', err);
+    watchRec(opt, func, events);
   });
 
 };
