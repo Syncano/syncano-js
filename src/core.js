@@ -10,6 +10,8 @@ var helpers  = require('./helpers.js');
 var request  = require('request');
 var _        = require('lodash');
 var Promise  = require('bluebird');
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
 
 var defaultOptions = {
   qsStringifyOptions: {arrayFormat: 'repeat'},
@@ -76,21 +78,25 @@ var watch = function(config) {
     }
     filter = filter || {};
     opt.qs = helpers.parseFilter(filter);
-    watchRec(opt, apiRequest);
+    var events = new EventEmitter();
+    watchRec(opt, apiRequest, events);
+    return events;
   });
+
 };
 
-var watchRec = function(config, func) {
+var watchRec = function(config, func, events) {
   var opt = _.merge({}, config);
   func(opt).then(function(res){
     if (res !== undefined) {
-      console.log(res);
+      events.emit(res.action, res.payload);
       opt.qs.last_id = res.id;
     }
-    watchRec(opt, func);
+    watchRec(opt, func, events);
   });
 
 };
+
 
 var filterReq = function filterReq(config) {
   var opt = _.merge({}, config);
