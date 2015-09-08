@@ -21,6 +21,7 @@ var config = {
   requestMock: function(uri, options, callback) {
     var res = {};
     res.body = options;
+    res.statusCode = 200;
     callback(null, res);
     return;
   },
