@@ -56917,7 +56917,7 @@ var apiRequest = function apiRequest(config, cb) {
     request(opt.url, opt, function(err, res) {
       var localError, response;
 
-      if (err || res.statusCode === 404) {
+      if (err || !(res.statusCode === 200 || res.statusCode === 201 || res.statusCode === 204)) {
         localError = err ? new Error(err) : new Error(JSON.stringify(res.body));
         reject(localError);
         return;
