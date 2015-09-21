@@ -43,6 +43,9 @@ var url = function(config) {
 
   var buildUrl = function urlAddOns(config) {
     var tmpl = config.tmpl || urlTmpl[config.type];
+    if (tmpl.substring(1) != 'v') {
+      tmpl = '/v1' + tmpl;
+    }
 
     if (config.inviteId) {
       tmpl += '<%= inviteId %>/';
@@ -203,25 +206,47 @@ var paramIdReq = function paramIdReq(config) {
 
 var apiRequest = function apiRequest(config, cb) {
   var opt = _.merge({}, defaultOptions, config, helpers.addAuth(config));
-  opt.url = url(opt);
-  opt.baseUrl = config.baseUrl || 'https://api.syncano.io/v1';
+  if (!opt.url) {
+    opt.url = url(opt);
+  }
+  opt.baseUrl = config.baseUrl || 'https://api.syncano.io';
 
   return new Promise(function(resolve, reject) {
     request(opt.url, opt, function(err, res) {
       var localError, response;
 
-      if (err || !(res.statusCode === 200 || res.statusCode === 201 || res.statusCode === 204)) {
+      if (err || !(res.statusCode === 200 || res.statusCode === 201 || res.statusCode === 204)) { // Errors
         localError = err ? new Error(err) : new Error(JSON.stringify(res.body));
         reject(localError);
         return;
       }
       if (res.statusCode === 204) {
-        response = res.statusMessage;
-      } else {
-        response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body;
-        if (opt.debug) {
-          response.debug = res;
+        response = res.statusMessage; // NO CONTENT message
+      }
+      if (res.statusCode === 200 || res.statusCode === 201) { // Success handling
+        response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body; // convert to JSON
+        if (res.statusCode === 200 && response.next != null) { // if there's a next URL
+          var resNext = response.next; // set to next URL so it's not overwritten
+          response.next = function(cb) { // NEXT function call
+            var nextConfig = _.merge({}, config); // create config obj
+            nextConfig.url = resNext;
+            return apiRequest(nextConfig, cb);
+          };
         }
+        if (res.statusCode == 200 && response.prev != null) { // if there's a next URL
+          var resPrev = response.prev; // set to prev URL so it's not overwritten
+          response.prev = function(cb) { // PREV function call
+            var prevConfig = _.merge({}, config); // create config obj
+            prevConfig.url = resPrev;
+            return apiRequest(prevConfig, cb);
+          }
+        } else if (res.statusCode == 200 && response.prev == null && response.objects.length < 1) {
+          console.log('No more previous objects.');
+          return; // returning nothing (otherwise would be 0 objects)
+        }
+      }
+      if (opt.debug) {
+        response.debug = res;
       }
 
       resolve(response);
