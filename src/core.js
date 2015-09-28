@@ -220,31 +220,38 @@ var apiRequest = function apiRequest(config, cb) {
         reject(localError);
         return;
       }
-      if (res.statusCode === 204) {
-        response = res.statusMessage; // NO CONTENT message
-      }
-      if (res.statusCode === 200 || res.statusCode === 201) { // Success handling
-        response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body; // convert to JSON
-        if (res.statusCode === 200 && response.next != null) { // if there's a next URL
-          var resNext = response.next; // set to next URL so it's not overwritten
-          response.next = function(cb) { // NEXT function call
-            var nextConfig = _.merge({}, config); // create config obj
-            nextConfig.url = resNext;
-            return apiRequest(nextConfig, cb);
-          };
-        }
-        if (res.statusCode == 200 && response.prev != null) { // if there's a next URL
-          var resPrev = response.prev; // set to prev URL so it's not overwritten
-          response.prev = function(cb) { // PREV function call
-            var prevConfig = _.merge({}, config); // create config obj
-            prevConfig.url = resPrev;
-            return apiRequest(prevConfig, cb);
+      switch (res.statusCode) {
+        case 204:
+          response = res.statusMessage; // NO CONTENT message
+          break;
+
+        case 201:
+          response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body; // convert to JSON
+          break;
+
+        case 200:
+          response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body; // convert to JSON
+          if (response.next) { // if there's a next URL
+            var resNext = response.next; // set to next URL so it's not overwritten
+            response.next = function(cb) { // NEXT function call
+              var nextConfig = _.merge({}, config); // create config obj
+              nextConfig.url = resNext;
+              return apiRequest(nextConfig, cb);
+            };
           }
-        } else if (res.statusCode == 200 && response.prev == null && response.objects.length < 1) {
-          console.log('No more previous objects.');
-          return; // returning nothing (otherwise would be 0 objects)
-        }
+          if (response.prev) { // if there's a prev URL
+            var resPrev = response.prev; // set to prev URL so it's not overwritten
+            response.prev = function(cb) { // PREV function call
+              var prevConfig = _.merge({}, config); // create config obj
+              prevConfig.url = resPrev;
+              return apiRequest(prevConfig, cb);
+            }
+          } else if (response.prev && response.objects.length < 1) {
+            return; // returning nothing (otherwise would be 0 objects)
+          }
+          break;
       }
+
       if (opt.debug) {
         response.debug = res;
       }
