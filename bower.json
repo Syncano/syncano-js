@@ -16,8 +16,5 @@
     "bower_components",
     "test",
     "tests"
-  ],
-  "dependencies": {
-    "bluebird": "~2.9.34"
-  }
+  ]
 }
