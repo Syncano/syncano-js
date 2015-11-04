@@ -12088,7 +12088,7 @@ function hasOwnProperty(obj, prop) {
 },{"./support/isBuffer":34,"_process":15,"inherits":13}],36:[function(require,module,exports){
 module.exports={
   "name": "syncano",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A library to intereact with the Syncano API.",
   "main": "src/syncano.js",
   "author": "Kelly Andrews",
@@ -12670,7 +12670,7 @@ var methods = {
   },
   update: function update(config) {
       var opts = {
-        method: 'PATCH',
+        method: 'POST',
         func: {single: core.paramReq, plural: core.paramIdReq}
       };
 
