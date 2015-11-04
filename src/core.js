@@ -226,11 +226,11 @@ var apiRequest = function apiRequest(config, cb) {
           break;
 
         case 201:
-          response = res.body; // convert to JSON
+          response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body; // convert to JSON
           break;
 
         case 200:
-          response = res.body; // convert to JSON
+          response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body; // convert to JSON
           if (response.next) { // if there's a next URL
             var resNext = response.next; // set to next URL so it's not overwritten
             response.next = function(cb) { // NEXT function call

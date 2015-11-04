@@ -134,6 +134,10 @@ my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - ret
 * Jhishan Khan - [twitter](https://twitter.com/jhishan), [github](https://github.com/jhishan)
 
 ### Change Log
+* **0.3.1** - 2015-11-04
+    * Fixed Various Small Bugs
+      * Corrected issue with `no content` responses being parsed incorrectly
+      * Fixed social authentication issue from api changes
 * **0.3.0** - 2015-10-26
     * Added `watch()` functionality for channels
       * Using the watch() function now emits events for channel updates.

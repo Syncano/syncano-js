@@ -23,16 +23,16 @@ var request = function(opts, cb) {
   var req = https.request(sendOptions, function(response) {
     var str = '';
 
-    response.on('data', function (chunk) {
+    response.on('data', function(chunk) {
       str += chunk;
     });
 
-    response.on('end', function () {
-      response.body = (typeof str !== 'object') ? JSON.parse(str) : str;
+    response.on('end', function() {
+      response.body = str;
       cb(null, response, response.body);
     });
 
-    response.on('error', function (err) {
+    response.on('error', function(err) {
       cb(err);
     });
 
