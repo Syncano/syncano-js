@@ -6,7 +6,7 @@
 
 
 ## Getting Started
-This library is inteded to be used with a [Syncano](http://www.syncano.com/) account. If you don't already have one - you can sign up [here](https://dashboard.syncano.io/?utm_source=syncano-js&utm_medium=readme&utm_campaign=github).
+This library is inteded to be used with a [Syncano](http://www.syncano.com/) account. If you don't already have one - you can sign up [here](https://dashboard.syncano.io/?utm_source=github&utm_medium=readme&utm_campaign=syncano-js).
 
 `syncano` is available as a client-side or server-side library. Depending on your requirements, you can use `bower` or `npm`.  Once downloaded, you can use it in your project.
 
