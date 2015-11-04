@@ -57,7 +57,7 @@ describe('Syncano (Account Scope)', function() {
     func = scope.update({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
-      (res.method).should.equal('PATCH');
+      (res.method).should.equal('POST');
       (res.url).should.equal('/v1/account/');
       (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
       (res.headers['X-API-KEY']).should.equal(config.accountKey);

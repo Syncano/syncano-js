@@ -66,7 +66,7 @@ describe('Admin', function() {
       func = scope.instance(config.instance).admin().update(config.adminId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('PATCH');
+        (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/admins/' + config.adminId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
@@ -121,7 +121,7 @@ describe('Admin', function() {
       func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('PATCH');
+        (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/admins/' + config.adminId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);

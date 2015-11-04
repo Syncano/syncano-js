@@ -67,7 +67,7 @@ describe('Trigger', function() {
       func = scope.instance(config.instance).trigger().update(config.triggerId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('PATCH');
+        (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
@@ -124,7 +124,7 @@ describe('Trigger', function() {
       func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('PATCH');
+        (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);

@@ -64,7 +64,7 @@ var methods = {
   },
   update: function update(config) {
       var opts = {
-        method: 'PATCH',
+        method: 'POST',
         func: {single: core.paramReq, plural: core.paramIdReq}
       };
 

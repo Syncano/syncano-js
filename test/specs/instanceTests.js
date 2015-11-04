@@ -82,7 +82,7 @@ describe('Instance', function() {
       func = scope.instance().update(config.instance, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('PATCH');
+        (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
@@ -147,7 +147,7 @@ describe('Instance', function() {
       func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('PATCH');
+        (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
