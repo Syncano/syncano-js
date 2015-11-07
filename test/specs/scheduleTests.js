@@ -67,7 +67,7 @@ describe('Schedule', function() {
       func = scope.instance(config.instance).schedule().update(config.scheduleId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('POST');
+        (res.method).should.equal('PATCH');
         (res.url).should.equal('/v1/instances/' + config.instance + '/schedules/' + config.scheduleId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
@@ -124,7 +124,7 @@ describe('Schedule', function() {
       func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('POST');
+        (res.method).should.equal('PATCH');
         (res.url).should.equal('/v1/instances/' + config.instance + '/schedules/' + config.scheduleId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);

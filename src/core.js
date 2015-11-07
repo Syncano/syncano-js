@@ -89,7 +89,7 @@ var watch = function(config) {
 
 var watchRec = function(config, func, events) {
   var opt = helpers.merge({}, config);
-  func(opt).then(function(res){
+  func(opt).then(function(res) {
     if (res !== undefined) {
       events.emit(res.action, res.payload);
       opt.qs.last_id = res.id;

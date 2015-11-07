@@ -67,7 +67,7 @@ describe('Webhook', function() {
       func = scope.instance(config.instance).webhook().update(config.webhookId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('POST');
+        (res.method).should.equal('PATCH');
         (res.url).should.equal('/v1/instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
@@ -125,7 +125,7 @@ describe('Webhook', function() {
       func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('POST');
+        (res.method).should.equal('PATCH');
         (res.url).should.equal('/v1/instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);

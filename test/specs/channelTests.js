@@ -68,7 +68,7 @@ describe('Channel', function() {
       func = scope.instance(config.instance).channel().update(config.channelId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('POST');
+        (res.method).should.equal('PATCH');
         (res.url).should.equal('/v1/instances/' + config.instance + '/channels/' + config.channelId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
@@ -123,7 +123,7 @@ describe('Channel', function() {
       func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('POST');
+        (res.method).should.equal('PATCH');
         (res.url).should.equal('/v1/instances/' + config.instance + '/channels/' + config.channelId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
@@ -201,9 +201,9 @@ describe('Channel', function() {
 
     it('poll() accepts room name in filter', function(done) {
       var func, res;
-      func = scope.channel(config.channelId).poll({room: "room name"});
+      func = scope.channel(config.channelId).poll({room: 'room name'});
       func.then(function(res) {
-        (res.qs).should.have.property('room').which.is.equal("room name");
+        (res.qs).should.have.property('room').which.is.equal('room name');
         done();
       }).catch(function(err) {
         done(err);
@@ -227,9 +227,9 @@ describe('Channel', function() {
 
     it('history() accepts room name in filter', function(done) {
       var func, res;
-      func = scope.channel(config.channelId).history({room: "room name"});
+      func = scope.channel(config.channelId).history({room: 'room name'});
       func.then(function(res) {
-        (res.qs).should.have.property('room').which.is.equal("room name");
+        (res.qs).should.have.property('room').which.is.equal('room name');
         done();
       }).catch(function(err) {
         done(err);

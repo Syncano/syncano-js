@@ -14,7 +14,7 @@
     "disallowSpacesInsideParentheses": true,
     "disallowTrailingComma" : true,
     "disallowTrailingWhitespace": true,
-    "maximumLineLength": 120,
+    "maximumLineLength": 160,
     "requireCapitalizedConstructors": true,
     "requireCurlyBraces": true,
     "requireSpaceAfterKeywords": [

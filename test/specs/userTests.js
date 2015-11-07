@@ -68,7 +68,7 @@ describe('User', function() {
       func = scope.instance(config.instance).user().update(config.userId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('POST');
+        (res.method).should.equal('PATCH');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/' + config.userId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
@@ -140,7 +140,7 @@ describe('User', function() {
       func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('POST');
+        (res.method).should.equal('PATCH');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/' + config.userId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
@@ -384,7 +384,7 @@ describe('User', function() {
       func = scope.user().update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('POST');
+        (res.method).should.equal('PATCH');
         (res.url).should.equal('/v1/instances/' + config.instance + '/user/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);

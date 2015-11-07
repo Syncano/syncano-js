@@ -134,8 +134,10 @@ my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - ret
 * Jhishan Khan - [twitter](https://twitter.com/jhishan), [github](https://github.com/jhishan)
 
 ### Change Log
+* **0.3.3** - 2015-11-07
+    * _Actually_ Fixed Bug with `update` method
 * **0.3.2** - 2015-11-04
-    * Fixed Bug with `update` method
+    * ~~Fixed Bug with `update` method~~ Introduced `update` method bug
 * **0.3.1** - 2015-11-04
     * Fixed Various Small Bugs
       * Corrected issue with `no content` responses being parsed incorrectly
