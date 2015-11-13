@@ -134,6 +134,8 @@ my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - ret
 * Jhishan Khan - [twitter](https://twitter.com/jhishan), [github](https://github.com/jhishan)
 
 ### Change Log
+* **0.3.4** - 2015-11-13
+    * Fixed bug with callback function checking, breaking callback functions.
 * **0.3.3** - 2015-11-07
     * _Actually_ Fixed Bug with `update` method
 * **0.3.2** - 2015-11-04
