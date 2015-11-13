@@ -12088,7 +12088,7 @@ function hasOwnProperty(obj, prop) {
 },{"./support/isBuffer":34,"_process":15,"inherits":13}],36:[function(require,module,exports){
 module.exports={
   "name": "syncano",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A library to intereact with the Syncano API.",
   "main": "src/syncano.js",
   "author": "Kelly Andrews",
@@ -12469,8 +12469,8 @@ var parseFilter = function(options) {
 
 var sortArgs = function(o, f) {
   var result = {};
-  result.cb = (isFunction(o)) ? o : null;
-  result.filter = (isPlainObject(o)) ? o : {};
+  result.cb = (typeof o === 'function') ? o : f;
+  result.filter = (typeof o === 'object') ? o : {};
   return result;
 };
 
@@ -12531,25 +12531,6 @@ var isArguments = function(value) {
   return isObjectLike(value) && isArrayLike(value) && hasOwnProperty.call(value, 'callee');
 };
 
-var isPlainObject = function(value) {
-  var Ctor;
-
-  if (!(isObjectLike(value) && objToString.call(value) === objectTag && !isHostObject(value) && !isArguments(value)) ||
-    (!hasOwnProperty.call(value, 'constructor') && (Ctor = value.constructor, typeof Ctor === 'function' && !(Ctor instanceof Ctor)))) {
-    return false;
-  }
-
-  var result;
-
-  for (var key in value) {
-    result = key;
-  }
-  return hasOwnProperty.call(value, result);
-};
-
-var isFunction = function(value) {
-  return isObject(value) && objToString(value) === funcTag;
-};
 
 var extend = function extend(destination, source) {
   for (var property in source) {

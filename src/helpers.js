@@ -63,8 +63,8 @@ var parseFilter = function(options) {
 
 var sortArgs = function(o, f) {
   var result = {};
-  result.cb = (isFunction(o)) ? o : null;
-  result.filter = (isPlainObject(o)) ? o : {};
+  result.cb = (typeof o === 'function') ? o : f;
+  result.filter = (typeof o === 'object') ? o : {};
   return result;
 };
 
@@ -125,25 +125,6 @@ var isArguments = function(value) {
   return isObjectLike(value) && isArrayLike(value) && hasOwnProperty.call(value, 'callee');
 };
 
-var isPlainObject = function(value) {
-  var Ctor;
-
-  if (!(isObjectLike(value) && objToString.call(value) === objectTag && !isHostObject(value) && !isArguments(value)) ||
-    (!hasOwnProperty.call(value, 'constructor') && (Ctor = value.constructor, typeof Ctor === 'function' && !(Ctor instanceof Ctor)))) {
-    return false;
-  }
-
-  var result;
-
-  for (var key in value) {
-    result = key;
-  }
-  return hasOwnProperty.call(value, result);
-};
-
-var isFunction = function(value) {
-  return isObject(value) && objToString(value) === funcTag;
-};
 
 var extend = function extend(destination, source) {
   for (var property in source) {
