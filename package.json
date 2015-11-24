@@ -2,11 +2,14 @@
   "name": "syncano",
   "version": "0.3.4",
   "description": "A library to intereact with the Syncano API.",
-  "main": "src/syncano.js",
+  "main": "./lib/syncano.js",
   "author": "Kelly Andrews",
   "license": "ISC",
   "scripts": {
-    "coverage": "CODECLIMATE_REPO_TOKEN=2fc62db4794c74bf7d733c365aed53960c0d7b7f9560674868f0e487ce36f2eb codeclimate-test-reporter < ./test/coverage/lcov.info"
+    "coverage": "CODECLIMATE_REPO_TOKEN=2fc62db4794c74bf7d733c365aed53960c0d7b7f9560674868f0e487ce36f2eb codeclimate-test-reporter < ./test/coverage/lcov.info",
+    "prebuild": "rimraf lib",
+    "build": "babel ./src --out-dir ./lib",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -16,6 +19,8 @@
     "bluebird": "^2.9.30"
   },
   "devDependencies": {
+    "babel": "^5.8.34",
+    "babel-plugin-inline-package-json": "^1.0.1",
     "browserify": "^10.2.4",
     "gulp": "^3.9.0",
     "gulp-bump": "^0.3.1",
@@ -32,6 +37,7 @@
     "jshint-stylish": "^2.0.1",
     "mocha": "^2.2.5",
     "mockery": "^1.4.0",
+    "rimraf": "^2.4.4",
     "should": "^7.0.1",
     "should-promised": "^0.3.0",
     "vinyl-buffer": "^1.0.0",
