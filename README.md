@@ -38,6 +38,30 @@ npm install syncano --save
 var Syncano = require('syncano');
 ```
 
+**Using with Webpack**
+
+In order to properly compile `syncano` with Webpack, you have to use the `json-loader` module in your project. 
+
+First, install the module as a dev dependency:
+
+`npm install json-loader --save-dev`
+
+Then, add the loader in your **webpack.config.js** file. An example configuration file would look like this:
+
+```
+module.exports = {
+  entry: './src/app.js',
+  output: {
+    filename: './dist/dist.js'
+  },
+  module: {
+    loaders: [
+      { test: /\.json$/, loader: 'json-loader'}
+    ]
+  }
+}
+```
+
 ## Using the Library
 
 With the Syncano platform, there are two basic ways to interact with your account.
