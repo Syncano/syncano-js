@@ -58,7 +58,7 @@ var url = function(config) {
       tmpl += '<%= path %>/';
     }
 
-    if (config.type === 'user' && config.json && config.json.backend) {
+    if ((config.type === 'user' || config.type === 'account') && config.json && config.json.backend) {
       tmpl += '<%= json.backend %>/';
     }
 

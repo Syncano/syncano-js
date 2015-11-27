@@ -132,8 +132,11 @@ my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - ret
 * Devin Visslailli - [twitter](https://twitter.com/devintyler9), [github](https://github.com/devintyler)
 * Patrick Devivo - [twitter](https://twitter.com/patrickdevivo), [github](https://github.com/patrickdevivo)
 * Jhishan Khan - [twitter](https://twitter.com/jhishan), [github](https://github.com/jhishan)
+* Jakub Bilko - [twitter](https://twitter.com/jakubbilko), [github](https://github.com/jakubbilko)
 
 ### Change Log
+* **0.3.5** - 2015-11-13
+    * Fixed bug with not being able to create Syncano users with social media credentials
 * **0.3.4** - 2015-11-13
     * Fixed bug with callback function checking, breaking callback functions.
 * **0.3.3** - 2015-11-07
