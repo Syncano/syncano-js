@@ -46,6 +46,34 @@ describe('Syncano (Empty Scope)', function() {
     });
   });
 
+  it('login() using facebook', function(done) {
+    var func, res;
+    func = scope.login({socialToken: '775b2b9981a2ec6b1e90ce62795bdbc0', backend: 'facebook'});
+    func.then(function(res) {
+      (res).should.have.properties(['method', 'url', 'headers']);
+      (res.method).should.equal('POST');
+      (res.url).should.equal('/v1/account/auth/facebook/');
+      (res.headers).should.have.properties(['User-Agent', 'Content-Type']);
+      done();
+    }).catch(function(err) {
+      done(err);
+    });
+  });
+
+  it('login() using google', function(done) {
+    var func, res;
+    func = scope.login({socialToken: '2fc5c9d91463f8e0ea1a04721bd7e929', backend: 'google-oauth2'});
+    func.then(function(res) {
+      (res).should.have.properties(['method', 'url', 'headers']);
+      (res.method).should.equal('POST');
+      (res.url).should.equal('/v1/account/auth/google-oauth2/');
+      (res.headers).should.have.properties(['User-Agent', 'Content-Type']);
+      done();
+    }).catch(function(err) {
+      done(err);
+    });
+  });
+
   it('register()', function(done) {
     var func, res;
     func = scope.register({});
