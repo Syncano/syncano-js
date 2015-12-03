@@ -1,0 +1,46 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: #33b5e4;
+	font-family: Arial;
+}
+
+header {
+	background: #fff;
+}
+
+.laptop {
+	width: 490px;
+	height: 290px;
+	background: url('../images/laptop.png') 0 0 no-repeat;
+	float: left;
+	position: relative;
+	margin-right: 3px;
+}
+
+h1 {
+	width: 980px;
+	margin: 0 auto;
+	font-size: 24px;
+	background: #fff url('../images/logo.png') left center no-repeat;
+	height: 35px;
+	text-indent: 270px;
+	padding: 30px 0 10px;
+}
+
+section {
+	width: 986px;
+	margin: 40px auto;
+}
+
+iframe {
+	position: absolute;
+	left: 68px;
+	top: 23px;
+	width: 354px;
+	height: 208px;
+	border: 0;
+}

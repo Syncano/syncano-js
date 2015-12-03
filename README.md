@@ -11,8 +11,7 @@ In case you need help working with the library - email us at libraries@syncano.c
 ## Directory structure:
 
 * lib/ - js library
-* examples/browser - examples for browser (in form of web page)
-* examples/node - simple node.js test script
+* examples - example projects
 
 ## To run code samples
 
@@ -49,17 +48,3 @@ Generate docs with yuidoc
 ```
 yuidoc -o docs lib/
 ```
-
-## Examples
-
-### Backbone.js
-
-https://github.com/Syncano/syncano4-js-backbone
-
-### node.js
-
-https://github.com/Syncano/syncano4-js-node
-
-### TodoMVC
-
-https://github.com/Syncano/syncano4-js-todomvc

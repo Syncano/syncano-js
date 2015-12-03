@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" data-framework="backbonejs">
+<head>
+<meta charset="utf-8">
+<title>Backbone + Syncano</title>
+<style type="text/css">
+	li span {margin-left: 10px; font-size:12px; vertical-align: super; cursor: pointer;}
+</style>
+</head>
+<body>
+	<header>
+		<h1>Todos</h1>
+	</header>
+	<section id="app">
+		<form action="#">
+			<p>
+				<input type="text" name="message" value="sample todo text">
+			</p>
+			<p>
+				<button type="submit">Create</button>
+			</p>
+		</form>
+		<ul></ul>
+	</section>
+
+	<script type="text/template" id="item-template">
+		<%= completedCheckbox %>
+		<% if(editing){ %>
+		<input type="text" value="<%- title %>">
+		<% } else { %>
+		<label><%- title %></label>
+		<% } %>
+		<span>[x]</span>
+	</script>
+	
+
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="bower_components/underscore/underscore-min.js"></script>
+	<script src="bower_components/backbone/backbone-min.js"></script>
+
+	<script src="js/config.js"></script>
+
+	<script src="bower_components/syncano4/lib/syncano4.js"></script>
+	<script src="bower_components/syncano4/lib/backbone/model.js"></script>
+	<script src="bower_components/syncano4/lib/backbone/collection.js"></script>
+	
+	<script src="js/model.js"></script>
+	<script src="js/collection.js"></script>
+	<script src="js/views.js"></script>
+	<script src="js/app.js"></script>
+</body>
+</html>

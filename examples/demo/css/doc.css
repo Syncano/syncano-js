@@ -1,0 +1,45 @@
+body {
+	color: #fff;
+	padding: 20px 15px;
+	font: 12px Arial;
+}
+
+body.doc1 {
+	background: #fd5555;
+}
+
+body.doc2 {
+	background: #ff8700;
+}
+
+body.doc3 {
+	background: #f1f1f1;
+	color: #000;
+}
+
+body.doc4 {
+	background: #aed2d2;
+}
+
+h1 {
+	font-size: 14px;
+}
+
+textarea {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100px;
+	background: #fff;
+}
+
+p.loader {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	width: 16px;
+	height: 16px;
+	background: url('../images/loader.gif') 0 0 no-repeat;
+	display: none;
+}
