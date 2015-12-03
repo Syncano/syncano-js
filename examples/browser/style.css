@@ -1,0 +1,44 @@
+.success {
+	background: #dff0d8 !important;
+}
+
+.error {
+	background: #f2dede !important;
+}
+
+.done, .errors {
+	position: relative;
+}
+
+.done:before {
+	content: 'DONE';
+	display: block;
+	font-size: 10px;
+	color: #000;
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 1px 4px;
+	background: #f5f5f5
+}
+
+.errors:before {
+	content: 'DOESN\'T WORK';
+	display: block;
+	font-size: 10px;
+	color: #000;
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 1px 4px;
+	background: #f5f5f5
+}
+
+.panel {
+	opacity: 0.2;
+	transition: all 1s linear;
+}
+
+.panel.active, .panel.connect {
+	opacity: 1;
+}

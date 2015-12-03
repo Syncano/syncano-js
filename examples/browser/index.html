@@ -1,0 +1,219 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Syncano 4 LIB test</title>
+	<link rel="stylesheet" href="bootstrap.css">
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<div class="container">
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<a class="btn btn-default navbar-right navbar-btn" href="https://syncanotest1-env.elasticbeanstalk.com/docs/" target="_blank">Docs</a>
+				<span class="navbar-text" id="api-key">not connected</span>
+			</div>
+		</nav>
+		<div class="col-md-3 col-sm-6">
+			<div class="panel panel-default connect">
+				<div class="panel-heading">Connect</div>
+				<div class="list-group">
+					<a href="#connect-api-key" class="list-group-item done">Connect with API key</a>
+					<a href="#connect-email" class="list-group-item done">Connect with email / password</a>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Users</div>
+				<div class="list-group">
+					<a href="#create-user" class="list-group-item done">Create</a>
+					<a href="#list-users" class="list-group-item done">List</a>
+					<a href="#get-user" class="list-group-item done">Get</a>
+					<a href="#update-user" class="list-group-item done">Update user</a>
+					<a href="#update-user-profile" class="list-group-item done">Update user profile definition</a>
+					<a href="#delete-user" class="list-group-item done">Delete</a>
+					<a href="#create-data-object-with-owner" class="list-group-item done">Create DO with owner and group</a>
+					<a href="#change-data-object-owner-and-group" class="list-group-item done">Change owner and group of DO</a>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Accounts</div>
+				<div class="list-group">
+					<a href="#register-account" class="list-group-item done">Register</a>
+					<a href="#get-account-info" class="list-group-item done">Get account info</a>
+					<a href="#update-account" class="list-group-item done">Update account info</a>
+					<a href="#account-reset-key" class="list-group-item done">Reset key</a>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Triggers</div>
+				<div class="list-group">
+					<a href="#create-trigger" class="list-group-item done">Create</a>
+					<a href="#list-triggers" class="list-group-item done">List</a>
+					<a href="#get-trigger" class="list-group-item done">Get</a>
+					<a href="#list-trigger-traces" class="list-group-item done">List traces</a>
+					<a href="#get-trigger-trace" class="list-group-item done">Get single trace</a>
+					<a href="#update-trigger" class="list-group-item done">Update</a>
+					<a href="#delete-trigger" class="list-group-item done">Delete</a>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Real life examples</div>
+				<div class="list-group">
+					<a href="#example-1" class="list-group-item done">Redefine class with objects</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-3 col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">Instances</div>
+				<div class="list-group">
+					<a href="#create-instance" class="list-group-item done">Create instance</a>
+					<a href="#list-instances" class="list-group-item done">List instances</a>
+					<a href="#get-instance-info-string" class="list-group-item done">Get instance info (string)</a>
+					<a href="#get-instance-info-object" class="list-group-item done">Get instance info (object)</a>
+					<a href="#delete-instance" class="list-group-item done">Delete instance</a>
+					<a href="#update-instance" class="list-group-item done">Update instance</a>
+					<a href="#get-instance-admins" class="list-group-item done">Get instance admins</a>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Webhooks</div>
+				<div class="list-group">
+					<a href="#create-webhook" class="list-group-item done">Create</a>
+					<a href="#list-webhooks" class="list-group-item done">List</a>
+					<a href="#get-webhook" class="list-group-item done">Get</a>
+					<a href="#update-webhook" class="list-group-item done">Update</a>
+					<a href="#delete-webhook" class="list-group-item done">Delete</a>
+					<a href="#run-webhook" class="list-group-item done">Run</a>
+					<a href="#list-webhook-traces" class="list-group-item done">List traces</a>
+					<a href="#get-webhook-trace" class="list-group-item done">Get single trace</a>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Schedules</div>
+				<div class="list-group">
+					<a href="#create-schedule" class="list-group-item done">Create</a>
+					<a href="#list-schedules" class="list-group-item done">List</a>
+					<a href="#get-schedule" class="list-group-item done">Get</a>
+					<a href="#delete-schedule" class="list-group-item done">Delete</a>
+					<a href="#list-schedule-traces" class="list-group-item done">List traces</a>
+					<a href="#get-schedule-trace" class="list-group-item done">Get single trace</a>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">API Keys</div>
+				<div class="list-group">
+					<a href="#list-api-keys" class="list-group-item done">List api keys</a>
+					<a href="#create-api-key" class="list-group-item done">Create api key</a>
+					<a href="#create-api-key-with-create-flag" class="list-group-item done">Create api key for user management</a>
+					<a href="#get-api-key-info" class="list-group-item done">Get key info</a>
+					<a href="#delete-api-key" class="list-group-item done">Delete key</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-3 col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">Classes</div>
+				<div class="list-group">
+					<a href="#create-user-class" class="list-group-item done">Create "user" class</a>
+					<a href="#create-relation-class" class="list-group-item done">Create class with reference</a>
+					<a href="#create-class" class="list-group-item done">Create class</a>
+					<a href="#list-classes" class="list-group-item done">List classes</a>
+					<a href="#delete-class" class="list-group-item done">Delete class</a>
+					<a href="#update-class" class="list-group-item done">Update class</a>
+					<a href="#get-class-info" class="list-group-item done">Get class info</a>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Data objects</div>
+				<div class="list-group">
+					<a href="#list-data-objects" class="list-group-item done">List data objects</a>
+					<a href="#list-data-objects-with-filter" class="list-group-item done">List objects with filter</a>
+					<a href="#list-data-objects-with-reference" class="list-group-item done">List objects with reference</a>
+					<a href="#create-data-object" class="list-group-item done">Create data object</a>
+					<a href="#create-data-object-with-reference" class="list-group-item done">Create data object with reference</a>
+					<a href="#delete-data-object" class="list-group-item done">Delete data object</a>
+					<a href="#update-data-object" class="list-group-item done">Update data object</a>
+					<a href="#get-data-object" class="list-group-item done">Get data object</a>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Groups</div>
+				<div class="list-group">
+					<a href="#create-group" class="list-group-item done">Create</a>
+					<a href="#list-groups" class="list-group-item done">List</a>
+					<a href="#get-group" class="list-group-item done">Get</a>
+					<a href="#delete-group" class="list-group-item done">Delete</a>
+					<a href="#add-user-to-group" class="list-group-item done">Add user to group</a>
+					<a href="#create-object-with-read-permission" class="list-group-item done">Create object with read permission</a>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Invitations</div>
+				<div class="list-group">
+					<a href="#create-invitation" class="list-group-item done">Create</a>
+					<a href="#list-invitations" class="list-group-item done">List</a>
+					<a href="#get-invitation" class="list-group-item done">Get</a>
+					<a href="#delete-invitation" class="list-group-item done">Delete</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-3 col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">Codeboxes</div>
+				<div class="list-group">
+					<a href="#list-codeboxes" class="list-group-item done">List codeboxes</a>
+					<a href="#list-codebox-runtimes" class="list-group-item done">List codebox runtimes</a>
+					<a href="#create-codebox-js" class="list-group-item done">Create codebox JS</a>
+					<a href="#create-codebox-python" class="list-group-item done">Create codebox Python</a>
+					<a href="#get-codebox" class="list-group-item done">Get codebox</a>
+					<a href="#update-codebox" class="list-group-item done">Update codebox</a>
+					<a href="#delete-codebox" class="list-group-item done">Delete codebox</a>
+					<a href="#run-codebox" class="list-group-item done">Run codebox</a>
+					<a href="#list-codebox-traces" class="list-group-item done">List traces</a>
+					<a href="#get-codebox-trace" class="list-group-item done">Get single trace</a>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Realtime</div>
+				<div class="list-group">
+					<a href="#create-channel" class="list-group-item done">Create channel</a>
+					<a href="#create-channel-with-separate-rooms" class="list-group-item done">Create channel with separate rooms</a>
+					<a href="#list-channels" class="list-group-item done">List channels</a>
+					<a href="#get-channel" class="list-group-item done">Get channel</a>
+					<a href="#update-channel" class="list-group-item done">Update channel</a>
+					<a href="#delete-channel" class="list-group-item done">Delete channel</a>
+					<a href="#listen-to-channel" class="list-group-item done">Listen to channel</a>
+					<a href="#publish-to-channel" class="list-group-item done">Publish to channel</a>
+					<a href="#get-channel-history" class="list-group-item done">Get history</a>
+					<a href="#create-data-object-with-channel" class="list-group-item done">Create DO with channel</a>
+					<a href="#update-data-object-with-channel" class="list-group-item done">Update DO with channel</a>
+					<a href="#delete-data-object-with-channel" class="list-group-item done">Delete DO with channel</a>
+					<a href="#create-data-object-with-room" class="list-group-item done">Create DO with room</a>
+					<a href="#update-data-object-with-room" class="list-group-item done">Update DO with room</a>
+					<a href="#get-room-history" class="list-group-item done">Get history of room</a>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<script src="vendor/jquery.js"></script>
+	<script src="../../lib/syncano4.js"></script>
+	<script src="js/config.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
