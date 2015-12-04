@@ -1,12 +1,23 @@
 {
-	"name": "syncano-js-4",
-	"version": "4.1.5",
-	"description": "Javascript library for Syncano 4",
-	"main": "./lib/syncano4.js",
-	"dependencies": {
-		"request": "^2.53.0"
-	},
-	"devDependencies": {},
-	"author": "Syncano <hello@syncano.com>",
-	"homepage": "https://github.com/Syncano/syncano-js-lib/tree/v3"
+  "name": "syncano",
+  "version": "3.1.3beta",
+  "main": "dist/syncano.min.js",
+  "description": "Real time high level library for Syncano (www.syncano.com)",
+  "keywords": [],
+  "author": "Artur /gTg/ Wróbel",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "grunt-contrib-yuidoc": "~0.5.2"
+  },
+  "repository": {
+  	
+  },
+  "devDependencies": {
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-jshint": "~0.6.4",
+    "grunt-contrib-uglify": "~0.2.4",
+    "grunt": "~0.4.1",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-qunit": "~0.3.0"
+  }
 }

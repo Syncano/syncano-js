@@ -1,0 +1,3595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>dist/syncano.js - syncano</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="syncano"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 3.1.3beta</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Syncano.html">Syncano</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: dist/syncano.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/*
+syncano
+ver: 3.1.3beta
+build date: 15-12-2014
+Copyright 2014 Syncano Inc.
+*/
+(function(root, undefined) {
+	&#x27;use strict&#x27;;
+
+
+	/**
+	 * Library agnostic version of jQuery&#x27;s Extend by @jonjaques 
+	 */
+
+	function type(obj) {
+		var checker = {};
+		var types = &#x27;Boolean Number String Function Array Date RegExp Object&#x27;.split(&#x27; &#x27;);
+		for(var i in types){
+			checker[ &#x27;[object &#x27; + types[i] + &#x27;]&#x27; ] = types[i].toLowerCase();
+		}
+		return obj === null ?
+			String( obj ) :
+			checker[ Object.prototype.toString.call(obj) ] || &#x27;object&#x27;;
+	}
+
+	function isFunction(obj) {
+		return type(obj) === &#x27;function&#x27;;
+	}
+
+	function isWindow(obj) {
+		return obj !== null &amp;&amp; obj === obj.window;
+	}
+
+	function isPlainObject(obj) {
+		var hasOwn = Object.prototype.hasOwnProperty;
+		if ( !obj || type(obj) !== &#x27;object&#x27; || obj.nodeType || isWindow( obj ) ) {
+			return false;
+		}
+		try {
+			if(obj.constructor &amp;&amp; !hasOwn.call(obj, &#x27;constructor&#x27;) &amp;&amp; !hasOwn.call(obj.constructor.prototype, &#x27;isPrototypeOf&#x27;) ) {
+				return false;
+			}
+		} catch ( e ) {
+			return false;
+		}
+		var key;
+		for ( key in obj ) {}
+		return key === undefined || hasOwn.call( obj, key );
+	}
+
+	function isArray(obj){
+		return type(obj) === &#x27;array&#x27;;
+	}
+
+
+	function extend() {
+		var options, name, src, copy, copyIsArray, clone,
+			target = arguments[0] || {},
+			i = 1,
+			length = arguments.length,
+			deep = false;
+	 
+		if ( typeof target === &#x27;boolean&#x27; ) {
+			deep = target;
+			target = arguments[1] || {};
+			i = 2;
+		}
+		if ( typeof target !== &#x27;object&#x27; &amp;&amp; !isFunction(target) ) {
+			target = {};
+		}
+
+		for ( ; i &lt; length; i++ ) {
+			if ( (options = arguments[ i ]) !== null ) {
+				for ( name in options ) {
+					src = target[ name ];
+					copy = options[ name ];
+					if ( target === copy ) {
+						continue;
+					}
+					if ( deep &amp;&amp; copy &amp;&amp; ( isPlainObject(copy) || (copyIsArray = isArray(copy)) ) ) {
+						if ( copyIsArray ) {
+							copyIsArray = false;
+							clone = src &amp;&amp; isArray(src) ? src : [];
+						} else {
+							clone = src &amp;&amp; isPlainObject(src) ? src : {};
+						}
+						target[ name ] = extend( deep, clone, copy );
+					} else if ( copy !== undefined ) {
+						target[ name ] = copy;
+					}
+				}
+			}
+		}
+		return target;
+	}
+
+
+	/**
+	 * converts string in camel case (eg. dataKey) to lowercase with underscores (eg. data_key) 
+	 */
+	function uncamelize(s){
+		var res = [];
+		for(var i=0, l=s.length; i&lt;l; i++){
+			var letter = s[i];
+			if(s.charCodeAt(i) &gt;= 97){
+				res.push(letter);
+			} else {
+				res.push(&#x27;_&#x27;);
+				res.push(letter.toLowerCase());
+			}
+		}
+		return res.join(&#x27;&#x27;);
+	}
+
+	/**
+	 *  
+	 */
+	function isset(v){
+		return typeof v !== &#x27;undefined&#x27; &amp;&amp; v !== null;
+	}
+
+	/**
+	 *  
+	 */
+	function isNumber(v){
+		if(typeof v === &#x27;number&#x27; || parseInt(v, 10) === v){
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 *  
+	 */
+	function isDate(v){
+		var d = new Date(v);
+		if(Object.prototype.toString.call(d) !== &#x27;[object Date]&#x27;){
+			return false;
+		}
+		return !isNaN(d.getTime());
+	}
+
+	/**
+	 *  
+	 */
+	function inArray(v,a){
+		if(a.indexOf(v) !== -1){
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 *  
+	 */
+	function isBool(v){
+		return typeof v === &#x27;boolean&#x27;;
+	}
+
+	/**
+	 * very simple pub-sub structure. Based on PubSubJS by @mroderick (https://github.com/mroderick/PubSubJS) 
+	 */
+
+	var PubSub = {};
+	var messages = {};
+	var lastUID = 0;
+
+
+	/**
+	 *  Register specified function as a callback for given message
+	 * 
+	 *  @method on
+	 *  @param {string} message Message identifier
+	 *  @param {function} callback Function to call when message is triggered
+	 */
+	PubSub.on = function(message, callback){
+		if(typeof callback !== &#x27;function&#x27;){
+			return false;
+		}
+		
+		if(!messages.hasOwnProperty(message)){
+			messages[message] = {};
+		}
+		
+		var token = &#x27;uid_&#x27; + (++lastUID);
+		messages[message][token] = callback;
+		return token;
+	};
+
+
+	/**
+	 *  Register specified function as a one-time callback (release it after the first run)
+	 *
+	 *  @method once
+	 *  @param {string} message Message identifier
+	 *  @param {function} callback Function to call when message is triggered
+	 */
+	PubSub.once = function(message, callback){
+		if(typeof callback !== &#x27;function&#x27;){
+			return false;
+		}
+		
+		if(!messages.hasOwnProperty(message)){
+			messages[message] = {};
+		}
+		
+		var token = &#x27;uid_&#x27; + (++lastUID);
+		messages[message][token] = function(param){
+			delete messages[message][token];
+			callback(param);
+		};
+		return token;
+	};
+
+
+	/**
+	 *  Does message have subscribers?
+	 *
+	 *  @method hasSubscribers
+	 *  @param {string} message - message identifier
+	 *  @return: boolean
+	 */
+	PubSub.hasSubscribers = function(message){
+		if(typeof message !== &#x27;string&#x27;){
+			return false;
+		}
+		if(messages.hasOwnProperty(message) &amp;&amp; Object.keys(messages[message]).length){
+			return true;
+		}
+		return false;
+	};
+
+
+	/**
+	 *  Remove specified function callback. If no func is given, removes all callbacks for given message
+	 *
+	 *  @method off
+	 *  @param {string} message - message identifier
+	 *  @param {function} func - function to remove
+	 */
+	PubSub.off = function(message, func){
+		if(message === &#x27;all&#x27;){
+			messages = {};
+		}
+		if(!this.hasSubscribers(message)){
+			return false;
+		}
+		if(typeof func === &#x27;undefined&#x27;){
+			return delete messages[message];
+		}
+		var list = messages[message];
+		for(var uuid in list){
+			if(list.hasOwnProperty(uuid)){
+				if(func === list[uuid]){
+					return delete messages[message][uuid];
+				}
+			}
+		}
+		return false;
+	};
+
+
+	/**
+	 *  Calls asynchronically all registered functions for given message. Shortcut method for doTrigger(message, false)
+	 *
+	 *  @method trigger
+	 *  @param {string} message - message identifier
+	 *  @return: boolean (true = success, false = fail)
+	 */
+	PubSub.trigger = function(message){
+		return PubSub.doTrigger(message, false, Array.prototype.slice.call(arguments, 1));
+	};
+
+
+	/**
+	 *  Calls synchronically all registered functions for given message. Shortcut method for doTrigger(message, true)
+	 *
+	 *  @method triggerSync
+	 *  @param {string} message - message identifier 
+	 */
+	PubSub.triggerSync = function(message){
+		return PubSub.doTrigger(message, true, Array.prototype.slice.call(arguments, 1));
+	};
+
+
+	/**
+	 *  Calls all registered functions for given message
+	 *
+	 *  @method doTrigger
+	 *  @param {string} message - message identifier
+	 *  @param {boolean} sync - true for synchronous calls, false for asynchronous
+	 */
+	PubSub.doTrigger = function(message, sync){
+		var list, uuid, func;
+		var called = false;
+
+		var params = Array.prototype.slice.call(arguments, 2)[0];
+		if(this.hasSubscribers(message)){
+			list = messages[message];
+			for(uuid in list){
+				if(list.hasOwnProperty(uuid)){
+					func = list[uuid];
+					if(sync === false){
+						setTimeout(func.call(func, params), 0);
+					} else {
+						func.call(func, params);
+					}
+					called = true;
+				}
+			}
+		}
+		/**
+		 *  trigger event for &#x27;all&#x27;. Send original message name as the first parameter
+		 */
+		var allMessage = &#x27;all&#x27;;
+		if(this.hasSubscribers(allMessage)){
+			list = messages[allMessage];
+			for(uuid in list){
+				if(list.hasOwnProperty(uuid)){
+					func = list[uuid];
+					if(sync === false){
+						setTimeout(func.call(func, message, params), 0);
+					} else {
+						func.call(func, message, params);
+					}
+					called = true;
+				}
+			}
+		}
+
+		return called;
+	};
+
+	/**
+	 * Methods for handling projects - creating, reading, updating, deleting 
+	 */
+	var Project = {};
+
+		
+	/**
+	 * Create new project 
+	 * 
+	 * @method Project.new
+	 * @param {string} name Name of the project
+	 * @param {string} [description] Short description of the project
+	 * @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:project:new
+	 */
+	Project.new = function(name, description, callback){
+		var method = &#x27;project.new&#x27;;
+		
+		if(!isset(name)){
+			throw new Error(method + &#x27;: name must be defined&#x27;);
+		}
+		
+		var params = {
+			name: name,
+		};
+		
+		if(isset(description)){
+			params.description = description;
+		}
+		this.__super__.__sendWithCallback(method, params, &#x27;project&#x27;, callback);
+	};
+		
+
+	/**
+	 *  Gets list of all projects in current instance
+	 *
+	 *  @method Project.get
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:project:get
+	 */
+	Project.get = function(callback){
+		var method = &#x27;project.get&#x27;;
+		this.__super__.__sendWithCallback(method, {}, &#x27;project&#x27;, callback);
+	};
+
+		
+	/**
+	 *  Receives detailed informations about project with given id 
+	 * 
+	 *  @method Project.getOne
+	 *  @param {number} id Project identifier
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:project:get_one
+	 */
+	Project.getOne = function(id, callback){
+		this.__super__.__checkProjectId(id);
+		var method = &#x27;project.get_one&#x27;;
+		this.__super__.__sendWithCallback(method, {project_id: id}, &#x27;project&#x27;, callback);
+	};
+		
+
+	/**
+	 *  Updates project details (name, description)
+	 *
+	 *  @method Project.update
+	 *  @param {number} id Project identifier
+	 *  @param {string} name Optional new name of the project
+	 *  @param {string} name Optional new description of the project
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:project:update
+	 */
+	Project.update = function(id, name, description, callback){
+		this.__super__.__checkProjectId(id);
+		if((typeof name === &#x27;undefined&#x27; || name === null) &amp;&amp; (typeof description === &#x27;undefined&#x27; || name === null)){
+			return false;
+		}
+		var method = &#x27;project.update&#x27;;
+		var params = {
+			project_id: id
+		};
+		if(name){
+			params.name = name;
+		}
+		if(typeof description !== &#x27;undefined&#x27; &amp;&amp; description !== null){
+			params.description = description;
+		}
+		this.__super__.__sendWithCallback(method, params, &#x27;project&#x27;, callback);
+	};
+
+
+	/**
+	 *  Deletes project
+	 *
+	 *  @method Project.delete
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:project:delete
+	 */
+	Project.delete = function(id, callback){
+		this.__super__.__checkProjectId(id);
+		var method = &#x27;project.delete&#x27;;
+		this.__super__.__sendWithCallback(method, {project_id: id}, null, callback);
+	};
+
+
+	/**
+	 * Methods for handling collections - creating, reading, updating, deleting 
+	 */
+	var Collection = {};
+
+
+	/**
+	 *  Create new collection within specified project
+	 *  
+	 *  @method Collection.new
+	 *  @param {number} projectId Project id that collection will be created for
+	 *  @param {string} name New collections name
+	 *  @param {object} [optionalParams] Optional parameters:
+	 *  @param {string} [optionalParams.key] New collections key
+	 *  @param {string} [optionalParams.description] New collection&#x27;s description
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:collection:new
+	 */
+	Collection.new = function(projectId, name, optionalParams, callback){
+		this.__super__.__checkProjectId(projectId);
+		
+		var method = &#x27;collection.new&#x27;;
+		
+		if(!isset(name)){
+			throw new Error(method + &#x27;: name must be set&#x27;);
+		}
+
+		var params = {
+			name: name,
+			project_id: projectId
+		};
+		if(isset(optionalParams)){
+			if(isset(optionalParams.description)){
+				params.description = optionalParams.description;
+			}
+			if(isset(optionalParams.key)){
+				params.key = optionalParams.key;
+			}
+		}
+		this.__super__.__sendWithCallback(method, params, &#x27;collection&#x27;, callback);
+	};
+
+
+	/**
+	 *  Get collections from specified project
+	 *
+	 *  @method Collection.get
+	 *  @param {number} projectId Project id
+	 *  @param {object} [optionalParams] Optional parameters:
+	 *  @param {string} [optionalParams.status] Status of events to list. Accepted values: active, inactive, all. Default value: all
+	 *  @param {string / Array} [optionalParams.withTags] If specified, will only list events that has specified tag(s) defined. Note: tags are case sensitive
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:collection:get
+	 */
+	Collection.get = function(projectId, optionalParams, callback){
+		this.__super__.__checkProjectId(projectId);
+		var method = &#x27;collection.get&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		
+		if(isset(optionalParams)){
+			if(isset(optionalParams.status)){
+				if(inArray(optionalParams.status.toLowerCase(), [&#x27;all&#x27;, &#x27;active&#x27;, &#x27;inactive&#x27;])){
+					params.status = optionalParams.status;
+				} else {
+					throw new Error(method + &#x27;: status must be one of the values: &quot;active&quot;, &quot;inactive&quot;, &quot;all&quot;&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.withTags)){
+				params.with_tags = optionalParams.withTags;
+			}
+		}
+		this.__super__.__sendWithCallback(method, params, &#x27;collection&#x27;, callback);
+	};
+
+
+	/**
+	 * Get one collection from specified project.
+	 * collection_id/collection_key parameter means that one can use either one of them - collection_id or collection_key 
+	 *
+	 * @method Collection.getOne
+	 * @param {number} projectId Project id
+	 * @param {string / Number} collection Either collection id (number) or key (string)
+	 * @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:collection:get_one
+	 */
+	Collection.getOne = function(projectId, collection, callback){
+		this.__super__.__checkProjectId(projectId);
+		
+		var method = &#x27;collection.get_one&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		this.__super__.__sendWithCallback(method, params, &#x27;collection&#x27;, callback);
+	};
+
+
+	/**
+	 * Activates specified collection 
+	 * 
+	 * @method Collection.activate
+	 * @param {number} projectId Project id
+	 * @param {number} collectionId Collection id defining collection to be activated
+	 * @param {boolean} force If set to True, will force the activation by deactivating all other collections that may share it&#x27;s data_key.
+	 * @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:collection:activate
+	 */
+	Collection.activate = function(projectId, collectionId, force, callback){
+		this.__super__.__checkProjectId(projectId);
+		
+		var method = &#x27;collection.activate&#x27;;
+
+		if(!isNumber(collectionId)){
+			throw new Error(method + &#x27;: collectionId must be a number&#x27;);
+		}
+
+		var params = {
+			project_id: projectId,
+			collection_id: collectionId
+		};
+		
+		if(isset(force)){
+			params.force = force;
+		}
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+
+	/**
+	 * Deactivates specified collection
+	 * collection_id/collection_key parameter means that one can use either one of them - collection_id or collection_key 
+	 *
+	 * @method Collection.deactivate
+	 * @param {number} projectId Project id
+	 * @param {string / Number} collection Either collection id (number) or key (string)
+	 * @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:collection:deactivate
+	 */
+	Collection.deactivate = function(projectId, collection, callback){
+		this.__super__.__checkProjectId(projectId);
+
+		var method = &#x27;collection.deactivate&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+
+	/**
+	 * Update existing collections name and/or description
+	 * 
+	 * @method Collection.update
+	 * @param {number} projectId Project id
+	 * @param {string / Number} collection Either collection id (number) or key (string)
+	 * @param {object} [optionalParams] Optional parameters:
+	 * @param {string} [optionalParams.name] New collection name
+	 * @param {string} [optionalParams.description] New collection description
+	 * @param {function} [callback] Function to be called when successful response comes 
+	 */
+	/** 
+	 *  @event syncano:collection:update
+	 */
+	Collection.update = function(projectId, collection, optionalParams, callback){
+		this.__super__.__checkProjectId(projectId);
+		var method = &#x27;collection.update&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		
+		if(isset(optionalParams)){
+			if(isset(optionalParams.name)){
+				params.name = optionalParams.name;
+			}
+			if(isset(optionalParams.description)){
+				params.description = optionalParams.description;
+			}
+		}
+		this.__super__.__sendWithCallback(method, params, &#x27;collection&#x27;, callback);
+	};
+
+
+	/**
+	 *  Add a tag to specific event.
+	 *  Note: tags are case sensitive. Non-ascii characters are not allowed.
+	 * 
+	 *  @method Collection.addTag
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id (number) or key (string)
+	 *  @param {string / Array} tags Tag(s) to be added. Either string (one tag) or array (multiple tags)
+	 *  @param {object} [optionalParams] Optional parameters:
+	 *  @param {float} [optionalParams.weight] Tags weight. Default value = 1
+	 *  @param {boolean} [optionalParams.removeOther] If true, will remove all other tags of specified collection. Default value: False
+	 *  @param {function} [callback] Function to be called when successful response comes 
+	 */
+	/** 
+	 *  @event syncano:collection:add_tag
+	 */
+	Collection.addTag = function(projectId, collection, tags, optionalParams, callback){
+		if(typeof arguments[3] === &#x27;function&#x27;){
+			callback = arguments[3];
+			optionalParams = undefined;
+		}
+
+		this.__super__.__checkProjectId(projectId);
+		var method = &#x27;collection.add_tag&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		
+		if(typeof tags !== &#x27;string&#x27; &amp;&amp; !(typeof tags === &#x27;object&#x27; &amp;&amp; typeof tags.length !== &#x27;undefined&#x27;)){
+			throw new Error(method + &#x27;: tags must be passed&#x27;);
+		}
+		
+		/**
+		 *  currently only ascii chars are supported
+		 */
+		var testTagString;
+		if(typeof tags === &#x27;string&#x27;){
+			testTagString = tags;
+		} else {
+			testTagString = tags.join(&#x27;,&#x27;);
+		}
+		if(!/^[\000-\177]*$/.test(testTagString)){
+			throw new Error(method + &#x27;: non ascii characters found in tag name&#x27;);
+		}
+		
+		params.tags = tags;
+		
+		if(isset(optionalParams)){
+			if(isset(optionalParams.weight)){
+				params.weight = optionalParams.weight;
+			}
+			if(isset(optionalParams.removeOther)){
+				params.remove_other = !!optionalParams.removeOther;
+			}
+		}
+		
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+
+	/**
+	 * Delete a tag or tags from specified collection.
+	 * Note: tags are case sensitive 
+	 *
+	 * @method Collection.deleteTag
+	 * @param {number} projectId Project id
+	 * @param {string / Number} collection Either collection id (number) or key (string)
+	 * @param {string / Array} tags Tag(s) to be added. Either string (one tag) or array (multiple tags)
+	 * @param {function} [callback] Function to be called when successful response comes 
+	 */
+	/** 
+	 *  @event syncano:collection:delete_tag
+	 */
+	Collection.deleteTag = function(projectId, collection, tags, callback){
+		this.__super__.__checkProjectId(projectId);
+		var method = &#x27;collection.delete_tag&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		
+		if(typeof tags !== &#x27;string&#x27; &amp;&amp; !(typeof tags === &#x27;object&#x27; &amp;&amp; typeof tags.length !== &#x27;undefined&#x27;)){
+			throw new Error(method + &#x27;: tags must be passed&#x27;);
+		}
+		
+		/**
+		 *  currently only ascii chars are supported
+		 */
+		var testTagString;
+		if(typeof tags === &#x27;string&#x27;){
+			testTagString = tags;
+		} else {
+			testTagString = tags.join(&#x27;,&#x27;);
+		}
+		if(!/^[\000-\177]*$/.test(testTagString)){
+			throw new Error(method + &#x27;: non ascii characters found in tag name&#x27;);
+		}
+		
+		params.tags = tags;
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+
+	/**
+	 * Adds collection-level permission to specified User API client. Requires Backend API key with Admin permission role.
+	 * Available permissions:
+	 *   create_data - can create new Data Objects within container,
+	 *   read_data - can read all Data Objects within container,
+	 *   read_own_data - can read only Data Objects within container that were created by associated user,
+	 *   update_data - can update all Data Objects within container,
+	 *   update_own_data - can update only Data Objects within container that were created by associated user,
+	 *   delete_data - can delete all Data Objects within container,
+	 *   delete_own_data - can delete only Data Objects within container that were created by associated user
+	 * 
+	 * @method Collection.authorize
+	 * @param {number} projectId Project id
+	 * @param {string} collection Either collection id (number) or key (string)
+	 * @param {number} apiClientId User API client id
+	 * @param {string} permission User API client&#x27;s permission to add
+	 * @param {function} [callback] Function to be called when successful response comes 
+	 */
+	Collection.authorize = function(projectId, collection, apiClientId, permission, callback){
+		this.__super__.__checkProjectId(projectId);
+		var method = &#x27;collection.authorize&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+
+		if(!isNumber(apiClientId)){
+			throw new Error(method + &#x27;: apiClientId must be a number&#x27;);
+		}
+
+		var availablePermissions = [
+			&#x27;create_data&#x27;, &#x27;read_data&#x27;, &#x27;read_own_data&#x27;, &#x27;update_data&#x27;, &#x27;update_own_data&#x27;, &#x27;delete_data&#x27;, &#x27;delete_own_data&#x27;
+		];
+		if(availablePermissions.indexOf(permission) === -1){
+			throw new Error(method + &#x27;: unknown permission name (&#x27; + permission + &#x27;)&#x27;);
+		}
+		params.api_client_id = apiClientId;
+		params.permission = permission;
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+	/**
+	 * Removes container-level permission from specified User API client. Requires Backend API key with Admin permission role.
+	 * Available permissions:
+	 *   create_data - can create new Data Objects within container,
+	 *   read_data - can read all Data Objects within container,
+	 *   read_own_data - can read only Data Objects within container that were created by associated user,
+	 *   update_data - can update all Data Objects within container,
+	 *   update_own_data - can update only Data Objects within container that were created by associated user,
+	 *   delete_data - can delete all Data Objects within container,
+	 *   delete_own_data - can delete only Data Objects within container that were created by associated user
+	 * 
+	 * @method Collection.deauthorize
+	 * @param {number} projectId Project id
+	 * @param {string} collection Either collection id (number) or key (string)
+	 * @param {number} apiClientId User API client id
+	 * @param {string} permission User API client&#x27;s permission to add
+	 * @param {function} [callback] Function to be called when successful response comes 
+	 */
+	Collection.deauthorize = function(projectId, collection, apiClientId, permission, callback){
+		this.__super__.__checkProjectId(projectId);
+		var method = &#x27;collection.deauthorize&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+
+		if(!isNumber(apiClientId)){
+			throw new Error(method + &#x27;: apiClientId must be a number&#x27;);
+		}
+
+		var availablePermissions = [
+			&#x27;create_data&#x27;, &#x27;read_data&#x27;, &#x27;read_own_data&#x27;, &#x27;update_data&#x27;, &#x27;update_own_data&#x27;, &#x27;delete_data&#x27;, &#x27;delete_own_data&#x27;
+		];
+		if(availablePermissions.indexOf(permission) === -1){
+			throw new Error(method + &#x27;: unknown permission name (&#x27; + permission + &#x27;)&#x27;);
+		}
+		params.api_client_id = apiClientId;
+		params.permission = permission;
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+
+	/**
+	 * Permanently delete specified collection and all associated data.
+	 * 
+	 * @method Collection.delete
+	 * @param {number} projectId Project id
+	 * @param {string / Number} collection Either collection id (number) or key (string)
+	 * @param {function} [callback] Function to be called when successful response comes 
+	 */
+	/** 
+	 *  @event syncano:collection:delete
+	 */
+	Collection.delete = function(projectId, collection, callback){
+		this.__super__.__checkProjectId(projectId);
+		var method = &#x27;collection.delete&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+
+	/**
+	 * methods for handling folders - creating, reading, updating, deleting 
+	 */
+
+	var Folder = {};
+
+	/**
+	 *  Create new folder within specified collection
+	 *
+	 *  @method Folder.new
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id (number) or key (string)
+	 *  @param {string} name Folder name
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:folder:new
+	 */
+	Folder.new = function(projectId, collection, name, callback){
+		this.__super__.__checkProjectId(projectId);
+		var method = &#x27;folder.new&#x27;;
+		var params = {
+			name: name,
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		
+		if(!name){
+			throw new Error(&#x27;Folder must have a name&#x27;);
+		}
+		
+		this.__super__.__sendWithCallback(method, params, &#x27;folder&#x27;, callback);
+	};
+
+
+	/**
+	 *  Get folders for specified collection
+	 *
+	 *  @method Folder.get 
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Collection id or key defining collection for which folders will be returned
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:folder:get
+	 */
+	Folder.get = function(projectId, collection, callback){
+		this.__super__.__checkProjectId(projectId);
+		
+		var method = &#x27;folder.get&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		this.__super__.__sendWithCallback(method, params, &#x27;folder&#x27;, callback);
+	};
+
+
+	/**
+	 *  Get folders for specified collection 
+	 * 
+	 *  @name method Folder.getOne 
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Collection id or key defining collection for which folder will be returned
+	 *  @param {string} folderName Folder name defining folder
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:folder:get_one
+	 */
+	Folder.getOne = function(projectId, collection, folderName, callback){
+		this.__super__.__checkProjectId(projectId);
+		
+		var method = &#x27;folder.get_one&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		
+		if(typeof folderName !== &#x27;string&#x27;){
+			throw new Error(&#x27;FolderName must be a string&#x27;);
+		}
+		params.folder_name = folderName;
+		this.__super__.__sendWithCallback(method, params, &#x27;folder&#x27;, callback);
+	};
+
+
+	/**
+	 *  Update existing folder
+	 *  Params newName and sourceId can be passed as a single object: {newName: &#x27;&#x27;, sourceId: &#x27;&#x27;} 
+	 * 
+	 *  @method Folder.update
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Collection id or key defining collection for which folder will be returned
+	 *  @param {string} folderName Folder name defining folder
+	 *  @param {string} [newName] New folder name
+	 *  @param {string} [sourceId] New source id, can be used for mapping folders to external source
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:folder:update
+	 */
+	Folder.update = function(projectId, collection, folderName, newName, sourceId, callback){
+		if(typeof arguments[3] === &#x27;object&#x27;){
+			var obj = Object.create(arguments[3]);
+			callback = arguments[4];
+			newName = obj.newName;
+			sourceId = obj.sourceId;
+		}
+		this.__super__.__checkProjectId(projectId);
+		var method = &#x27;folder.update&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		
+		if(typeof folderName !== &#x27;string&#x27;){
+			throw new Error(&#x27;FolderName must be a string&#x27;);
+		}
+		params.name = folderName;
+		
+		if(isset(newName)){
+			if(typeof newName !== &#x27;string&#x27;){
+				throw new Error(&#x27;newName must be a string&#x27;);
+			}
+			params.new_name = newName;
+		} else {
+			throw new Error(&#x27;newName must be passed&#x27;);
+		}
+		
+		if(isset(sourceId)){
+			if(isNumber(sourceId)){
+				params.source_id = sourceId + &#x27;&#x27;;
+			} else {
+				throw new Error(&#x27;sourceId must be a number&#x27;);
+			}
+		}
+		this.__super__.__sendWithCallback(method, params, &#x27;folder&#x27;, callback);
+	};
+
+
+	/**
+	 *  Permanently delete specified folder and all associated data
+	 *
+	 *  @method Folder.delete
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Collection id or key defining collection for which folder will be returned
+	 *  @param {string} folderName Folder name defining folder
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:folder:delete
+	 */
+	Folder.delete = function(projectId, collection, folderName, callback){
+		this.__super__.__checkProjectId(projectId);
+		var method = &#x27;folder.delete&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		
+		if(typeof folderName !== &#x27;string&#x27;){
+			throw new Error(&#x27;FolderName must be a string&#x27;);
+		}
+		params.name = folderName;
+		
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+
+	Folder.authorize = function(apiKey, projectId, collection, permission, folderName, callback){
+		this.__super__.__checkProjectId(projectId);
+		var method = &#x27;folder.authorize&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		params.api_client_id = apiKey;
+
+		if(typeof folderName !== &#x27;string&#x27;){
+			throw new Error(&#x27;FolderName must be a string&#x27;);
+		}
+		params.name = folderName;
+
+		var availPermissions = [
+			&#x27;create_data&#x27;, &#x27;read_data&#x27;, &#x27;read_own_data&#x27;, &#x27;update_data&#x27;, &#x27;update_own_data&#x27;, &#x27;delete_data&#x27;, &#x27;delete_own_data&#x27;
+		];
+
+		if(isset(permission) &amp;&amp; availPermissions.indexOf(permission) !== -1){
+			params.permission = permission;
+		} else {
+			throw new Error(&#x27;Permission must be one of: &#x27; + availPermissions.join(&#x27;, &#x27;));
+		}
+
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+	var Data = {};
+
+	/**
+	 *  Creates a new Data Object
+	 * 
+	 *  @method Data.new
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id (number) or key (string)
+	 *  @param {object} [optionalParams] Optional parameters:
+	 *  @param {string} [optionalParams.dataKey] Used for uniquely identifying message. Has to be unique within collection. Useful for updating
+	 *  @param {string} [optionalParams.userName] Name of user to associate Data Object with. If not set, internal user &#x27;syncano&#x27; is used
+	 *  @param {string} [optionalParams.sourceUrl] Source URL associated with message
+	 *  @param {string} [optionalParams.title] Title of data object
+	 *  @param {string} [optionalParams.text] Text data associated with message
+	 *  @param {string} [optionalParams.link] Link associated with message
+	 *  @param {string} [optionalParams.image] Image data associated with message
+	 *  @param {string} [optionalParams.imageUrl] Image source URL. Used in combination with image parameter
+	 *  @param {string} [optionalParams.folder] Folder name that data will be put in. Default value: &#x27;Default&#x27;.
+	 *  @param {string} [optionalParams.state] State of data to be initially set. Accepted values: Pending, Moderated, Rejected. Default value: Pending
+	 *  @param {number} [optionalParams.parentId] If specified, creates one parent-child relation with specified parent id.
+	 *  @param {object} [optionalParams.additional] Any number of additional parameters (key - value)
+	 *  @param {object} [optionalParams.special] Special object with max 3 keys - data1, data2 and data3. These fields are &quot;special purpose&quot; integers - one can sort and filter by them in Data.get method
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 *  @example
+		var s = SyncanoConnector.getInstance();
+		s.connect({instance:&#x27;&#x27;, api_key:&#x27;&#x27;});
+		s.Data.new(projectId, &#x27;Default&#x27;, {}, function(res){
+			console.log(&#x27;Added data object:&#x27;, res);
+		});
+	 */
+	/** 
+	 *  @event syncano:data:new
+	 */
+	Data.new = function(projectId, collection, optionalParams, callback){
+		this.__super__.__checkProjectId(projectId);
+		
+		var method = &#x27;data.new&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+
+		var key, value;
+		
+		/**
+		 *  all optional params
+		 */
+		if(isset(optionalParams)){
+			var stringParams = [
+				&#x27;dataKey&#x27;, &#x27;userName&#x27;, &#x27;sourceUrl&#x27;, &#x27;title&#x27;, &#x27;text&#x27;, &#x27;link&#x27;, &#x27;image&#x27;, &#x27;imageUrl&#x27;, &#x27;folder&#x27;, &#x27;state&#x27;
+			];
+			for(var i=0; i&lt;stringParams.length; i++){
+				var strParam = stringParams[i];
+				if(isset(optionalParams[strParam])){
+					if(typeof optionalParams[strParam] === &#x27;string&#x27;){
+						params[uncamelize(strParam)] = optionalParams[strParam];
+					} else {
+						throw new Error(strParam + &#x27; must be a string&#x27;);
+					}
+				}
+			}
+			if(isset(optionalParams.parentId)){
+				if(isNumber(optionalParams.parentId)){
+					params.parent_id = optionalParams.parentId;
+				} else {
+					throw new Error(&#x27;parentId must be a number&#x27;);
+				}
+			}
+			
+			if(isset(params.state)){
+				if([&#x27;pending&#x27;, &#x27;moderated&#x27;, &#x27;rejected&#x27;].indexOf(params.state.toLowerCase()) === -1){
+					throw new Error(&#x27;incorrect value of state param&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.additional)){
+				for(key in optionalParams.additional){
+					if(optionalParams.additional.hasOwnProperty(key)){
+						var val = optionalParams.additional[key];
+						if(stringParams.indexOf(key) !== -1 || key === &#x27;parent_id&#x27;){
+							throw new Error(&#x27;Cannot use additional (custom) param named &#x27; + key);
+						}
+						params[key] = val;
+					}
+				}
+			}
+
+			if(isset(optionalParams.special) &amp;&amp; Object.keys(optionalParams.special).length &gt; 0){
+				var predefined = [&#x27;data1&#x27;, &#x27;data2&#x27;, &#x27;data3&#x27;];
+				for(key in optionalParams.special){
+					if(optionalParams.special.hasOwnProperty(key)){
+						value = optionalParams.special[key];
+						var idx = predefined.indexOf(key);
+						if(idx !== -1){
+							params[key] = value;
+							predefined[idx] = null;
+							delete optionalParams.special[key];
+						}
+					}
+				}
+				if(Object.keys(optionalParams.special).length &gt; 0){
+					// there are some keys left, so we didn&#x27;t use default data1...data3 names
+					for(key in optionalParams.special){
+						if(optionalParams.special.hasOwnProperty(key)){
+							value = optionalParams.special[key];
+							var predefinedKey;
+							do {
+								predefinedKey = predefined.shift();
+							} while(predefinedKey === null &amp;&amp; predefined.length &gt; 0);
+							if(typeof predefinedKey !== &#x27;undefined&#x27;){
+								params[predefinedKey] = value;
+								params[key] = predefinedKey;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		this.__super__.ignoreNextNew = true;
+		this.__super__.__sendWithCallback(method, params, &#x27;data&#x27;, callback);
+	};
+
+
+	/**
+	 *  Get data from collection(s) or whole project with optional additional filtering. All filters, unless explicitly noted otherwise, affect all hierarchy levels.
+	 *  To paginate and to get more data, use since_id or since_time parameter
+	 *  All optional params should be passed as a single object: {key: value, ...}
+	 *
+	 *  @method Data.get
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id or key
+	 *  @param {object} [optionalParams] Object with additional parameters
+	 *  @param {string / Array} [optionalParams.dataIds] If specified, will return data objects with specified ids. Note: has no effect on returned data object&#x27;s children. Max 100 values per request 
+	 *  @param {string} [optionalParams.state] State of data to be returned. Accepted values: Pending, Moderated, Rejected, All. Default value: All.
+	 *  @param {string / Array} [optionalParams.folders] Folder name that data will be returned from. Max 100 values per request. If not presents returns data from across all collection folders
+	 *  @param {number} [optionalParams.sinceId] If specified, will only return data with id higher than since_id (newer). Note: has no effect on returned data object&#x27;s children
+	 *  @param {string} [optionalParams.sinceTime] String with date. If specified, will only return data with created_at or updated_at time after specified value (newer). Note: has no effect on returned data object&#x27;s children
+	 *  @param {number} [optionalParams.maxId] If specified, will only return data with id lower than max_id (older)
+	 *  @param {number} [optionalParams.limit] Number of Data Objects to be returned. Default and max value: 100 
+	 *  @param {string} [optionalParams.order] Sets order of data that will be returned. ASC (default) - oldest first, DESC - newest first
+	 *  @param {string} [optionalParams.orderBy] Orders by specified criteria. created_at (default), updated_at
+	 *  @param {string} [optionalParams.filter] TEXT - only data with text field specified, IMAGE - only data with an image attached
+	 *  @param {string} [optionalParams.includeChildren] If true, include Data Object children as well (recursively). Default value: True.
+	 *  @param {number} [optionalParams.depth] Max depth of children to follow. If not specified, will follow all levels until children limit is reached
+	 *  @param {number} [optionalParams.childrenLimit] Limit of children to show (if include_children is True). Default and max value: 100 (some children levels may be incomplete if there are more than this limit).
+	 *  @param {string / Array} [optionalParams.parentIds] Data Object id or ids. If specified, only children of specific Data Object parent will be listed
+	 *  @param {string} [optionalParams.byUser] If specified, filter by Data Object user&#x27;s name
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 *  @example
+		var s = SyncanoConnector.getInstance();
+		s.connect({instance:&#x27;&#x27;, api_key:&#x27;&#x27;});
+		s.Data.get(projectId, &#x27;Default&#x27;, {}, function(res){
+			console.log(&#x27;Loaded &#x27;+ res.length + &#x27; records&#x27;);
+			res.forEach(function(d){
+				console.log(d);
+			});
+		});
+	 */
+	/** 
+	 *  @event syncano:data:get
+	 */
+	Data.get = function(projectId, collection, optionalParams, callback){
+		var i;
+
+		this.__super__.__checkProjectId(projectId);
+		
+		var method = &#x27;data.get&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		
+		if(isset(optionalParams)){
+			
+			/**
+			 *  these optionalParams are just copied to params array if they are set
+			 */
+			var justSetParams = [&#x27;dataIds&#x27;, &#x27;folders&#x27;, &#x27;byUser&#x27;, &#x27;parentIds&#x27;];
+			for(i=0; i&lt;justSetParams.length; i++){
+				var jsParam = justSetParams[i];
+				if(isset(optionalParams[jsParam])){
+					params[uncamelize(jsParam)] = optionalParams[jsParam];
+				}
+			}
+			
+			/**
+			 *  these optionalParams have to be numbers - so check if they are set and are proper numbers. If not - throw an Error
+			 */
+			var numericParams = [&#x27;maxId&#x27;, &#x27;limit&#x27;, &#x27;sinceId&#x27;, &#x27;depth&#x27;, &#x27;childrenLimit&#x27;];
+			for(i=0; i&lt;numericParams.length; i++){
+				var numParam = numericParams[i];
+				if(isset(optionalParams[numParam])){
+					if(isNumber(optionalParams[numParam])){
+						params[uncamelize(numParam)] = optionalParams[numParam];
+					} else {
+						throw new Error(numParam + &#x27; must be a number&#x27;);
+					}
+				}
+			}
+			
+			if(isset(optionalParams.state)){
+				if(inArray(optionalParams.state.toLowerCase(), [&#x27;pending&#x27;,&#x27;moderated&#x27;,&#x27;rejected&#x27;,&#x27;all&#x27;])){
+					params.state = optionalParams.state;
+				} else {
+					throw new Error(&#x27;incorrect value of state param&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.sinceTime)){
+				if(isDate(optionalParams.sinceTime)){
+					params.since_time = optionalParams.sinceTime;
+				} else {
+					throw new Error(&#x27;Param sinceTime must be a proper date string&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.order)){
+				if([&#x27;asc&#x27;, &#x27;desc&#x27;].indexOf(optionalParams.order.toLowerCase()) !== -1){
+					params.order = optionalParams.order;
+				} else {
+					throw new Error(&#x27;incorrect value of order param - only &quot;asc&quot; and &quot;desc&quot; are allowed&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.orderBy)){
+				if(inArray(optionalParams.orderBy.toLowerCase(), [&#x27;created_at&#x27;, &#x27;updated_at&#x27;, &#x27;data1&#x27;, &#x27;data2&#x27;, &#x27;data3&#x27;])){
+					params.order_by = optionalParams.orderBy;
+				} else {
+					throw new Error(&#x27;incorrect value of order_by param - only &quot;created_at&quot; and &quot;updated_at&quot; are allowed&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.filter)){
+				if(inArray(optionalParams.filter.toLowerCase(), [&#x27;text&#x27;, &#x27;image&#x27;])){
+					params.filter = optionalParams.filter;
+				} else {
+					throw new Error(&#x27;incorrect value of filter param - only &quot;text&quot; and &quot;image&quot; are allowed&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.includeChildren)){
+				if(isBool(optionalParams.includeChildren)){
+					params.include_children = optionalParams.includeChildren;
+				} else {
+					throw new Error(&#x27;includeChildren param must be boolean&#x27;);
+				}
+			}
+
+			var specialFields = [&#x27;data1&#x27;, &#x27;data2&#x27;, &#x27;data3&#x27;];
+			var operators = [&#x27;eq&#x27;, &#x27;neq&#x27;, &#x27;lte&#x27;, &#x27;lt&#x27;, &#x27;gte&#x27;, &#x27;gt&#x27;];
+			for(var f=0; f&lt;specialFields.length; f++){
+				for(var o=0; o&lt;operators.length; o++){
+					var key = specialFields[f] + &#x27;__&#x27; + operators[o];
+					if(isset(optionalParams[key])){
+						params[key] = optionalParams[key];
+					}
+				}
+			}
+		}
+
+		this.__super__.__sendWithCallback(method, params, &#x27;data&#x27;, callback);
+	};
+
+
+	/**
+	 * Get data by data_id or data_key
+	 * 
+	 *  @method Data.getOne 
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id (number) or key (string)
+	 *  @param {string / Number} dataKeyOrId Either data id (number) or key (string)
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 *  @example
+		var s = SyncanoConnector.getInstance();
+		s.connect({instance:&#x27;&#x27;, api_key:&#x27;&#x27;});
+		s.Data.getOne(projectId, &#x27;Default&#x27;, dataId, function(res){
+			console.log(&#x27;Found record:&#x27;, res);
+		});
+	 */
+	/** 
+	 *  @event syncano:data:get_one
+	 */
+	Data.getOne = function(projectId, collection, dataKeyOrId, callback){
+		this.__super__.__checkProjectId(projectId);
+		
+		var method = &#x27;data.get_one&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		if(typeof dataKeyOrId === &#x27;string&#x27;){
+			params.data_key = dataKeyOrId;
+		} else if (typeof dataKeyOrId === &#x27;number&#x27;){
+			params.data_id = dataKeyOrId;
+		} else {
+			throw new Error(&#x27;Data key/id must be passed&#x27;);
+		}
+		
+		this.__super__.__sendWithCallback(method, params, &#x27;data&#x27;, callback);
+	};
+
+
+	/**
+	 * Increase one of special fields in data object
+	 *
+	 *  @method Data.increase
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id (number) or key (string)
+	 *  @param {string / Number} dataKeyOrId Either data id (number) or key (string)
+	 *  @param {string} field One of predefined fields - data1, data2 or data3
+	 *  @param {int} value Value by which the field has to be increased
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	Data.increase = function(projectId, collection, dataKeyOrId, field, value, callback){
+		this.__super__.__checkProjectId(projectId);
+		
+		var method = &#x27;data.update&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		
+		if(typeof dataKeyOrId === &#x27;string&#x27;){
+			params.data_key = dataKeyOrId;
+		} else if (typeof dataKeyOrId === &#x27;number&#x27;){
+			params.data_id = dataKeyOrId;
+		} else {
+			throw new Error(&#x27;Data key/id must be passed&#x27;);
+		}
+
+		var allowedFields = [&#x27;data1&#x27;, &#x27;data2&#x27;, &#x27;data3&#x27;];
+		if(allowedFields.indexOf(field) !== -1){
+			params[field + &#x27;__inc&#x27;] = value;
+		}
+
+		this.__super__.ignoreNextChange = true;
+		this.__super__.__sendWithCallback(method, params, &#x27;data&#x27;, callback);
+	};
+
+
+	/**
+	 * Decrease one of special fields in data object
+	 *
+	 *  @method Data.decrease
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id (number) or key (string)
+	 *  @param {string / Number} dataKeyOrId Either data id (number) or key (string)
+	 *  @param {string} field One of predefined fields - data1, data2 or data3
+	 *  @param {int} value Value by which the field has to be decreased
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	Data.decrease = function(projectId, collection, dataKeyOrId, field, value, callback){
+		this.__super__.__checkProjectId(projectId);
+		
+		var method = &#x27;data.update&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		
+		if(typeof dataKeyOrId === &#x27;string&#x27;){
+			params.data_key = dataKeyOrId;
+		} else if (typeof dataKeyOrId === &#x27;number&#x27;){
+			params.data_id = dataKeyOrId;
+		} else {
+			throw new Error(&#x27;Data key/id must be passed&#x27;);
+		}
+
+		var allowedFields = [&#x27;data1&#x27;, &#x27;data2&#x27;, &#x27;data3&#x27;];
+		if(allowedFields.indexOf(field) !== -1){
+			params[field + &#x27;__dec&#x27;] = value;
+		}
+
+		this.__super__.ignoreNextChange = true;
+		this.__super__.__sendWithCallback(method, params, &#x27;data&#x27;, callback);
+	};
+
+
+	/**
+	 *  
+	 *  @method Data.update
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id or key
+	 *  @param {string / Number} dataKeyOrId Either data id (number) or key (string)
+	 *  @param {object} [optionalParams] Object with additional parameters
+	 *  @param {string} [optionalParams.updateMethod] Default value: replace
+	 *  @param {string} [optionalParams.user_name] User name of user to associate Data Object with. If not set, internal user &#x27;syncano&#x27; is used
+	 *  @param {string} [optionalParams.sourceUrl] Source URL associated with message
+	 *  @param {string} [optionalParams.title] Title of message
+	 *  @param {string} [optionalParams.text] Text data associated with message
+	 *  @param {string} [optionalParams.link] Link associated with message
+	 *  @param {string} [optionalParams.image] Image data associated with message. If specified as empty string - will instead delete current image
+	 *  @param {string} [optionalParams.imageUrl] Image source URL. Used in combination with image parameter
+	 *  @param {string} [optionalParams.folder] Folder name that data will be put in. Default value: &#x27;Default&#x27;
+	 *  @param {string} [optionalParams.dataKey] New data key to be set
+	 *  @param {string} [optionalParams.state] State of data to be initially set. Accepted values: Pending, Moderated, Rejected. Default value: Pending
+	 *  @param {number} [optionalParams.parentId] If specified, new Data Object becomes a child of specified parent id. Note that all other parent-child relations for this Data Object are removed
+	 *  @param {string} [optionalParams.additional] any number of additional parameters passed as key - value object literal
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 *  @example
+		var s = SyncanoConnector.getInstance();
+		s.connect({instance:&#x27;&#x27;, api_key:&#x27;&#x27;});
+		s.Data.update(projectId, &#x27;Default&#x27;, dataId, {title: &#x27;New title&#x27;}, function(res){
+			console.log(&#x27;Modified record:&#x27;, res);
+		});
+	 */
+	/** 
+	 *  @event syncano:data:update
+	 */
+	Data.update = function(projectId, collection, dataKeyOrId, optionalParams, callback){
+		this.__super__.__checkProjectId(projectId);
+		
+		var method = &#x27;data.update&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		
+		if(typeof dataKeyOrId === &#x27;string&#x27;){
+			params.data_key = dataKeyOrId;
+		} else if (typeof dataKeyOrId === &#x27;number&#x27;){
+			params.data_id = dataKeyOrId;
+		} else {
+			throw new Error(&#x27;Data key/id must be passed&#x27;);
+		}
+		
+		if(isset(optionalParams)){
+			var paramsToPass = [&#x27;updateMethod&#x27;, &#x27;userName&#x27;, &#x27;sourceUrl&#x27;, &#x27;title&#x27;, &#x27;text&#x27;, &#x27;link&#x27;, &#x27;image&#x27;, &#x27;imageUrl&#x27;, &#x27;dataKey&#x27;, &#x27;data1&#x27;, &#x27;data2&#x27;, &#x27;data3&#x27;];
+			for(var i=0; i&lt;paramsToPass.length; i++){
+				var jsParam = paramsToPass[i];
+				if(isset(optionalParams[jsParam])){
+					var tmpK = jsParam;
+					if(jsParam !== &#x27;data1&#x27; &amp;&amp; jsParam !== &#x27;data2&#x27; &amp;&amp; jsParam !== &#x27;data3&#x27;){
+						tmpK = uncamelize(jsParam);
+					}
+					params[tmpK] = optionalParams[jsParam];
+				}
+			}
+			
+			if(isset(optionalParams.parentId)){
+				if(isNumber(optionalParams.parentId)){
+					params.parent_id = optionalParams.parentId;
+				} else {
+					throw new Error(&#x27;parentId must be a number&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.state)){
+				if(inArray(optionalParams.state.toLowerCase(), [&#x27;pending&#x27;,&#x27;moderated&#x27;,&#x27;rejected&#x27;])){
+					params.state = optionalParams.state;
+				} else {
+					throw new Error(&#x27;incorrect value of state param&#x27;);
+				}
+			}
+		}
+
+		if(isset(optionalParams.additional)){
+			for(var key in optionalParams.additional){
+				if(optionalParams.additional.hasOwnProperty(key)){
+					var val = optionalParams.additional[key];
+					if(typeof params[key] !== &#x27;undefined&#x27;){
+						throw new Error(&#x27;Cannot use additional (custom) param named &#x27; + key);
+					}
+					params[key] = val;
+				}
+			}
+		}
+		
+		this.__super__.ignoreNextChange = true;
+		this.__super__.__sendWithCallback(method, params, &#x27;data&#x27;, callback);
+	};
+
+
+	/**
+	 *  Moves data to folder and/or state
+	 * 
+	 *  @method Data.move 
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id or key
+	 *  @param {object} [optionalParams] Object with additional parameters
+	 *  @param {string} [optionalParams.dataIds] If specified, will filter by Data id or ids. Max 100 ids per request.
+	 *  @param {string} [optionalParams.folders] If specified, filter by specified folder or folders. Max 100 values per request.
+	 *  @param {string} [optionalParams.state] If specified, filter by Data state. Accepted values: Pending, Moderated, All. Default value: All.
+	 *  @param {string} [optionalParams.filter] TEXT - only data with text IMAGE - only data with an image
+	 *  @param {string} [optionalParams.byUser] If specified, filter by user&#x27;s name
+	 *  @param {string} [optionalParams.limit] Number of Data Objects to process. Default and max value: 100
+	 *  @param {string} [optionalParams.newFolder] Destination folder where data will be moved. If not specified, leaves folder as is.
+	 *  @param {string} [optionalParams.newState] State to be set data for specified data. Accepted values: Pending, Moderated. If not specified, leaves state as is.
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 *  @example
+		var s = SyncanoConnector.getInstance();
+		s.connect({instance:&#x27;&#x27;, api_key:&#x27;&#x27;});
+		s.Data.move(projectId, &#x27;Default&#x27;, {newFolder: &#x27;Output folder&#x27;});
+	 */
+	/** 
+	 *  @event syncano:data:move
+	 */
+	Data.move = function(projectId, collection, optionalParams, callback){
+		this.__super__.__checkProjectId(projectId);
+		
+		var method = &#x27;data.move&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		
+		if(isset(optionalParams)){
+			/**
+			 *  these optionalParams are just copied to params array if they are set
+			 */
+			var justSetParams = [&#x27;dataIds&#x27;, &#x27;folders&#x27;, &#x27;byUser&#x27;, &#x27;newFolder&#x27;];
+			for(var i=0; i&lt;justSetParams.length; i++){
+				var jsParam = justSetParams[i];
+				if(isset(optionalParams[jsParam])){
+					params[uncamelize(jsParam)] = optionalParams[jsParam];
+				}
+			}
+			
+			if(isset(optionalParams.filter)){
+				if(inArray(optionalParams.filter.toLowerCase(), [&#x27;text&#x27;, &#x27;image&#x27;])){
+					params.filter = optionalParams.filter;
+				} else {
+					throw new Error(&#x27;incorrect value of filter param - only &quot;text&quot; and &quot;image&quot; are allowed&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.state)){
+				if(inArray(optionalParams.state.toLowerCase(), [&#x27;pending&#x27;,&#x27;moderated&#x27;,&#x27;rejected&#x27;])){
+					params.state = optionalParams.state;
+				} else {
+					throw new Error(&#x27;incorrect value of state param&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.newState)){
+				if(inArray(optionalParams.newState.toLowerCase(), [&#x27;pending&#x27;,&#x27;moderated&#x27;,&#x27;rejected&#x27;])){
+					params.new_state = optionalParams.newState;
+				} else {
+					throw new Error(&#x27;incorrect value of newState param&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.limit)){
+				if(isNumber(optionalParams.limit)){
+					params.limit = optionalParams.limit;
+				} else {
+					throw new Error(&#x27;limit must be a number&#x27;);
+				}
+			}
+		}
+		
+		this.__super__.ignoreNextChange = true;
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+
+	/**
+	 *  Copies data with data_id. Copy has data_key cleared
+	 *
+	 *  @method Data.copy
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id or key
+	 *  @param {string / Array} dataId Data id or ids
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 *  @example
+		var s = SyncanoConnector.getInstance();
+		s.connect({instance:&#x27;&#x27;, api_key:&#x27;&#x27;});
+		s.Data.copy(projectId, &#x27;Default&#x27;, dataId, function(res){
+			console.log(&#x27;Copied data object:&#x27;, res);
+		});
+	 */
+	/** 
+	 *  @event syncano:data:copy
+	 */
+	Data.copy = function(projectId, collection, dataId, callback){
+		this.__super__.__checkProjectId(projectId);
+		
+		var method = &#x27;data.copy&#x27;;
+		var params = {
+			project_id: projectId,
+			data_ids: []
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		
+		if(!isset(dataId)){
+			throw new Error(&#x27;dataId must be set&#x27;);
+		}
+
+		if(isNumber(dataId)){
+			params.data_ids = [String(dataId)];
+		} else if(typeof dataId === &#x27;object&#x27;){
+			params.data_ids = [];
+			for(var i=0; i&lt;dataId.length; i++){
+				if(!isNumber(dataId[i])){
+					throw new Error(&#x27;dataId must be integer or array of integers&#x27;);
+				} else {
+					params.data_ids.push(String(dataId[i]));
+				}
+			}
+		} else {
+			throw new Error(&#x27;dataId must be integer or array of integers&#x27;);
+		}
+
+		this.__super__.__sendWithCallback(method, params, &#x27;data&#x27;, callback);
+	};
+
+
+	/**
+	 *  Adds additional parent to data with data_id. If remove_other is True, all other parents of specified Data Object will be removed.
+	 *
+	 *  @method Data.addParent 
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id or key
+	 *  @param {number} dataId Data Object id
+	 *  @param {number} parentId Parent id to add
+	 *  @param {boolean} [removeOther] If true, will remove all other parents. Default value: False
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:data:add_parent
+	 */
+	Data.addParent = function(projectId, collection, dataId, parentId, removeOther, callback){
+		this.__super__.__checkProjectId(projectId);
+		
+		var method = &#x27;data.add_parent&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		
+		if(isset(dataId) &amp;&amp; isNumber(dataId)){
+			params.data_id = dataId;
+		} else {
+			throw new Error(&#x27;dataId must be passed&#x27;);
+		}
+		
+		if(isset(parentId) &amp;&amp; isNumber(parentId)){
+			params.parent_id = parentId;
+		} else {
+			throw new Error(&#x27;parentId must be passed&#x27;);
+		}
+		
+		if(isset(removeOther) &amp;&amp; isBool(removeOther)){
+			params.remove_other = removeOther;
+		}
+		
+		this.__super__.ignoreNextNewRelation = true;
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+
+	/**
+	 *  Removes a parent (or parents) from data with data_id
+	 *
+	 *  @method Data.removeParent 
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id or key
+	 *  @param {number} dataId Data Object id
+	 *  @param {number} parentId Parent id to remove. If not specified, will remove all Data Object parents
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:data:remove_parent
+	 */
+	Data.removeParent = function(projectId, collection, dataId, parentId, callback){
+		this.__super__.__checkProjectId(projectId);
+		
+		var method = &#x27;data.remove_parent&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		
+		if(isset(dataId) &amp;&amp; isNumber(dataId)){
+			params.data_id = dataId;
+		} else {
+			throw new Error(&#x27;dataId must be passed&#x27;);
+		}
+
+		if(isset(parentId) &amp;&amp; isNumber(parentId)){
+			params.parent_id = parentId;
+		}
+		
+		this.__super__.ignoreNextDeleteRelation = true;
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+
+	/**
+	 *  Adds additional child to data with data_id. If remove_other is True, all other children of specified Data Object will be removed.
+	 *  Note: There is a limit of maximum 250 parents per Data Object, but there is no limit of children.
+	 *
+	 *  @method Data.addChild 
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id or key
+	 *  @param {number} dataId Data Object id
+	 *  @param {number} childId Child id to add
+	 *  @param {boolean} [removeOther] If true, will remove all other parents. Default value: False
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:data:add_child
+	 */
+	Data.addChild = function(projectId, collection, dataId, childId, removeOther, callback){
+		this.__super__.__checkProjectId(projectId);
+		
+		var method = &#x27;data.add_child&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		
+		if(isset(dataId) &amp;&amp; isNumber(dataId)){
+			params.data_id = dataId;
+		} else {
+			throw new Error(&#x27;dataId must be passed&#x27;);
+		}
+		
+		if(isset(childId) &amp;&amp; isNumber(childId)){
+			params.child_id = childId;
+		} else {
+			throw new Error(&#x27;childId must be passed&#x27;);
+		}
+		
+		if(isset(removeOther) &amp;&amp; isBool(removeOther)){
+			params.remove_other = removeOther;
+		}
+		
+		this.__super__.ignoreNextNewRelation = true;
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+
+	/**
+	 *  Removes a child (or children) from data with data_id.
+	 *
+	 *  @method Data.removeChild 
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id or key
+	 *  @param {number} dataId Data Object id
+	 *  @param {number} childId Child id to remove. If not specified, will remove all Data Object children
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:data:remove_child
+	 */
+	Data.removeChild = function(projectId, collection, dataId, childId, callback){
+		this.__super__.__checkProjectId(projectId);
+
+		var method = &#x27;data.remove_child&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+
+		if(isset(dataId) &amp;&amp; isNumber(dataId)){
+			params.data_id = dataId;
+		} else {
+			throw new Error(&#x27;dataId must be passed&#x27;);
+		}
+
+		if(isset(childId) &amp;&amp; isNumber(childId)){
+			params.child_id = childId;
+		}
+
+		this.__super__.ignoreNextDeleteRelation = true;
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+
+	/**
+	 *  Deletes Data Object. If no filters are specified, will process all Data Objects in defined collection(s) (up to defined limit).
+	 *
+	 *  @method Data.delete
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id or key
+	 *  @param {object} [optionalParams] Optional parameters:
+	 *  @param {number / Array} [optionalParams.dataIds] If specified, will filter by Data id or ids. Max 100 ids per request
+	 *  @param {string} [optionalParams.state] If specified, filter by Data state. Accepted values: Pending, Moderated, All. Default value: All
+	 *  @param {string / Array} [optionalParams.folders] If specified, filter by specified folder or folders. Max 100 values per request
+	 *  @param {string} [optionalParams.filter] TEXT - only data with text IMAGE - only data with an image
+	 *  @param {string} [optionalParams.byUser] If specified, filter by user name.
+	 *  @param {string} [optionalParams.limit] Number of Data Objects to process. Default and max value: 100.
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:data:delete
+	 */
+	Data.delete = function(projectId, collection, optionalParams, callback){
+		this.__super__.__checkProjectId(projectId);
+
+		var method = &#x27;data.delete&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+
+		if(isset(optionalParams)){
+			/**
+			 *  these optionalParams are just copied to params array if they are set
+			 */
+			var justSetParams = [&#x27;dataIds&#x27;, &#x27;folders&#x27;, &#x27;byUser&#x27;];
+			for(var i=0; i&lt;justSetParams.length; i++){
+				var jsParam = justSetParams[i];
+				if(isset(optionalParams[jsParam])){
+					params[uncamelize(jsParam)] = optionalParams[jsParam];
+				}
+			}
+			
+			if(isset(optionalParams.limit)){
+				if(isNumber(optionalParams.limit)){
+					params.limit = optionalParams.limit;
+				} else {
+					throw new Error(&#x27;limit must be a number&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.state)){
+				if(inArray(optionalParams.state.toLowerCase(), [&#x27;pending&#x27;,&#x27;moderated&#x27;,&#x27;rejected&#x27;,&#x27;all&#x27;])){
+					params.state = optionalParams.state;
+				} else {
+					throw new Error(&#x27;incorrect value of state param&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.filter)){
+				if(inArray(optionalParams.filter.toLowerCase(), [&#x27;text&#x27;, &#x27;image&#x27;])){
+					params.filter = optionalParams.filter;
+				} else {
+					throw new Error(&#x27;incorrect value of filter param - only &quot;text&quot; and &quot;image&quot; are allowed&#x27;);
+				}
+			}
+		}
+
+		this.__super__.ignoreNextDelete = true;
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+
+	/**
+	 *  Counts data of specified criteria
+	 *
+	 *  @method Data.count
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id or key
+	 *  @param {object} [optionalParams] Optional parameters:
+	 *  @param {string} [optionalParams.state] State of data to be counted. Accepted values: Pending, Moderated, All. Default value: All
+	 *  @param {string / Array} [optionalParams.folders] Folder name(s) that data will be counted from. If not presents counts data from across all collection folders. Max 100 values per request
+	 *  @param {string} [optionalParams.filter] TEXT - only data with text IMAGE - only data with an image
+	 *  @param {string} [optionalParams.byUser] If specified, filter by user name.
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:data:count
+	 */
+	Data.count = function(projectId, collection, optionalParams, callback){
+		this.__super__.__checkProjectId(projectId);
+
+		var method = &#x27;data.count&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+
+		if(isset(optionalParams)){
+			/**
+			 *  these optionalParams are just copied to params array if they are set
+			 */
+			var justSetParams = [&#x27;folders&#x27;, &#x27;byUser&#x27;];
+			for(var i=0; i&lt;justSetParams.length; i++){
+				var jsParam = justSetParams[i];
+				if(isset(optionalParams[jsParam])){
+					params[uncamelize(jsParam)] = optionalParams[jsParam];
+				}
+			}
+
+			if(isset(optionalParams.state)){
+				if(inArray(optionalParams.state.toLowerCase(), [&#x27;pending&#x27;,&#x27;moderated&#x27;,&#x27;rejected&#x27;,&#x27;all&#x27;])){
+					params.state = optionalParams.state;
+				} else {
+					throw new Error(&#x27;incorrect value of state param&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.filter)){
+				if(inArray(optionalParams.filter.toLowerCase(), [&#x27;text&#x27;, &#x27;image&#x27;])){
+					params.filter = optionalParams.filter;
+				} else {
+					throw new Error(&#x27;incorrect value of filter param - only &quot;text&quot; and &quot;image&quot; are allowed&#x27;);
+				}
+			}
+		}
+		
+		this.__super__.__sendWithCallback(method, params, &#x27;count&#x27;, callback);
+	};
+
+	var BigData = {};
+
+	BigData.__internalDataGet = function(res, limit, projectId, collectionId, params, callback){
+		this.__super__.Data.get(projectId, collectionId, params, function(part){
+			var pLen = part.length;
+			res = res.concat(part);
+			if(pLen === 0 || pLen !== limit){
+				callback(res);
+			} else {
+				params.sinceId = parseInt(part[pLen - 1].id, 10);
+				this.__internalDataGet(res, limit, projectId, collectionId, params, callback);
+			}
+		}.bind(this));
+	};
+
+	BigData.get = function(projectId, collectionId, params, callback){
+		var res = [];
+		var limit = 100;
+		if(typeof params.limit !== &#x27;undefined&#x27;){
+			limit = params.limit;
+		}
+		this.__internalDataGet(res, limit, projectId, collectionId, params, function(res){
+			callback(res);
+		});
+	};
+
+	var Tree = {};
+
+	Tree.__internalReadLevel = function(projectId, collection, params, ids, callback){
+		this.__super__.BigData.get(projectId, collection, params, function(levelData){
+			var len = levelData.length;
+			var parentIds = [];
+			for(var i=0; i&lt;len; i++){
+				var item = levelData[i];
+				var id = item.id | 0;
+				ids.push(id);
+				if(item.children_count &gt; 0){
+					parentIds.push(id);
+				}
+			}
+			if(parentIds.length &gt; 0){
+				params.parentIds = parentIds;
+				this.__internalReadLevel(projectId, collection, params, ids, callback);
+			} else {
+				callback(ids);
+			}
+		}.bind(this));
+	};
+
+	Tree.__internalRemoveIds = function(projectId, collection, ids, folders, callback){
+		var packSize = 100;
+		var idsPack = ids.splice(0, packSize);
+
+		var params = {
+			dataIds: idsPack,
+			folders: folders
+		};
+		this.__super__.Data.delete(projectId, collection, params, function(){
+			if(ids.length === 0){
+				callback();
+			} else {
+				this.__internalRemoveIds(projectId, collection, ids, folders, callback);
+			}
+		}.bind(this));
+	};
+
+
+	Tree.delete = function(projectId, collection, dataId, folders, callback){
+		var params = {
+			parentIds: dataId,
+			folders: folders,
+			includeChildren: false
+		};
+		var ids = [dataId];
+		this.__internalReadLevel(projectId, collection, params, ids, function(ids){
+			this.__internalRemoveIds(projectId, collection, ids, folders, callback);
+		}.bind(this));
+	};
+
+
+	/*
+		odczytaj wszystkie rekordy ze wskazanych folderów
+		zapisz je w tablicy
+		zapamiętaj wszystkie identyfikatory rekordów mających children_count &gt; 0
+	*/
+	Tree.get = function(projectId, collection, folders, callback){
+		var params = {
+			folders: folders,
+			includeChildren: false
+		};
+		var out = [];
+		var parents = [];
+		var relations = {};
+
+		var internalReadChildren = function(){
+			console.log(&#x27;Przetwarzam, liczba węzłów:&#x27;, parents.length);
+			var parent = parents.shift();
+			relations[parent] = [];
+			var params = {
+				includeChildren: false,
+				parentIds: parent
+			};
+			this.__super__.BigData.get(projectId, collection, params, function(data){
+				// w data mamy wszystkie dzieci zadanego węzła
+				for(var i=0; i&lt;data.length; i++){
+					var rec = data[i];
+					rec.id = rec.id | 0;
+
+					// zapamiętaj relację
+					relations[parent].push(rec.id);
+					// zapamiętaj data object
+					out.push(rec);
+					// jeśli ma dzieci, dopisz go do listy
+					if(rec.children_count &gt; 0){
+						parents.push(rec.id);
+					}
+				}
+				
+				// przetworzono wszystkie dzieci. Zdecyduj, czy przetwarzamy dalej
+				if(parents.length === 0){
+					callback(out, relations);
+				} else {
+					internalReadChildren();
+				}
+			}.bind(this));
+		}.bind(this);
+
+		this.__super__.BigData.get(projectId, collection, params, function(data){
+			for(var i=0; i&lt;data.length; i++){
+				var rec = data[i];
+				rec.id = rec.id | 0;
+				out.push(rec);
+				if(rec.children_count &gt; 0){
+					parents.push(rec.id);
+				}
+			}
+			internalReadChildren();
+		});
+	};
+
+
+
+
+
+
+
+
+
+	/**
+	 * Methods for user management 
+	 */
+	var User = {};
+
+	/**
+	 *
+	 */
+	User.login = function(userName, password, instanceName, apiKey, callback){
+		var method = &#x27;user.login&#x27;;
+		var params = {};
+
+		if(type(userName) === &#x27;object&#x27; &amp;&amp; (isFunction(password) || isPlainObject(password))){
+			var tempParams = userName;
+			callback = password;
+			apiKey = tempParams.api_key;
+			userName = tempParams.user_name;
+			password = tempParams.password;
+			instanceName = tempParams.instance;
+		}
+
+		if(isset(userName)){
+			params.user_name = userName;
+		} else {
+			throw new Error(&#x27;Please provide user name&#x27;);
+		}
+		if(isset(password)){
+			params.password = password;
+		} else {
+			throw new Error(&#x27;Please provide password&#x27;);
+		}
+		if(isset(instanceName)){
+			params.instance = instanceName;
+		}
+		if(isset(apiKey)){
+			params.apiKey = apiKey;
+		}
+
+		var success = function(){};
+		var error = function(msg){
+			this.__super__.trigger(&#x27;syncano:error&#x27;, msg);
+		}.bind(this);
+
+		if(typeof callback === &#x27;function&#x27;){
+			success = callback;
+		} else if(typeof callback === &#x27;object&#x27;){
+			if(typeof callback.success === &#x27;function&#x27;){
+				success = callback.success;
+			}
+			if(typeof callback.error === &#x27;function&#x27;){
+				error = callback.error;
+			}
+		}
+
+		this.__super__.__sendAjaxRequest(method, params, &#x27;user&#x27;, function(result){
+			if(typeof result.auth_key !== &#x27;undefined&#x27; &amp;&amp; result.result === &#x27;OK&#x27;){
+				this.auth_key = result.auth_key;
+				success(result);
+			} else if(result.result === &#x27;NOK&#x27;){
+				error(result.error);
+			} else {
+				success(result);
+			}
+		}.bind(this.__super__));
+	};
+
+
+	/**
+	 *  Creates new user
+	 *  
+	 *  @method User.new
+	 *  @param {string} name User&#x27;s name
+	 *  @param {string} [nick] User&#x27;s nick
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:user:new
+	 */
+	User.new = function(name, nick, callback){
+		var method = &#x27;user.new&#x27;;
+		var params = {};
+		if(isset(name)){
+			params.user_name = name;
+		} else {
+			throw new Error(&#x27;user must have a name&#x27;);
+		}
+		if(isset(nick)){
+			params.nick = nick;
+		}
+		
+		this.__super__.__sendWithCallback(method, params, &#x27;user&#x27;, callback);
+	};
+
+
+	/**
+	 *  Get all users from within instance. To paginate and to get more data, use since_id or since_time parameter.
+	 *
+	 *  @method User.getAll
+	 *  @param {number} sinceId If specified, will only return users with id higher than since_id (newer).
+	 *  @param {number} limit Number of users to be returned. Default and max value: 100
+	 */
+	/** 
+	 *  @event syncano:user:get_all
+	 */
+	User.getAll = function(sinceId, limit, callback){
+		var method = &#x27;user.get_all&#x27;;
+		
+		if(typeof arguments[0] === &#x27;function&#x27;){
+			callback = arguments[0];
+			sinceId = undefined;
+			limit = undefined;
+		}
+		
+		var params = {};
+		if(isset(sinceId)){
+			if(isNumber(sinceId)){
+				params.since_id = sinceId;
+			} else {
+				throw new Error(&#x27;sinceId must be a number&#x27;);
+			}
+		}
+		
+		if(isset(limit)){
+			if(isNumber(limit)){
+				params.limit = limit;
+			} else {
+				throw new Error(&#x27;limit must be a number&#x27;);
+			}
+		}
+		
+		this.__super__.__sendWithCallback(method, params, &#x27;user&#x27;, callback);
+	};
+
+
+	/**
+	 *  Get users of specified criteria that are associated with Data Objects within specified collection 
+	 *
+	 *  @method User.count
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id or key
+	 *  @param {object} [optionalParams] Optional parameters:
+	 *  @param {string} [optionalParams.state] Return only users whose Data Objects are in specified state. Accepted values: Pending, Moderated, Rejected, All. Default value: All
+	 *  @param {string / Array} [optionalParams.folders] Folder name that data will be returned from. Max 100 values per request. If not present returns data from across all collection folders
+	 *  @param {string} [optionalParams.filter] TEXT - only return users that sent data with text IMAGE - only return users that sent data with an image
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:user:get
+	 */
+	User.get = function(projectId, collection, optionalParams, callback){
+		this.__super__.__checkProjectId(projectId);
+
+		var method = &#x27;user.get&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+
+		if(isset(optionalParams)){
+			if(isset(optionalParams.folders)){
+				params.folders = optionalParams.folders;
+			}
+			
+			if(isset(optionalParams.state)){
+				if(inArray(optionalParams.state.toLowerCase(), [&#x27;pending&#x27;,&#x27;moderated&#x27;,&#x27;rejected&#x27;,&#x27;all&#x27;])){
+					params.state = optionalParams.state;
+				} else {
+					throw new Error(&#x27;incorrect value of state param&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.filter)){
+				if(inArray(optionalParams.filter.toLowerCase(), [&#x27;text&#x27;, &#x27;image&#x27;])){
+					params.filter = optionalParams.filter;
+				} else {
+					throw new Error(&#x27;incorrect value of filter param - only &quot;text&quot; and &quot;image&quot; are allowed&#x27;);
+				}
+			}
+		}
+		
+		this.__super__.__sendWithCallback(method, params, &#x27;user&#x27;, callback);
+	};
+
+
+	/**
+	 *  Get one user
+	 *
+	 *  @method User.getOne
+	 *  @param {string / Number} user User id or name
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:user:get_one
+	 */
+	User.getOne = function(user, callback){
+		var method = &#x27;user.get_one&#x27;;
+		var params = {};
+		if(isset(user)){
+			if(typeof user === &#x27;number&#x27;){
+				params.user_id = user;
+			} else if(typeof user === &#x27;string&#x27;){
+				params.user_name = user;
+			} else {
+				throw new Error(&#x27;incorrect type of user param&#x27;);
+			}
+		} else {
+			throw new Error(&#x27;user id or name must be passed&#x27;);
+		}
+		this.__super__.__sendWithCallback(method, params, &#x27;user&#x27;, callback);
+	};
+
+
+	/**
+	 *  Updates specified user
+	 *
+	 *  @method User.update
+	 *  @param {string / Number} user User id or name
+	 *  @param {string} [nick] User&#x27;s nick
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:user:update
+	 */
+	User.update = function(user, nick, callback){
+		var method = &#x27;user.update&#x27;;
+		var params = {};
+		if(isset(user)){
+			if(typeof user === &#x27;number&#x27;){
+				params.user_id = user;
+			} else if(typeof user === &#x27;string&#x27;){
+				params.user_name = user;
+			} else {
+				throw new Error(&#x27;incorrect type of user param&#x27;);
+			}
+		} else {
+			throw new Error(&#x27;user id or name must be passed&#x27;);
+		}
+		
+		if(isset(nick)){
+			if(typeof nick === &#x27;string&#x27;){
+				params.nick = nick;
+			} else {
+				throw new Error(&#x27;nick must be given&#x27;);
+			}
+		}
+		
+		this.__super__.__sendWithCallback(method, params, &#x27;user&#x27;, callback);
+	};
+
+
+	/**
+	 *  Count users of specified criteria 
+	 *
+	 *  @method User.count
+	 *  @param {object} [optionalParams] Optional parameters:
+	 *  @param {number} [optionalParams.projectId] Project id. If defined, will only count users that has a Data Object associated within project.
+	 *  @param {string / Number} [optionalParams.collection] Collection id or key defining collection. If defined, will only count users that has a Data Object associated within collection
+	 *  @param {string} [optionalParams.state] Return only users whose Data Objects are in specified state. Accepted values: Pending, Moderated, All. Default value: All
+	 *  @param {string / Array} [optionalParams.folders] Folder name that data will be returned from. Max 100 values per request. If not present returns data from across all collection folders
+	 *  @param {string} [optionalParams.filter] TEXT - only return users that sent data with text IMAGE - only return users that sent data with an image
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:user:count
+	 */
+	User.count = function(optionalParams, callback){
+
+		var method = &#x27;user.count&#x27;;
+		var params = {};
+		
+		if(arguments.length === 1){
+			callback = arguments[0];
+			optionalParams = undefined;
+		}
+
+		if(isset(optionalParams)){
+			if(isset(optionalParams.projectId)){
+				if(isNumber(optionalParams.projectId)){
+					params.project_id = optionalParams.projectId;
+				}
+			}
+
+			if(isset(optionalParams.collection)){
+				if(typeof optionalParams.collection === &#x27;string&#x27;){
+					params.collection_key = optionalParams.collection;
+				} else if(typeof optionalParams.collection === &#x27;number&#x27;){
+					params.collection_id = optionalParams.collection;
+				} else {
+					throw new Error(&#x27;collection identifier must be a string (key) or number (id)&#x27;);
+				}
+			}
+
+			if(isset(optionalParams.folders)){
+				params.folders = optionalParams.folders;
+			}
+
+			if(isset(optionalParams.state)){
+				if(inArray(optionalParams.state.toLowerCase(), [&#x27;pending&#x27;,&#x27;moderated&#x27;,&#x27;rejected&#x27;,&#x27;all&#x27;])){
+					params.state = optionalParams.state;
+				} else {
+					throw new Error(&#x27;incorrect value of state param&#x27;);
+				}
+			}
+
+			if(isset(optionalParams.filter)){
+				if(inArray(optionalParams.filter.toLowerCase(), [&#x27;text&#x27;, &#x27;image&#x27;])){
+					params.filter = optionalParams.filter;
+				} else {
+					throw new Error(&#x27;incorrect value of filter param - only &quot;text&quot; and &quot;image&quot; are allowed&#x27;);
+				}
+			}
+		}
+
+		this.__super__.__sendWithCallback(method, params, &#x27;count&#x27;, callback);
+	};
+
+
+	/**
+	 *  Deletes (permanently) specified user and all associated data
+	 *
+	 *  @method User.delete
+	 *  @param {string / Number} user User id or name
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:user:delete
+	 */
+	User.delete = function(user, callback){
+		var method = &#x27;user.delete&#x27;;
+		var params = {};
+		if(typeof user === &#x27;number&#x27;){
+			params.user_id = user;
+		} else if(typeof user === &#x27;string&#x27;){
+			params.user_name = user;
+		} else {
+			throw new Error(&#x27;user identifier must be given&#x27;);
+		}
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+	/**
+	 * Subscriptions handling methods 
+	 */
+	var Subscription = {};
+
+
+	/**
+	 *  Subscribe to project level notifications
+	 *
+	 *  @method Subscription.subscribeProject
+	 *  @param {number} projectId Project id
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:subscription:subscribe_project
+	 */
+	Subscription.subscribeProject = function(projectId, callback){
+		var method = &#x27;subscription.subscribe_project&#x27;;
+		if(!isset(projectId) || !isNumber(projectId)){
+			throw new Error(&#x27;projectId must be defined&#x27;);
+		}
+		this.__super__.__sendWithCallback(method, {project_id: projectId}, null, callback);
+	};
+
+
+	/**
+	 *  Unsubscribe from project
+	 *
+	 *  @method Subscription.unsubscribeProject
+	 *  @param {number} projectId Project id
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:subscription:unsubscribe_project
+	 */
+	Subscription.unsubscribeProject = function(projectId, callback){
+		var method = &#x27;subscription.unsubscribe_project&#x27;;
+		if(!isset(projectId) || !isNumber(projectId)){
+			throw new Error(&#x27;projectId must be defined&#x27;);
+		}
+		this.__super__.__sendWithCallback(method, {project_id: projectId}, null, callback);
+	};
+
+
+	/**
+	 *  Subscribe to collection level notifications within specified project 
+	 * 
+	 *  @method Subscription.subscribeCollection
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id (number) or key (string)
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:subscription:subscribe_collection
+	 */
+	Subscription.subscribeCollection = function(projectId, collection, callback){
+		this.__super__.__checkProjectId(projectId);
+
+		var method = &#x27;subscription.subscribe_collection&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+
+	/**
+	 *  Unsubscribe from collection within specified project 
+	 *
+	 *  @method Subscription.unsubscribeCollection
+	 *  @param {number} projectId Project id
+	 *  @param {string / Number} collection Either collection id (number) or key (string)
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:subscription:unsubscribe_collection
+	 */
+	Subscription.unsubscribeCollection = function(projectId, collection, callback){
+		this.__super__.__checkProjectId(projectId);
+
+		var method = &#x27;subscription.unsubscribe_collection&#x27;;
+		var params = {
+			project_id: projectId
+		};
+		params = this.__super__.__addCollectionIdentifier(params, collection);
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+
+	/**
+	 *  Get API client subscriptions
+	 * 
+	 *  @method Subscription.get
+	 *  @param {string} [apiId] API client id defining client. If not present, gets subscriptions for current client
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:subscription:get
+	 */
+	Subscription.get = function(apiId, callback){
+		if(typeof arguments[0] === &#x27;function&#x27;){
+			callback = arguments[0];
+			apiId = undefined;
+		}
+
+		var method = &#x27;subscription.get&#x27;;
+		var params = {};
+		if(isset(apiId)){
+			params.api_client_id = apiId;
+		}
+		this.__super__.__sendWithCallback(method, params, &#x27;subscription&#x27;, callback);
+	};
+
+	var Connection = {};
+
+	/**
+	 *  Get currently connected API client connections up to limit (max 100).
+	 *
+	 *  @method Connection.get
+	 *  @param {object} [optionalParams] Optional parameters:
+	 *  @param {number} [optionalParams.apiClientId] API client id. If not specified, will get connections for current API client
+	 *  @param {string} [optionalParams.name] If specified, will only return connections of specified name.
+	 *  @param {number} [optionalParams.sinceId] If specified, will only return data with id higher than since_id (newer).
+	 *  @param {number} [optionalParams.limit] Maximum number of API client connections to get. Default and max: 100
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:connection:get
+	 */
+	Connection.get = function(optionalParams, callback){
+		if(typeof arguments[0] === &#x27;function&#x27;){
+			callback = arguments[0];
+			optionalParams = undefined;
+		}
+		var method = &#x27;connection.get&#x27;;
+		var params = {};
+		
+		if(isset(optionalParams)){
+
+			var numericParams = [&#x27;apiClientId&#x27;, &#x27;sinceId&#x27;, &#x27;limit&#x27;];
+			for(var i=0; i&lt;numericParams.length; i++){
+				var numParam = numericParams[i];
+				if(isset(optionalParams[numParam])){
+					if(isNumber(optionalParams[numParam])){
+						params[uncamelize(numParam)] = optionalParams[numParam];
+					} else {
+						throw new Error(method + &#x27;: &#x27; + numParam + &#x27; must be a number&#x27;);
+					}
+				}
+			}
+			
+			if(isset(optionalParams.name)){
+				if(typeof optionalParams.name === &#x27;string&#x27;){
+					params.name = optionalParams.name;
+				} else {
+					throw new Error(method + &#x27;: name must be a string&#x27;);
+				}
+			}
+		}
+		this.__super__.__sendWithCallback(method, params, &#x27;connection&#x27;, callback);
+	};
+
+
+	/**
+	 *  Updates specified API client connection info.
+	 *
+	 *  @method Connection.update
+	 *  @param {string} uuid Identity UUID
+	 *  @param {object} [optionalParams] Optional parameters:
+	 *  @param {number} [optionalParams.apiClientId] API client id. If not specified, will query current API client connections
+	 *  @param {string} [optionalParams.name] New connection name to set.
+	 *  @param {string} [optionalParams.state] New state to set
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:connection:update
+	 */
+	Connection.update = function(uuid, optionalParams, callback){
+		if(typeof arguments[1] === &#x27;function&#x27;){
+			callback = arguments[1];
+			optionalParams = undefined;
+		}
+		var method = &#x27;connection.update&#x27;;
+		var params = {};
+		
+		if(!isset(uuid) || typeof uuid !== &#x27;string&#x27;){
+			throw new Error(method + &#x27;: uuid parameter is required&#x27;);
+		} else {
+			params.uuid = uuid;
+		}
+		
+		if(isset(optionalParams)){
+			
+			if(isset(optionalParams.apiClientId)){
+				if(isNumber(optionalParams.apiClientId)){
+					params.api_client_id = optionalParams.apiClientId;
+				} else {
+					throw new Error(method + &#x27;: apiClientId must be a number&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.name)){
+				if(typeof optionalParams.name === &#x27;string&#x27;){
+					params.name = optionalParams.name;
+				} else {
+					throw new Error(method + &#x27;: name must be a string&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.state)){
+				if(typeof optionalParams.state === &#x27;string&#x27;){
+					params.state = optionalParams.state;
+				} else {
+					throw new Error(method + &#x27;: state must be a string&#x27;);
+				}
+			}
+		}
+		
+		this.__super__.__sendWithCallback(method, params, &#x27;connection&#x27;, callback);
+	};
+
+	var Notification = {};
+
+
+	/**
+	 *  Sends custom notification to API client through Sync Server. If uuid is specified - will only send to this specific instance.
+	 *
+	 *  @method Notification.send
+	 *  @param {object} [optionalParams] Optional parameters:
+	 *  @param {number} [optionalParams.apiClientId] Destination API client id. If not specified, will use current API client
+	 *  @param {string} [optionalParams.uuid] UUID of client identity. If not specified, will send a broadcast to all API client identities within current instance
+	 *  @param {object} [optionalParams.data] Additional key-value parameters to be sent.
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:notification:send
+	 */
+	Notification.send = function(optionalParams, callback){
+		if(typeof arguments[0] === &#x27;function&#x27;){
+			callback = arguments[0];
+			optionalParams = undefined;
+		}
+		var method = &#x27;notification.send&#x27;;
+		var params = {};
+		
+		if(isset(optionalParams)){
+			if(isset(optionalParams.apiClientId)){
+				if(isNumber(optionalParams.apiClientId)){
+					params.api_client_id = optionalParams.apiClientId;
+				} else {
+					throw new Error(method + &#x27;: apiClientId must be a number&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.uuid)){
+				if(typeof optionalParams.uuid === &#x27;string&#x27;){
+					params.uuid = optionalParams.uuid;
+				} else {
+					throw new Error(method + &#x27;: uuid must be a string&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.data)){
+				for(var key in optionalParams.data){
+					if(optionalParams.data.hasOwnProperty(key)){
+						var val = optionalParams.data[key];
+						if(inArray(key, [&#x27;apiClientId&#x27;, &#x27;api_client_id&#x27;, &#x27;uuid&#x27;])){
+							throw new Error(method + &#x27;: Cannot send custom param named &#x27; + key);
+						}
+						params[key] = val;
+					}
+				}
+			}
+		}
+		
+		this.__super__.__sendWithCallback(method, params, null, callback);
+	};
+
+
+	/**
+	 *  Get history of notifications of specified API client. History items are stored for 24 hours
+	 *
+	 *  @method Notification.getHistory
+	 *  @param {object} [optionalParams] Optional parameters:
+	 *  @param {number} [optionalParams.apiClientId] Client id. If not specified, will return history of current API client.
+	 *  @param {number} [optionalParams.sinceId] If specified, will only return data with id higher than since_id (newer).
+	 *  @param {string} [optionalParams.sinceTime] String with date. If specified, will only return data with timestamp after specified value (newer).
+	 *  @param {number} [optionalParams.limit] Maximum number of history items to get. Default and max: 100
+	 *  @param {string} [optionalParams.order] Sets order of data that will be returned. ASC (default) - oldest first, DESC - newest first
+	 *  @param {function} [callback] Function to be called when successful response comes
+	 */
+	/** 
+	 *  @event syncano:notification:get_history
+	 */
+	Notification.getHistory = function(optionalParams, callback){
+		if(typeof arguments[0] === &#x27;function&#x27;){
+			callback = arguments[0];
+			optionalParams = undefined;
+		}
+		var method = &#x27;notification.get_history&#x27;;
+		var params = {};
+		
+		if(isset(optionalParams)){
+			if(isset(optionalParams.apiClientId)){
+				if(isNumber(optionalParams.apiClientId)){
+					params.api_client_id = optionalParams.apiClientId;
+				} else {
+					throw new Error(method + &#x27;: apiClientId must be a number&#x27;);
+				}
+			}
+			
+			/**
+			 *  these optionalParams have to be numbers - so check if they are set and are proper numbers. If not - throw an Error
+			 */
+			var numericParams = [&#x27;limit&#x27;, &#x27;sinceId&#x27;];
+			for(var i=0; i&lt;numericParams.length; i++){
+				var numParam = numericParams[i];
+				if(isset(optionalParams[numParam])){
+					if(isNumber(optionalParams[numParam])){
+						params[uncamelize(numParam)] = optionalParams[numParam];
+					} else {
+						throw new Error(method + &#x27;: &#x27; + numParam + &#x27; must be a number&#x27;);
+					}
+				}
+			}
+			
+			if(isset(optionalParams.sinceTime)){
+				if(isDate(optionalParams.sinceTime)){
+					params.since_time = optionalParams.sinceTime;
+				} else {
+					throw new Error(method + &#x27;: sinceTime must be a proper date string&#x27;);
+				}
+			}
+			
+			if(isset(optionalParams.order)){
+				if(typeof optionalParams.order.toLowerCase !== &#x27;undefined&#x27; &amp;&amp; inArray(optionalParams.order.toLowerCase(), [&#x27;asc&#x27;, &#x27;desc&#x27;])){
+					params.order = optionalParams.order;
+				} else {
+					throw new Error(method + &#x27;: incorrect value of order param - only &quot;asc&quot; and &quot;desc&quot; are allowed&#x27;);
+				}
+			}
+		}
+		
+		this.__super__.__sendWithCallback(method, params, &#x27;history&#x27;, callback);
+	};
+
+	/*global XMLHttpRequest*/
+	/**
+	 *  
+	 */
+	var states = {
+		DISCONNECTED: 1,
+		CONNECTED: 2,
+		AUTHORIZED: 3
+	};
+
+
+	/**
+	 * Real time high level library for Syncano (www.syncano.com)
+	 *
+	 * @class Syncano
+	 * @constructor
+	 */
+	var Syncano = function(){
+		this.socketURL = &#x27;https://api.syncano.com/ws&#x27;;
+		this.socket = null;
+		this.status = states.DISCONNECTED;
+		this.requestId = 1;
+		this.uuid = null;
+
+		this.instance = null;
+		this.apiKey = null;
+
+		this.requestInProgress = false;
+
+		/**
+			this flags are set by Data.new, Data.addChild, Data.addParent methods
+			when we create new data object in syncano, we still get notification from the backend that new data has been created
+			we already know that (cause we&#x27;ve created it!), so we have to ignore message
+		 */
+		this.ignoreNextNew = false;
+		this.ignoreNextNewRelation = false;
+		this.ignoreNextDelete = false;
+		this.ignoreNextDeleteRelation = false;
+		this.ignoreNextChange = false;
+		
+		this.VERSION = &#x27;3.1.0beta&#x27;;
+		
+		/**
+		 *  queue for messages which could not be sent because of no connection 
+		 */
+		this.requestsQueue = [];
+
+		this.connectionType = &#x27;socket&#x27;;
+		
+		/**
+		 *  in this list we will keep arrays of [action, callback] for every sent message, so we will be able to run callback function
+		 *  when answer to message arrives. The list is indexed with message_id attribute
+		 */
+		this.waitingForResponse = {};
+		
+		/**
+		 *  High-level function mixins
+		 */
+		this.Project = Project;
+		this.Project.__super__ = this;
+		this.Collection = Collection;
+		this.Collection.__super__ = this;
+		this.Folder = Folder;
+		this.Folder.__super__ = this;
+		this.Data = Data;
+		this.Data.__super__ = this;
+		this.BigData = BigData;
+		this.BigData.__super__ = this;
+		this.Tree = Tree;
+		this.Tree.__super__ = this;
+		this.User = User;
+		this.User.__super__ = this;
+		this.Subscription = Subscription;
+		this.Subscription.__super__ = this;
+		this.Connection = Connection;
+		this.Connection.__super__ = this;
+		this.Notification = Notification;
+		this.Notification.__super__ = this;
+	};
+
+
+	/**
+	 *  add PubSub mixin
+	 */
+	Syncano.prototype = extend(Syncano.prototype, PubSub);
+
+
+	/**
+	 *  Establishes connecion to the server and sends authorization request.
+	 *  
+	 *  @method connect
+	 *  @param {object} params Connection parameters {instance, api_key, optional timezone}. If any of them is not defined, error is thrown
+	 *  @param {function} callback Optional callback to be called after successful connection and authorization.
+	 */
+	Syncano.prototype.connect = function(params, callback){
+		if(typeof params === &#x27;undefined&#x27; || typeof params.api_key === &#x27;undefined&#x27; || typeof params.instance === &#x27;undefined&#x27;){
+			throw new Error(&#x27;syncano.connect requires instance name and api_key&#x27;);
+		}
+
+		this.instance = params.instance;
+		this.apiKey = params.api_key;
+
+		if(typeof root.SockJS === &#x27;undefined&#x27;){
+			this.connectionType = &#x27;ajax&#x27;;
+		}
+		if(typeof params.type !== &#x27;undefined&#x27;){
+			this.connectionType = params.type;
+		}
+
+		this.connectionParams = params;
+		if(this.auth_key){
+			this.connectionParams.auth_key = this.auth_key;
+		}
+
+
+		if(this.status !== states.DISCONNECTED){
+			this.reconnectOnSocketClose = true;
+			return;
+		}
+
+		if(typeof callback !== &#x27;undefined&#x27;){
+			this.waitingForResponse.auth = [&#x27;auth&#x27;, callback];
+		}
+
+		if(this.connectionType === &#x27;socket&#x27;){
+			this.socket = new root.SockJS(this.socketURL);
+			this.socket.onopen = this.onSocketOpen.bind(this);
+			this.socket.onclose = this.onSocketClose.bind(this);
+			this.socket.onmessage = this.onMessage.bind(this);
+		} else {
+			if(typeof callback === &#x27;function&#x27;){
+				callback();
+			}
+		}
+	};
+
+
+	/**
+	 *  Internal method called after the socket is open. Sends authorization request - instance, api_key and (optional) timezone 
+	 *  defined in this.connectionParams.
+	 *
+	 *  @method onSocketOpen
+	 */
+	Syncano.prototype.onSocketOpen = function(){
+		this.status = states.CONNECTED;
+		var obj = {
+			instance: this.connectionParams.instance,
+			api_key: this.connectionParams.api_key,
+			&#x27;user-agent&#x27;: &#x27;syncano-js-3.1beta&#x27;
+		};
+		this.socketSend(obj);
+	};
+
+
+	/**
+	 *  Internal method called automatically when socket is closed. Clears SockJS instance, changes state to DISCONNECTED. If there was
+	 *  waiting request to reconnect, handles reconnection with the same params.
+	 *
+	 *  @method onSocketClose
+	 */
+	Syncano.prototype.onSocketClose = function(){
+		this.status = states.DISCONNECTED;
+		this.socket = null;
+		if(this.reconnectOnSocketClose === true){
+			this.reconnectOnSocketClose = false;
+			this.connect(this.connectionParams);
+		}
+	};
+
+
+	/**
+	 *  Method called every time the message is received. Message is passed as e.data
+	 *  If there was an error, e.data.result is &#x27;NOK&#x27; (not ok), otherwise e.data has response data.
+	 * 
+	 *  @method onMessage
+	 *  @param {object} e event object
+	 */
+	/** 
+	 *  When server cannot process request (result === NOK)
+	 *  @event syncano:error
+	 */
+	/** 
+	 *  When authorization failed
+	 *  @event syncano:auth:error
+	 */
+	/** 
+	 *  When response to message sent comes
+	 *  @event syncano:received
+	 */
+	Syncano.prototype.onMessage = function(e){
+		var data = JSON.parse(e.data);
+		
+		if(data.result === &#x27;NOK&#x27;){
+			var messageId = (data.type === &#x27;auth&#x27;) ? &#x27;auth&#x27; : data.message_id;
+			var errMsg = data.error || data.data.error;
+
+			if(typeof messageId !== &#x27;undefined&#x27; &amp;&amp; typeof this.waitingForResponse[messageId] !== &#x27;undefined&#x27; &amp;&amp; typeof this.waitingForResponse[messageId][1] === &#x27;object&#x27; &amp;&amp; typeof this.waitingForResponse[messageId][1].error === &#x27;function&#x27;){
+				this.waitingForResponse[messageId][1].error(errMsg);
+			} else {
+				this.trigger(&#x27;syncano:error&#x27;, errMsg);
+			}
+			if(data.type === &#x27;auth&#x27;){
+				this.socket.close();
+				this.trigger(&#x27;syncano:auth:error&#x27;);
+			} else {
+				this.requestInProgress = false;
+				this.sendQueue();
+			}
+			return;
+		}
+		
+		switch(data.type){
+		case &#x27;auth&#x27;:
+			this.parseAuthorizationResponse(data);
+			break;
+			
+		case &#x27;callresponse&#x27;:
+			if(this.status === states.AUTHORIZED){
+				this.requestInProgress = false;
+				this.sendQueue();
+			}
+			this.parseCallResponse(data);
+			break;
+			
+		case &#x27;message&#x27;:
+			this.parseMessageNotifier(data);
+			break;
+			
+		case &#x27;new&#x27;:
+			if(data.object === &#x27;data&#x27;){
+				this.parseNewRecordNotifier(data);
+			} else if(data.object === &#x27;datarelation&#x27;){
+				this.parseNewRelationNotifier(data);
+			}
+			break;
+			
+		case &#x27;change&#x27;:
+			this.parseChangeRecordNotifier(data);
+			break;
+			
+		case &#x27;delete&#x27;:
+			if(data.object === &#x27;data&#x27;){
+				this.parseDeleteRecordNotifier(data);
+			} else {
+				this.parseDeleteRelationNotifier(data);
+			}
+			break;
+		}
+	};
+
+
+	/**
+	 *  After successful authorization trigger event and send all queued messages
+	 *
+	 *  @method parseAuthorizationResponse
+	 *  @param {object} data Object send by server. Fields: timestamp, uuid, type, result
+	 */
+	/** 
+	 *  @event syncano:authorized
+	 */
+	Syncano.prototype.parseAuthorizationResponse = function(data){
+		this.uuid = data.uuid;
+		this.status = states.AUTHORIZED;
+		this.trigger(&#x27;syncano:received&#x27;, data);
+		this.trigger(&#x27;syncano:authorized&#x27;, this.uuid);
+		this.parseCallResponse({message_id: &#x27;auth&#x27;, data:data});
+		this.sendQueue();
+	};
+
+
+	/**
+	 *  When message with type &#x27;new&#x27; comes, we trigger 3 events: one for the project (syncano:newdata:project-ID), 
+	 *  one for the collection (syncano:newdata:collection-ID) and one for the folder (syncano:newdata:folder-NAME).
+	 *  You can handle any of them.
+	 *  
+	 *  @method parseNewRecordNotifier
+	 *  @param {object} rec Object send by server. Fields: timestamp, uuid, type, result
+	 */
+	/**
+	 *  Triggered after receiving message with new record in folder XXX
+	 *  @event syncano:newdata:folder-XXX
+	 */
+	/** 
+	 *  Triggered after receiving message with new record in project XXX
+	 *  @event syncano:newdata:project-XXX
+	 */
+	/** 
+	 *  Triggered after receiving message with new record in collection XXX 
+	 *  @event syncano:newdata:collection-XXX
+	 */
+	Syncano.prototype.parseNewRecordNotifier = function(rec){
+		// ignore means ignore
+		if(this.ignoreNextNew === true){
+			this.trigger(&#x27;syncano:ignored&#x27;, rec);
+			this.ignoreNextNew = false;
+			return;
+		}
+		this.trigger(&#x27;syncano:received&#x27;, rec);
+		var projectId = rec.channel.project_id | 0;
+		var collectionId = rec.channel.collection_id | 0;
+		var recData = rec.data;
+		var folder = recData.folder;
+		if(folder){
+			this.trigger(&#x27;syncano:newdata:folder-&#x27; + folder, recData);
+		}
+		this.trigger(&#x27;syncano:newdata:project-&#x27; + projectId, recData);
+		this.trigger(&#x27;syncano:newdata:collection-&#x27; + collectionId, recData);
+	};
+
+
+	/**
+	 *  When message with type &#x27;new&#x27; and object &#x27;datarelation&#x27; comes, trigger two events - for parent and for child 
+	 *
+	 *  @method parseNewRelationNotifier
+	 *  @param {object} rec Object send by server
+	 */
+	/** 
+	 *  Triggered after receiving message with new relation between records XXX (child) and YYY (parent)
+	 *  @event syncano:newparent:data-XXX
+	 */
+	/** 
+	 *  Triggered after receiving message with new relation between records XXX (child) and YYY (parent)
+	 *  @event syncano:newchild:data-YYY
+	 */
+	Syncano.prototype.parseNewRelationNotifier = function(rec){
+		if(this.ignoreNextNewRelation === true){
+			this.trigger(&#x27;syncano:ignored&#x27;, rec);
+			this.ignoreNextNewRelation = false;
+			return;
+		}
+		this.trigger(&#x27;syncano:received&#x27;, rec);
+		if(typeof rec.target !== &#x27;undefined&#x27;){
+			var parentId = rec.target.parent_id;
+			var childId = rec.target.child_id;
+			this.trigger(&#x27;syncano:newparent:data-&#x27; + childId, parentId);
+			this.trigger(&#x27;syncano:newchild:data-&#x27; + parentId, childId);
+		}
+	};
+
+
+	/**
+	 *  When message with type &#x27;change&#x27; comes, trigger appropriate event for each data object modified.
+	 *
+	 *  @method parseChangeRecordNotifier
+	 *  @param {object} rec Object send by server. Fields: timestamp, uuid, type, result
+	 */
+	/** 
+	 *  Triggered after receiving message with changed record XXX 
+	 *  @event syncano:change:data-XXX
+	 */
+	Syncano.prototype.parseChangeRecordNotifier = function(rec){
+		// ignore means ignore
+		if(this.ignoreNextChange === true){
+			this.trigger(&#x27;syncano:ignored&#x27;, rec);
+			this.ignoreNextChange = false;
+			return;
+		}
+		var targetIds = rec.target.id;
+		this.trigger(&#x27;syncano:received&#x27;, rec);
+		for(var i=0; i&lt;targetIds.length; i++){
+			var id = targetIds[i];
+			var p = {};
+			if(typeof rec.add !== &#x27;undefined&#x27;){
+				p.add = rec.add;
+			}
+			if(typeof rec.replace !== &#x27;undefined&#x27;){
+				p.replace = rec.replace;
+			}
+			if(typeof rec.delete !== &#x27;undefined&#x27;){
+				p[&#x27;delete&#x27;] = rec[&#x27;delete&#x27;];
+			}
+			this.trigger(&#x27;syncano:change:data-&#x27;+id, p);
+		}
+	};
+
+	/**
+	 *  When message with type &#x27;delete&#x27; comes, trigger appropriate event for each data object modified.
+	 *
+	 *  @method parseChangeRecordNotifier
+	 *  @param {object} rec Object send by server. Fields: timestamp, uuid, type, result
+	 */
+	/** 
+	 *  Triggered after receiving message with deleted record XXX 
+	 *  @event syncano:delete:data-XXX
+	 */
+	Syncano.prototype.parseDeleteRecordNotifier = function(rec){
+		if(this.ignoreNextDelete === true){
+			this.trigger(&#x27;syncano:ignored&#x27;, rec);
+			this.ignoreNextDelete = false;
+			return;
+		}
+		var targetIds = rec.target.id;
+		this.trigger(&#x27;syncano:received&#x27;, rec);
+		for(var i=0; i&lt;targetIds.length; i++){
+			var id = targetIds[i];
+			this.trigger(&#x27;syncano:delete:data-&#x27;+id);
+		}
+	};
+
+	/**
+	 *  When message with type &#x27;delete&#x27; and object &#x27;datarelation&#x27; comes, trigger two events - for parent and for child 
+	 *
+	 *  @method parseDeleteRelationNotifier
+	 *  @param {object} rec Object send by server
+	 */
+	/** 
+	 *  Triggered after receiving message with removed relation between records XXX (child) and YYY (parent)
+	 *  @event syncano:removeparent:data-XXX
+	 */
+	/** 
+	 *  Triggered after receiving message with removed relation between records XXX (child) and YYY (parent)
+	 *  @event syncano:removechild:data-YYY
+	 */
+	Syncano.prototype.parseDeleteRelationNotifier = function(rec){
+		if(this.ignoreNextDeleteRelation === true){
+			this.trigger(&#x27;syncano:ignored&#x27;, rec);
+			this.ignoreNextDeleteRelation = false;
+			return;
+		}
+		this.trigger(&#x27;syncano:received&#x27;, rec);
+		if(typeof rec.target !== &#x27;undefined&#x27;){
+			var parentId = rec.target.parent_id;
+			var childId = rec.target.child_id;
+			this.trigger(&#x27;syncano:removeparent:data-&#x27; + childId, parentId);
+			this.trigger(&#x27;syncano:removechild:data-&#x27; + parentId, childId);
+		}
+	};
+
+	/**
+	 *  When message with type &#x27;message&#x27; comes, just trigger event with data passed
+	 *
+	 *  @method parseMessageNotifier
+	 *  @param {object} data Object send by server. Fields: timestamp, uuid, type, result
+	 */
+	/** 
+	 *  Triggered after receiving message from server
+	 *  @event syncano:message
+	 */
+	Syncano.prototype.parseMessageNotifier = function(data){
+		this.trigger(&#x27;syncano:received&#x27;, data);
+		this.trigger(&#x27;syncano:message&#x27;, data);
+	};
+
+
+	/**
+	 *  Receiven new callresponse message. If we were waiting for this response, handle it (call callback, etc). Otherwise - ignore
+	 *
+	 *  @method parseCallResponse
+	 *  @param {object} data - data received. Fields: type (=callresponse), message_id, result, data
+	 */
+	/** 
+	 *  When server sends data we are not waiting for
+	 *  @event syncano:ignored
+	 */
+	Syncano.prototype.parseCallResponse = function(data){
+		var messageId = data.message_id;
+		if(typeof messageId !== &#x27;undefined&#x27; &amp;&amp; typeof this.waitingForResponse[messageId] !== &#x27;undefined&#x27;){
+			var rec = this.waitingForResponse[messageId];
+			var actionType = rec[0].replace(&#x27;.&#x27;, &#x27;:&#x27;);
+			var callback = rec[1];
+			this.trigger(&#x27;syncano:received&#x27;, data);
+			this.trigger(&#x27;syncano:&#x27; + actionType, data.data);
+			if(typeof callback === &#x27;function&#x27;){
+				callback(data.data);
+			} else if(typeof callback === &#x27;object&#x27; &amp;&amp; typeof callback.success === &#x27;function&#x27;){
+				callback.success(data.data);
+			}
+			delete this.waitingForResponse[messageId];
+		} else {
+			this.trigger(&#x27;syncano:ignored&#x27;, data);
+		}
+	};
+
+
+	/**
+	 *  Sends all requests waiting in the queue and clears the queue.
+	 *
+	 *  @method sendQueue
+	 */
+	Syncano.prototype.sendQueue = function(){
+		// while(this.requestsQueue.length &gt; 0){
+		if(this.requestsQueue.length &gt; 0){
+			var request = this.requestsQueue.shift();
+			this.socketSend(request);
+		}
+	};
+
+
+	/**
+	 *  Generates unique message id
+	 * 
+	 *  @method getNextRequestId
+	 *  @return {number} next unique identifier
+	 */
+	Syncano.prototype.getNextRequestId = function(){
+		return this.requestId++;
+	};
+
+
+	/**
+	 *  Sends request as a string. Internal low-level function, should not be used outside
+	 * 
+	 *  @method socketSend
+	 *  @param {object} request 
+	 */
+	Syncano.prototype.socketSend = function(request){
+		this.socket.send(JSON.stringify(request) + &#x27;\n&#x27;);
+	};
+
+
+	/**
+	 *  Universal high-level function for sending requests to syncano. 
+	 *  Sends request to &#x27;method&#x27; with given &#x27;params&#x27; if the socket is connected. If not, puts request on the queue to be sent later.
+	 *  Uses internal &#x27;waitingForResponse&#x27; object to match request with response.
+	 *
+	 *  @method sendRequest
+	 *  @param {string} method Name of the Syncano method to call (check syncano docs)
+	 *  @param {object} params Parameters to send. Every method needs different parameters (check syncano docs)
+	 *  @param {function} callback Function to call after receiving response from server
+	 */
+	/** 
+	 *  Before sending request to server
+	 *  @event syncano:call
+	 */
+	/** 
+	 *  When user wants to send data to the server, but connection has not been established yet
+	 *  @event syncano:queued
+	 */
+	Syncano.prototype.sendRequest = function(method, params, callback, requestType){
+		if(typeof params === &#x27;undefined&#x27;){
+			params = {};
+		}
+		if(this.connectionType === &#x27;ajax&#x27; || requestType === &#x27;ajax&#x27;){
+			var url = &#x27;https://&#x27; + this.instance + &#x27;.syncano.com/api/&#x27; + method + &#x27;?api_key=&#x27; + this.apiKey + &#x27;&amp;&#x27;;
+			for(var key in params){
+				if(params.hasOwnProperty(key)){
+					url += key + &#x27;=&#x27; + params[key] + &#x27;&amp;&#x27;;
+				}
+			}
+			var xhr = new XMLHttpRequest();
+			xhr.open(&#x27;GET&#x27;, url, true);
+			xhr.onreadystatechange = function(){
+				if(xhr.readyState === 4 &amp;&amp; xhr.status === 200){
+					var data = JSON.parse(xhr.responseText);
+					this.trigger(&#x27;syncano:received&#x27;, data);
+					callback(data);
+				}
+			}.bind(this);
+			xhr.send();
+		} else if(this.connectionType === &#x27;socket&#x27;){
+			var request = {
+				type: &#x27;call&#x27;,
+				method: method,
+				params: params
+			};
+			
+			request.message_id = this.getNextRequestId();
+
+			/**
+			 *  Remember method and callback on the waitingForResponse list. When the response comes, callback will be called
+			 */
+			this.waitingForResponse[request.message_id] = [method, callback];
+			
+			/**
+			 *  Send message to socket if already open and authorized. Otherwise - push to requestsQueue
+			 */
+			if(this.status === states.AUTHORIZED &amp;&amp; this.requestInProgress === false){
+				this.requestInProgress = true;
+				this.trigger(&#x27;syncano:call&#x27;, request);
+				this.socketSend(request);
+			} else {
+				this.trigger(&#x27;syncano:queued&#x27;, request);
+				this.requestsQueue.push(request);
+			}
+		}
+	};
+
+	/**
+	 *  Internal method to check if projectId is a number - so I don&#x27;t have to write this manualy again and again
+	 */
+	Syncano.prototype.__checkProjectId = function(projectId){
+		if(typeof projectId !== &#x27;number&#x27;){
+			throw new Error(&#x27;projectId must be a number&#x27;);
+		}
+	};
+
+	/**
+	 *  Internal method to check the variable name (string or number) and add correct key to passed object
+	 */
+	Syncano.prototype.__addCollectionIdentifier = function(params, collection){
+		if (typeof collection === &#x27;number&#x27;){
+			params.collection_id = collection;
+		} else if(typeof collection === &#x27;string&#x27;){
+			params.collection_key = collection;
+		} else {
+			throw new Error(&#x27;Collection key/id must be passed&#x27;);
+		}
+		return params;
+	};
+
+	/**
+	 *  Internal shortcut method to send request and run the callback function with proper data as parameter
+	 */
+	Syncano.prototype.__sendWithCallback = function(method, params, key, callback, requestType){
+
+		var success = function(){};
+		var error;
+
+		if(typeof callback === &#x27;function&#x27;){
+			success = callback;
+		} else if(typeof callback === &#x27;object&#x27;){
+			if(typeof callback.success === &#x27;function&#x27;){
+				success = callback.success;
+			}
+			if(typeof callback.error === &#x27;function&#x27;){
+				error = callback.error;
+			}
+		}
+
+		var customSuccess = function(data){
+			var res;
+			if(key === null){
+				res = true;
+			} else {
+				if(typeof data[key] !== &#x27;undefined&#x27;){
+					res = data[key];
+				} else {
+					res = data;
+				}
+			}
+			success(res);
+		};
+
+		this.sendRequest(method, params, {
+			success: customSuccess,
+			error: error
+		}, requestType);
+	};
+
+	/**
+	 *
+	 */
+	Syncano.prototype.__sendAjaxRequest = function(method, params, resultKey, callback){
+		if(typeof params === &#x27;undefined&#x27;){
+			params = {};
+		}
+		if(this.instance === null){
+			if(typeof params.instance !== &#x27;undefined&#x27;){
+				this.instance = params.instance;
+				delete params.instance;
+			} else {
+				throw new Error(&#x27;Please provide instance name&#x27;);
+			}
+		}
+		if(this.apiKey === null){
+			if(typeof params.apiKey !== &#x27;undefined&#x27;){
+				this.apiKey = params.apiKey;
+				delete params.apiKey;
+			} else {
+				throw new Error(&#x27;Please provide api key&#x27;);
+			}
+		}
+
+		var url = &#x27;https://&#x27; + this.instance + &#x27;.syncano.com/api/&#x27; + method + &#x27;?api_key=&#x27; + this.apiKey + &#x27;&amp;&#x27;;
+		for(var key in params){
+			if(params.hasOwnProperty(key)){
+				url += key + &#x27;=&#x27; + params[key] + &#x27;&amp;&#x27;;
+			}
+		}
+
+		var xhr = new XMLHttpRequest();
+		xhr.open(&#x27;GET&#x27;, url, true);
+		xhr.onreadystatechange = function(){
+			if(xhr.readyState === 4 &amp;&amp; xhr.status === 200){
+				var data = JSON.parse(xhr.responseText);
+				var callbackParam;
+				if(typeof data[resultKey] !== &#x27;undefined&#x27;){
+					callbackParam = data[resultKey];
+				} else {
+					callbackParam = data;
+				}
+				this.trigger(&#x27;syncano:received&#x27;, data);
+				callback(callbackParam);
+			}
+		}.bind(this);
+		xhr.send();
+	};
+
+	var objectInstance = null;
+
+
+	/**
+	 * Export to the root, which is probably &#x60;window&#x60;. 
+	 */
+	root.SyncanoConnector = {
+		getInstance: function(){
+			if(objectInstance === null){
+				objectInstance = new Syncano();
+			}
+			return objectInstance;
+		}
+	};
+
+
+}(this));
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>
