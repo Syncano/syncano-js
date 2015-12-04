@@ -3,7 +3,7 @@
  * Copyright 2015 Syncano Inc.
  */
 
- 'use strict';
+'use strict';
 
 var checkParams = function(p) {
   if (typeof p !== 'object') {
@@ -86,46 +86,6 @@ var addAuth = function(options) {
   return response;
 };
 
-
-//lodash replacements
-var objToString = Object.prototype.toString;
-var objectTag = '[object Object]';
-var MAX_SAFE_INTEGER = 9007199254740991;
-var funcTag = '[object Function]';
-
-var isObject = function(value) {
-  var type = typeof value;
-  return !!value && (type === 'object' || type === 'function');
-};
-
-var isObjectLike = function(value) {
-  return !!value && typeof value === 'object';
-};
-
-var isHostObject = (function() {
-  try {
-    Object({ toString: 0 } + '');
-  } catch (e) {
-    return function() { return false; };
-  }
-  return function(value) {
-    return typeof value.toString !== 'function' && typeof (value + '') === 'string';
-  };
-}());
-
-var isLength = function(value) {
-  return typeof value === 'number' && value > -1 && value % 1 === 0 && value <= MAX_SAFE_INTEGER;
-};
-
-var isArrayLike = function(value) {
-  return value !== null && isLength(value.length);
-};
-
-var isArguments = function(value) {
-  return isObjectLike(value) && isArrayLike(value) && hasOwnProperty.call(value, 'callee');
-};
-
-
 var extend = function extend(destination, source) {
   for (var property in source) {
     if (source[property] && source[property].constructor &&
@@ -164,7 +124,6 @@ var template = function(tmpl, data) {
 
   return tmpl;
 };
-
 
 var helpers = {
   checkParams: checkParams,

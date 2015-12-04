@@ -6,7 +6,7 @@
 'use strict';
 
 var helpers  = require('./helpers.js');
-var core     = require('./core.js');
+var core     = require('../server/core.js');
 
 var methods = {
   list: function list(config) {

@@ -5,18 +5,13 @@
 
 'use strict';
 
-var version  = require('../package.json').version;
-var helpers  = require('./helpers.js');
-var request  = require('./request.js');
+var helpers  = require('../shared/helpers.js');
 var Promise  = require('bluebird');
 var EventEmitter = require('events').EventEmitter;
-var util = require('util');
+var request = require('./request.js');
 
 var defaultOptions = {
-  qsStringifyOptions: {arrayFormat: 'repeat'},
-  withCredentials: false,
   headers: {
-    'User-Agent': 'syncano/version:' + version,
     'Content-Type': 'application/json'
   }
 };
@@ -58,7 +53,7 @@ var url = function(config) {
       tmpl += '<%= path %>/';
     }
 
-    if ((config.type === 'user' || config.type === 'account') && config.json && config.json.backend) {
+    if (config.type === 'user' && config.json && config.json.backend) {
       tmpl += '<%= json.backend %>/';
     }
 
@@ -159,7 +154,6 @@ var paramReq = function paramReq(config) {
   delete opt.func;
 
   return (function(params, filter, cb) {
-    // TODO Add check for optional params - respond accordingly
     params = helpers.checkParams(params);
 
     if (arguments.length <= 2) {
@@ -169,7 +163,12 @@ var paramReq = function paramReq(config) {
     }
 
     opt.qs = helpers.parseFilter(filter);
-    opt.json = params;
+
+    if (config.type === 'dataobject') {
+      opt.formData = params;
+    } else {
+      opt.json = params;
+    }
 
     return apiRequest(opt, cb);
 
@@ -182,7 +181,6 @@ var paramIdReq = function paramIdReq(config) {
   delete opt.func;
 
   return (function(id, params, filter, cb) {
-    // TODO Add check for optional params - respond accordingly
     opt.id = helpers.checkId(id);
 
     params = helpers.checkParams(params, false);
@@ -194,7 +192,12 @@ var paramIdReq = function paramIdReq(config) {
     }
 
     opt.qs = helpers.parseFilter(filter);
-    opt.json = params;
+
+    if (config.type === 'dataobject') {
+      opt.formData = params;
+    } else {
+      opt.json = params;
+    }
 
 
     return apiRequest(opt, cb);
@@ -212,25 +215,18 @@ var apiRequest = function apiRequest(config, cb) {
   opt.baseUrl = config.baseUrl || 'https://api.syncano.io';
 
   return new Promise(function(resolve, reject) {
-    request(opt, function(err, res) {
-      var localError, response;
+    var response, localError;
 
-      if (err || !(res.statusCode === 200 || res.statusCode === 201 || res.statusCode === 204)) { // Errors
-        localError = err ? new Error(err) : new Error(JSON.stringify(res.body));
-        reject(localError);
-        return;
-      }
-      switch (res.statusCode) {
+    request(opt).then(function(res) {
+      switch (res.status) {
         case 204:
-          response = res.statusMessage; // NO CONTENT message
+          response = res.statusText; // NO CONTENT message
           break;
-
         case 201:
-          response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body; // convert to JSON
+          response = (typeof res.data !== 'object') ? JSON.parse(res.data) : res.data; // convert to JSON
           break;
-
         case 200:
-          response = (typeof res.body !== 'object') ? JSON.parse(res.body) : res.body; // convert to JSON
+          response = (typeof res.data !== 'object') ? JSON.parse(res.data) : res.data; // convert to JSON
           if (response.next) { // if there's a next URL
             var resNext = response.next; // set to next URL so it's not overwritten
             response.next = function(cb) { // NEXT function call
@@ -251,12 +247,13 @@ var apiRequest = function apiRequest(config, cb) {
           }
           break;
       }
-
       if (opt.debug) {
         response.debug = res;
       }
-
       resolve(response);
+    }).catch(function(res) {
+      localError = new Error(JSON.stringify(res.data));
+      reject(localError);
     });
   }).nodeify(cb);
 };
