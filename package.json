@@ -7,13 +7,6 @@
 		"request": "^2.53.0"
 	},
 	"devDependencies": {},
-	"repository": {
-		"type": "git",
-		"url": "git@github.com:Syncano/syncano4-js.git"
-	},
 	"author": "Syncano <hello@syncano.com>",
-	"bugs": {
-		"url": "https://github.com/Syncano/syncano4-js/issues"
-	},
-	"homepage": "https://github.com/Syncano/syncano4-js"
+	"homepage": "https://github.com/Syncano/syncano-js-lib/tree/v3"
 }
