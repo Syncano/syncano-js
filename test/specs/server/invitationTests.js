@@ -2,16 +2,16 @@
 
 var should = require('should');
 var mockery = require('mockery');
-var config = require('../config.js');
+var config = require('../../config.js');
 
-describe('Webhook', function() {
+describe('Invitation', function() {
   describe('(Account Scope)', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
       mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../src/syncano.js');
+      Syncano = require('../../../lib/syncano.js');
       scope = new Syncano({
         accountKey: config.accountKey
       });
@@ -22,23 +22,22 @@ describe('Webhook', function() {
       mockery.disable();
     });
 
-    it('instance.webhook is an webhook object', function() {
-      (scope.instance(config.instance).webhook().type).should.equal('webhook');
-      (scope.instance(config.instance).webhook()).should.have.keys(['list', 'add', 'detail', 'update', 'delete']);
-      (scope.instance(config.instance).webhook().list).should.be.a.Function();
-      (scope.instance(config.instance).webhook().add).should.be.a.Function();
-      (scope.instance(config.instance).webhook().detail).should.be.a.Function();
-      (scope.instance(config.instance).webhook().delete).should.be.a.Function();
-      (scope.instance(config.instance).webhook().update).should.be.a.Function();
+    it('is an invitation object', function() {
+      (scope.invitation().type).should.equal('invitation');
+      (scope.invitation()).should.have.keys(['list', 'detail', 'accept', 'delete']);
+      (scope.invitation().list).should.be.a.Function();
+      (scope.invitation().detail).should.be.a.Function();
+      (scope.invitation().delete).should.be.a.Function();
+      (scope.invitation().accept).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).webhook().list();
+      func = scope.invitation().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/webhooks/');
+        (res.url).should.equal('/v1/account/invitations/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -49,11 +48,11 @@ describe('Webhook', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).webhook().detail(config.webhookId);
+      func = scope.invitation().detail(config.inviteId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
+        (res.url).should.equal('/v1/account/invitations/' + config.inviteId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -62,13 +61,13 @@ describe('Webhook', function() {
       });
     });
 
-    it('update() should recieve correct options', function(done) {
+    it('accept() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).webhook().update(config.webhookId, {});
+      func = scope.invitation().accept({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('PATCH');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
+        (res.method).should.equal('POST');
+        (res.url).should.equal('/v1/account/invitations/accept/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -79,11 +78,11 @@ describe('Webhook', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).webhook().delete(config.webhookId);
+      func = scope.invitation().delete(config.inviteId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
+        (res.url).should.equal('/v1/account/invitations/' + config.inviteId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -92,17 +91,12 @@ describe('Webhook', function() {
       });
     });
 
-
-    it('should create a new webhook object', function() {
-      scope = new scope.instance(config.instance).webhook(config.webhookId);
-      (scope.type).should.equal('webhook');
-      (scope).should.have.keys(['config', 'detail', 'update', 'delete', 'run', 'traces', 'trace']);
+    it('invitation() returns an invitation object', function() {
+      scope = scope.invitation(config.inviteId);
+      (scope.type).should.equal('invitation');
+      (scope).should.have.keys(['config', 'detail', 'delete']);
       (scope.detail).should.be.a.Function();
       (scope.delete).should.be.a.Function();
-      (scope.update).should.be.a.Function();
-      (scope.run).should.be.a.Function();
-      (scope.traces).should.be.a.Function();
-      (scope.trace).should.be.a.Function();
     });
 
     it('detail() should recieve correct options', function(done) {
@@ -111,22 +105,7 @@ describe('Webhook', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
-        (res.headers['X-API-KEY']).should.equal(config.accountKey);
-        done();
-      }).catch(function(err) {
-        done(err);
-      });
-    });
-
-    it('update() should recieve correct options', function(done) {
-      var func, res;
-      func = scope.update({});
-      func.then(function(res) {
-        (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('PATCH');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
+        (res.url).should.equal('/v1/account/invitations/' + config.inviteId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -141,7 +120,7 @@ describe('Webhook', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/webhooks/' + config.webhookId + '/');
+        (res.url).should.equal('/v1/account/invitations/' + config.inviteId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -149,13 +128,73 @@ describe('Webhook', function() {
         done(err);
       });
     });
-    it('run() should recieve correct options', function(done) {
+
+  });
+
+  describe('(Account.Instance Scope)', function() {
+    var requestMock, Syncano, scope;
+    before(function() {
+      mockery.enable(config.mockSettings);
+      mockery.registerMock('./request.js', config.requestMock);
+
+      Syncano = require('../../../lib/syncano.js');
+      scope = new Syncano({
+        accountKey: config.accountKey
+      });
+    });
+
+    after(function() {
+      mockery.deregisterMock('request');
+      mockery.disable();
+    });
+
+    it('is an invitation object', function() {
+      (scope.instance(config.instance).invitation().type).should.equal('invitation');
+      (scope.instance(config.instance).invitation()).should.have.keys(['list', 'detail', 'sendEmail', 'resendEmail','delete']);
+      (scope.instance(config.instance).invitation().list).should.be.a.Function();
+      (scope.instance(config.instance).invitation().detail).should.be.a.Function();
+      (scope.instance(config.instance).invitation().delete).should.be.a.Function();
+      (scope.instance(config.instance).invitation().sendEmail).should.be.a.Function();
+      (scope.instance(config.instance).invitation().resendEmail).should.be.a.Function();
+    });
+
+    it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.run({});
+      func = scope.instance(config.instance).invitation().list();
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('GET');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/invitations/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.accountKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it('detail() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.instance(config.instance).invitation().detail(config.inviteId);
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('GET');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/invitations/' + config.inviteId + '/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.accountKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it('sendEmail() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.instance(config.instance).invitation().sendEmail({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/webhooks/' + config.webhookId + '/run/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/invitations/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -164,13 +203,13 @@ describe('Webhook', function() {
       });
     });
 
-    it('traces() should recieve correct options', function(done) {
+    it('resendEmail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.traces();
+      func = scope.instance(config.instance).invitation().resendEmail({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/webhooks/' + config.webhookId + '/traces/');
+        (res.method).should.equal('POST');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/invitations/resend/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -179,13 +218,13 @@ describe('Webhook', function() {
       });
     });
 
-    it('trace() should recieve correct options', function(done) {
+    it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.trace(config.traceId);
+      func = scope.instance(config.instance).invitation().delete(config.inviteId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/webhooks/' + config.webhookId + '/traces/' + config.traceId + '/');
+        (res.method).should.equal('DELETE');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/invitations/' + config.inviteId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -193,5 +232,7 @@ describe('Webhook', function() {
         done(err);
       });
     });
+
   });
+
 });

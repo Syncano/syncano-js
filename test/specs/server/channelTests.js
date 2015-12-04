@@ -2,7 +2,7 @@
 
 var should = require('should');
 var mockery = require('mockery');
-var config = require('../config.js');
+var config = require('../../config.js');
 
 describe('Channel', function() {
   describe('(Account Scope)', function() {
@@ -11,7 +11,7 @@ describe('Channel', function() {
       mockery.enable(config.mockSettings);
       mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../src/syncano.js');
+      Syncano = require('../../../lib/syncano.js');
       scope = new Syncano({
         accountKey: config.accountKey
       });
@@ -156,7 +156,7 @@ describe('Channel', function() {
       mockery.enable(config.mockSettings);
       mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../src/syncano.js');
+      Syncano = require('../../../lib/syncano.js');
       scope = new Syncano({
         apiKey: config.apiKey,
         instance: config.instance
@@ -264,7 +264,7 @@ describe('Channel', function() {
       mockery.enable(config.mockSettings);
       mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../src/syncano.js');
+      Syncano = require('../../../lib/syncano.js');
       scope = new Syncano({
         apiKey: config.apiKey,
         instance: config.instance,

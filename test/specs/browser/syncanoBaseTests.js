@@ -2,21 +2,23 @@
 
 var should = require('should');
 var mockery = require('mockery');
-var config = require('../config.js');
+var config = require('../../config.js');
 
 describe('Syncano', function() {
   var requestMock, Syncano, scope;
 
   before(function() {
     mockery.enable(config.mockSettings);
-    mockery.registerMock('./request.js', config.requestMock);
+    mockery.registerMock('./request.js', config.browserRequestMock);
+    mockery.registerSubstitute('../server/core.js', '../browser/core.js');
 
-    Syncano = require('../../src/syncano.js');
+    Syncano = require('../../../lib/syncano.js');
     scope = new Syncano();
   });
 
   after(function() {
     mockery.deregisterMock('request');
+    mockery.deregisterSubstitute('../server/core.js');
     mockery.disable();
   });
 

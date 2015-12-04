@@ -2,16 +2,16 @@
 
 var should = require('should');
 var mockery = require('mockery');
-var config = require('../config.js');
+var config = require('../../config.js');
 
-describe('Admin', function() {
-  describe('(Account Scope)', function() {
+describe('Instance', function() {
+  describe('(Account scope)', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
       mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../src/syncano.js');
+      Syncano = require('../../../lib/syncano.js');
       scope = new Syncano({
         accountKey: config.accountKey
       });
@@ -22,22 +22,23 @@ describe('Admin', function() {
       mockery.disable();
     });
 
-    it('instance.admin is an admin object', function() {
-      (scope.instance(config.instance).admin().type).should.equal('admin');
-      (scope.instance(config.instance).admin()).should.have.keys(['list', 'detail', 'update', 'delete']);
-      (scope.instance(config.instance).admin().list).should.be.a.Function();
-      (scope.instance(config.instance).admin().detail).should.be.a.Function();
-      (scope.instance(config.instance).admin().delete).should.be.a.Function();
-      (scope.instance(config.instance).admin().update).should.be.a.Function();
+    it('should be an instance object', function() {
+      (scope.instance().type).should.equal('instance');
+      (scope.instance()).should.have.keys(['list','detail', 'add', 'update', 'delete']);
+      (scope.instance().list).should.be.an.Function();
+      (scope.instance().add).should.be.an.Function();
+      (scope.instance().detail).should.be.a.Function();
+      (scope.instance().delete).should.be.a.Function();
+      (scope.instance().update).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).admin().list();
+      func = scope.instance().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/admins/');
+        (res.url).should.equal('/v1/instances/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -48,11 +49,26 @@ describe('Admin', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).admin().detail(config.adminId);
+      func = scope.instance().detail(config.instance);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/admins/' + config.adminId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.accountKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it('add() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.instance().add({});
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('POST');
+        (res.url).should.equal('/v1/instances/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -63,11 +79,11 @@ describe('Admin', function() {
 
     it('update() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).admin().update(config.adminId, {});
+      func = scope.instance().update(config.instance, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/admins/' + config.adminId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -78,11 +94,11 @@ describe('Admin', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).admin().delete(config.adminId);
+      func = scope.instance().delete(config.instance);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/admins/' + config.adminId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -91,14 +107,40 @@ describe('Admin', function() {
       });
     });
 
-
-    it('should create a new admin object', function() {
-      scope = new scope.instance(config.instance).admin(config.adminId);
-      (scope.type).should.equal('admin');
-      (scope).should.have.keys(['config', 'detail', 'update', 'delete']);
+    it('should create new instance object', function() {
+      scope = new scope.instance(config.instance);
+      (scope.type).should.equal('instance');
+      (scope).should.have.keys([
+        'config',
+        'admin',
+        'detail',
+        'update',
+        'delete',
+        'apikey',
+        'channel',
+        'class',
+        'codebox',
+        'invitation',
+        'group',
+        'schedule',
+        'trigger',
+        'webhook',
+        'user'
+      ]);
       (scope.detail).should.be.a.Function();
-      (scope.delete).should.be.a.Function();
       (scope.update).should.be.a.Function();
+      (scope.delete).should.be.a.Function();
+      (scope.admin).should.be.a.Function();
+      (scope.apikey).should.be.a.Function();
+      (scope.channel).should.be.a.Function();
+      (scope.class).should.be.a.Function();
+      (scope.codebox).should.be.a.Function();
+      (scope.invitation).should.be.a.Function();
+      (scope.group).should.be.a.Function();
+      (scope.schedule).should.be.a.Function();
+      (scope.trigger).should.be.a.Function();
+      (scope.webhook).should.be.a.Function();
+      (scope.user).should.be.a.Function();
     });
 
     it('detail() should recieve correct options', function(done) {
@@ -107,7 +149,7 @@ describe('Admin', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/admins/' + config.adminId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -122,7 +164,7 @@ describe('Admin', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/admins/' + config.adminId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -137,7 +179,7 @@ describe('Admin', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/admins/' + config.adminId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -145,6 +187,7 @@ describe('Admin', function() {
         done(err);
       });
     });
+
 
   });
 });

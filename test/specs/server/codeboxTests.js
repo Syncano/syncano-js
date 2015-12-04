@@ -1,16 +1,17 @@
 'use strict';
+
 var should = require('should');
 var mockery = require('mockery');
-var config = require('../config.js');
+var config = require('../../config.js');
 
-describe('Class', function() {
+describe('CodeBox', function() {
   describe('(Account Scope)', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
       mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../src/syncano.js');
+      Syncano = require('../../../lib/syncano.js');
       scope = new Syncano({
         accountKey: config.accountKey
       });
@@ -21,23 +22,25 @@ describe('Class', function() {
       mockery.disable();
     });
 
-    it('is a class object', function() {
-      (scope.instance(config.instance).class().type).should.equal('class');
-      (scope.instance(config.instance).class()).should.have.keys(['list', 'add', 'detail', 'update', 'delete']);
-      (scope.instance(config.instance).class().list).should.be.a.Function();
-      (scope.instance(config.instance).class().add).should.be.a.Function();
-      (scope.instance(config.instance).class().detail).should.be.a.Function();
-      (scope.instance(config.instance).class().delete).should.be.a.Function();
-      (scope.instance(config.instance).class().update).should.be.a.Function();
+    it('instance.codebox is an codebox object', function() {
+      (scope.instance(config.instance).codebox()).should.be.an.Object();
+      (scope.instance(config.instance).codebox().type).should.equal('codebox');
+      (scope.instance(config.instance).codebox()).should.have.keys(['list', 'add', 'detail', 'update', 'delete', 'runtimes']);
+      (scope.instance(config.instance).codebox().list).should.be.a.Function();
+      (scope.instance(config.instance).codebox().add).should.be.a.Function();
+      (scope.instance(config.instance).codebox().detail).should.be.a.Function();
+      (scope.instance(config.instance).codebox().delete).should.be.a.Function();
+      (scope.instance(config.instance).codebox().update).should.be.a.Function();
+      (scope.instance(config.instance).codebox().runtimes).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).class().list();
+      func = scope.instance(config.instance).codebox().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/codeboxes/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -48,11 +51,11 @@ describe('Class', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).class().detail(config.className);
+      func = scope.instance(config.instance).codebox().detail(config.codeboxId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -63,11 +66,11 @@ describe('Class', function() {
 
     it('update() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).class().update(config.className, {});
+      func = scope.instance(config.instance).codebox().update(config.codeboxId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -78,11 +81,26 @@ describe('Class', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).class().delete(config.className);
+      func = scope.instance(config.instance).codebox().delete(config.codeboxId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.accountKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it('runtimes() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.instance(config.instance).codebox().runtimes();
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('GET');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/codeboxes/runtimes/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -92,14 +110,13 @@ describe('Class', function() {
     });
 
 
-    it('should create a new class object', function() {
-      scope = new scope.instance(config.instance).class(config.className);
-      (scope.type).should.equal('class');
-      (scope).should.have.keys(['config', 'detail', 'update', 'delete', 'dataobject']);
+    it('should create a new codebox object', function() {
+      scope = new scope.instance(config.instance).codebox(config.codeboxId);
+      (scope.type).should.equal('codebox');
+      (scope).should.have.properties(['detail', 'update', 'delete', 'run', 'trace', 'traces']);
       (scope.detail).should.be.a.Function();
       (scope.delete).should.be.a.Function();
       (scope.update).should.be.a.Function();
-      (scope.dataobject).should.be.an.Function();
     });
 
     it('detail() should recieve correct options', function(done) {
@@ -108,7 +125,7 @@ describe('Class', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -123,7 +140,7 @@ describe('Class', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -138,7 +155,67 @@ describe('Class', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.accountKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it('run() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.run({});
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('POST');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/run/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.accountKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it('traces() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.traces();
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('GET');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/traces/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.accountKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it('trace() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.trace(config.traceId);
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('GET');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/codeboxes/' + config.codeboxId + '/traces/' + config.traceId + '/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.accountKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it('runtimes() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.runtimes();
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('GET');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/codeboxes/runtimes/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -148,134 +225,4 @@ describe('Class', function() {
     });
 
   });
-
-  describe('(Instance Scope)', function() {
-    var requestMock, Syncano, scope;
-    before(function() {
-      mockery.enable(config.mockSettings);
-      mockery.registerMock('./request.js', config.requestMock);
-
-      Syncano = require('../../src/syncano.js');
-      scope = new Syncano({
-        apiKey: config.apiKey,
-        instance: config.instance
-      });
-    });
-
-    after(function() {
-      mockery.deregisterMock('request');
-      mockery.disable();
-    });
-
-    it('this.class should be class object', function() {
-      (scope.class().type).should.equal('class');
-      (scope.class()).should.have.keys(['list', 'detail']);
-    });
-
-    it('list() should recieve correct options', function(done) {
-      var func, res;
-      func = scope.class().list();
-      func.then(function(res) {
-        (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
-        (res.headers['X-API-KEY']).should.equal(config.apiKey);
-        done();
-      }).catch(function(err) {
-        done(err);
-      });
-    });
-
-    it('detail() should recieve correct options', function(done) {
-      var func, res;
-      func = scope.class().detail(config.className);
-      func.then(function(res) {
-        (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
-        (res.headers['X-API-KEY']).should.equal(config.apiKey);
-        done();
-      }).catch(function(err) {
-        done(err);
-      });
-    });
-
-    it('should return new Class', function() {
-      scope = new scope.class(config.className);
-      (scope.type).should.equal('class');
-      (scope).should.have.keys(['config', 'detail', 'dataobject']);
-    });
-
-  });
-
-  describe('(Logged User Scope)', function() {
-    var requestMock, Syncano, scope;
-    before(function() {
-      mockery.enable(config.mockSettings);
-      mockery.registerMock('./request.js', config.requestMock);
-
-      Syncano = require('../../src/syncano.js');
-      scope = new Syncano({
-        apiKey: config.apiKey,
-        instance: config.instance,
-        userKey: config.userKey
-      });
-    });
-
-    after(function() {
-      mockery.deregisterMock('request');
-      mockery.disable();
-    });
-
-    it('is a class object', function() {
-      (scope.class().type).should.equal('class');
-      (scope.class()).should.have.keys(['list', 'detail']);
-    });
-
-
-    it('list() should recieve correct options', function(done) {
-      var func, res;
-      func = scope.class().list();
-      func.then(function(res) {
-        (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
-        (res.headers['X-API-KEY']).should.equal(config.apiKey);
-        (res.headers['X-USER-KEY']).should.equal(config.userKey);
-        done();
-      }).catch(function(err) {
-        done(err);
-      });
-    });
-
-    it('detail() should recieve correct options', function(done) {
-      var func, res;
-      func = scope.class().detail(config.className);
-      func.then(function(res) {
-        (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
-        (res.headers['X-API-KEY']).should.equal(config.apiKey);
-        (res.headers['X-USER-KEY']).should.equal(config.userKey);
-        done();
-      }).catch(function(err) {
-        done(err);
-      });
-    });
-
-    it('should return new Class', function() {
-      scope = new scope.class(config.className);
-      (scope.type).should.equal('class');
-      (scope).should.have.keys(['config', 'detail', 'dataobject']);
-    });
-
-  });
-
-
-
-
 });

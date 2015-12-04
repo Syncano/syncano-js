@@ -2,16 +2,16 @@
 
 var should = require('should');
 var mockery = require('mockery');
-var config = require('../config.js');
+var config = require('../../config.js');
 
-describe('DataObject', function() {
+describe('Trigger', function() {
   describe('(Account Scope)', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
       mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../src/syncano.js');
+      Syncano = require('../../../lib/syncano.js');
       scope = new Syncano({
         accountKey: config.accountKey
       });
@@ -22,23 +22,23 @@ describe('DataObject', function() {
       mockery.disable();
     });
 
-    it('instance.dataobject is an dataobject object', function() {
-      (scope.instance(config.instance).class(config.className).dataobject().type).should.equal('dataobject');
-      (scope.instance(config.instance).class(config.className).dataobject()).should.have.keys(['list', 'add', 'detail', 'update', 'delete']);
-      (scope.instance(config.instance).class(config.className).dataobject().list).should.be.a.Function();
-      (scope.instance(config.instance).class(config.className).dataobject().add).should.be.a.Function();
-      (scope.instance(config.instance).class(config.className).dataobject().detail).should.be.a.Function();
-      (scope.instance(config.instance).class(config.className).dataobject().delete).should.be.a.Function();
-      (scope.instance(config.instance).class(config.className).dataobject().update).should.be.a.Function();
+    it('instance.trigger is an trigger object', function() {
+      (scope.instance(config.instance).trigger().type).should.equal('trigger');
+      (scope.instance(config.instance).trigger()).should.have.keys(['list', 'add', 'detail', 'update', 'delete']);
+      (scope.instance(config.instance).trigger().list).should.be.a.Function();
+      (scope.instance(config.instance).trigger().add).should.be.a.Function();
+      (scope.instance(config.instance).trigger().detail).should.be.a.Function();
+      (scope.instance(config.instance).trigger().delete).should.be.a.Function();
+      (scope.instance(config.instance).trigger().update).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).class(config.className).dataobject().list();
+      func = scope.instance(config.instance).trigger().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/objects/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -49,11 +49,11 @@ describe('DataObject', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).class(config.className).dataobject().detail(config.dataobjectId);
+      func = scope.instance(config.instance).trigger().detail(config.triggerId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/objects/' + config.dataobjectId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -64,11 +64,11 @@ describe('DataObject', function() {
 
     it('update() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).class(config.className).dataobject().update(config.dataobjectId, {});
+      func = scope.instance(config.instance).trigger().update(config.triggerId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/objects/' + config.dataobjectId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -79,11 +79,11 @@ describe('DataObject', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).class(config.className).dataobject().delete(config.dataobjectId);
+      func = scope.instance(config.instance).trigger().delete(config.triggerId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/objects/' + config.dataobjectId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -93,13 +93,15 @@ describe('DataObject', function() {
     });
 
 
-    it('should create a new dataobject object', function() {
-      scope = new scope.instance(config.instance).class(config.className).dataobject(config.dataobjectId);
-      (scope.type).should.equal('dataobject');
-      (scope).should.have.keys(['config', 'detail', 'update', 'delete']);
+    it('should create a new trigger object', function() {
+      scope = new scope.instance(config.instance).trigger(config.triggerId);
+      (scope.type).should.equal('trigger');
+      (scope).should.have.keys(['config', 'detail', 'update', 'delete', 'traces', 'trace']);
       (scope.detail).should.be.a.Function();
       (scope.delete).should.be.a.Function();
       (scope.update).should.be.a.Function();
+      (scope.traces).should.be.a.Function();
+      (scope.trace).should.be.a.Function();
     });
 
     it('detail() should recieve correct options', function(done) {
@@ -108,7 +110,7 @@ describe('DataObject', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/objects/' + config.dataobjectId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -123,7 +125,7 @@ describe('DataObject', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/objects/' + config.dataobjectId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -138,7 +140,21 @@ describe('DataObject', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/objects/' + config.dataobjectId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.accountKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+    it('traces() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.traces();
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('GET');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/traces/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -147,5 +163,19 @@ describe('DataObject', function() {
       });
     });
 
+    it('trace() should recieve correct options', function(done) {
+      var func, res;
+      func = scope.trace(config.traceId);
+      func.then(function(res) {
+        (res).should.have.properties(['method', 'url', 'headers']);
+        (res.method).should.equal('GET');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/traces/' + config.traceId + '/');
+        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers['X-API-KEY']).should.equal(config.accountKey);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
   });
 });

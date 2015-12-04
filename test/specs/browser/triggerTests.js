@@ -2,16 +2,17 @@
 
 var should = require('should');
 var mockery = require('mockery');
-var config = require('../config.js');
+var config = require('../../config.js');
 
 describe('Trigger', function() {
   describe('(Account Scope)', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
-      mockery.registerMock('./request.js', config.requestMock);
+      mockery.registerMock('./request.js', config.browserRequestMock);
+      mockery.registerSubstitute('../server/core.js', '../browser/core.js');
 
-      Syncano = require('../../src/syncano.js');
+      Syncano = require('../../../lib/syncano.js');
       scope = new Syncano({
         accountKey: config.accountKey
       });
@@ -19,6 +20,7 @@ describe('Trigger', function() {
 
     after(function() {
       mockery.deregisterMock('request');
+      mockery.deregisterSubstitute('../server/core.js');
       mockery.disable();
     });
 
@@ -39,7 +41,7 @@ describe('Trigger', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -54,7 +56,7 @@ describe('Trigger', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -69,7 +71,7 @@ describe('Trigger', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
         (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -84,7 +86,7 @@ describe('Trigger', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
         (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -111,7 +113,7 @@ describe('Trigger', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -126,7 +128,7 @@ describe('Trigger', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
         (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -141,7 +143,7 @@ describe('Trigger', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
         (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -155,7 +157,7 @@ describe('Trigger', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/traces/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -170,7 +172,7 @@ describe('Trigger', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/instances/' + config.instance + '/triggers/' + config.triggerId + '/traces/' + config.traceId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {

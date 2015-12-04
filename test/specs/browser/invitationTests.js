@@ -2,16 +2,17 @@
 
 var should = require('should');
 var mockery = require('mockery');
-var config = require('../config.js');
+var config = require('../../config.js');
 
 describe('Invitation', function() {
   describe('(Account Scope)', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
-      mockery.registerMock('./request.js', config.requestMock);
+      mockery.registerMock('./request.js', config.browserRequestMock);
+      mockery.registerSubstitute('../server/core.js', '../browser/core.js');
 
-      Syncano = require('../../src/syncano.js');
+      Syncano = require('../../../lib/syncano.js');
       scope = new Syncano({
         accountKey: config.accountKey
       });
@@ -19,6 +20,7 @@ describe('Invitation', function() {
 
     after(function() {
       mockery.deregisterMock('request');
+      mockery.deregisterSubstitute('../server/core.js');
       mockery.disable();
     });
 
@@ -38,7 +40,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/account/invitations/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -53,7 +55,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/account/invitations/' + config.inviteId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -68,7 +70,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
         (res.url).should.equal('/v1/account/invitations/accept/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -83,7 +85,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
         (res.url).should.equal('/v1/account/invitations/' + config.inviteId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -106,7 +108,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/account/invitations/' + config.inviteId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -121,7 +123,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
         (res.url).should.equal('/v1/account/invitations/' + config.inviteId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -137,7 +139,7 @@ describe('Invitation', function() {
       mockery.enable(config.mockSettings);
       mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../src/syncano.js');
+      Syncano = require('../../../lib/syncano.js');
       scope = new Syncano({
         accountKey: config.accountKey
       });
@@ -165,7 +167,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/instances/' + config.instance + '/invitations/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -180,7 +182,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/instances/' + config.instance + '/invitations/' + config.inviteId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -195,7 +197,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/invitations/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -210,7 +212,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/invitations/resend/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -225,7 +227,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
         (res.url).should.equal('/v1/instances/' + config.instance + '/invitations/' + config.inviteId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {

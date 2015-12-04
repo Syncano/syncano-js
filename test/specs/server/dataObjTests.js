@@ -2,16 +2,16 @@
 
 var should = require('should');
 var mockery = require('mockery');
-var config = require('../config.js');
+var config = require('../../config.js');
 
-describe('ApiKey', function() {
+describe('DataObject', function() {
   describe('(Account Scope)', function() {
     var requestMock, Syncano, scope;
     before(function() {
       mockery.enable(config.mockSettings);
       mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../src/syncano.js');
+      Syncano = require('../../../lib/syncano.js');
       scope = new Syncano({
         accountKey: config.accountKey
       });
@@ -22,23 +22,23 @@ describe('ApiKey', function() {
       mockery.disable();
     });
 
-    it('should be apikey object', function() {
-      (scope.instance(config.instance).apikey().type).should.equal('apikey');
-      (scope.instance(config.instance).apikey()).should.have.keys(['list', 'detail', 'add', 'resetKey', 'delete']);
-      (scope.instance(config.instance).apikey().add).should.be.a.Function();
-      (scope.instance(config.instance).apikey().list).should.be.a.Function();
-      (scope.instance(config.instance).apikey().detail).should.be.a.Function();
-      (scope.instance(config.instance).apikey().delete).should.be.a.Function();
-      (scope.instance(config.instance).apikey().resetKey).should.be.a.Function();
+    it('instance.dataobject is an dataobject object', function() {
+      (scope.instance(config.instance).class(config.className).dataobject().type).should.equal('dataobject');
+      (scope.instance(config.instance).class(config.className).dataobject()).should.have.keys(['list', 'add', 'detail', 'update', 'delete']);
+      (scope.instance(config.instance).class(config.className).dataobject().list).should.be.a.Function();
+      (scope.instance(config.instance).class(config.className).dataobject().add).should.be.a.Function();
+      (scope.instance(config.instance).class(config.className).dataobject().detail).should.be.a.Function();
+      (scope.instance(config.instance).class(config.className).dataobject().delete).should.be.a.Function();
+      (scope.instance(config.instance).class(config.className).dataobject().update).should.be.a.Function();
     });
 
     it('list() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).apikey().list();
+      func = scope.instance(config.instance).class(config.className).dataobject().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/api_keys/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/objects/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -49,11 +49,11 @@ describe('ApiKey', function() {
 
     it('detail() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).apikey().detail(config.apiKeyId);
+      func = scope.instance(config.instance).class(config.className).dataobject().detail(config.dataobjectId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/api_keys/' + config.apiKeyId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/objects/' + config.dataobjectId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -62,28 +62,13 @@ describe('ApiKey', function() {
       });
     });
 
-    it('add() should recieve correct options', function(done) {
+    it('update() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).apikey().add({});
+      func = scope.instance(config.instance).class(config.className).dataobject().update(config.dataobjectId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('POST');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/api_keys/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
-        (res.headers['X-API-KEY']).should.equal(config.accountKey);
-        done();
-      }).catch(function(err) {
-        done(err);
-      });
-    });
-
-    it('resetKey() should recieve correct options', function(done) {
-      var func, res;
-      func = scope.instance(config.instance).apikey().resetKey(config.apiKeyId);
-      func.then(function(res) {
-        (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('POST');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/api_keys/' + config.apiKeyId + '/reset_key/');
+        (res.method).should.equal('PATCH');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/objects/' + config.dataobjectId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -94,11 +79,11 @@ describe('ApiKey', function() {
 
     it('delete() should recieve correct options', function(done) {
       var func, res;
-      func = scope.instance(config.instance).apikey().delete(config.apiKeyId);
+      func = scope.instance(config.instance).class(config.className).dataobject().delete(config.dataobjectId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/api_keys/' + config.apiKeyId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/objects/' + config.dataobjectId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -107,13 +92,14 @@ describe('ApiKey', function() {
       });
     });
 
-    it('should create new ApiKey object', function() {
-      scope = new scope.instance(config.instance).apikey(config.apiKeyId);
-      (scope.type).should.equal('apikey');
-      (scope).should.have.properties(['detail', 'resetKey', 'delete']);
+
+    it('should create a new dataobject object', function() {
+      scope = new scope.instance(config.instance).class(config.className).dataobject(config.dataobjectId);
+      (scope.type).should.equal('dataobject');
+      (scope).should.have.keys(['config', 'detail', 'update', 'delete']);
       (scope.detail).should.be.a.Function();
       (scope.delete).should.be.a.Function();
-      (scope.resetKey).should.be.a.Function();
+      (scope.update).should.be.a.Function();
     });
 
     it('detail() should recieve correct options', function(done) {
@@ -122,7 +108,7 @@ describe('ApiKey', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/api_keys/' + config.apiKeyId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/objects/' + config.dataobjectId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -131,13 +117,13 @@ describe('ApiKey', function() {
       });
     });
 
-    it('resetKey() should recieve correct options', function(done) {
+    it('update() should recieve correct options', function(done) {
       var func, res;
-      func = scope.resetKey({});
+      func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
-        (res.method).should.equal('POST');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/api_keys/' + config.apiKeyId + '/reset_key/');
+        (res.method).should.equal('PATCH');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/objects/' + config.dataobjectId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
@@ -152,7 +138,7 @@ describe('ApiKey', function() {
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
-        (res.url).should.equal('/v1/instances/' + config.instance + '/api_keys/' + config.apiKeyId + '/');
+        (res.url).should.equal('/v1/instances/' + config.instance + '/classes/' + config.className + '/objects/' + config.dataobjectId + '/');
         (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
