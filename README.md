@@ -135,7 +135,9 @@ my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - ret
 * Jakub Bilko - [twitter](https://twitter.com/jakubbilko), [github](https://github.com/jakubbilko)
 
 ### Change Log
-* **0.3.5** - 2015-11-13
+* **0.4.0** - 2015-12-07
+    * Added the possibility to upload files from both the server and browser environments
+* **0.3.5** - 2015-11-27
     * Fixed bug with not being able to create Syncano users with social media credentials
 * **0.3.4** - 2015-11-13
     * Fixed bug with callback function checking, breaking callback functions.
