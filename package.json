@@ -1,6 +1,6 @@
 {
   "name": "syncano",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "A library to intereact with the Syncano API.",
   "main": "lib/syncano.js",
   "browser": {
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Syncano/syncano-js-lib.git"
+    "url": "https://github.com/Syncano/syncano-js.git"
   },
   "dependencies": {
     "axios": "^0.7.0",
