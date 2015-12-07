@@ -40,7 +40,7 @@ var Request = function(opts) {
 };
 
 Request.prototype._qs = function(qs) {
-  this.sendOptions.path += '?' + Querystring.stringify(qs);
+  this.sendOptions.url += '?' + Querystring.stringify(qs);
 };
 
 Request.prototype._formData = function(formData) {

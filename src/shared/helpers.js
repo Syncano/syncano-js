@@ -31,6 +31,10 @@ var parseFilter = function(options) {
       parsedOptions.excluded_fields = options.fields.exclude.join();
     }
   }
+  
+  if(options.include_count && options.include_count === true ) {
+    parsedOptions.include_count = true;
+  }
 
   if (options.lastId) {
     parsedOptions.last_id = options.lastId;
