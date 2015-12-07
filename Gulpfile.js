@@ -14,6 +14,12 @@ var source = require('vinyl-source-stream');
 var stylish = require('jshint-stylish');
 var uglify = require('gulp-uglify');
 var argv = require('yargs').argv;
+var aliasify  = require('aliasify');
+var aliasifyConfig = {
+    aliases: {
+        "../server/core.js": './lib/browser/core.js'
+    }
+}
 
 var handleError = function handleError(err) {
   console.log(err.toString());
@@ -32,11 +38,13 @@ gulp.task('bump', function(){
   .pipe(gulp.dest('./'));
 });
 
-gulp.task('browserify', function() {
+gulp.task('browserify', function(cb) {
   var b = browserify({
-    entries: './src/syncano.js',
+    entries: './lib/syncano.js',
     standalone: 'Syncano'
   });
+
+  b.transform(aliasify, aliasifyConfig);
 
   return b.bundle()
     .pipe(source('syncano.js'))

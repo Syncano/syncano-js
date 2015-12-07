@@ -2,7 +2,10 @@
   "name": "syncano",
   "version": "0.3.5",
   "description": "A library to intereact with the Syncano API.",
-  "main": "./lib/syncano.js",
+  "main": "lib/syncano.js",
+  "browser": {
+    "./lib/server/core.js": "./lib/browser/core.js"
+  },
   "author": "Kelly Andrews",
   "license": "ISC",
   "scripts": {
@@ -10,16 +13,19 @@
     "prebuild": "rimraf lib",
     "build": "babel ./src --out-dir ./lib",
     "prepublish": "npm run build",
-    "test": "mocha test/specs"
+    "test": "mocha 'test/specs/**/*.js'"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/Syncano/syncano-js-lib.git"
   },
   "dependencies": {
-    "bluebird": "^2.9.30"
+    "axios": "^0.7.0",
+    "bluebird": "^2.9.30",
+    "form-data": "1.0.0-rc3"
   },
   "devDependencies": {
+    "aliasify": "^1.8.0",
     "babel": "^5.8.34",
     "babel-plugin-inline-package-json": "^1.0.1",
     "browserify": "^10.2.4",

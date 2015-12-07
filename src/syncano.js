@@ -1,11 +1,12 @@
 /*
- * @license
  * Syncano JS Library
  * Copyright 2015 Syncano Inc.
  */
-//TODO Tighten all tests to ensure proper objects are created
 
-var Objects = require('./objects.js');
+'use strict';
+
+var Objects = require('./shared/objects.js');
+var helpers = require('./shared/helpers.js');
 
 var Syncano = function Syncano(opt) {
   if (!(this instanceof Syncano)) {
@@ -51,7 +52,6 @@ var Syncano = function Syncano(opt) {
 };
 
 Syncano.prototype.constructor = Syncano;
-
 
 var EmptyScope = function(config) {
   if (config !== undefined) {

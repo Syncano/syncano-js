@@ -25,6 +25,11 @@ var config = {
     cb(null, res);
     return;
   },
+  browserRequestMock: function(opts) {
+    return new Promise(function(resolve, reject) {
+      resolve({data: opts, status: 200});
+    });
+  },
   mockSettings: {
     warnOnReplace: false,
     warnOnUnregistered: false,
