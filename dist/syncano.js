@@ -305,7 +305,7 @@ var Request = function Request(opts) {
 };
 
 Request.prototype._qs = function (qs) {
-  this.sendOptions.path += '?' + Querystring.stringify(qs);
+  this.sendOptions.url += '?' + Querystring.stringify(qs);
 };
 
 Request.prototype._formData = function (formData) {
@@ -331,7 +331,6 @@ Request.prototype._performRequest = function () {
 };
 
 module.exports = request;
-
 },{"../shared/helpers.js":3,"axios":7,"form-data":28,"querystring":26,"url":27}],3:[function(require,module,exports){
 /*
  * Syncano JS Library
@@ -365,6 +364,10 @@ var parseFilter = function parseFilter(options) {
     if (options.fields.exclude) {
       parsedOptions.excluded_fields = options.fields.exclude.join();
     }
+  }
+
+  if (options.include_count && options.include_count === true) {
+    parsedOptions.include_count = true;
   }
 
   if (options.lastId) {
