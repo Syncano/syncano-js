@@ -9,11 +9,12 @@
   "author": "Kelly Andrews",
   "license": "ISC",
   "scripts": {
-    "coverage": "CODECLIMATE_REPO_TOKEN=2fc62db4794c74bf7d733c365aed53960c0d7b7f9560674868f0e487ce36f2eb codeclimate-test-reporter < ./test/coverage/lcov.info",
+    "codeclimate": "codeclimate-test-reporter < ./coverage/lcov.info",
     "prebuild": "rimraf lib",
     "build": "babel ./src --out-dir ./lib",
     "prepublish": "npm run build",
-    "test": "mocha 'test/specs/**/*.js'"
+    "test": "mocha 'test/specs/**/*.js'",
+    "test-with-coverage": "istanbul cover _mocha -- 'test/specs/**/*.js'"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
     "babel": "^5.8.34",
     "babel-plugin-inline-package-json": "^1.0.1",
     "browserify": "^10.2.4",
+    "codeclimate-test-reporter": "^0.1.1",
     "gulp": "^3.9.0",
     "gulp-bump": "^0.3.1",
     "gulp-gzip": "^1.1.0",
@@ -41,6 +43,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^1.2.0",
+    "istanbul": "^0.4.1",
     "jshint-stylish": "^2.0.1",
     "mocha": "^2.2.5",
     "mockery": "^1.4.0",
