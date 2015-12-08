@@ -2,7 +2,8 @@
 
 [![NPM](https://img.shields.io/npm/v/syncano.svg)](https://www.npmjs.com/package/syncano)
 
-[![Code Climate](https://img.shields.io/codeclimate/github/Syncano/syncano-js-lib.svg)](https://codeclimate.com/github/Syncano/syncano-js-lib)  [![Test Coverage](https://img.shields.io/codeclimate/coverage/github/Syncano/syncano-js-lib.svg)](https://codeclimate.com/github/Syncano/syncano-js-lib/coverage)
+[![Circle CI](https://circleci.com/gh/Syncano/syncano-js/tree/master.svg?style=shield&circle-token=95dd01adb2eb42ff2e8cf86f65c3cc24e5b69690)](https://circleci.com/gh/Syncano/syncano-js/tree/master)
+[![Code Climate](https://img.shields.io/codeclimate/github/Syncano/syncano-js.svg)](https://codeclimate.com/github/Syncano/syncano-js)  [![Test Coverage](https://img.shields.io/codeclimate/coverage/github/Syncano/syncano-js.svg)](https://codeclimate.com/github/Syncano/syncano-js/coverage)
 
 
 ## Getting Started
@@ -52,7 +53,7 @@ Based on the type of authentication you need, you can initialize `syncano` with 
 
 ```js
 //returns an account scoped object
-var account = new Syncano({accountKey : "MY_ACCOUNT_KEY"});  
+var account = new Syncano({accountKey : "MY_ACCOUNT_KEY"});
 
 //returns an instance scoped object
 var instance = new Syncano({apiKey : "MY_INSTANCE_KEY", instance: "MY_INSTANCE_NAME"});
@@ -136,7 +137,7 @@ my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - ret
 
 ### Change Log
 * **0.4.1** - 2015-12-07
-    * Added support for the `include_count` parameter to retreive dataobject count 
+    * Added support for the `include_count` parameter to retreive dataobject count
 * **0.4.0** - 2015-12-07
     * Added the possibility to upload files from both the server and browser environments
 * **0.3.5** - 2015-11-27
