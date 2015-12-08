@@ -4,5 +4,5 @@ machine:
 
 test:
   override:
-    - npm test
-    - npm run-script coverage
+    - npm run-script test-with-coverage
+    - npm run-script codeclimate
