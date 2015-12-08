@@ -9,7 +9,7 @@
   "author": "Kelly Andrews",
   "license": "ISC",
   "scripts": {
-    "coverage": "CODECLIMATE_REPO_TOKEN=2fc62db4794c74bf7d733c365aed53960c0d7b7f9560674868f0e487ce36f2eb codeclimate-test-reporter < ./test/coverage/lcov.info",
+    "coverage": "codeclimate-test-reporter < ./test/coverage/lcov.info",
     "prebuild": "rimraf lib",
     "build": "babel ./src --out-dir ./lib",
     "prepublish": "npm run build",
