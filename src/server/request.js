@@ -87,7 +87,7 @@ Request.prototype._performRequest = function(cb) {
 Request.prototype._end = function() {
 
   if (this.json) {
-    this.request.write(JSON.stringify(this.json));
+    this.request.write(this.json);
   }
 
   if (this.form) {
