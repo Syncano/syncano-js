@@ -136,6 +136,8 @@ my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - ret
 * Jakub Bilko - [twitter](https://twitter.com/jakubbilko), [github](https://github.com/jakubbilko)
 
 ### Change Log
+* **0.4.2** - 2015-12-09
+    * Fixed the `register` method in the node environment
 * **0.4.1** - 2015-12-07
     * Added support for the `include_count` parameter to retreive dataobject count
 * **0.4.0** - 2015-12-07
