@@ -2,7 +2,7 @@
 
 var _send = XMLHttpRequest.prototype.send;
 XMLHttpRequest.prototype.send = function(data) {
-    if (data instanceof FormData) {
+    if (data instanceof DummyFormData) {
         if (!data.__endedMultipart) data.__append('--' + data.boundary + '--\r\n');
         data.__endedMultipart = true;
         this.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + data.boundary);
@@ -12,11 +12,11 @@ XMLHttpRequest.prototype.send = function(data) {
     return _send.call(this, data);
 };
 
-function FormData() {
+function DummyFormData() {
     // Force a Constructor
-    if (!(this instanceof FormData)) return new FormData();
+    if (!(this instanceof DummyFormData)) return new DummyFormData();
     // Generate a random boundary - This must be unique with respect to the form's contents.
-    this.boundary = '------SyncanoFormDataBoundary' + Math.random().toString(36);
+    this.boundary = '------DataBoundary' + Math.random().toString(36);
     var internal_data = this.data = [];
     /**
     * Internal method.
@@ -36,7 +36,7 @@ function FormData() {
     };
 }
 
-FormData.prototype.append = function(name, value, filename) {
+DummyFormData.prototype.append = function(name, value, filename) {
     if (this.__endedMultipart) {
         // Truncate the closing boundary
         this.data.length -= this.boundary.length + 6;
@@ -65,4 +65,4 @@ FormData.prototype.append = function(name, value, filename) {
     this.__append(part);
 };
 
-module.exports = window.FormData || FormData;
+module.exports = FormData || DummyFormData;
