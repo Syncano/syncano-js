@@ -1,12 +1,16 @@
 {
   "name": "syncano",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "A library to intereact with the Syncano API.",
   "main": "lib/syncano.js",
   "browser": {
     "./lib/server/core.js": "./lib/browser/core.js"
   },
   "author": "Kelly Andrews",
+  "contributors": [
+    {"name": "Jakub Bilko", "email": "jakub.bilko@syncano.com"},
+    {"name": "Daniel Kopka", "email": "daniel.kopka@syncano.com"}
+  ],
   "license": "ISC",
   "scripts": {
     "codeclimate": "codeclimate-test-reporter < ./coverage/lcov.info",
