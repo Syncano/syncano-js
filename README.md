@@ -137,6 +137,8 @@ my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - ret
 * Daniel Kopka - [twitter](https://twitter.com/danielkopka), [github](https://github.com/dancio)
 
 ### Change Log
+* **0.4.3** - 2015-12-14
+    * Polyfill for `FormData`
 * **0.4.2** - 2015-12-09
     * Fixed the `register` method in the node environment
 * **0.4.1** - 2015-12-07
