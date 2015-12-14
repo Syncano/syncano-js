@@ -134,8 +134,11 @@ my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - ret
 * Patrick Devivo - [twitter](https://twitter.com/patrickdevivo), [github](https://github.com/patrickdevivo)
 * Jhishan Khan - [twitter](https://twitter.com/jhishan), [github](https://github.com/jhishan)
 * Jakub Bilko - [twitter](https://twitter.com/jakubbilko), [github](https://github.com/jakubbilko)
+* Daniel Kopka - [twitter](https://twitter.com/danielkopka), [github](https://github.com/dancio)
 
 ### Change Log
+* **0.4.3** - 2015-12-14
+    * Polyfill for `FormData`
 * **0.4.2** - 2015-12-09
     * Fixed the `register` method in the node environment
 * **0.4.1** - 2015-12-07
