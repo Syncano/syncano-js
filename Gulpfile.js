@@ -72,6 +72,18 @@ gulp.task('git-add-tag', function(cb) {
 
   async.series([
     function(callback) {
+      gulp
+        .src(['./lib/**/*', './dist/**/*'])
+        .pipe(git.add())
+        .pipe(git.commit('Version bump: ' + version + ' [ci skip]'))
+        .on('finish', callback);
+    },
+
+    function(callback) {
+      git.push('origin', 'master', callback);
+    }
+
+    function(callback) {
       git.tag(version, 'Release ' + version, callback);
     },
 
@@ -150,8 +162,20 @@ gulp.task('watch', function() {
   );
 });
 
+
+gulp.task('npm-build', function (cb) {
+  spawn('npm', ['run-script', 'build'], { stdio: 'inherit' }).on('close', cb);
+});
+
+gulp.task('npm-publish', function (cb) {
+  spawn('npm', ['publish'], { stdio: 'inherit' }).on('close', cb);
+});
+
 gulp.task('default', ['test', 'watch']);
 gulp.task('build-and-publish', gulpSequence(
+  'npm-build',
+  'package',
   'git-add-tag',
+  'npm-publish',
   'git-bump'
 ));
