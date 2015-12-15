@@ -1,8 +1,11 @@
 var browserify = require('browserify');
 var buffer = require('vinyl-buffer');
 var bump = require('gulp-bump');
+var async = require('async');
+var git = require('gulp-git');
 var gulp = require('gulp');
 var gzip = require('gulp-gzip');
+var gulpSequence = require('gulp-sequence');
 var istanbul = require('gulp-istanbul');
 var jscs = require('gulp-jscs');
 var jshint = require('gulp-jshint');
@@ -13,7 +16,6 @@ var sourcemaps = require('gulp-sourcemaps');
 var source = require('vinyl-source-stream');
 var stylish = require('jshint-stylish');
 var uglify = require('gulp-uglify');
-var argv = require('yargs').argv;
 var aliasify  = require('aliasify');
 var aliasifyConfig = {
     aliases: {
@@ -26,16 +28,60 @@ var handleError = function handleError(err) {
   this.emit('end');
 };
 
-gulp.task('bump', function(){
-  var type;
-  if (argv.major) { type = "major"; }
-  if (argv.minor) { type = "minor"; }
-  if (argv.patch) { type = "patch"; }
-  if (argv.prerelease) { type = "prerelease"; }
+gulp.task('git-bump', function(cb){
+  async.series([
+    function(callback) {
+      git.checkout('devel', callback);
+    },
 
-  gulp.src(['./bower.json', './package.json'])
-  .pipe(bump({type:type}))
-  .pipe(gulp.dest('./'));
+    function(callback) {
+      git.pull('origin', 'devel', callback);
+    },
+
+    function(callback) {
+      git.merge('master', callback);
+    },
+
+    function(callback) {
+      gulp
+        .src(['./bower.json', './package.json'])
+        .pipe(bump())
+        .pipe(gulp.dest('./'))
+        .on('finish', callback);
+    },
+
+    function(callback) {
+      var version = 'v' + require('package.json').version;
+
+      gulp.src(['./bower.json', './package.json'])
+          .pipe(git.commit('Version bump: ' + version + ' [ci skip]'))
+          .on('finish', callback);
+    },
+
+    function(callback) {
+      git.push('origin', 'devel', callback);
+    }
+  ], function(err) {
+    if (err) throw err;
+    cb();
+  });
+});
+
+gulp.task('git-add-tag', function(cb) {
+  var version = 'v' + require('package.json').version;
+
+  async.series([
+    function(callback) {
+      git.tag(version, 'Release ' + version, callback);
+    },
+
+    function(callback) {
+      git.push('origin', version, callback);
+    }
+  ], function(err) {
+    if (err) throw err;
+    cb();
+  });
 });
 
 gulp.task('browserify', function(cb) {
@@ -105,3 +151,7 @@ gulp.task('watch', function() {
 });
 
 gulp.task('default', ['test', 'watch']);
+gulp.task('build-and-publish', gulpSequence(
+  'git-add-tag',
+  'git-bump'
+));
