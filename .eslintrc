@@ -136,7 +136,6 @@
         "no-warning-comments": [0, { "terms": ["todo", "fixme", "xxx"], "location": "start" }],
         "no-with": 0,
         "no-magic-numbers": 0,
-
         "array-bracket-spacing": [0, "never"],
         "array-callback-return": 0,
         "arrow-body-style": [0, "as-needed"],
