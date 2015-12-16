@@ -3,34 +3,12 @@
 var mockery = require('mockery');
 var should = require('should');
 var config = require('../../config.js');
-
-var cb = function() {
-  return 'stubbed';
-};
-
+var helper = require('../../helpers/browser/helper.js');
 
 describe('Syncano (Logged User Scope)', function() {
-  var requestMock, Syncano, scope;
 
-  before(function() {
-    mockery.enable(config.mockSettings);
-    mockery.registerMock('./request.js', config.browserRequestMock);
-    mockery.registerSubstitute('../server/core.js', '../browser/core.js');
-
-    Syncano = require('../../../lib/syncano.js');
-
-    scope = new Syncano({
-      apiKey: config.apiKey,
-      instance: config.instance,
-      userKey: config.userKey
-    });
-  });
-
-  after(function() {
-    mockery.deregisterMock('request');
-    mockery.deregisterSubstitute('../server/core.js');
-    mockery.disable();
-  });
+  before(helper.beforeUserScopeFunc);
+  after(helper.afterFunc);
 
   it('should return instance object', function() {
     (scope).should.be.type('object');

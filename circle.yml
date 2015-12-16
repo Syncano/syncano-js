@@ -2,7 +2,20 @@ machine:
   node:
     version: 4.2.3
 
+checkout:
+  post:
+    - git config --global user.email "$GITHUB_EMAIL"
+    - git config --global user.name "$GITHUB_NAME"
+    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+
 test:
   override:
     - npm run-script test-with-coverage
     - npm run-script codeclimate
+
+deployment:
+  publish:
+    branch: master
+    owner: syncano
+    commands:
+      - npm run-script build-and-publish
