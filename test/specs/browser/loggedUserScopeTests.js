@@ -3,16 +3,12 @@
 var mockery = require('mockery');
 var should = require('should');
 var config = require('../../config.js');
+var helper = require('../../helpers/browser/helper.js');
 
 describe('Syncano (Logged User Scope)', function() {
 
-  var helper = require('../../helpers/browser/user_scope_helper.js');
-
-  after(function() {
-    mockery.deregisterMock('request');
-    mockery.deregisterSubstitute('../server/core.js');
-    mockery.disable();
-  });
+  before(helper.beforeUserScopeFunc);
+  after(helper.afterFunc);
 
   it('should return instance object', function() {
     (scope).should.be.type('object');

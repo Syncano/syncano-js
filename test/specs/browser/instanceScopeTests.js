@@ -3,11 +3,11 @@
 var should = require('should');
 var mockery = require('mockery');
 var config = require('../../config.js');
-var helper = require('../../helpers/browser/instance_scope_helper.js');
+var helper = require('../../helpers/browser/helper.js');
 
 describe('Syncano (Instance Scope)', function() {
 
-  before(helper.beforeFunc);
+  before(helper.beforeInstanceScopeFunc);
   after(helper.afterFunc);
 
   it('should return instance object', function() {
