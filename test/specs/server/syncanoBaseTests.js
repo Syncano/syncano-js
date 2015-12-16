@@ -3,22 +3,12 @@
 var should = require('should');
 var mockery = require('mockery');
 var config = require('../../config.js');
+var helper = require('../../helpers/server/helper.js');
 
 describe('Syncano', function() {
-  var requestMock, Syncano, scope;
 
-  before(function() {
-    mockery.enable(config.mockSettings);
-    mockery.registerMock('./request.js', config.requestMock);
-
-    Syncano = require('../../../lib/syncano.js');
-    scope = new Syncano();
-  });
-
-  after(function() {
-    mockery.deregisterMock('request');
-    mockery.disable();
-  });
+  before(helper.beforeEmptyScopeFunc);
+  after(helper.afterFunc);
 
   it('should be a constructor', function() {
     (Syncano).should.be.a.Function();

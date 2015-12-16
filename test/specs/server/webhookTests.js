@@ -3,24 +3,13 @@
 var should = require('should');
 var mockery = require('mockery');
 var config = require('../../config.js');
+var helper = require('../../helpers/server/helper.js');
 
 describe('Webhook', function() {
   describe('(Account Scope)', function() {
-    var requestMock, Syncano, scope;
-    before(function() {
-      mockery.enable(config.mockSettings);
-      mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../../lib/syncano.js');
-      scope = new Syncano({
-        accountKey: config.accountKey
-      });
-    });
-
-    after(function() {
-      mockery.deregisterMock('request');
-      mockery.disable();
-    });
+    before(helper.beforeAccountScopeFunc);
+    after(helper.afterFunc);
 
     it('instance.webhook is an webhook object', function() {
       (scope.instance(config.instance).webhook().type).should.equal('webhook');

@@ -3,24 +3,13 @@
 var should = require('should');
 var mockery = require('mockery');
 var config = require('../../config.js');
+var helper = require('../../helpers/server/helper.js');
 
 describe('DataObject', function() {
   describe('(Account Scope)', function() {
-    var requestMock, Syncano, scope;
-    before(function() {
-      mockery.enable(config.mockSettings);
-      mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../../lib/syncano.js');
-      scope = new Syncano({
-        accountKey: config.accountKey
-      });
-    });
-
-    after(function() {
-      mockery.deregisterMock('request');
-      mockery.disable();
-    });
+    before(helper.beforeAccountScopeFunc);
+    after(helper.afterFunc);
 
     it('instance.dataobject is an dataobject object', function() {
       (scope.instance(config.instance).class(config.className).dataobject().type).should.equal('dataobject');
