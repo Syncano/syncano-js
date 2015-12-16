@@ -124,7 +124,6 @@ CodeBox.prototype.type = 'codebox';
 
 var DataObject = function DataObject(config, id) {
 
-  var singleFunc, pluralFunc;
   var opts = helpers.merge({}, config);
 
   if (id) {
@@ -142,7 +141,6 @@ DataObject.prototype.type = 'dataobject';
 
 var Instance = function(config, id) {
 
-  var self = this;
   var singleFunc, pluralFunc;
 
   var opts = helpers.merge({}, config);
@@ -156,7 +154,6 @@ var Instance = function(config, id) {
 
     opts.instance = id || opts.instance;
     SingleObj.call(this, opts, singleFunc);
-    var objArr;
 
     if (opts && opts.accountKey) {
       this.admin = classBuilder(Admin, opts);
