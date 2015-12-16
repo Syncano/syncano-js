@@ -1,7 +1,6 @@
 'use strict';
 
-var should = require('should');
-var mockery = require('mockery');
+var should = require('should'); // eslint-disable-line
 var config = require('../../config.js');
 var helper = require('../../helpers/server/helper.js');
 
@@ -22,7 +21,7 @@ describe('DataObject', function() {
     });
 
     it('list() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).class(config.className).dataobject().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -37,7 +36,7 @@ describe('DataObject', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).class(config.className).dataobject().detail(config.dataobjectId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -52,7 +51,7 @@ describe('DataObject', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).class(config.className).dataobject().update(config.dataobjectId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -67,7 +66,7 @@ describe('DataObject', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).class(config.className).dataobject().delete(config.dataobjectId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -92,7 +91,7 @@ describe('DataObject', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.detail();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -107,7 +106,7 @@ describe('DataObject', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -122,7 +121,7 @@ describe('DataObject', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.delete();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);

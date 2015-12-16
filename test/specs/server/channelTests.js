@@ -1,7 +1,6 @@
 'use strict';
 
-var should = require('should');
-var mockery = require('mockery');
+var should = require('should'); // eslint-disable-line
 var config = require('../../config.js');
 var helper = require('../../helpers/server/helper.js');
 
@@ -22,7 +21,7 @@ describe('Channel', function() {
     });
 
     it('list() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).channel().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -37,7 +36,7 @@ describe('Channel', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).channel().detail(config.channelId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -52,7 +51,7 @@ describe('Channel', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).channel().update(config.channelId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -67,7 +66,7 @@ describe('Channel', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).channel().delete(config.channelId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -92,7 +91,7 @@ describe('Channel', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.detail();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -107,7 +106,7 @@ describe('Channel', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -122,7 +121,7 @@ describe('Channel', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.delete();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -139,22 +138,9 @@ describe('Channel', function() {
   });
 
   describe('(Instance Scope)', function() {
-    var requestMock, Syncano, scope;
-    before(function() {
-      mockery.enable(config.mockSettings);
-      mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../../lib/syncano.js');
-      scope = new Syncano({
-        apiKey: config.apiKey,
-        instance: config.instance
-      });
-    });
-
-    after(function() {
-      mockery.deregisterMock('request');
-      mockery.disable();
-    });
+    before(helper.beforeInstanceScopeFunc);
+    after(helper.afterFunc);
 
     it('should be channel object', function() {
       (scope.channel().type).should.equal('channel');
@@ -162,7 +148,7 @@ describe('Channel', function() {
     });
 
     it('poll() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.channel(config.channelId).poll();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -177,7 +163,7 @@ describe('Channel', function() {
     });
 
     it('poll() accepts lastId in filter', function(done) {
-      var func, res;
+      var func;
       func = scope.channel(config.channelId).poll({lastId: 1});
       func.then(function(res) {
         (res.qs).should.have.property('last_id').which.is.equal(1);
@@ -188,7 +174,7 @@ describe('Channel', function() {
     });
 
     it('poll() accepts room name in filter', function(done) {
-      var func, res;
+      var func;
       func = scope.channel(config.channelId).poll({room: 'room name'});
       func.then(function(res) {
         (res.qs).should.have.property('room').which.is.equal('room name');
@@ -199,7 +185,7 @@ describe('Channel', function() {
     });
 
     it('history() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.channel(config.channelId).history();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -214,7 +200,7 @@ describe('Channel', function() {
     });
 
     it('history() accepts room name in filter', function(done) {
-      var func, res;
+      var func;
       func = scope.channel(config.channelId).history({room: 'room name'});
       func.then(function(res) {
         (res.qs).should.have.property('room').which.is.equal('room name');
@@ -225,7 +211,7 @@ describe('Channel', function() {
     });
 
     it('publish() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.channel(config.channelId).publish({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -247,23 +233,10 @@ describe('Channel', function() {
   });
 
   describe('(Logged User Scope)', function() {
-    var requestMock, Syncano, scope;
-    before(function() {
-      mockery.enable(config.mockSettings);
-      mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../../lib/syncano.js');
-      scope = new Syncano({
-        apiKey: config.apiKey,
-        instance: config.instance,
-        userKey: config.userKey
-      });
-    });
+    before(helper.beforeUserScopeFunc);
+    after(helper.afterFunc);
 
-    after(function() {
-      mockery.deregisterMock('request');
-      mockery.disable();
-    });
     it('should be channel object', function() {
       (scope.channel().type).should.equal('channel');
       (scope.channel()).should.have.keys(['list', 'detail', 'detail', 'history', 'publish', 'poll', 'watch']);

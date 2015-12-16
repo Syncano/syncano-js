@@ -10,7 +10,6 @@ var helpers  = require('../shared/helpers.js');
 var request  = require('./request.js');
 var Promise  = require('bluebird');
 var EventEmitter = require('events').EventEmitter;
-var util = require('util');
 
 var defaultOptions = {
   headers: {

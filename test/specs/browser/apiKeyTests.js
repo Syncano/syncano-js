@@ -1,7 +1,6 @@
 'use strict';
 
-var should = require('should');
-var mockery = require('mockery');
+var should = require('should'); // eslint-disable-line
 var config = require('../../config.js');
 var helper = require('../../helpers/browser/helper.js');
 
@@ -12,7 +11,6 @@ describe('ApiKey', function() {
     after(helper.afterFunc);
 
     it('should be apikey object', function() {
-      console.log(scope);
       (scope.instance(config.instance).apikey().type).should.equal('apikey');
       (scope.instance(config.instance).apikey()).should.have.keys(['list', 'detail', 'add', 'resetKey', 'delete']);
       (scope.instance(config.instance).apikey().add).should.be.a.Function();
@@ -23,7 +21,7 @@ describe('ApiKey', function() {
     });
 
     it('list() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).apikey().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -38,7 +36,7 @@ describe('ApiKey', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).apikey().detail(config.apiKeyId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -53,7 +51,7 @@ describe('ApiKey', function() {
     });
 
     it('add() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).apikey().add({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -68,7 +66,7 @@ describe('ApiKey', function() {
     });
 
     it('resetKey() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).apikey().resetKey(config.apiKeyId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -83,7 +81,7 @@ describe('ApiKey', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).apikey().delete(config.apiKeyId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -107,7 +105,7 @@ describe('ApiKey', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.detail();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -122,7 +120,7 @@ describe('ApiKey', function() {
     });
 
     it('resetKey() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.resetKey({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -137,7 +135,7 @@ describe('ApiKey', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.delete();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);

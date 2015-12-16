@@ -1,7 +1,6 @@
 'use strict';
 
-var mockery = require('mockery');
-var should = require('should');
+var should = require('should'); // eslint-disable-line
 var config = require('../../config.js');
 var helper = require('../../helpers/browser/helper.js');
 
@@ -23,7 +22,7 @@ describe('Syncano (Logged User Scope)', function() {
   });
 
   it('detail() should recieve correct options', function(done) {
-    var func, res;
+    var func;
     func = scope.detail();
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);

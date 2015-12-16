@@ -1,7 +1,6 @@
 'use strict';
 
-var should = require('should');
-var mockery = require('mockery');
+var should = require('should'); // eslint-disable-line
 var config = require('../../config.js');
 var helper = require('../../helpers/browser/helper.js');
 
@@ -22,7 +21,7 @@ describe('Instance', function() {
     });
 
     it('list() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -37,7 +36,7 @@ describe('Instance', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance().detail(config.instance);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -52,7 +51,7 @@ describe('Instance', function() {
     });
 
     it('add() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance().add({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -67,7 +66,7 @@ describe('Instance', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance().update(config.instance, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -82,7 +81,7 @@ describe('Instance', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance().delete(config.instance);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -133,7 +132,7 @@ describe('Instance', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.detail();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -148,7 +147,7 @@ describe('Instance', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -163,7 +162,7 @@ describe('Instance', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.delete();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);

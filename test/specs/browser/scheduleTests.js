@@ -1,7 +1,6 @@
 'use strict';
 
-var should = require('should');
-var mockery = require('mockery');
+var should = require('should'); // eslint-disable-line
 var config = require('../../config.js');
 var helper = require('../../helpers/browser/helper.js');
 
@@ -22,7 +21,7 @@ describe('Schedule', function() {
     });
 
     it('list() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).schedule().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -37,7 +36,7 @@ describe('Schedule', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).schedule().detail(config.scheduleId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -52,7 +51,7 @@ describe('Schedule', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).schedule().update(config.scheduleId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -67,7 +66,7 @@ describe('Schedule', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).schedule().delete(config.scheduleId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -94,7 +93,7 @@ describe('Schedule', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.detail();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -109,7 +108,7 @@ describe('Schedule', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -124,7 +123,7 @@ describe('Schedule', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.delete();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -138,7 +137,7 @@ describe('Schedule', function() {
       });
     });
     it('traces() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.traces();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -153,7 +152,7 @@ describe('Schedule', function() {
     });
 
     it('trace() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.trace(config.traceId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);

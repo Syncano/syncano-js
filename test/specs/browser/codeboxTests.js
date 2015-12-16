@@ -1,7 +1,6 @@
 'use strict';
 
-var should = require('should');
-var mockery = require('mockery');
+var should = require('should'); // eslint-disable-line
 var config = require('../../config.js');
 var helper = require('../../helpers/browser/helper.js');
 
@@ -24,7 +23,7 @@ describe('CodeBox', function() {
     });
 
     it('list() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).codebox().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -39,7 +38,7 @@ describe('CodeBox', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).codebox().detail(config.codeboxId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -54,7 +53,7 @@ describe('CodeBox', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).codebox().update(config.codeboxId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -69,7 +68,7 @@ describe('CodeBox', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).codebox().delete(config.codeboxId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -84,7 +83,7 @@ describe('CodeBox', function() {
     });
 
     it('runtimes() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).codebox().runtimes();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -109,7 +108,7 @@ describe('CodeBox', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.detail();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -124,7 +123,7 @@ describe('CodeBox', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -139,7 +138,7 @@ describe('CodeBox', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.delete();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -154,7 +153,7 @@ describe('CodeBox', function() {
     });
 
     it('run() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.run({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -169,7 +168,7 @@ describe('CodeBox', function() {
     });
 
     it('traces() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.traces();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -184,7 +183,7 @@ describe('CodeBox', function() {
     });
 
     it('trace() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.trace(config.traceId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -199,7 +198,7 @@ describe('CodeBox', function() {
     });
 
     it('runtimes() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.runtimes();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);

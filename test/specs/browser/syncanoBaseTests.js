@@ -1,7 +1,6 @@
 'use strict';
 
-var should = require('should');
-var mockery = require('mockery');
+var should = require('should'); // eslint-disable-line
 var config = require('../../config.js');
 var helper = require('../../helpers/browser/helper.js');
 
@@ -31,7 +30,7 @@ describe('Syncano', function() {
   });
 
   it('should allow filters', function(done) {
-    var func, res;
+    var func;
     var filterOpts = {filter: {some: 'filter'}, fields: {include: ['included'], exclude: ['excluded'] }, orderBy: {field: 'desc'}, pageSize: 10 };
     func = scope.instance().list(filterOpts);
     func.then(function(res) {

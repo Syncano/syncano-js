@@ -11,7 +11,7 @@ var FormData = require('./formdata.js');
 var helpers = require('../shared/helpers.js');
 var axios = require('axios');
 
-var request = function(opts, cb) {
+var request = function(opts) {
   var req = new Request(opts);
   if (opts.qs) {
     req._qs(opts.qs);

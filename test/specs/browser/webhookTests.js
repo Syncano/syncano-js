@@ -1,7 +1,6 @@
 'use strict';
 
-var should = require('should');
-var mockery = require('mockery');
+var should = require('should'); // eslint-disable-line
 var config = require('../../config.js');
 var helper = require('../../helpers/browser/helper.js');
 
@@ -22,7 +21,7 @@ describe('Webhook', function() {
     });
 
     it('list() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).webhook().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -37,7 +36,7 @@ describe('Webhook', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).webhook().detail(config.webhookId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -52,7 +51,7 @@ describe('Webhook', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).webhook().update(config.webhookId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -67,7 +66,7 @@ describe('Webhook', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).webhook().delete(config.webhookId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -95,7 +94,7 @@ describe('Webhook', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.detail();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -110,7 +109,7 @@ describe('Webhook', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -125,7 +124,7 @@ describe('Webhook', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.delete();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -139,7 +138,7 @@ describe('Webhook', function() {
       });
     });
     it('run() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.run({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -154,7 +153,7 @@ describe('Webhook', function() {
     });
 
     it('traces() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.traces();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -169,7 +168,7 @@ describe('Webhook', function() {
     });
 
     it('trace() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.trace(config.traceId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);

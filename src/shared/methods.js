@@ -91,7 +91,7 @@ var methods = {
 
     return opts;
   },
-  runtimes: function runtimes(config) {
+  runtimes: function runtimes() {
     var opts = {
       method: 'GET',
       path: 'runtimes',
@@ -102,7 +102,7 @@ var methods = {
 
     return opts;
   },
-  resetKey: function resetKey(config) {
+  resetKey: function resetKey() {
     var opts = {
       method: 'POST',
       path: 'reset_key',
@@ -110,7 +110,7 @@ var methods = {
     };
     return opts;
   },
-  traces: function traces(config) {
+  traces: function traces() {
     var opts = {
       method: 'GET',
       path: 'traces',
@@ -118,7 +118,7 @@ var methods = {
     };
     return opts;
   },
-  trace: function trace(config) {
+  trace: function trace() {
     var opts = {
       method: 'GET',
       pathFirst: true,
@@ -127,7 +127,7 @@ var methods = {
     };
     return opts;
   },
-  run: function run(config) {
+  run: function run() {
     var opts = {
       method: 'POST',
       path: 'run',
@@ -135,7 +135,7 @@ var methods = {
     };
     return opts;
   },
-  poll: function poll(config) {
+  poll: function poll() {
     var opts = {
       method: 'GET',
       path: 'poll',
@@ -143,7 +143,7 @@ var methods = {
     };
     return opts;
   },
-  watch: function poll(config) {
+  watch: function poll() {
     var opts = {
       method: 'GET',
       path: 'poll',
@@ -151,7 +151,7 @@ var methods = {
     };
     return opts;
   },
-  history: function history(config) {
+  history: function history() {
     var opts = {
       method: 'GET',
       path: 'history',
@@ -159,7 +159,7 @@ var methods = {
     };
     return opts;
   },
-  publish: function publish(config) {
+  publish: function publish() {
     var opts = {
       method: 'POST',
       path: 'publish',
@@ -167,14 +167,14 @@ var methods = {
     };
     return opts;
   },
-  sendEmail: function sendEmail(config) {
+  sendEmail: function sendEmail() {
     var opts = {
       method: 'POST',
       func: {plural: core.paramReq}
     };
     return opts;
   },
-  accept: function accept(config) {
+  accept: function accept() {
     var opts = {
       method: 'POST',
       path: 'accept',
@@ -182,7 +182,7 @@ var methods = {
     };
     return opts;
   },
-  register: function register(config) {
+  register: function register() {
     var opts = {
       method: 'POST',
       path: 'register',
@@ -201,7 +201,7 @@ var methods = {
     }
     return opts;
   },
-  changePw: function changePw(config) {
+  changePw: function changePw() {
     var opts = {
       method: 'POST',
       path: 'password',
@@ -209,7 +209,7 @@ var methods = {
     };
     return opts;
   },
-  setPw: function setPw(config) {
+  setPw: function setPw() {
     var opts = {
       method: 'POST',
       path: 'password/set',
@@ -217,7 +217,7 @@ var methods = {
     };
     return opts;
   },
-  resetPw: function resetPw(config) {
+  resetPw: function resetPw() {
     var opts = {
       method: 'POST',
       path: 'password/reset',
@@ -225,7 +225,7 @@ var methods = {
     };
     return opts;
   },
-  confirmResetPw: function confirmResetPw(config) {
+  confirmResetPw: function confirmResetPw() {
     var opts = {
       method: 'POST',
       path: 'password/reset/confirm',
@@ -233,7 +233,7 @@ var methods = {
     };
     return opts;
   },
-  activate: function activate(config) {
+  activate: function activate() {
     var opts = {
       method: 'POST',
       path: 'activate',

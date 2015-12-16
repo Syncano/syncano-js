@@ -6,7 +6,6 @@
 'use strict';
 
 var Objects = require('./shared/objects.js');
-var helpers = require('./shared/helpers.js');
 
 var Syncano = function Syncano(opt) {
   if (!(this instanceof Syncano)) {
@@ -19,7 +18,6 @@ var Syncano = function Syncano(opt) {
     var instance = opt.instance;
     var userKey = opt.userKey || opt.user_key;
     var accountKey = opt.accountKey || opt.account_key;
-    var debug = opt.debug;
 
     if (opt.baseUrl) {
       this.config.baseUrl = opt.baseUrl;
