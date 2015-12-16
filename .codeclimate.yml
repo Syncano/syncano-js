@@ -2,6 +2,7 @@ languages:
    JavaScript: true
 exclude_paths:
  - "test/**/*"
+ - "lib/**/*"
  - "Gulpfile.js"
  - "README.md"
  - "package.json"

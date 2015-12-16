@@ -3,26 +3,13 @@
 var should = require('should');
 var mockery = require('mockery');
 var config = require('../../config.js');
+var helper = require('../../helpers/browser/helper.js');
 
 describe('Instance', function() {
   describe('(Account scope)', function() {
-    var requestMock, Syncano, scope;
-    before(function() {
-      mockery.enable(config.mockSettings);
-      mockery.registerMock('./request.js', config.browserRequestMock);
-      mockery.registerSubstitute('../server/core.js', '../browser/core.js');
 
-      Syncano = require('../../../lib/syncano.js');
-      scope = new Syncano({
-        accountKey: config.accountKey
-      });
-    });
-
-    after(function() {
-      mockery.deregisterMock('request');
-      mockery.deregisterSubstitute('../server/core.js');
-      mockery.disable();
-    });
+    before(helper.beforeAccountScopeFunc);
+    after(helper.afterFunc);
 
     it('should be an instance object', function() {
       (scope.instance().type).should.equal('instance');
