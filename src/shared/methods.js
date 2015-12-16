@@ -131,7 +131,7 @@ var methods = {
     var opts = {
       method: 'POST',
       path: 'run',
-      func: {single: core.filterReq, plural: core.filterIdReq}
+      func: { single: core.paramReq, plural: core.paramIdReq }
     };
     return opts;
   },
