@@ -154,7 +154,7 @@ var paramReq = function paramReq(config) {
   delete opt.func;
 
   return (function(params, filter, cb) {
-    params = helpers.checkParams(params);
+    params = helpers.checkParams(params, (config.type === 'webhook' ? true : false));
 
     if (arguments.length <= 2) {
       var args = helpers.sortArgs(filter, cb);
@@ -183,7 +183,7 @@ var paramIdReq = function paramIdReq(config) {
   return (function(id, params, filter, cb) {
     opt.id = helpers.checkId(id);
 
-    params = helpers.checkParams(params, false);
+    params = helpers.checkParams(params, (config.type === 'webhook' ? true : false));
 
     if (arguments.length <= 3) {
       var args = helpers.sortArgs(filter, cb);

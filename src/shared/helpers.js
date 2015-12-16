@@ -5,11 +5,11 @@
 
 'use strict';
 
-var checkParams = function(p) {
-  if (typeof p !== 'object') {
+var checkParams = function(p, d) {
+  if (typeof p !== 'object' && !d) {
     throw new Error('Invalid parameters object.');
   }
-  return p;
+  return p || {};
 };
 
 var checkId = function(id) {
@@ -31,7 +31,7 @@ var parseFilter = function(options) {
       parsedOptions.excluded_fields = options.fields.exclude.join();
     }
   }
-  
+
   if(options.include_count && options.include_count === true ) {
     parsedOptions.include_count = true;
   }
