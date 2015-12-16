@@ -65,4 +65,4 @@ DummyFormData.prototype.append = function(name, value, filename) {
     this.__append(part);
 };
 
-module.exports = FormData || DummyFormData;
+module.exports = window.FormData || DummyFormData;
