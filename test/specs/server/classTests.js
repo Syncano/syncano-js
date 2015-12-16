@@ -1,12 +1,11 @@
 'use strict';
-var should = require('should');
-var mockery = require('mockery');
+var should = require('should'); // eslint-disable-line
 var config = require('../../config.js');
 var helper = require('../../helpers/server/helper.js');
 
 describe('Class', function() {
   describe('(Account Scope)', function() {
-    
+
     before(helper.beforeAccountScopeFunc);
     after(helper.afterFunc);
 
@@ -21,7 +20,7 @@ describe('Class', function() {
     });
 
     it('list() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).class().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -36,7 +35,7 @@ describe('Class', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).class().detail(config.className);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -51,7 +50,7 @@ describe('Class', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).class().update(config.className, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -66,7 +65,7 @@ describe('Class', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).class().delete(config.className);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -92,7 +91,7 @@ describe('Class', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.detail();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -107,7 +106,7 @@ describe('Class', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -122,7 +121,7 @@ describe('Class', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.delete();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -139,22 +138,9 @@ describe('Class', function() {
   });
 
   describe('(Instance Scope)', function() {
-    var requestMock, Syncano, scope;
-    before(function() {
-      mockery.enable(config.mockSettings);
-      mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../../lib/syncano.js');
-      scope = new Syncano({
-        apiKey: config.apiKey,
-        instance: config.instance
-      });
-    });
-
-    after(function() {
-      mockery.deregisterMock('request');
-      mockery.disable();
-    });
+    before(helper.beforeInstanceScopeFunc);
+    after(helper.afterFunc);
 
     it('this.class should be class object', function() {
       (scope.class().type).should.equal('class');
@@ -162,7 +148,7 @@ describe('Class', function() {
     });
 
     it('list() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.class().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -177,7 +163,7 @@ describe('Class', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.class().detail(config.className);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -200,23 +186,9 @@ describe('Class', function() {
   });
 
   describe('(Logged User Scope)', function() {
-    var requestMock, Syncano, scope;
-    before(function() {
-      mockery.enable(config.mockSettings);
-      mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../../lib/syncano.js');
-      scope = new Syncano({
-        apiKey: config.apiKey,
-        instance: config.instance,
-        userKey: config.userKey
-      });
-    });
-
-    after(function() {
-      mockery.deregisterMock('request');
-      mockery.disable();
-    });
+    before(helper.beforeUserScopeFunc);
+    after(helper.afterFunc);
 
     it('is a class object', function() {
       (scope.class().type).should.equal('class');
@@ -225,7 +197,7 @@ describe('Class', function() {
 
 
     it('list() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.class().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -241,7 +213,7 @@ describe('Class', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.class().detail(config.className);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -263,8 +235,4 @@ describe('Class', function() {
     });
 
   });
-
-
-
-
 });

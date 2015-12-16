@@ -1,8 +1,6 @@
 'use strict';
 
-var should = require('should');
-var mockery = require('mockery');
-var config = require('../../config.js');
+var should = require('should'); // eslint-disable-line
 var helper = require('../../helpers/server/helper.js');
 
 describe('Syncano (Empty Scope)', function() {
@@ -23,7 +21,7 @@ describe('Syncano (Empty Scope)', function() {
   });
 
   it('login()', function(done) {
-    var func, res;
+    var func;
     func = scope.login({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
@@ -37,7 +35,7 @@ describe('Syncano (Empty Scope)', function() {
   });
 
   it('register()', function(done) {
-    var func, res;
+    var func;
     func = scope.register({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
@@ -51,7 +49,7 @@ describe('Syncano (Empty Scope)', function() {
   });
 
   it('resendEmail()', function(done) {
-    var func, res;
+    var func;
     func = scope.resendEmail({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
@@ -65,7 +63,7 @@ describe('Syncano (Empty Scope)', function() {
   });
 
   it('resetPw() should recieve correct options', function(done) {
-    var func, res;
+    var func;
     func = scope.resetPw({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
@@ -79,7 +77,7 @@ describe('Syncano (Empty Scope)', function() {
   });
 
   it('confirmResetPw() should recieve correct options', function(done) {
-    var func, res;
+    var func;
     func = scope.confirmResetPw({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
@@ -93,7 +91,7 @@ describe('Syncano (Empty Scope)', function() {
   });
 
   it('activate() should recieve correct options', function(done) {
-    var func, res;
+    var func;
     func = scope.activate({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);

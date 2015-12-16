@@ -1,6 +1,6 @@
 'use strict';
 
-var should = require('should');
+var should = require('should'); // eslint-disable-line
 var config = require('../../config.js');
 var helper = require('../../helpers/browser/helper.js');
 
@@ -20,7 +20,7 @@ describe('Admin', function() {
     });
 
     it('list() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).admin().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -35,7 +35,7 @@ describe('Admin', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).admin().detail(config.adminId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -50,7 +50,7 @@ describe('Admin', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).admin().update(config.adminId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -65,7 +65,7 @@ describe('Admin', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).admin().delete(config.adminId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -90,7 +90,7 @@ describe('Admin', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.detail();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -105,7 +105,7 @@ describe('Admin', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -120,7 +120,7 @@ describe('Admin', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.delete();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);

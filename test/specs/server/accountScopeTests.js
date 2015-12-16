@@ -1,7 +1,6 @@
 'use strict';
 
-var should = require('should');
-var mockery = require('mockery');
+var should = require('should'); // eslint-disable-line
 var config = require('../../config.js');
 var helper = require('../../helpers/server/helper.js');
 
@@ -25,7 +24,7 @@ describe('Syncano (Account Scope)', function() {
   });
 
   it('detail() should recieve correct options', function(done) {
-    var func, res;
+    var func;
     func = scope.detail();
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
@@ -40,7 +39,7 @@ describe('Syncano (Account Scope)', function() {
   });
 
   it('update() should recieve correct options', function(done) {
-    var func, res;
+    var func;
     func = scope.update({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
@@ -55,7 +54,7 @@ describe('Syncano (Account Scope)', function() {
   });
 
   it('resetKey() should recieve correct options', function(done) {
-    var func, res;
+    var func;
     func = scope.resetKey();
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
@@ -70,7 +69,7 @@ describe('Syncano (Account Scope)', function() {
   });
 
   it('changePw() should recieve correct options', function(done) {
-    var func, res;
+    var func;
     func = scope.changePw({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);
@@ -85,7 +84,7 @@ describe('Syncano (Account Scope)', function() {
   });
 
   it('setPw() should recieve correct options', function(done) {
-    var func, res;
+    var func;
     func = scope.setPw({});
     func.then(function(res) {
       (res).should.have.properties(['method', 'url', 'headers']);

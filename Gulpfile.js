@@ -143,7 +143,7 @@ gulp.task('test', ['lint'], function() {
 });
 
 gulp.task('lint', function() {
-  gulp.src(['src/**/*.js'])
+  gulp.src(['src/**/*.js', 'test/specs/**/*.js'])
   .pipe(plumber())
   .pipe(eslint())
   .pipe(eslint.format())

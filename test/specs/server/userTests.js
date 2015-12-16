@@ -1,7 +1,6 @@
 'use strict';
 
-var should = require('should');
-var mockery = require('mockery');
+var should = require('should'); // eslint-disable-line
 var config = require('../../config.js');
 var helper = require('../../helpers/server/helper.js');
 
@@ -23,7 +22,7 @@ describe('User', function() {
     });
 
     it('list() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).user().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -38,7 +37,7 @@ describe('User', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).user().detail(config.userId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -53,7 +52,7 @@ describe('User', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).user().update(config.userId, {});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -68,7 +67,7 @@ describe('User', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).user().delete(config.userId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -83,7 +82,7 @@ describe('User', function() {
     });
 
     it('resetKey() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.instance(config.instance).user().resetKey(config.userId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -110,7 +109,7 @@ describe('User', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.detail();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -125,7 +124,7 @@ describe('User', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -140,7 +139,7 @@ describe('User', function() {
     });
 
     it('delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.delete();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -155,7 +154,7 @@ describe('User', function() {
     });
 
     it('resetKey() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.resetKey();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -170,7 +169,7 @@ describe('User', function() {
     });
 
     it('group().list() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.group().list();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -185,7 +184,7 @@ describe('User', function() {
     });
 
     it('group().add() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.group().add({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -200,7 +199,7 @@ describe('User', function() {
     });
 
     it('group().detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.group().detail(config.groupId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -215,7 +214,7 @@ describe('User', function() {
     });
 
     it('group().delete() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.group().delete(config.groupId);
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -238,22 +237,9 @@ describe('User', function() {
   });
 
   describe('(Instance Scope)', function() {
-    var requestMock, Syncano, scope;
-    before(function() {
-      mockery.enable(config.mockSettings);
-      mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../../lib/syncano.js');
-      scope = new Syncano({
-        apiKey: config.apiKey,
-        instance: config.instance
-      });
-    });
-
-    after(function() {
-      mockery.deregisterMock('request');
-      mockery.disable();
-    });
+    before(helper.beforeInstanceScopeFunc);
+    after(helper.afterFunc);
 
     it('this.user should be user object', function() {
       (scope.user().type).should.equal('user');
@@ -263,7 +249,7 @@ describe('User', function() {
     });
 
     it('add() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.user().add({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -278,7 +264,7 @@ describe('User', function() {
     });
 
     it('login() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.user().login({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -293,7 +279,7 @@ describe('User', function() {
     });
 
     it('login() (social login) should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.user().login({socialToken: config.socialToken, backend: config.backend});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -311,23 +297,9 @@ describe('User', function() {
   });
 
   describe('(Logged User Scope)', function() {
-    var requestMock, Syncano, scope;
-    before(function() {
-      mockery.enable(config.mockSettings);
-      mockery.registerMock('./request.js', config.requestMock);
 
-      Syncano = require('../../../lib/syncano.js');
-      scope = new Syncano({
-        apiKey: config.apiKey,
-        instance: config.instance,
-        userKey: config.userKey
-      });
-    });
-
-    after(function() {
-      mockery.deregisterMock('request');
-      mockery.disable();
-    });
+    before(helper.beforeUserScopeFunc);
+    after(helper.afterFunc);
 
     it('this.user should be user object', function() {
       (scope.user().type).should.equal('user');
@@ -338,7 +310,7 @@ describe('User', function() {
     });
 
     it('add() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.user().add({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -354,7 +326,7 @@ describe('User', function() {
     });
 
     it('detail() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.user().detail();
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
@@ -369,7 +341,7 @@ describe('User', function() {
     });
 
     it('update() should recieve correct options', function(done) {
-      var func, res;
+      var func;
       func = scope.user().update({});
       func.then(function(res) {
         (res).should.have.properties(['method', 'url', 'headers']);
