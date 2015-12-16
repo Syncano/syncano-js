@@ -17,11 +17,12 @@ var source = require('vinyl-source-stream');
 var stylish = require('jshint-stylish');
 var uglify = require('gulp-uglify');
 var aliasify  = require('aliasify');
+eslint = require('gulp-eslint');
 var aliasifyConfig = {
     aliases: {
         "../server/core.js": './lib/browser/core.js'
     }
-}
+};
 
 var handleError = function handleError(err) {
   console.log(err.toString());
@@ -81,7 +82,7 @@ gulp.task('git-add-tag', function(cb) {
 
     function(callback) {
       git.push('origin', 'master', callback);
-    }
+    },
 
     function(callback) {
       git.tag(version, 'Release ' + version, callback);
@@ -125,7 +126,7 @@ gulp.task('package', ['browserify'], function() {
 });
 
 
-gulp.task('test', ['lint', 'jscs'], function() {
+gulp.task('test', ['lint'], function() {
   return gulp.src('src/**/*.js')
   .pipe(istanbul({includeUntested: true}))
   .pipe(istanbul.hookRequire())
@@ -141,24 +142,18 @@ gulp.task('test', ['lint', 'jscs'], function() {
   });
 });
 
-gulp.task('jscs', function() {
-  gulp.src(['src/**/*.js', 'test/specs/**/*.js', 'Gulpfile.js'])
-  .pipe(plumber())
-  .pipe(jscs());
-});
-
 gulp.task('lint', function() {
-  gulp.src(['src/**/*.js', 'test/specs/**/*.js'])
+  gulp.src(['src/**/*.js'])
   .pipe(plumber())
-  .pipe(jshint('.jshintrc'))
-  .pipe(jshint.reporter(stylish))
-  .pipe(jshint.reporter('fail'));
+  .pipe(eslint())
+  .pipe(eslint.format())
+  .pipe(eslint.failAfterError());
 });
 
 gulp.task('watch', function() {
   gulp.watch(
-    ['src/**/*.js', 'test/specs/**/*.js', 'test/config.js', '.jscsrc', '.jshintrc', 'Gulpfile.js'],
-    ['test', 'lint', 'jscs']
+    ['src/**/*.js', 'test/specs/**/*.js', 'test/config.js', 'Gulpfile.js'],
+    ['test', 'lint']
   );
 });
 
