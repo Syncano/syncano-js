@@ -54,7 +54,7 @@ Request.prototype._formData = function(formData) {
     }
   });
 
-  this.sendOptions.data = form;
+  this.sendOptions.data = form.toString();
   this.sendOptions.headers = helpers.merge(this.sendOptions.headers, {
     'Content-Type': 'multipart/form-data; boundary=' + form.boundary
   });
