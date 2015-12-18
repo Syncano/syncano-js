@@ -53,8 +53,11 @@ Request.prototype._formData = function(formData) {
       form.append(key, formData[key]);
     }
   });
+
   this.sendOptions.data = form;
-  this.sendOptions.headers = helpers.merge({}, this.sendOptions.headers);
+  this.sendOptions.headers = helpers.merge(this.sendOptions.headers, {
+    'Content-Type': 'multipart/form-data; boundary=' + form.boundary
+  });
 };
 
 Request.prototype._jsonData = function(json) {
