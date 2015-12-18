@@ -1,4 +1,4 @@
-var browserify = require('browserify');
+var webpack = require('webpack-stream');
 var buffer = require('vinyl-buffer');
 var bump = require('gulp-bump');
 var async = require('async');
@@ -16,13 +16,7 @@ var sourcemaps = require('gulp-sourcemaps');
 var source = require('vinyl-source-stream');
 var stylish = require('jshint-stylish');
 var uglify = require('gulp-uglify');
-var aliasify  = require('aliasify');
-eslint = require('gulp-eslint');
-var aliasifyConfig = {
-    aliases: {
-        "../server/core.js": './lib/browser/core.js'
-    }
-};
+var eslint = require('gulp-eslint');
 
 var handleError = function handleError(err) {
   console.log(err.toString());
@@ -97,20 +91,13 @@ gulp.task('git-add-tag', function(cb) {
   });
 });
 
-gulp.task('browserify', function(cb) {
-  var b = browserify({
-    entries: './lib/syncano.js',
-    standalone: 'Syncano'
-  });
-
-  b.transform(aliasify, aliasifyConfig);
-
-  return b.bundle()
-    .pipe(source('syncano.js'))
-    .pipe(gulp.dest('./dist'));
+gulp.task('webpack', function(cb) {
+  return gulp.src('./src/syncano.js')
+  pipe(webpack(require('./webpack.config.js')))
+  .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('package', ['browserify'], function() {
+gulp.task('package', ['webpack'], function() {
   gulp.src('./dist/syncano.js')
   .pipe(rename('syncano.min.js'))
   .pipe(buffer())
