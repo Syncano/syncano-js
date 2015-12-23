@@ -13,6 +13,6 @@
   "manual": {
     "asset": "./manual/asset",
     "overview": ["./manual/overview.md"],
-    "changelog": ["./CHANGELOG.md]"]
+    "changelog": ["./CHANGELOG.md"]
   }
 }
