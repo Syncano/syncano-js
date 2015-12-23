@@ -1,5 +1,8 @@
 node_modules
-test/coverage
+coverage
 .DS_Store
 .idea
 coverage
+lib
+dist
+npm-debug.log
