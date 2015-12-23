@@ -1,0 +1,10 @@
+languages:
+   JavaScript: true
+exclude_paths:
+ - "test/**/*"
+ - "Gulpfile.js"
+ - "README.md"
+ - "package.json"
+ - "dist/*.*"
+ - "lib/*.*"
+ - "bower.json"
