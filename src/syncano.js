@@ -1,0 +1,1 @@
+var stampit = require('stampit');
