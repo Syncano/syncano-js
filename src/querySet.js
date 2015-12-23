@@ -63,7 +63,16 @@ const Request = stampit()
     }
   });
 
-const QuerySet = stampit.compose(Request);
+const List = stampit()
+  .methods({
+    list() {
+      this.method = 'GET';
+      this.endpoint = 'list';
+      return this;
+    }
+  });
+
+const QuerySet = stampit.compose(Request, List);
 
 
 export default QuerySet;
