@@ -12,4 +12,4 @@ deployment:
   production:
     branch: master
     commands:
-      - npm run-script codeclimate
+      - npm run codeclimate

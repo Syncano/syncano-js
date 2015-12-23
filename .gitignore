@@ -2,7 +2,6 @@ node_modules
 coverage
 .DS_Store
 .idea
-coverage
 lib
 dist
 npm-debug.log
