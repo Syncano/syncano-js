@@ -32,8 +32,7 @@
     "codeclimate": "codeclimate-test-reporter < ./coverage/lcov.info",
     "watch": "npm-run-all --parallel watch:*",
     "watch:lib": "npm run build:lib -- --watch",
-    "watch:dist": "npm run build:dist -- --watch",
-    "prepublish": "npm run build"
+    "watch:dist": "npm run build:dist -- --watch"
   },
   "repository": {
     "type": "git",
