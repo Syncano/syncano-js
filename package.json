@@ -28,7 +28,8 @@
     "pretest": "npm run lint",
     "test": "npm-run-all test:*",
     "test:lib": "istanbul cover _mocha -- 'test/lib/**/*.js'",
-    "test:dist": "karma start karma.config.js"
+    "test:dist": "karma start karma.config.js",
+    "codeclimate": "codeclimate-test-reporter < ./coverage/lcov.info"
   },
   "repository": {
     "type": "git",
