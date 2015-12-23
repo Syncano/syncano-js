@@ -1,0 +1,27 @@
+{
+  "name": "syncano",
+  "version": "1.0.0",
+  "description": "A library to intereact with the Syncano API.",
+  "main": "lib/syncano.js",
+  "author": "Kelly Andrews",
+  "contributors": [
+    {
+      "name": "Jakub Bilko",
+      "email": "jakub.bilko@syncano.com"
+    },
+    {
+      "name": "Daniel Kopka",
+      "email": "daniel.kopka@syncano.com"
+    }
+  ],
+  "license": "ISC",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Syncano/syncano-js.git"
+  },
+  "dependencies": {
+    "stampit": "^2.1.1"
+  },
+  "devDependencies": {}
+}

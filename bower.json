@@ -1,0 +1,22 @@
+{
+  "name": "syncano",
+  "version": "1.0.0",
+  "description": "A library to intereact with the Syncano API.",
+  "homepage": "https://github.com/Syncano/syncano-js",
+  "authors": [
+    "Kelly Andrews <kelly@kellyjandrews.com>",
+    "Jakub Bilko <jakub.bilko@syncano.com>",
+    "Daniel Kopka <daniel.kopka@syncano.com>"
+  ],
+  "main": [
+    "dist/syncano.min.js"
+  ],
+  "license": "ISC",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
