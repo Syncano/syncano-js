@@ -22,7 +22,7 @@
     "clean:coverage": "rimraf ./coverage",
     "prebuild": "npm run clean",
     "build": "npm-run-all build:*",
-    "build:lib": "babel src -d lib",
+    "build:lib": "babel src --out-dir lib",
     "build:dist": "webpack",
     "lint": "eslint src/** test/**",
     "pretest": "npm run lint",
@@ -31,7 +31,8 @@
     "test:dist": "karma start karma.config.js",
     "codeclimate": "codeclimate-test-reporter < ./coverage/lcov.info",
     "watch": "npm-run-all watch:*",
-    "watch:lib": "npm run build:lib -- --watch"
+    "watch:lib": "npm run build:lib -- --watch",
+    "watch:dist": "npm run build:dist -- --watch"
   },
   "repository": {
     "type": "git",
