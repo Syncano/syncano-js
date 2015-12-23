@@ -16,9 +16,14 @@
   ],
   "license": "ISC",
   "scripts": {
+    "clean": "npm-run-all clean:*",
+    "clean:lib": "rimraf ./lib",
+    "clean:dist": "rimraf ./dist",
+
+    "prebuild": "npm run clean",
     "build": "npm-run-all build:*",
-      "build:js": "babel src -d lib",
-      "build:package": "webpack"
+    "build:lib": "babel src -d lib",
+    "build:dist": "webpack"
   },
   "repository": {
     "type": "git",
@@ -34,9 +39,12 @@
     "babel-loader": "^6.2.0",
     "babel-preset-es2015": "^6.3.13",
     "npm-run-all": "^1.4.0",
+    "rimraf": "^2.4.5",
     "webpack": "^1.12.9"
   },
   "babel": {
-    "presets": ["es2015"]
+    "presets": [
+      "es2015"
+    ]
   }
 }
