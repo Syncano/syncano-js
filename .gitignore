@@ -5,3 +5,4 @@ coverage
 lib
 dist
 npm-debug.log
+docs
