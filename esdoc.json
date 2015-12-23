@@ -1,0 +1,18 @@
+{
+  "source": "./src",
+  "destination": "./docs",
+  "test": {
+    "type": "mocha",
+    "source": "./test/lib"
+  },
+  "index": "./README.md",
+  "package": "./package.json",
+  "coverage": true,
+  "includeSource": true,
+  "title": "Syncano",
+  "manual": {
+    "asset": "./manual/asset",
+    "overview": ["./manual/overview.md"],
+    "changelog": ["./CHANGELOG.md]"]
+  }
+}
