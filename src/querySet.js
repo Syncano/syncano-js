@@ -5,6 +5,13 @@ import _ from 'lodash';
 
 
 const Request = stampit()
+  .refs({
+    model: null,
+    connection: {
+      root: 'https://api.syncano.io',
+      accountKey: ''
+    }
+  })
   .props({
     endpoint: null,
     method: null,
@@ -17,6 +24,15 @@ const Request = stampit()
     payload: {}
   })
   .methods({
+    serialize(response) {
+      if (this.endpoint === 'list') {
+        response.objects = _.map(response.objects, (object) => this.model(object));
+      } else if (this.endpoint === 'detail') {
+        response = this.model(response);
+      }
+      return response;
+    },
+
     request(callback) {
       if (_.isEmpty(this.method)) {
         throw Error('"method" is required');
@@ -26,14 +42,26 @@ const Request = stampit()
         throw Error('"endpoint" is required');
       }
 
+      const meta = this.model.getMeta();
+      const endpoint = meta.endpoints[this.endpoint] || {};
+      const allowedMethods = endpoint.methods || [];
+      const url = `${this.connection.root}${endpoint.path}`;
       const method = this.method.toLowerCase();
       let request = superagent[method];
 
-      if (_.isUndefined(request)) {
+      if (_.isUndefined(request) || !_.includes(allowedMethods, method)) {
         throw Error(`Invalid request method: "${this.method}"`);
       }
 
-      request = request(this.endpoint)
+      if (_.isUndefined(endpoint)) {
+        throw Error(`Invalid request endpoint: "${this.endpoint}"`);
+      }
+
+      if (!_.isEmpty(this.connection.accountKey)) {
+        this.headres['Authorization'] = `Token ${this.connection.accountKey}`;
+      }
+
+      request = request(url)
         .type(self.type)
         .accept(self.accept)
         .set(this.headres)
@@ -41,7 +69,12 @@ const Request = stampit()
         .send(this.payload);
 
       if (_.isFunction(callback)) {
-        request = request.end(callback);
+        request = request.end(_.wrap(callback, (func, err, res) => {
+          if (err || !res.ok) {
+            return func(err, res);
+          }
+          return func(err, this.serialize(res.body), res);
+        }));
       }
 
       return request;
@@ -49,11 +82,11 @@ const Request = stampit()
 
     then(callback) {
       return new Promise((resolve, reject) => {
-        this.request((err, res) => {
+        this.request((err, body, res) => {
           if (err || !res.ok) {
             return reject(err);
           }
-          resolve(res);
+          resolve(body);
         });
       }).then(callback);
     },
