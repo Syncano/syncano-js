@@ -33,7 +33,7 @@ const Request = stampit()
       return response;
     },
 
-    request(callback) {
+    request() {
       if (_.isEmpty(this.method)) {
         throw Error('"method" is required');
       }
@@ -68,31 +68,18 @@ const Request = stampit()
         .query(this.query)
         .send(this.payload);
 
-      if (_.isFunction(callback)) {
-        request = request.end(_.wrap(callback, (func, err, res) => {
-          if (err || !res.ok) {
-            return func(err, res);
-          }
-          return func(err, this.serialize(res.body), res);
-        }));
-      }
-
-      return request;
-    },
-
-    then(callback) {
       return new Promise((resolve, reject) => {
-        this.request((err, body, res) => {
+        request.end((err, res) => {
           if (err || !res.ok) {
             return reject(err);
           }
-          resolve(body);
+          resolve(this.serialize(res.body), res);
         });
-      }).then(callback);
+      })
     },
 
-    end(callback) {
-      return this.request(callback);
+    then(callback) {
+      return this.request().then(callback);
     }
   });
 
