@@ -16,10 +16,10 @@ export const Please = stampit().static({
 export const Model = stampit()
   .methods({
     save() {
-      console.log('save');
+
     },
     delete() {
-      console.log('delete');
+
     }
   })
   .static({
