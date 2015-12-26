@@ -1,15 +1,28 @@
 import stampit from 'stampit';
 import models from './models';
+import _ from 'lodash';
 
 /**
  * Main Syncano object.
  * @type {Syncano}
  */
-const Syncano = stampit();
-
-models.Instance.please().list().then((response) => {
-    response.objects[0].delete();
-    response.objects[0].save();
-})
+const Syncano = stampit()
+  .props({
+    baseUrl: 'https://api.syncano.io',
+    accountKey: ''
+  })
+  .methods({
+    setKey(key) {
+      if(_.isEmpty(key)) throw Error('Key is required');
+      this.accountKey = key;
+    },
+    setBaseUrl(url) {
+      if(_.isEmpty(key)) throw Error('Url is required');
+      this.baseUrl = key;
+    },
+    instance() {
+      return models.Instance;
+    }
+  });
 
 export default Syncano;
