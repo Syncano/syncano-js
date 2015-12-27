@@ -51,7 +51,8 @@ const Request = stampit()
       const meta = this.model.getMeta();
       const endpoint = meta.endpoints[this.endpoint] || {};
       const allowedMethods = endpoint.methods || [];
-      const url = `${this.connection.root}${endpoint.path}`;
+      const path = meta.resolveEndpointPath(this.endpoint, this.properties);
+      const url = `${this.connection.root}${path}`;
       const method = this.method.toLowerCase();
       let request = superagent[method];
 
@@ -68,8 +69,8 @@ const Request = stampit()
       }
 
       request = request(url)
-        .type(self.type)
-        .accept(self.accept)
+        .type(this.type)
+        .accept(this.accept)
         .set(this.headres)
         .query(this.query)
         .send(this.payload);
@@ -92,7 +93,7 @@ const Request = stampit()
 
 const Create = stampit().methods({
   create(object) {
-    const attrs = _.assign({}, self.properties, object);
+    const attrs = _.assign({}, this.properties, object);
     const instance = this.model(attrs);
 
     return instance.save();
@@ -110,14 +111,13 @@ const Get = stampit().methods({
   }
 });
 
-
 const GetOrCreate = stampit().methods({
   getOrCreate(properties = {}, defaults = {}) {
     return new Promise((resolve, reject) => {
       this.get(properties)
         .then(resolve)
         .catch(() => {
-          const attrs = _.assign({}, self.properties, properties, defaults);
+          const attrs = _.assign({}, this.properties, properties, defaults);
           this.create(attrs)
             .then(resolve)
             .catch(reject);
@@ -164,7 +164,7 @@ const UpdateOrCreate = stampit().methods({
       this.update(properties, object)
         .then(resolve)
         .catch(() => {
-          const attrs = _.assign({}, self.properties, properties, defaults);
+          const attrs = _.assign({}, this.properties, properties, defaults);
           this.create(attrs)
             .then(resolve)
             .catch(reject);
@@ -172,7 +172,6 @@ const UpdateOrCreate = stampit().methods({
     });
   }
 });
-
 
 const First = stampit().methods({
   first(properties = {}, query = {}) {
@@ -233,6 +232,5 @@ const QuerySet = stampit.compose(
   Ordering,
   Raw
 );
-
 
 export default QuerySet;
