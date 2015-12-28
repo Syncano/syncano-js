@@ -8,10 +8,8 @@ import _ from 'lodash';
  */
 const Syncano = stampit()
   .refs({
-    connection: {
-      baseUrl: 'https://api.syncano.io',
-      accountKey: ''
-    }
+    baseUrl: 'https://api.syncano.io',
+    accountKey: ''
   })
   .methods({
     setKey(key) {
