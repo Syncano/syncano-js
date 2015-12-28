@@ -8,5 +8,6 @@ import Admin from './admin';
 import ApiKey from './apikey'
 import InstanceInvitation from './instanceinvitation'
 import CodeBox from './codebox'
+import Schedule from './schedule'
 
-export default { Instance, Class, Channel, DataObject, User, Group, Admin, ApiKey, InstanceInvitation, CodeBox };
+export default { Instance, Class, Channel, DataObject, User, Group, Admin, ApiKey, InstanceInvitation, CodeBox, Schedule };
