@@ -62,7 +62,10 @@ export const Model = stampit()
       this.fixed._meta = Meta(meta);
       return this;
     },
-
+    setBaseObject(syncano) {
+      this.fixed.base = syncano;
+      return this;
+    },
     getMeta() {
       return this.fixed._meta;
     }
