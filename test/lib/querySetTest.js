@@ -50,15 +50,22 @@ describe('QuerySet', function() {
     });
 
     it('should not serialize', function() {
+      let response = {objects: [1, 2]};
+
       should(qs).have.property('endpoint').which.is.null();
       should(qs).have.property('model').which.is.Function();
       should(qs).have.property('_serialize').which.is.Boolean().equal(true);
 
       qs.endpoint = 'list';
       qs._serialize = false;
+      let serialized = qs.serialize(response);
 
-      let response = {objects: [1, 2]};
-      const serialized = qs.serialize(response);
+      should(serialized).which.is.an.Object();
+      should(serialized).have.keys(_.keys(response)).and.properties(response);
+
+      qs.endpoint = null;
+      qs._serialize = true;
+      serialized = qs.serialize(response);
 
       should(serialized).which.is.an.Object();
       should(serialized).have.keys(_.keys(response)).and.properties(response);
