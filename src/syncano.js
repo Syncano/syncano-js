@@ -7,6 +7,11 @@ import _ from 'lodash';
  * @type {Syncano}
  */
 const Syncano = stampit()
+  .init(({instance}) => {
+    _.forEach(models, (model, name) => {
+      instance[name] = stampit().compose(model).setBaseObject(this)();
+    });
+  })
   .refs({
     baseUrl: 'https://api.syncano.io',
     accountKey: ''
@@ -19,9 +24,6 @@ const Syncano = stampit()
     setBaseUrl(url) {
       if(_.isEmpty(key)) throw Error('Url is required');
       this.connection.baseUrl = url;
-    },
-    instance() {
-      return stampit().compose(models.Instance).setBaseObject(this);
     }
   });
 
