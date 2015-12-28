@@ -3,6 +3,7 @@ import Class from './class';
 import Channel from './class';
 import DataObject from './dataobject';
 import User from './user';
-import Group from './group'
+import Group from './group';
+import Admin from './admin';
 
-export default { Instance, Class, Channel, DataObject, User, Group };
+export default { Instance, Class, Channel, DataObject, User, Group, Admin };
