@@ -1,0 +1,35 @@
+import stampit from 'stampit';
+import {Meta, Model} from './base';
+
+const ChannelMeta = Meta({
+  name: 'instance',
+  pluralName: 'instances',
+  endpoints: {
+    'detail': {
+      'methods': ['delete', 'patch', 'put', 'get'],
+      'path': '/v1/channels/{name}/'
+    },
+    'list': {
+      'methods': ['post', 'get'],
+      'path': '/v1/channels/'
+    },
+    'poll': {
+      'methods': ['get'],
+      'path': '/channels/{name}/poll/'
+    },
+    'publish': {
+      'methods': ['post'],
+      'path': '/channels/{name}/publish/',
+    },
+    'history': {
+      'methods': ['get'],
+      'path': '/channels/{name}/history/'
+    }
+  }
+});
+
+const Channel = stampit()
+  .compose(Model)
+  .setMeta(ChannelMeta);
+
+export default Channel;
