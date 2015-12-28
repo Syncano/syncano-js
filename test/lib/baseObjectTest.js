@@ -25,6 +25,7 @@ describe('Base Object', function() {
       should(baseObject).have.property('InstanceInvitation').which.is.Function();
       should(baseObject).have.property('CodeBox').which.is.Function();
       should(baseObject).have.property('Schedule').which.is.Function();
+      should(baseObject).have.property('Trigger').which.is.Function();
     });
 
     it('shoud have baseUrl and accountKey properties', function() {
