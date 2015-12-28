@@ -7,9 +7,11 @@ import _ from 'lodash';
  * @type {Syncano}
  */
 const Syncano = stampit()
-  .props({
-    baseUrl: 'https://api.syncano.io',
-    accountKey: ''
+  .refs({
+    connection: {
+      baseUrl: 'https://api.syncano.io',
+      accountKey: ''
+    }
   })
   .methods({
     setKey(key) {
@@ -18,10 +20,10 @@ const Syncano = stampit()
     },
     setBaseUrl(url) {
       if(_.isEmpty(key)) throw Error('Url is required');
-      this.baseUrl = key;
+      this.baseUrl = url;
     },
     instance() {
-      return models.Instance;
+      return stampit().compose(models.Instance);
     }
   });
 
