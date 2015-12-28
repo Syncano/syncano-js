@@ -18,6 +18,7 @@ describe('Base Object', function() {
       should(baseObject).have.property('Class').which.is.Function();
       should(baseObject).have.property('Channel').which.is.Function();
       should(baseObject).have.property('DataObject').which.is.Function();
+      should(baseObject).have.property('User').which.is.Function();
     });
 
     it('shoud have baseUrl and accountKey properties', function() {
