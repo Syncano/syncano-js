@@ -7,5 +7,6 @@ import Group from './group';
 import Admin from './admin';
 import ApiKey from './apikey'
 import InstanceInvitation from './instanceinvitation'
+import CodeBox from './codebox'
 
-export default { Instance, Class, Channel, DataObject, User, Group, Admin, ApiKey, InstanceInvitation };
+export default { Instance, Class, Channel, DataObject, User, Group, Admin, ApiKey, InstanceInvitation, CodeBox };

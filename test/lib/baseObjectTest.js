@@ -23,6 +23,7 @@ describe('Base Object', function() {
       should(baseObject).have.property('Admin').which.is.Function();
       should(baseObject).have.property('ApiKey').which.is.Function();
       should(baseObject).have.property('InstanceInvitation').which.is.Function();
+      should(baseObject).have.property('CodeBox').which.is.Function();
     });
 
     it('shoud have baseUrl and accountKey properties', function() {
