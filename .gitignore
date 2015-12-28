@@ -2,8 +2,8 @@ node_modules
 coverage
 .DS_Store
 .idea
-lib
-dist
+/lib
+/dist
 npm-debug.log
 docs
 *.sublime-*

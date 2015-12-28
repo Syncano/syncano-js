@@ -28,7 +28,7 @@
     "lint": "eslint src/** test/**",
     "pretest": "npm run lint",
     "test": "npm-run-all test:*",
-    "test:lib": "istanbul cover _mocha -- 'test/lib/**/*.js' --compilers js:babel-register",
+    "test:lib": "babel-node ./node_modules/.bin/isparta cover _mocha -- 'test/lib/**/*.js'",
     "test:dist": "karma start karma.config.js",
     "codeclimate": "codeclimate-test-reporter < ./coverage/lcov.info",
     "watch": "npm-run-all --parallel watch:*",
