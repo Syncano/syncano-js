@@ -7,23 +7,23 @@ const ChannelMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/channels/{name}/'
+      'path': '/v1/instance/{instance}/channels/{name}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/channels/'
+      'path': '/v1/instance/{instance}/channels/'
     },
     'poll': {
       'methods': ['get'],
-      'path': '/channels/{name}/poll/'
+      'path': '/v1/instance/{instance}/channels/{name}/poll/'
     },
     'publish': {
       'methods': ['post'],
-      'path': '/channels/{name}/publish/',
+      'path': '/v1/instance/{instance}/channels/{name}/publish/',
     },
     'history': {
       'methods': ['get'],
-      'path': '/channels/{name}/history/'
+      'path': '/v1/instance/{instance}/channels/{name}/history/'
     }
   }
 });

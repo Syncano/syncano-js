@@ -1,23 +1,23 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
 
-const ClassMeta = Meta({
+const DataObjectMeta = Meta({
   name: 'class',
   pluralName: 'classes',
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instance}/classes/{name}/'
+      'path': '/v1/instances/{instance}/classes/{class}/objects/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instance}/classes/'
+      'path': '/v1/instances/{instance}/classes/{class}/objects/'
     }
   }
 });
 
-const Class = stampit()
+const DataObject = stampit()
   .compose(Model)
-  .setMeta(ClassMeta);
+  .setMeta(DataObjectMeta);
 
-export default Class;
+export default DataObject;
