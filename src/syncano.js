@@ -9,12 +9,14 @@ import _ from 'lodash';
 const Syncano = stampit()
   .init(({instance}) => {
     _.forEach(models, (model, name) => {
-      instance[name] = stampit().compose(model).setBaseObject(this)();
+      instance[name] = stampit().compose(model).setBaseObject(this);
     });
   })
   .refs({
-    baseUrl: 'https://api.syncano.io',
-    accountKey: ''
+    connection: {
+      baseUrl: 'https://api.syncano.io',
+      accountKey: ''
+    }
   })
   .methods({
     setKey(key) {
