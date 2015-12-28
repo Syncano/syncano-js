@@ -13,19 +13,17 @@ const Syncano = stampit()
     });
   })
   .refs({
-    connection: {
-      baseUrl: 'https://api.syncano.io',
-      accountKey: ''
-    }
+    baseUrl: 'https://api.syncano.io',
+    accountKey: ''
   })
   .methods({
     setKey(key) {
       if(_.isEmpty(key)) throw Error('Key is required');
-      this.connection.accountKey = key;
+      this.accountKey = key;
     },
     setBaseUrl(url) {
       if(_.isEmpty(key)) throw Error('Url is required');
-      this.connection.baseUrl = url;
+      this.baseUrl = url;
     }
   });
 
