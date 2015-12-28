@@ -2,8 +2,8 @@ import stampit from 'stampit';
 import {Meta, Model} from './base';
 
 const GroupMeta = Meta({
-  name: 'instance',
-  pluralName: 'instances',
+  name: 'group',
+  pluralName: 'groups',
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],

@@ -2,8 +2,8 @@ import stampit from 'stampit';
 import {Meta, Model} from './base';
 
 const AdminMeta = Meta({
-  name: 'instance',
-  pluralName: 'instances',
+  name: 'admin',
+  pluralName: 'admins',
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],

@@ -6,5 +6,6 @@ import User from './user';
 import Group from './group';
 import Admin from './admin';
 import ApiKey from './apikey'
+import InstanceInvitation from './instanceinvitation'
 
-export default { Instance, Class, Channel, DataObject, User, Group, Admin, ApiKey };
+export default { Instance, Class, Channel, DataObject, User, Group, Admin, ApiKey, InstanceInvitation };

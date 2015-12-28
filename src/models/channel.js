@@ -2,8 +2,8 @@ import stampit from 'stampit';
 import {Meta, Model} from './base';
 
 const ChannelMeta = Meta({
-  name: 'instance',
-  pluralName: 'instances',
+  name: 'channel',
+  pluralName: 'channels',
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],

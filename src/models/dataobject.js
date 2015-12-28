@@ -2,8 +2,8 @@ import stampit from 'stampit';
 import {Meta, Model} from './base';
 
 const DataObjectMeta = Meta({
-  name: 'class',
-  pluralName: 'classes',
+  name: 'dataobject',
+  pluralName: 'dataobjects',
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],

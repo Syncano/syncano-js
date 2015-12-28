@@ -2,8 +2,8 @@ import stampit from 'stampit';
 import {Meta, Model} from './base';
 
 const UserMeta = Meta({
-  name: 'instance',
-  pluralName: 'instances',
+  name: 'user',
+  pluralName: 'users',
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
