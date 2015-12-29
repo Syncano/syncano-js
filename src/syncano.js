@@ -22,7 +22,7 @@ const Syncano = stampit()
       this.accountKey = key;
     },
     setBaseUrl(url) {
-      if(_.isEmpty(key)) throw Error('Url is required');
+      if(_.isEmpty(url)) throw Error('Url is required');
       this.baseUrl = url;
     }
   });
