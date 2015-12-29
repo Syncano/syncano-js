@@ -2,8 +2,8 @@ import stampit from 'stampit';
 import {Meta, Model} from './base';
 
 const ApiKeyMeta = Meta({
-  name: 'api_key',
-  pluralName: 'api_keys',
+  name: 'apiKey',
+  pluralName: 'apiKeys',
   endpoints: {
     'detail': {
       'methods': ['delete', 'get'],

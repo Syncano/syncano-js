@@ -7,11 +7,11 @@ const TriggerTraceMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instance}/triggers/{trigger_id}/traces/{trace_id}/'
+      'path': '/v1/instances/{instance}/triggers/{triggerId}/traces/{traceId}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instance}/triggers/{trigger_id}/traces/'
+      'path': '/v1/instances/{instance}/triggers/{triggerId}/traces/'
     }
   }
 });

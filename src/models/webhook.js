@@ -23,7 +23,7 @@ const WebhookMeta = Meta({
     },
     'public': {
       'methods': ['get'],
-      'path': '/v1/instances/{instance}/webhooks/p/{public_link}/{name}/'
+      'path': '/v1/instances/{instance}/webhooks/p/{publicLink}/{name}/'
     }
   }
 });
