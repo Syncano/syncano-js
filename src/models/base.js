@@ -1,6 +1,8 @@
 import stampit from 'stampit';
 import _ from 'lodash';
 import QuerySet from '../querySet';
+import {ConfigMixin, MetaMixin} from '../utils';
+
 
 export const Meta = stampit()
   .props({
@@ -8,12 +10,12 @@ export const Meta = stampit()
     pluralName: null,
     endpoints: {}
   })
-  .init(({ instance, stamp }) => {
+  .init(function({ instance }) {
     _.forEach(instance.endpoints, (value) => {
-      value.properties = stamp.getPathProperties(value.path);
+      value.properties = this.getPathProperties(value.path);
     });
   })
-  .static({
+  .methods({
     getPathProperties(path) {
       const re = /{([^}]*)}/gi;
       let match = null;
@@ -42,34 +44,26 @@ export const Meta = stampit()
     }
   });
 
-export const Please = stampit().static({
-  please() {
-    return QuerySet({model: this});
-  }
-});
+export const Model = stampit({
+  static: {
+    please() {
+      return QuerySet({model: this, _config: this.getConfig()});
+    }
+  },
 
-export const Model = stampit()
-  .methods({
+  methods: {
+    isNew() {
+
+    },
+
     save() {
 
     },
+
     delete() {
 
     }
-  })
-  .static({
-    setMeta(meta) {
-      this.fixed._meta = Meta(meta);
-      return this;
-    },
-    setBaseObject(syncano) {
-      this.fixed.base = syncano;
-      return this;
-    },
-    getMeta() {
-      return this.fixed._meta;
-    }
-  })
-  .compose(Please);
+  }
+}).compose(ConfigMixin, MetaMixin);
 
 export default Model;

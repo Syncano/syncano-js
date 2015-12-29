@@ -1,22 +1,16 @@
 import stampit from 'stampit';
-import superagent from 'superagent';
 import Promise from 'bluebird';
 import _ from 'lodash';
+import Request from './request';
 
 
-const Request = stampit()
+const QuerySetRequest = stampit().compose(Request)
   .refs({
-    model: null,
-    connection: {
-      root: 'https://api.syncano.io',
-      accountKey: ''
-    }
+    model: null
   })
   .props({
     endpoint: null,
     method: null,
-    type: 'json',
-    accept: 'json',
     headres: {},
 
     properties: {},
@@ -40,23 +34,13 @@ const Request = stampit()
     },
 
     request() {
-      if (_.isEmpty(this.method)) {
-        throw Error('"method" is required.');
-      }
-
-      if (_.isEmpty(this.endpoint)) {
-        throw Error('"endpoint" is required.');
-      }
-
       const meta = this.model.getMeta();
       const endpoint = meta.endpoints[this.endpoint] || {};
       const allowedMethods = endpoint.methods || [];
       const path = meta.resolveEndpointPath(this.endpoint, this.properties);
-      const url = `${this.connection.root}${path}`;
       const method = this.method.toLowerCase();
-      let request = superagent[method];
 
-      if (_.isUndefined(request) || !_.includes(allowedMethods, method)) {
+      if (!_.includes(allowedMethods, method)) {
         throw Error(`Invalid request method: "${this.method}".`);
       }
 
@@ -64,24 +48,13 @@ const Request = stampit()
         throw Error(`Invalid request endpoint: "${this.endpoint}".`);
       }
 
-      if (!_.isEmpty(this.connection.accountKey)) {
-        this.headres['Authorization'] = `Token ${this.connection.accountKey}`;
-      }
-
-      request = request(url)
-        .type(this.type)
-        .accept(this.accept)
-        .set(this.headres)
-        .query(this.query)
-        .send(this.payload);
-
       return new Promise((resolve, reject) => {
-        request.end((err, res) => {
+        this.makeRequest(method, path, {}, (err, res) => {
           if (err || !res.ok) {
-            return reject(err);
+            return reject(err, res);
           }
           resolve(this.serialize(res.body), res);
-        });
+        })
       })
     },
 
@@ -203,7 +176,7 @@ const Ordering = stampit().methods({
     const ordering = value.toLowerCase();
 
     if (!_.includes(allowed, ordering)) {
-      throw new Error(`Invalid order value: "${value}", allowed choices are ${allowed.join()}.`);
+      throw Error(`Invalid order value: "${value}", allowed choices are ${allowed.join()}.`);
     }
 
     this.query['ordering'] = ordering;
@@ -219,7 +192,7 @@ const Raw = stampit().methods({
 });
 
 const QuerySet = stampit.compose(
-  Request,
+  QuerySetRequest,
   Create,
   Get,
   GetOrCreate,
