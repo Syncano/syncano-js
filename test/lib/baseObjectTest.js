@@ -32,6 +32,7 @@ describe('Base Object', function() {
       should(baseObject).have.property('CodeBoxTrace').which.is.Function();
       should(baseObject).have.property('ScheduleTrace').which.is.Function();
       should(baseObject).have.property('TriggerTrace').which.is.Function();
+      should(baseObject).have.property('WebhookTrace').which.is.Function();
     });
 
     it('shoud have baseUrl and accountKey properties', function() {
