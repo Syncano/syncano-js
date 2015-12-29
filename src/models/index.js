@@ -15,5 +15,6 @@ import Profile from './profile';
 import DataView from './dataview';
 import CodeBoxTrace from './codeboxtrace';
 import ScheduleTrace from './scheduletrace';
+import TriggerTrace from './triggertrace';
 
-export default { Instance, Class, Channel, DataObject, User, Group, Admin, ApiKey, InstanceInvitation, CodeBox, Schedule, Trigger, Webhook, Profile, DataView, CodeBoxTrace, ScheduleTrace };
+export default { Instance, Class, Channel, DataObject, User, Group, Admin, ApiKey, InstanceInvitation, CodeBox, Schedule, Trigger, Webhook, Profile, DataView, CodeBoxTrace, ScheduleTrace, TriggerTrace };
