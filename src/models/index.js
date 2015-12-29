@@ -18,4 +18,24 @@ import ScheduleTrace from './scheduletrace';
 import TriggerTrace from './triggertrace';
 import WebhookTrace from './webhooktrace';
 
-export default { Instance, Class, Channel, DataObject, User, Group, Admin, ApiKey, InstanceInvitation, CodeBox, Schedule, Trigger, Webhook, Profile, DataView, CodeBoxTrace, ScheduleTrace, TriggerTrace, WebhookTrace };
+export default {
+  Instance,
+  Class,
+  Channel,
+  DataObject,
+  User,
+  Group,
+  Admin,
+  ApiKey,
+  InstanceInvitation,
+  CodeBox,
+  Schedule,
+  Trigger,
+  Webhook,
+  Profile,
+  DataView,
+  CodeBoxTrace,
+  ScheduleTrace,
+  TriggerTrace,
+  WebhookTrace
+};

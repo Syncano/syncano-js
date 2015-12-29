@@ -19,7 +19,7 @@ const ChannelMeta = Meta({
     },
     'publish': {
       'methods': ['post'],
-      'path': '/v1/instance/{instance}/channels/{name}/publish/',
+      'path': '/v1/instance/{instance}/channels/{name}/publish/'
     },
     'history': {
       'methods': ['get'],
