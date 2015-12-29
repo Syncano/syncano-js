@@ -11,5 +11,6 @@ import CodeBox from './codebox';
 import Schedule from './schedule';
 import Trigger from './trigger';
 import Webhook from './webhook';
+import Profile from './profile'
 
-export default { Instance, Class, Channel, DataObject, User, Group, Admin, ApiKey, InstanceInvitation, CodeBox, Schedule, Trigger, Webhook };
+export default { Instance, Class, Channel, DataObject, User, Group, Admin, ApiKey, InstanceInvitation, CodeBox, Schedule, Trigger, Webhook, Profile };
