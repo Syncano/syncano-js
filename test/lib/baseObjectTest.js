@@ -1,16 +1,15 @@
 import should from 'should/as-function';
-
 import Syncano from '../../src/syncano';
 
 
-describe('Base Object', function() {
+describe('Base Object', () => {
   let baseObject = null;
 
   beforeEach(function() {
     baseObject = Syncano();
   });
 
-  describe('#init()', function() {
+  describe('#init()', () => {
 
     it('should have model factories automatically injected as properties', function() {
       should(baseObject).have.property('Instance').which.is.Function();
@@ -32,6 +31,8 @@ describe('Base Object', function() {
       should(baseObject).have.property('ScheduleTrace').which.is.Function();
       should(baseObject).have.property('TriggerTrace').which.is.Function();
       should(baseObject).have.property('WebhookTrace').which.is.Function();
+      should(baseObject).have.property('GCMDevice').which.is.Function();
+      should(baseObject).have.property('APNSDevice').which.is.Function();
     });
 
     it('shoud have baseUrl and accountKey properties', function() {
@@ -41,12 +42,12 @@ describe('Base Object', function() {
 
   });
 
-  describe('#setKey()', function() {
+  describe('#setKey()', () => {
 
     it('should allow to set accountKey', function() {
       should(baseObject).have.property('setKey').which.is.Function();
 
-      should(function() {
+      should(() => {
         baseObject.setKey();
       }).throw(Error('Key is required'))
 
@@ -58,12 +59,12 @@ describe('Base Object', function() {
 
   });
 
-  describe('#setBaseUrl()', function() {
+  describe('#setBaseUrl()', () => {
 
     it('should allow to set base url', function() {
       should(baseObject).have.property('setBaseUrl').which.is.Function();
 
-      should(function() {
+      should(() => {
         baseObject.setBaseUrl();
       }).throw(Error('Url is required'))
 

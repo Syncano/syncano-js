@@ -17,6 +17,8 @@ import CodeBoxTrace from './codeboxtrace';
 import ScheduleTrace from './scheduletrace';
 import TriggerTrace from './triggertrace';
 import WebhookTrace from './webhooktrace';
+import GCMDevice from './gcmdevice';
+import APNSDevice from './apnsdevice';
 
 export default {
   Instance,
@@ -37,5 +39,7 @@ export default {
   CodeBoxTrace,
   ScheduleTrace,
   TriggerTrace,
-  WebhookTrace
+  WebhookTrace,
+  GCMDevice,
+  APNSDevice
 };
