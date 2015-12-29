@@ -39,22 +39,24 @@ describe('Base Object', () => {
 
     it('shoud have baseUrl and accountKey properties', () => {
       should(baseObject).have.property('baseUrl').which.is.String();
-      should(baseObject).have.property('accountKey').which.is.String();
+      should(baseObject).have.property('accountKey').which.is.Null();
+      should(baseObject).have.property('userKey').which.is.Null();
+      should(baseObject).have.property('socialToken').which.is.Null();
     })
 
   });
 
-  describe('#setKey()', () => {
+  describe('#setAccountKey()', () => {
 
     it('should allow to set accountKey', () => {
-      should(baseObject).have.property('setKey').which.is.Function();
+      should(baseObject).have.property('setAccountKey').which.is.Function();
 
       should(() => {
-        baseObject.setKey();
-      }).throw(Error('Key is required'))
+        baseObject.setAccountKey();
+      }).throw(Error('Account key is required.'))
 
       let testKey = '123';
-      baseObject.setKey(testKey);
+      baseObject.setAccountKey(testKey);
 
       should(baseObject.accountKey).is.equal(testKey);
     });
@@ -68,12 +70,46 @@ describe('Base Object', () => {
 
       should(() => {
         baseObject.setBaseUrl();
-      }).throw(Error('Url is required'))
+      }).throw(Error('Base Url is required.'))
 
       let testUrl = 'http://api.syncano.rocks';
       baseObject.setBaseUrl(testUrl);
 
       should(baseObject.baseUrl).is.equal(testUrl);
+    });
+
+  });
+
+  describe('#setUserKey()', () => {
+
+    it('should allow to set userKey', () => {
+      should(baseObject).have.property('setUserKey').which.is.Function();
+
+      should(() => {
+        baseObject.setUserKey();
+      }).throw(Error('Account key is required.'))
+
+      let testKey = '123';
+      baseObject.setUserKey(testKey);
+
+      should(baseObject.userKey).is.equal(testKey);
+    });
+
+  });
+
+  describe('#setSocialToken()', () => {
+
+    it('should allow to set socialToken', () => {
+      should(baseObject).have.property('setSocialToken').which.is.Function();
+
+      should(() => {
+        baseObject.setSocialToken();
+      }).throw(Error('Account key is required.'))
+
+      let testKey = '123';
+      baseObject.setSocialToken(testKey);
+
+      should(baseObject.socialToken).is.equal(testKey);
     });
 
   });

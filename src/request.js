@@ -1,6 +1,5 @@
 import stampit from 'stampit';
 import superagent from 'superagent';
-import Promise from 'bluebird';
 import _ from 'lodash';
 import {ConfigMixin} from './utils';
 
