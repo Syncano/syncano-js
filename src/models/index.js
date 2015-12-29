@@ -13,5 +13,6 @@ import Trigger from './trigger';
 import Webhook from './webhook';
 import Profile from './profile';
 import DataView from './dataview';
+import CodeBoxTrace from './codeboxtrace'
 
-export default { Instance, Class, Channel, DataObject, User, Group, Admin, ApiKey, InstanceInvitation, CodeBox, Schedule, Trigger, Webhook, Profile, DataView };
+export default { Instance, Class, Channel, DataObject, User, Group, Admin, ApiKey, InstanceInvitation, CodeBox, Schedule, Trigger, Webhook, Profile, DataView, CodeBoxTrace };

@@ -29,6 +29,7 @@ describe('Base Object', function() {
       should(baseObject).have.property('Webhook').which.is.Function();
       should(baseObject).have.property('Profile').which.is.Function();
       should(baseObject).have.property('DataView').which.is.Function();
+      should(baseObject).have.property('CodeBoxTrace').which.is.Function();
     });
 
     it('shoud have baseUrl and accountKey properties', function() {
