@@ -1,23 +1,23 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
 
-const InstanceMeta = Meta({
-  name: 'instance',
-  pluralName: 'instances',
+const AdminMeta = Meta({
+  name: 'admin',
+  pluralName: 'admins',
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instance}/'
+      'path': '/v1/instances/{instance}/admins/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/'
+      'path': '/v1/instances/{instance}/admins/'
     }
   }
 });
 
-const Instance = stampit()
+const Admin = stampit()
   .compose(Model)
-  .setMeta(InstanceMeta);
+  .setMeta(AdminMeta);
 
-export default Instance;
+export default Admin;
