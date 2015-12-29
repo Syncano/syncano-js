@@ -5,13 +5,13 @@ import Syncano from '../../src/syncano';
 describe('Base Object', () => {
   let baseObject = null;
 
-  beforeEach(function() {
+  beforeEach(() => {
     baseObject = Syncano();
   });
 
   describe('#init()', () => {
 
-    it('should have model factories automatically injected as properties', function() {
+    it('should have model factories automatically injected as properties', () => {
       should(baseObject).have.property('Instance').which.is.Function();
       should(baseObject).have.property('Class').which.is.Function();
       should(baseObject).have.property('Channel').which.is.Function();
@@ -33,9 +33,11 @@ describe('Base Object', () => {
       should(baseObject).have.property('WebhookTrace').which.is.Function();
       should(baseObject).have.property('GCMDevice').which.is.Function();
       should(baseObject).have.property('APNSDevice').which.is.Function();
+      should(baseObject).have.property('GCMMessage').which.is.Function();
+      should(baseObject).have.property('APNSMessage').which.is.Function();
     });
 
-    it('shoud have baseUrl and accountKey properties', function() {
+    it('shoud have baseUrl and accountKey properties', () => {
       should(baseObject).have.property('baseUrl').which.is.String();
       should(baseObject).have.property('accountKey').which.is.String();
     })
@@ -44,7 +46,7 @@ describe('Base Object', () => {
 
   describe('#setKey()', () => {
 
-    it('should allow to set accountKey', function() {
+    it('should allow to set accountKey', () => {
       should(baseObject).have.property('setKey').which.is.Function();
 
       should(() => {
@@ -61,7 +63,7 @@ describe('Base Object', () => {
 
   describe('#setBaseUrl()', () => {
 
-    it('should allow to set base url', function() {
+    it('should allow to set base url', () => {
       should(baseObject).have.property('setBaseUrl').which.is.Function();
 
       should(() => {

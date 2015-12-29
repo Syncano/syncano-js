@@ -19,6 +19,8 @@ import TriggerTrace from './triggertrace';
 import WebhookTrace from './webhooktrace';
 import GCMDevice from './gcmdevice';
 import APNSDevice from './apnsdevice';
+import GCMMessage from './gcmmessage';
+import APNSMessage from './apnsmessage';
 
 export default {
   Instance,
@@ -41,5 +43,7 @@ export default {
   TriggerTrace,
   WebhookTrace,
   GCMDevice,
-  APNSDevice
+  APNSDevice,
+  GCMMessage,
+  APNSMessage
 };
