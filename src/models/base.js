@@ -1,6 +1,7 @@
 import stampit from 'stampit';
 import _ from 'lodash';
 import QuerySet from '../querySet';
+import Request from '../request';
 import {ConfigMixin, MetaMixin} from '../utils';
 
 
@@ -62,8 +63,12 @@ export const Model = stampit({
 
     delete() {
 
+    },
+
+    toJSON() {
+      return _.omit(this, '_config', '_meta', '_request');
     }
   }
-}).compose(ConfigMixin, MetaMixin);
+}).compose(ConfigMixin, MetaMixin, Request);
 
 export default Model;

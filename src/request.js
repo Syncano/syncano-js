@@ -6,13 +6,15 @@ import {ConfigMixin} from './utils';
 
 const Request = stampit().compose(ConfigMixin)
   .refs({
-    allowedMethods: [
-      'GET',
-      'POST',
-      'DELETE',
-      'HEAD',
-      'PUT'
-    ]
+    _request: {
+      allowedMethods: [
+        'GET',
+        'POST',
+        'DELETE',
+        'HEAD',
+        'PUT'
+      ]
+    }
   })
   .methods({
     buildUrl(path) {
@@ -46,7 +48,7 @@ const Request = stampit().compose(ConfigMixin)
         throw Error('"callback" needs to be a function.');
       }
 
-      if (_.isEmpty(methodName) || !_.includes(this.allowedMethods, method)) {
+      if (_.isEmpty(methodName) || !_.includes(this._request.allowedMethods, method)) {
         return callback(new Error(`Invalid request method: "${methodName}".`));
       }
 
