@@ -66,10 +66,10 @@ const Request = stampit().compose(ConfigMixin)
 
       // wtf ?
       if (!_.isUndefined(config)) {
-        if (!_.isNull(config.getAccountKey()) && !_.isNull(config.getUserKey())) {
+        if (!_.isEmpty(config.getAccountKey()) && !_.isEmpty(config.getUserKey())) {
           options.headers['X-API-KEY'] = config.getAccountKey();
           options.headers['X-USER-KEY'] = config.getUserKey();
-        } else if (_.isUndefined(options.headers['Authorization'])) {
+        } else if (_.isEmpty(options.headers['Authorization'])) {
           const token = config.getSocialToken() || config.getAccountKey();
 
           if (!_.isUndefined(token) && !_.isEmpty(token)) {
