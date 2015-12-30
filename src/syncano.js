@@ -7,23 +7,57 @@ import _ from 'lodash';
  * @type {Syncano}
  */
 const Syncano = stampit()
-  .init(({instance}) => {
+  // We need function here, do not use arrow syntax!
+  .init(function() {
     _.forEach(models, (model, name) => {
-      instance[name] = stampit().compose(model).setBaseObject(this);
+      this[name] = model.setConfig(this);
     });
   })
   .refs({
     baseUrl: 'https://api.syncano.io',
-    accountKey: ''
+    accountKey: null,
+    userKey: null,
+    socialToken: null
   })
   .methods({
-    setKey(key) {
-      if(_.isEmpty(key)) throw Error('Key is required');
-      this.accountKey = key;
+    setBaseUrl(baseUrl) {
+      if(_.isEmpty(baseUrl)) throw Error('Base Url is required.');
+      this.baseUrl = baseUrl;
+      return this;
     },
-    setBaseUrl(url) {
-      if(_.isEmpty(url)) throw Error('Url is required');
-      this.baseUrl = url;
+
+    getBaseUrl() {
+      return this.baseUrl;
+    },
+
+    setAccountKey(accountKey) {
+      if(_.isEmpty(accountKey)) throw Error('Account key is required.');
+      this.accountKey = accountKey;
+      return this;
+    },
+
+    getAccountKey() {
+      return this.accountKey;
+    },
+
+    setUserKey(userKey) {
+      if(_.isEmpty(userKey)) throw Error('User key is required.');
+      this.userKey = userKey;
+      return this;
+    },
+
+    getUserKey() {
+      return this.userKey;
+    },
+
+    setSocialToken(socialToken) {
+      if(_.isEmpty(socialToken)) throw Error('Social token is required.');
+      this.socialToken = socialToken;
+      return this;
+    },
+
+    getSocialToken() {
+      return this.socialToken;
     }
   });
 

@@ -1,6 +1,10 @@
 import stampit from 'stampit';
+import Promise from 'bluebird';
 import _ from 'lodash';
 import QuerySet from '../querySet';
+import Request from '../request';
+import {ConfigMixin, MetaMixin} from '../utils';
+
 
 export const Meta = stampit()
   .props({
@@ -8,12 +12,12 @@ export const Meta = stampit()
     pluralName: null,
     endpoints: {}
   })
-  .init(({ instance, stamp }) => {
+  .init(function({ instance }) {
     _.forEach(instance.endpoints, (value) => {
-      value.properties = stamp.getPathProperties(value.path);
+      value.properties = this.getPathProperties(value.path);
     });
   })
-  .static({
+  .methods({
     getPathProperties(path) {
       const re = /{([^}]*)}/gi;
       let match = null;
@@ -31,7 +35,7 @@ export const Meta = stampit()
       let path = endpoint.path;
 
       if (diff.length > 0) {
-        throw new Error(`Missing path "${endpointName}" properties "${diff.join()}"`)
+        throw new Error(`Missing "${endpointName}" path properties "${diff.join()}"`)
       }
 
       _.forEach(endpoint.properties, (property) => {
@@ -39,37 +43,79 @@ export const Meta = stampit()
       });
 
       return path;
+    },
+
+    findAllowedMethod(endpointName, ...methodNames) {
+      const endpoint = this.endpoints[endpointName];
+      const methods = _.intersection(_.map(methodNames, (m) => m.toLowerCase()), endpoint.methods);
+
+      if (_.isEmpty(methods)) {
+        throw Error(`Unsupported request methods: ${methodNames.join()}.`);
+      }
+
+      return methods[0];
     }
   });
 
-export const Please = stampit().static({
-  please() {
-    return QuerySet({model: this});
-  }
-});
+export const Model = stampit({
+  static: {
+    please() {
+      return QuerySet({model: this, _config: this.getConfig()});
+    }
+  },
 
-export const Model = stampit()
-  .methods({
+  methods: {
+    isNew() {
+      return !_.has(this, 'links');
+    },
+
     save() {
+      const meta = this.getMeta();
+      let endpoint = 'list';
+      let method = 'POST';
+      let payload = JSON.stringify(this);
 
+      if (!this.isNew()) {
+        endpoint = 'detail';
+        method = meta.findAllowedMethod(endpoint, 'PUT', 'POST');
+      }
+
+      const path = meta.resolveEndpointPath(endpoint, this);
+
+      return new Promise((resolve, reject) => {
+        this.makeRequest(method, path, {payload}, (err, res) => {
+          if (err || !res.ok) {
+            return reject(err, res);
+          }
+          resolve(this.getStamp()(res.body), res);
+        });
+      });
     },
+
     delete() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('detail', this);
 
-    }
-  })
-  .static({
-    setMeta(meta) {
-      this.fixed._meta = Meta(meta);
-      return this;
+      return new Promise((resolve, reject) => {
+        this.makeRequest('DELETE', path, {}, (err, res) => {
+          if (err || !res.ok) {
+            return reject(err, res);
+          }
+          resolve(null, res);
+        });
+      });
     },
-    setBaseObject(syncano) {
-      this.fixed.base = syncano;
-      return this;
-    },
-    getMeta() {
-      return this.fixed._meta;
+
+    toJSON() {
+      return _.omit(this, '_config', '_meta', '_request');
     }
-  })
-  .compose(Please);
+  }
+})
+.init(({stamp}) => {
+  if (!stamp.fixed.methods.getStamp) {
+    stamp.fixed.methods.getStamp = () => stamp;
+  }
+})
+.compose(ConfigMixin, MetaMixin, Request);
 
 export default Model;
