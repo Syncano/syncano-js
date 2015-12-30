@@ -40,21 +40,21 @@ const QuerySetRequest = stampit().compose(Request)
       const path = meta.resolveEndpointPath(this.endpoint, this.properties);
       const method = this.method.toLowerCase();
 
-      if (!_.includes(allowedMethods, method)) {
-        throw Error(`Invalid request method: "${this.method}".`);
-      }
-
-      if (_.isUndefined(endpoint)) {
-        throw Error(`Invalid request endpoint: "${this.endpoint}".`);
-      }
-
       return new Promise((resolve, reject) => {
+        if (!_.includes(allowedMethods, method)) {
+          return reject(Error(`Invalid request method: "${this.method}".`));
+        }
+
+        if (_.isUndefined(endpoint)) {
+          return reject(Error(`Invalid request endpoint: "${this.endpoint}".`));
+        }
+
         this.makeRequest(method, path, {}, (err, res) => {
           if (err || !res.ok) {
             return reject(err, res);
           }
           resolve(this.serialize(res.body), res);
-        })
+        });
       })
     },
 
