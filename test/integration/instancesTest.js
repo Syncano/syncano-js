@@ -3,7 +3,7 @@ import Syncano from '../../src/syncano';
 import {suffix, credentials} from './utils';
 
 describe('Instance', function() {
-  this.timeout(5000);
+  this.timeout(15000);
 
   let connection = null;
   let instanceName = suffix.get('name');
@@ -124,8 +124,21 @@ describe('Instance', function() {
         });
     });
 
-    it('shoule be able to delete an instance', function() {
+    it('shoule be able to delete an instance', function(done) {
+      connection.Instance.please().create({name: instanceName})
+        .then((instance) => {
+          should(instance).be.an.Object();
+          should(instance).have.property('name').which.is.String().equal(instanceName);
 
+          connection.Instance.please().delete({name: instanceName})
+            .then(() => {
+              done();
+            }).catch((err) => {
+              throw err;
+            });
+        }).catch((err) => {
+          throw err;
+        });
     });
 
   });
