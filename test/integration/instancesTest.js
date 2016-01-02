@@ -156,7 +156,7 @@ describe('Instance', function() {
           should(instance).have.property('name').which.is.String().equal(instanceName);
           return instance;
         })
-        .then((instance) => {
+        .then(() => {
           return connection
             .Instance
             .please()
