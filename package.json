@@ -30,6 +30,7 @@
     "test": "npm-run-all test:*",
     "test:lib": "mocha 'test/lib/**/*.js' --compilers js:babel-register",
     "test:dist": "karma start karma.config.js",
+    "test:integration": "mocha 'test/integration/**/*.js' --compilers js:babel-register",
     "codeclimate": "codeclimate-test-reporter < ./coverage/lcov.info",
     "watch": "npm-run-all --parallel watch:*",
     "watch:lint": "esw src/** test/** --watch --format simple-detail",
