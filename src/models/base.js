@@ -1,9 +1,13 @@
 import stampit from 'stampit';
 import Promise from 'bluebird';
 import _ from 'lodash';
+import validate from 'validate.js';
 import QuerySet from '../querySet';
 import Request from '../request';
-import {ConfigMixin, MetaMixin} from '../utils';
+import {ValidationError} from '../errors';
+import {ConfigMixin, MetaMixin, ConstraintsMixin} from '../utils';
+
+validate.Promise = Promise;
 
 
 export const Meta = stampit()
@@ -69,8 +73,20 @@ export const Model = stampit({
       return !_.has(this, 'links');
     },
 
+    validate() {
+      const constraints = this.getConstraints();
+      const attributes = this.toJSON();
+
+      if (_.isEmpty(constraints)) {
+        return;
+      }
+
+      return validate(attributes, constraints);
+    },
+
     save() {
       const meta = this.getMeta();
+      const errors = this.validate();
       let endpoint = 'list';
       let method = 'POST';
       let payload = JSON.stringify(this);
@@ -83,6 +99,10 @@ export const Model = stampit({
       const path = meta.resolveEndpointPath(endpoint, this);
 
       return new Promise((resolve, reject) => {
+        if (!_.isEmpty(errors)) {
+          return reject(new ValidationError(errors));
+        }
+
         this.makeRequest(method, path, {payload}, (err, res) => {
           if (err || !res.ok) {
             return reject(err, res);
@@ -107,7 +127,7 @@ export const Model = stampit({
     },
 
     toJSON() {
-      return _.omit(this, '_config', '_meta', '_request');
+      return _.omit(this, '_config', '_meta', '_request', '_constraints');
     }
   }
 })
@@ -116,6 +136,6 @@ export const Model = stampit({
     stamp.fixed.methods.getStamp = () => stamp;
   }
 })
-.compose(ConfigMixin, MetaMixin, Request);
+.compose(ConfigMixin, MetaMixin, ConstraintsMixin, Request);
 
 export default Model;

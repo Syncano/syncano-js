@@ -1,5 +1,6 @@
 import stampit from 'stampit';
 
+
 export const ConfigMixin = stampit({
   methods: {
     setConfig(config) {
@@ -42,6 +43,29 @@ export const MetaMixin = stampit({
 
     getMeta() {
       return this.fixed.refs._meta;
+    }
+  }
+});
+
+export const ConstraintsMixin = stampit({
+  methods: {
+    setConstraints(constraints) {
+      this._constraints = constraints;
+      return this;
+    },
+
+    getConstraints() {
+      return this._constraints;
+    }
+  },
+
+  static: {
+    setConstraints(constraints) {
+      return this.refs({_constraints: constraints});
+    },
+
+    getConstraints() {
+      return this.fixed.refs._constraints;
     }
   }
 });
