@@ -16,8 +16,18 @@ const InstanceMeta = Meta({
   }
 });
 
+const InstanceConstraints = {
+  name: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  }
+};
+
 const Instance = stampit()
   .compose(Model)
-  .setMeta(InstanceMeta);
+  .setMeta(InstanceMeta)
+  .setConstraints(InstanceConstraints);
 
 export default Instance;
