@@ -28,7 +28,7 @@
     "lint": "eslint src/** test/**",
     "pretest": "npm run lint",
     "test": "npm-run-all test:*",
-    "test:lib": "mocha 'test/lib/**/*.js' --compilers js:babel-register",
+    "test:lib": "babel-node ./node_modules/isparta/bin/isparta cover --report text --report html _mocha -- 'test/lib/**/*.js' --reporter dot",
     "test:dist": "karma start karma.config.js",
     "test:integration": "mocha 'test/integration/**/*.js' --compilers js:babel-register",
     "codeclimate": "codeclimate-test-reporter < ./coverage/lcov.info",
