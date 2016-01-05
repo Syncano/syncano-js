@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export class SyncanoError extends Error {
   constructor(message = '') {
     super(message);
@@ -10,7 +12,7 @@ export class SyncanoError extends Error {
 
     Object.defineProperty(this, 'name', {
       enumerable : false,
-      value : name || this.constructor.name,
+      value : this.constructor.name
     });
 
     if (Error.hasOwnProperty('captureStackTrace')) {
@@ -20,7 +22,7 @@ export class SyncanoError extends Error {
 
     Object.defineProperty(this, 'stack', {
       enumerable : false,
-      value : (new Error(message)).stack,
+      value : (new Error(message)).stack
     });
   }
 }

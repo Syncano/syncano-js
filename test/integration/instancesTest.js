@@ -1,6 +1,7 @@
 import should from 'should/as-function';
 import Syncano from '../../src/syncano';
 import {suffix, credentials} from './utils';
+import {ValidationError} from '../../src/errors';
 
 describe('Instance', function() {
   this.timeout(15000);
@@ -18,6 +19,14 @@ describe('Instance', function() {
       .delete({name: instanceName})
       .then(() => done())
       .catch(() => done());
+  });
+
+  it('shoule be validated', function() {
+    connection.Instance().save().catch((err) => {
+      should(function() {
+        throw err;
+      }).throw(new ValidationError());
+    });
   });
 
   it('shoule be able to save via model instance', function(done) {
@@ -56,18 +65,17 @@ describe('Instance', function() {
         should(instance).have.property('description').which.is.String().equal(data.description);
 
         instance.description = 'new description';
-        instance.save().then((newInstance) => {
-          should(newInstance).be.an.Object();
-          should(newInstance).have.property('name').which.is.String().equal(instance.name);
-          should(newInstance).have.property('description').which.is.String().equal(instance.description);
-
-          done();
-        }).catch((err) => {
-          throw err;
-        });
-      }).catch((err) => {
+        return instance.save();
+      })
+      .then((instance) => {
+        should(instance).be.an.Object();
+        should(instance).have.property('name').which.is.String().equal(data.name);
+        should(instance).have.property('description').which.is.String().equal('new description');
+      })
+      .catch((err) => {
         throw err;
-      });
+      })
+      .finally(() => done());
   });
 
   it('shoule be able to delete via model instance', function(done) {
@@ -82,14 +90,11 @@ describe('Instance', function() {
         should(instance).have.property('name').which.is.String().equal(data.name);
         should(instance).have.property('description').which.is.String().equal(data.description);
 
-        instance.delete()
-          .then(() => done())
-          .catch((err) => {
-            throw err;
-          })
+        return instance.delete();
       }).catch((err) => {
         throw err;
-      });
+      })
+      .finally(() => done());
   });
 
   describe('#please()', function() {
@@ -169,16 +174,59 @@ describe('Instance', function() {
         .finally(() => done());
     });
 
-    it('shoule be able to get or create instance (CREATE)', function() {
-
+    it('shoule be able to get or create instance (CREATE)', function(done) {
+      connection.Instance.please().getOrCreate({name: instanceName}, {description: 'test'}).then((instance) => {
+        should(instance).be.an.Object();
+        should(instance).have.property('name').which.is.String().equal(instanceName);
+        should(instance).have.property('description').which.is.String().equal('test');
+        should(instance).have.property('created_at').which.is.String();
+        should(instance).have.property('updated_at').which.is.String();
+        should(instance).have.property('links').which.is.Object();
+        should(instance).have.property('owner').which.is.Object();
+        should(instance).have.property('metadata').which.is.Object();
+      })
+      .catch((err) => {
+        throw err;
+      })
+      .finally(() => done());
     });
 
-    it('shoule be able to get or create instance (GET)', function() {
+    it('shoule be able to get or create instance (GET)', function(done) {
+      connection.Instance.please().create({name: instanceName, description: 'test'}).then((instance) => {
+        should(instance).be.an.Object();
+        should(instance).have.property('name').which.is.String().equal(instanceName);
+        should(instance).have.property('description').which.is.String().equal('test');
 
+        return connection.Instance.please().getOrCreate({name: instanceName}, {description: 'newTest'});
+      })
+      .then((instance) => {
+        should(instance).be.an.Object();
+        should(instance).have.property('name').which.is.String().equal(instanceName);
+        should(instance).have.property('description').which.is.String().equal('test');
+      })
+      .catch((err) => {
+        throw err;
+      })
+      .finally(() => done());
     });
 
-    it('shoule be able to update an instance', function() {
+    it('shoule be able to update an instance', function(done) {
+      connection.Instance.please().create({name: instanceName, description: 'test'}).then((instance) => {
+        should(instance).be.an.Object();
+        should(instance).have.property('name').which.is.String().equal(instanceName);
+        should(instance).have.property('description').which.is.String().equal('test');
 
+        return connection.Instance.please().update({name: instance.name}, {description: 'newTest'});
+      })
+      .then((instance) => {
+        should(instance).be.an.Object();
+        should(instance).have.property('name').which.is.String().equal(instanceName);
+        should(instance).have.property('description').which.is.String().equal('newTest');
+      })
+      .catch((err) => {
+        throw err;
+      })
+      .finally(() => done());
     });
 
     it('shoule be able to update or create instance (UPDATE)', function() {

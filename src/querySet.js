@@ -16,6 +16,7 @@ const QuerySetRequest = stampit().compose(Request)
     properties: {},
     query: {},
     payload: {},
+    attachments: {},
     _serialize: true
   })
   .methods({
@@ -39,6 +40,12 @@ const QuerySetRequest = stampit().compose(Request)
       const allowedMethods = endpoint.methods || [];
       const path = meta.resolveEndpointPath(this.endpoint, this.properties);
       const method = this.method.toLowerCase();
+      const requestOptions = {
+        headers: this.headres,
+        query: this.query,
+        payload: this.payload,
+        attachments: this.attachments
+      };
 
       return new Promise((resolve, reject) => {
         if (!_.includes(allowedMethods, method)) {
@@ -49,7 +56,7 @@ const QuerySetRequest = stampit().compose(Request)
           return reject(Error(`Invalid request endpoint: "${this.endpoint}".`));
         }
 
-        this.makeRequest(method, path, {}, (err, res) => {
+        this.makeRequest(method, path, requestOptions, (err, res) => {
           if (err || !res.ok) {
             return reject(err, res);
           }
@@ -91,7 +98,7 @@ const GetOrCreate = stampit().methods({
         .then(resolve)
         .catch(() => {
           const attrs = _.assign({}, this.properties, properties, defaults);
-          this.create(attrs)
+          return this.create(attrs)
             .then(resolve)
             .catch(reject);
         });
@@ -125,7 +132,7 @@ const Update = stampit().methods({
     this.properties = _.assign({}, this.properties, properties);
     this.payload = object;
 
-    this.method = 'PUT';
+    this.method = 'PATCH';
     this.endpoint = 'detail';
     return this;
   }
