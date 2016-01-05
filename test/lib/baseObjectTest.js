@@ -7,7 +7,6 @@ describe('Base Object', function() {
   let testUrl = 'http://api.syncano.rocks'
 
   beforeEach(function() {
-
     baseObject = Syncano();
   });
 
