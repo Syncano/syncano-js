@@ -1,18 +1,21 @@
 export class SyncanoError extends Error {
-
+  constructor(message) {
+    super(message);
+    this.message = message;
+    this.name = 'SyncanoError';
+  }
 }
 
 export class ValidationError extends SyncanoError {
 
   constructor(errors = {}) {
-    let message = 'ValidationError';
-
-    if (!_.isEmpty(errors)) {
-      const keys = _.keys(errors);
-      message += `: ${keys[0]} - ${errors[keys[0]].join()}`;
-    }
+    let message = _.reduce(errors, (result, value, key) => {
+      result += `${key} - ${value.join()} `;
+      return result;
+    }, '');
 
     super(message);
+    this.name = 'ValidationError';
     this.errors = errors;
   }
 
