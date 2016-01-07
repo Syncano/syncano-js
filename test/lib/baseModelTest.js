@@ -1,7 +1,7 @@
 import should from 'should/as-function';
 import Syncano from '../../src/syncano';
 
-describe('Base model', function() {
+describe('Base model meta', function() {
   let model = null;
   let meta = null;
 
@@ -16,7 +16,7 @@ describe('Base model', function() {
       should(meta).have.property('resolveEndpointPath').which.is.Function();
     });
 
-    it('should throw error when no endpoint is found', function() {
+    it('should throw error when endpoint is not found', function() {
       should(function() {
         meta.resolveEndpointPath('test_endpoint', model);
       }).throw(Error('Invalid endpoit name: test_endpoint.'));
