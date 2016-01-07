@@ -34,6 +34,10 @@ export const Meta = stampit()
       return result;
     },
     resolveEndpointPath(endpointName, properties) {
+      if (_.isEmpty(this.endpoints[endpointName])) {
+        throw new Error(`Invalid endpoit name: "${endpointName}".`);
+      }
+
       const endpoint = this.endpoints[endpointName];
       const diff = _.difference(endpoint.properties, _.keys(properties));
       let path = endpoint.path;

@@ -1,10 +1,10 @@
 import stampit from 'stampit';
 import superagent from 'superagent';
 import _ from 'lodash';
-import {ConfigMixin} from './utils';
+import {ConfigMixin, Logger} from './utils';
 
 
-const Request = stampit().compose(ConfigMixin)
+const Request = stampit().compose(ConfigMixin, Logger)
   .refs({
     _request: {
       allowedMethods: [
@@ -12,7 +12,8 @@ const Request = stampit().compose(ConfigMixin)
         'POST',
         'DELETE',
         'HEAD',
-        'PUT'
+        'PUT',
+        'PATCH'
       ]
     }
   })
@@ -45,7 +46,7 @@ const Request = stampit().compose(ConfigMixin)
       });
 
       if (!_.isFunction(callback)) {
-        throw Error('"callback" needs to be a function.');
+        throw new Error('"callback" needs to be a function.');
       }
 
       if (_.isEmpty(methodName) || !_.includes(this._request.allowedMethods, method)) {
@@ -90,7 +91,11 @@ const Request = stampit().compose(ConfigMixin)
         request = request.attach(key, value);
       });
 
-      request.end(callback);
+      request.end(_.wrap(callback, (_callback, err, res) => {
+        this.log(`makeRequest\n${method} ${path}\n${JSON.stringify(options, null, 2)}\n---`);
+        return _callback(err, res);
+      }));
+
       return request;
     }
 

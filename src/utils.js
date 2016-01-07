@@ -69,3 +69,17 @@ export const ConstraintsMixin = stampit({
     }
   }
 });
+
+
+export const Logger = stampit({
+  methods: {
+    log(...args) {
+      const env = process.env.BABEL_ENV || process.env.NODE_ENV;
+      if (env === 'development') {
+        /*eslint-disable no-console */
+        console.log(...args);
+        /*eslint-enable no-console */
+      }
+    }
+  }
+});
