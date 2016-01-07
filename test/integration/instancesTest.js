@@ -255,17 +255,14 @@ describe('Instance', function() {
         `${instanceName}_2`
       ];
 
-      let testInstances = [];
-
       return Promise
         .all(_.map(names, (name) => connection.Instance.please().create({name: name})))
         .then((instances) => {
-          testInstances = instances;
+          should(instances).be.an.Array().with.length(2);
           return connection.Instance.please().pageSize(1);
         })
         .then((instances) => {
           should(instances).be.an.Array().with.length(1);
-          should(instances[0]).have.property('name').which.is.String().equal(testInstances[0].name);
         })
         .finally(() => {
           return Promise.all(_.map(names, (name) => connection.Instance.please().delete({name: name})));
