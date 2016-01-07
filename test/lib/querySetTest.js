@@ -24,10 +24,10 @@ describe('QuerySet', function() {
   describe('#serialize()', function() {
 
     it('should serialize list', function() {
-      should(qs).have.property('endpoint').which.is.null();
+      should(qs).have.property('endpoint').which.is.equal('list');
+      should(qs).have.property('method').which.is.equal('GET');
       should(qs).have.property('model').which.is.Function();
 
-      qs.endpoint = 'list';
       let response = {objects: [1, 2]};
       const serialized = qs.serialize(response);
 
@@ -38,7 +38,8 @@ describe('QuerySet', function() {
     });
 
     it('should serialize object', function() {
-      should(qs).have.property('endpoint').which.is.null();
+      should(qs).have.property('endpoint').which.is.equal('list');
+      should(qs).have.property('method').which.is.equal('GET');
       should(qs).have.property('model').which.is.Function();
 
       qs.endpoint = 'detail';
@@ -52,7 +53,8 @@ describe('QuerySet', function() {
     it('should not serialize', function() {
       let response = {objects: [1, 2]};
 
-      should(qs).have.property('endpoint').which.is.null();
+      should(qs).have.property('endpoint').which.is.equal('list');
+      should(qs).have.property('method').which.is.equal('GET');
       should(qs).have.property('model').which.is.Function();
       should(qs).have.property('_serialize').which.is.Boolean().equal(true);
 
