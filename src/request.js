@@ -79,10 +79,6 @@ const Request = stampit().compose(ConfigMixin, Logger)
         }
       }
 
-      this.log('makeRequest::path', path);
-      this.log('makeRequest::method', method);
-      this.log('makeRequest::options', options);
-
       let request = superagent(method, this.buildUrl(path))
         .type(options.type)
         .accept(options.accept)
@@ -95,7 +91,11 @@ const Request = stampit().compose(ConfigMixin, Logger)
         request = request.attach(key, value);
       });
 
-      request.end(callback);
+      request.end(_.wrap(callback, (_callback, err, res) => {
+        this.log(`makeRequest\n${method} ${path}\n${JSON.stringify(options, null, 2)}\n---`);
+        return _callback(err, res);
+      }));
+
       return request;
     }
 

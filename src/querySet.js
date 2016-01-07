@@ -9,8 +9,8 @@ const QuerySetRequest = stampit().compose(Request)
     model: null
   })
   .props({
-    endpoint: null,
-    method: null,
+    endpoint: 'list',
+    method: 'GET',
     headres: {},
 
     properties: {},
@@ -145,7 +145,7 @@ const UpdateOrCreate = stampit().methods({
         .then(resolve)
         .catch(() => {
           const attrs = _.assign({}, this.properties, properties, defaults);
-          this.create(attrs)
+          return this.create(attrs)
             .then(resolve)
             .catch(reject);
         })
