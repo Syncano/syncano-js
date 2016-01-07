@@ -1,5 +1,6 @@
 import should from 'should/as-function';
 import Syncano from '../../src/syncano';
+import Instance from '../../src/models/instance';
 
 describe('Base model meta', function() {
   let model = null;
@@ -50,6 +51,56 @@ describe('Base model meta', function() {
     it('should return supported method', function() {
       let method = meta.findAllowedMethod('list', 'GET');
       should(method).equal('get');
+    });
+
+  });
+
+});
+
+describe('Base model methods', function() {
+  let model = null;
+  let model_single = null;
+
+  beforeEach(function() {
+    model = Syncano({ name: 'testInstance' }).Instance;
+    model_single = Instance;
+  });
+
+  describe('#please()', function() {
+
+    it('should be a method of the model', function() {
+      should(model).have.property('please').which.is.Function();
+    })
+
+    it('should return QuerySet object', function() {
+      let qs = model.please();
+      should(qs).be.type('object');
+    });
+
+  });
+
+  describe('#isNew()', function() {
+
+    it('should be a method of the model', function() {
+      should(model_single()).have.property('isNew').which.is.Function();
+    });
+
+    it('should return correct value', function() {
+      should(model_single().isNew()).equal(true);
+    });
+
+  });
+
+  describe('#validate()', function() {
+
+    it('should be a method of the model', function() {
+      should(model_single()).have.property('validate').which.is.Function();
+    });
+
+    it('should enable validation', function() {
+      should(model_single.setConstraints({})().validate()).not.be.ok;
+      should(model_single().validate()).have.property('name').which.is.Array();
+      should(model_single({ name: 'test_name'}).validate()).not.be.ok;
     });
 
   });
