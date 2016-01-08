@@ -225,7 +225,7 @@ describe('QuerySet', function() {
         resolve('createResolve');
       }));
 
-      should(qs.getOrCreate()).be.Promise().fulfilledWith('createResolve');
+      should(qs.getOrCreate()).be.Promise().fulfilledWith ('createResolve');
     });
 
     it('should reject if create fails', function() {
@@ -244,16 +244,40 @@ describe('QuerySet', function() {
 
   describe('#list()', function() {
 
-    it('should return list of objects', function() {
+    it('should return "this" and set properties and query', function() {
+      qs.properties = {pa: 1, pb: 2};
+      qs.query = {qa: 1, qb: 2};
 
+      const properties = {a: 1, b: 2};
+      const query = {c: 3, d: 4};
+      const outcome = qs.list(properties, query);
+
+      const expectedProperties = _.assign({}, qs.properties, properties);
+      const expectedQuery = _.assign({}, qs.query, query);
+
+      should(outcome).be.an.Object();
+      should(outcome).have.property('method').which.is.an.String().equal('GET');
+      should(outcome).have.property('endpoint').which.is.an.String().equal('list');
+      should(outcome).have.property('properties').which.is.an.Object().with.properties(expectedProperties);
+      should(outcome).have.property('query').which.is.an.Object().with.properties(expectedQuery);
     });
 
   });
 
   describe('#delete()', function() {
 
-    it('should return undefined', function() {
+    it('should return "this" and set properties and query', function() {
+      qs.properties = {pa: 1, pb: 2};
 
+      const properties = {a: 1, b: 2};
+      const outcome = qs.delete(properties);
+
+      const expectedProperties = _.assign({}, qs.properties, properties);
+
+      should(outcome).be.an.Object();
+      should(outcome).have.property('method').which.is.an.String().equal('DELETE');
+      should(outcome).have.property('endpoint').which.is.an.String().equal('detail');
+      should(outcome).have.property('properties').which.is.an.Object().with.properties(expectedProperties);
     });
 
   });
