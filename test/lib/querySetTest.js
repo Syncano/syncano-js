@@ -397,6 +397,12 @@ describe('QuerySet', function() {
       should(outcome).have.property('query').which.is.an.Object().properties({ordering: 'desc'});
     });
 
+    it('should have default value', function() {
+      const outcome = qs.ordering();
+      should(outcome).be.an.Object();
+      should(outcome).have.property('query').which.is.an.Object().properties({ordering: 'asc'});
+    });
+
     it('should validate value', function() {
       should(() => {
         qs.ordering('dummy');
