@@ -208,7 +208,7 @@ describe('QuerySet', function() {
   describe('#getOrCreate()', function() {
 
     it('should return a Promise', function() {
-      const stub = sinon.stub(qs, 'get').returns(new Promise((resolve, reject) => {
+      sinon.stub(qs, 'get').returns(new Promise((resolve) => {
         resolve();
       }));
 
@@ -221,7 +221,7 @@ describe('QuerySet', function() {
         reject(new Error('dummy'));
       }));
 
-      sinon.stub(qs, 'create').returns(new Promise((resolve, reject) => {
+      sinon.stub(qs, 'create').returns(new Promise((resolve) => {
         resolve('createResolve');
       }));
 
@@ -305,7 +305,7 @@ describe('QuerySet', function() {
   describe('#updateOrCreate()', function() {
 
     it('should return a Promise', function() {
-      const stub = sinon.stub(qs, 'update').returns(new Promise((resolve, reject) => {
+      sinon.stub(qs, 'update').returns(new Promise((resolve) => {
         resolve();
       }));
 
@@ -318,7 +318,7 @@ describe('QuerySet', function() {
         reject(new Error('dummy'));
       }));
 
-      sinon.stub(qs, 'create').returns(new Promise((resolve, reject) => {
+      sinon.stub(qs, 'create').returns(new Promise((resolve) => {
         resolve('createResolve');
       }));
 
@@ -342,7 +342,7 @@ describe('QuerySet', function() {
   describe('#first()', function() {
 
     it('should return a Promise', function() {
-      sinon.stub(qs, 'list').returns(new Promise((resolve, reject) => {
+      sinon.stub(qs, 'list').returns(new Promise((resolve) => {
         resolve([{x: 1}]);
       }));
 
@@ -351,7 +351,7 @@ describe('QuerySet', function() {
     });
 
     it('should return the first object', function() {
-      sinon.stub(qs, 'list').returns(new Promise((resolve, reject) => {
+      sinon.stub(qs, 'list').returns(new Promise((resolve) => {
         resolve(['a', 'b']);
       }));
 
@@ -360,7 +360,7 @@ describe('QuerySet', function() {
     });
 
     it('should return null', function() {
-      sinon.stub(qs, 'list').returns(new Promise((resolve, reject) => {
+      sinon.stub(qs, 'list').returns(new Promise((resolve) => {
         resolve([]);
       }));
 
