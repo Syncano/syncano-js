@@ -133,6 +133,7 @@ describe('Base model methods', function() {
             links: {}
           });
       model({name: instanceName}).save().then((instance) => {
+        should(instance).be.an.Object();
         should(instance).have.property('name').which.is.String().equal(instanceName);
       });
     });
