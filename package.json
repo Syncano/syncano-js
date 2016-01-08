@@ -74,6 +74,7 @@
     "phantomjs": "^1.9.19",
     "rimraf": "^2.4.5",
     "should": "^8.0.2",
+    "sinon": "^1.17.2",
     "webpack": "^1.12.9"
   },
   "babel": {

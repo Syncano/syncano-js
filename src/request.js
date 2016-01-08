@@ -7,6 +7,7 @@ import {ConfigMixin, Logger} from './utils';
 const Request = stampit().compose(ConfigMixin, Logger)
   .refs({
     _request: {
+      handler: superagent,
       allowedMethods: [
         'GET',
         'POST',
@@ -18,6 +19,15 @@ const Request = stampit().compose(ConfigMixin, Logger)
     }
   })
   .methods({
+    setRequestHandler(handler) {
+      this._request.handler = handler;
+      return this;
+    },
+
+    getRequestHandler() {
+      return this._request.handler;
+    },
+
     buildUrl(path) {
       const config = this.getConfig();
 
@@ -57,10 +67,6 @@ const Request = stampit().compose(ConfigMixin, Logger)
         return callback(new Error('"path" is required.'));
       }
 
-      if (!_.isEmpty(options) && !_.isObject(options)) {
-        return callback(new Error('"options" needs to be an object.'));
-      }
-
       if (!_.isEmpty(options.attachments)) {
         options.type = 'form';
       }
@@ -79,7 +85,8 @@ const Request = stampit().compose(ConfigMixin, Logger)
         }
       }
 
-      let request = superagent(method, this.buildUrl(path))
+      let handler = this.getRequestHandler();
+      let request = handler(method, this.buildUrl(path))
         .type(options.type)
         .accept(options.accept)
         .timeout(options.timeout)
@@ -99,6 +106,16 @@ const Request = stampit().compose(ConfigMixin, Logger)
       return request;
     }
 
+  }).static({
+    setRequestHandler(handler) {
+      let _request = this.fixed.refs._request || {};
+      _request.handler = handler;
+      return this.refs({_request});
+    },
+
+    getRequestHandler() {
+      return this.fixed.refs._request.handler;
+    }
   });
 
 export default Request;
