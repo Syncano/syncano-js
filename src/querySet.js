@@ -11,7 +11,7 @@ const QuerySetRequest = stampit().compose(Request)
   .props({
     endpoint: 'list',
     method: 'GET',
-    headres: {},
+    headers: {},
 
     properties: {},
     query: {},
@@ -41,7 +41,7 @@ const QuerySetRequest = stampit().compose(Request)
       const path = meta.resolveEndpointPath(this.endpoint, this.properties);
       const method = this.method.toLowerCase();
       const requestOptions = {
-        headers: this.headres,
+        headers: this.headers,
         query: this.query,
         payload: this.payload,
         attachments: this.attachments
@@ -49,11 +49,7 @@ const QuerySetRequest = stampit().compose(Request)
 
       return new Promise((resolve, reject) => {
         if (!_.includes(allowedMethods, method)) {
-          return reject(Error(`Invalid request method: "${this.method}".`));
-        }
-
-        if (_.isUndefined(endpoint)) {
-          return reject(Error(`Invalid request endpoint: "${this.endpoint}".`));
+          return reject(new Error(`Invalid request method: "${this.method}".`));
         }
 
         this.makeRequest(method, path, requestOptions, (err, res) => {
