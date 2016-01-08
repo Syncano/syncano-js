@@ -198,9 +198,9 @@ describe('QuerySet', function() {
       const expected = _.assign({}, qs.properties, attrs);
 
       should(outcome).be.an.Object();
-      should(qs).have.property('properties').which.is.an.Object().with.properties(expected);
-      should(qs).have.property('method').which.is.an.String().equal('GET');
-      should(qs).have.property('endpoint').which.is.an.String().equal('detail');
+      should(outcome).have.property('properties').which.is.an.Object().with.properties(expected);
+      should(outcome).have.property('method').which.is.an.String().equal('GET');
+      should(outcome).have.property('endpoint').which.is.an.String().equal('detail');
     });
 
   });
@@ -271,12 +271,11 @@ describe('QuerySet', function() {
 
   describe('#raw()', function() {
 
-    it('should disable serialization', function() {
+    it('should disable serialization and return "this"', function() {
+      const outcome = qs.raw();
 
-    });
-
-    it('should return "this"', function() {
-
+      should(outcome).be.an.Object();
+      should(outcome).have.property('_serialize').which.is.false();
     });
 
   });
