@@ -207,8 +207,37 @@ describe('QuerySet', function() {
 
   describe('#getOrCreate()', function() {
 
-    it('should return object', function() {
+    it('should return a Promise', function() {
+      const stub = sinon.stub(qs, 'get').returns(new Promise((resolve, reject) => {
+        resolve();
+      }));
 
+      should(qs.getOrCreate()).be.a.Promise();
+      should(qs.get.calledOnce).be.true();
+    });
+
+    it('should call create if get fails', function() {
+      sinon.stub(qs, 'get').returns(new Promise((resolve, reject) => {
+        reject(new Error('dummy'));
+      }));
+
+      sinon.stub(qs, 'create').returns(new Promise((resolve, reject) => {
+        resolve('createResolve');
+      }));
+
+      should(qs.getOrCreate()).be.Promise().fulfilledWith('createResolve');
+    });
+
+    it('should reject if create fails', function() {
+      sinon.stub(qs, 'get').returns(new Promise((resolve, reject) => {
+        reject(new Error('getReject'));
+      }));
+
+      sinon.stub(qs, 'create').returns(new Promise((resolve, reject) => {
+        reject(new Error('createReject'));
+      }));
+
+      should(qs.getOrCreate()).be.Promise().rejectedWith('createReject');
     });
 
   });
