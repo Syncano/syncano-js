@@ -266,7 +266,7 @@ describe('QuerySet', function() {
 
   describe('#delete()', function() {
 
-    it('should return "this" and set properties and query', function() {
+    it('should return "this" and set properties', function() {
       qs.properties = {pa: 1, pb: 2};
 
       const properties = {a: 1, b: 2};
@@ -284,40 +284,123 @@ describe('QuerySet', function() {
 
   describe('#update()', function() {
 
-    it('should return object', function() {
+    it('should return "this" and set properties', function() {
+      qs.properties = {pa: 1, pb: 2};
+      qs.object = {qa: 1, qb: 2};
 
+      const properties = {a: 1, b: 2};
+      const object = {c: 3, d: 4};
+      const outcome = qs.update(properties, object);
+      const expectedProperties = _.assign({}, qs.properties, properties);
+
+      should(outcome).be.an.Object();
+      should(outcome).have.property('method').which.is.an.String().equal('PATCH');
+      should(outcome).have.property('endpoint').which.is.an.String().equal('detail');
+      should(outcome).have.property('properties').which.is.an.Object().with.properties(expectedProperties);
+      should(outcome).have.property('payload').which.is.an.Object().with.properties(object);
     });
 
   });
 
   describe('#updateOrCreate()', function() {
 
-    it('should return object', function() {
+    it('should return a Promise', function() {
+      const stub = sinon.stub(qs, 'update').returns(new Promise((resolve, reject) => {
+        resolve();
+      }));
 
+      should(qs.updateOrCreate()).be.a.Promise();
+      should(qs.update.calledOnce).be.true();
+    });
+
+    it('should call create if update fails', function() {
+      sinon.stub(qs, 'update').returns(new Promise((resolve, reject) => {
+        reject(new Error('dummy'));
+      }));
+
+      sinon.stub(qs, 'create').returns(new Promise((resolve, reject) => {
+        resolve('createResolve');
+      }));
+
+      should(qs.updateOrCreate()).be.Promise().fulfilledWith('createResolve');
+    });
+
+    it('should reject if create fails', function() {
+      sinon.stub(qs, 'update').returns(new Promise((resolve, reject) => {
+        reject(new Error('updateReject'));
+      }));
+
+      sinon.stub(qs, 'create').returns(new Promise((resolve, reject) => {
+        reject(new Error('createReject'));
+      }));
+
+      should(qs.updateOrCreate()).be.Promise().rejectedWith('createReject');
     });
 
   });
 
   describe('#first()', function() {
 
-    it('should return object or undefined', function() {
+    it('should return a Promise', function() {
+      sinon.stub(qs, 'list').returns(new Promise((resolve, reject) => {
+        resolve([{x: 1}]);
+      }));
 
+      should(qs.first()).be.a.Promise();
+      should(qs.list.calledOnce).be.true();
+    });
+
+    it('should return the first object', function() {
+      sinon.stub(qs, 'list').returns(new Promise((resolve, reject) => {
+        resolve(['a', 'b']);
+      }));
+
+      should(qs.first()).be.a.Promise().fulfilledWith('a');
+      should(qs.list.calledOnce).be.true();
+    });
+
+    it('should return null', function() {
+      sinon.stub(qs, 'list').returns(new Promise((resolve, reject) => {
+        resolve([]);
+      }));
+
+      should(qs.first()).be.a.Promise().fulfilledWith(undefined);
+      should(qs.list.calledOnce).be.true();
+    });
+
+    it('should reject if list fails', function() {
+      sinon.stub(qs, 'list').returns(new Promise((resolve, reject) => {
+        reject(new Error('listReject'));
+      }));
+
+      should(qs.first()).be.a.Promise().rejectedWith('listReject');
+      should(qs.list.calledOnce).be.true();
     });
 
   });
 
   describe('#pageSize()', function() {
 
-    it('should return "this"', function() {
-
+    it('should return "this" and set pageSize', function() {
+      const outcome = qs.pageSize(1);
+      should(outcome).be.an.Object();
+      should(outcome).have.property('query').which.is.an.Object().properties({page_size: 1});
     });
 
   });
 
   describe('#ordering()', function() {
 
-    it('should return "this"', function() {
+    it('should return "this" and set ordering', function() {
+      const outcome = qs.ordering('desc');
+      should(outcome).be.an.Object();
+      should(outcome).have.property('query').which.is.an.Object().properties({ordering: 'desc'});
+    });
 
+    it('should validate value', function() {
+      should(() => {
+        qs.ordering('dummy');
+      }).throw(new Error('dummy'));
     });
 
   });
