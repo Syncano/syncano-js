@@ -242,7 +242,6 @@ describe('Instance', function() {
         })
         .then((instance) => {
           should(instance).be.an.Object();
-          should(instance).have.property('name').which.is.String().equal(names[1]);
         })
         .finally(() => {
           return Promise.all(_.map(names, (name) => connection.Instance.please().delete({name: name})));
