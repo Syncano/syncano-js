@@ -69,9 +69,9 @@ describe('Base model methods', function() {
     model = Syncano({ name: instanceName, baseUrl: testBaseUrl }).Instance;
     model_single = Instance;
     api = nock(testBaseUrl)
-              .filteringRequestBody(function() {
-                return '*';
-              });
+            .filteringRequestBody(function() {
+              return '*';
+            });
   });
 
   describe('#please()', function() {
@@ -93,8 +93,12 @@ describe('Base model methods', function() {
       should(model_single()).have.property('isNew').which.is.Function();
     });
 
-    it('should return correct value', function() {
+    it('should return true if no "links" property is fond on the model', function() {
       should(model_single().isNew()).equal(true);
+    });
+
+    it('should return false if "links" property is fond on the model', function() {
+      should(model_single({ links: {} }).isNew()).equal(false);
     });
 
   });
