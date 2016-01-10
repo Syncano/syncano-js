@@ -25,6 +25,10 @@ describe('SyncanoError', function() {
     should(error).have.property('stack').which.is.String();
   });
 
+  it('has defaults', function() {
+    should(new SyncanoError()).have.property('message').which.is.String().equal('');
+  });
+
 });
 
 
@@ -55,6 +59,10 @@ describe('ValidationError', function() {
     should(error).have.property('errors').which.is.Object().properties('name');
   });
 
+  it('has defaults', function() {
+    should(new ValidationError()).have.property('errors').which.is.Object();
+  });
+
 });
 
 
@@ -83,6 +91,13 @@ describe('RequestError', function() {
 
   it('has a proper errors attr', function() {
     should(error).have.property('errors').which.is.Object().properties('name');
+  });
+
+  it('has defaults', function() {
+    error = new RequestError();
+    should(error).have.property('statusCode').which.is.Number().equal(400);
+    should(error).have.property('errors').which.is.Object();
+    should(error).have.property('response').which.is.null();
   });
 
 });
