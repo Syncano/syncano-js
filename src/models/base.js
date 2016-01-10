@@ -67,12 +67,8 @@ export const Meta = stampit()
 
 export const Model = stampit({
   static: {
-    please() {
-      return QuerySet({model: this, _config: this.getConfig(), properties: this.properties || {}});
-    },
-    setProperties(props) {
-      this.properties = props;
-      return this;
+    please(properties = {}) {
+      return QuerySet({model: this, _config: this.getConfig(), properties: properties});
     }
   },
   methods: {
@@ -143,10 +139,11 @@ export const Model = stampit({
     stamp.fixed.methods.getStamp = () => stamp;
   }
 })
-.init(function() {
+.init(function(instance, stamp) {
+  instance.clone = () => stamp(instance)
   _.forEach(this.getConfig(), (model, name) => {
     if(this.getMeta().relatedModels && this.getMeta().relatedModels.indexOf(name) > -1) {
-      this[name] = stampit().compose(model).setProperties({instance: this.name}).please();
+      this[name] = stampit().compose(model).please({ instance: this.name });
     }
   });
 })
