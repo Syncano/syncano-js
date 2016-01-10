@@ -23,7 +23,7 @@ describe('Instance', function() {
       .catch(() => done());
   });
 
-  it('shoule be validated', function() {
+  it('should be validated', function() {
     connection.Instance().save().catch((err) => {
       should(function() {
         throw err;
@@ -31,7 +31,7 @@ describe('Instance', function() {
     });
   });
 
-  it('shoule be able to save via model instance', function() {
+  it('should be able to save via model instance', function() {
     const data = {
       name: instanceName,
       description: suffix.get('description')
@@ -50,7 +50,7 @@ describe('Instance', function() {
       });
   });
 
-  it('shoule be able to update via model instance', function() {
+  it('should be able to update via model instance', function() {
     const data = {
       name: instanceName,
       description: suffix.get('description')
@@ -72,7 +72,7 @@ describe('Instance', function() {
       });
   });
 
-  it('shoule be able to delete via model instance', function() {
+  it('should be able to delete via model instance', function() {
     const data = {
       name: instanceName,
       description: suffix.get('description')
@@ -90,13 +90,13 @@ describe('Instance', function() {
 
   describe('#please()', function() {
 
-    it('shoule be able to list instances', function() {
+    it('should be able to list instances', function() {
       return connection.Instance.please().list().then((instances) => {
         should(instances).be.an.Array();
       });
     });
 
-    it('shoule be able to create an instance', function() {
+    it('should be able to create an instance', function() {
       return connection.Instance.please().create({name: instanceName}).then((instance) => {
         should(instance).be.a.Object();
         should(instance).have.property('name').which.is.String().equal(instanceName);
@@ -109,7 +109,7 @@ describe('Instance', function() {
       });
     });
 
-    it('shoule be able to get an instance', function() {
+    it('should be able to get an instance', function() {
       return connection.Instance.please().create({name: instanceName})
         .then((instance) => {
           should(instance).be.an.Object();
@@ -135,7 +135,7 @@ describe('Instance', function() {
         });
     });
 
-    it('shoule be able to delete an instance', function() {
+    it('should be able to delete an instance', function() {
       return connection.Instance.please().create({name: instanceName})
         .then((instance) => {
           should(instance).be.an.Object();
@@ -151,7 +151,7 @@ describe('Instance', function() {
         });
     });
 
-    it('shoule be able to get or create instance (CREATE)', function() {
+    it('should be able to get or create instance (CREATE)', function() {
       return connection.Instance.please().getOrCreate({name: instanceName}, {description: 'test'}).then((instance) => {
         should(instance).be.an.Object();
         should(instance).have.property('name').which.is.String().equal(instanceName);
@@ -164,7 +164,7 @@ describe('Instance', function() {
       });
     });
 
-    it('shoule be able to get or create instance (GET)', function() {
+    it('should be able to get or create instance (GET)', function() {
       return connection.Instance.please().create({name: instanceName, description: 'test'}).then((instance) => {
         should(instance).be.an.Object();
         should(instance).have.property('name').which.is.String().equal(instanceName);
@@ -179,7 +179,7 @@ describe('Instance', function() {
       });
     });
 
-    it('shoule be able to update an instance', function() {
+    it('should be able to update an instance', function() {
       return connection.Instance.please().create({name: instanceName, description: 'test'}).then((instance) => {
         should(instance).be.an.Object();
         should(instance).have.property('name').which.is.String().equal(instanceName);
@@ -194,7 +194,7 @@ describe('Instance', function() {
       });
     });
 
-    it('shoule be able to update or create instance (UPDATE)', function() {
+    it('should be able to update or create instance (UPDATE)', function() {
       return connection.Instance.please().create({name: instanceName, description: 'test'}).then((instance) => {
         should(instance).be.an.Object();
         should(instance).have.property('name').which.is.String().equal(instanceName);
@@ -209,7 +209,7 @@ describe('Instance', function() {
       });
     });
 
-    it('shoule be able to update or create instance (CREATE)', function() {
+    it('should be able to update or create instance (CREATE)', function() {
       let properties = {name: instanceName};
       let object = {description: 'updateTest'};
       let defaults = {
@@ -229,7 +229,7 @@ describe('Instance', function() {
       });
     });
 
-    it('shoule be able to get first instance (SUCCESS)', function() {
+    it('should be able to get first instance (SUCCESS)', function() {
       const names = [
         `${instanceName}_1`,
         `${instanceName}_2`
@@ -248,7 +248,7 @@ describe('Instance', function() {
         });
     });
 
-    it('shoule be able to change page size', function() {
+    it('should be able to change page size', function() {
       const names = [
         `${instanceName}_1`,
         `${instanceName}_2`
@@ -268,7 +268,7 @@ describe('Instance', function() {
         });
     });
 
-    it('shoule be able to change ordering', function() {
+    it('should be able to change ordering', function() {
       const names = [
         `${instanceName}_1`,
         `${instanceName}_2`
@@ -300,7 +300,7 @@ describe('Instance', function() {
         });
     });
 
-    it('shoule be able to get raw data', function() {
+    it('should be able to get raw data', function() {
       return connection.Instance.please().list().raw().then((response) => {
         should(response).be.a.Object();
         should(response).have.property('objects').which.is.Array();

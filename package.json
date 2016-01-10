@@ -70,6 +70,7 @@
     "karma-webpack": "^1.7.0",
     "mocha": "^2.3.4",
     "mockery": "^1.4.0",
+    "nock": "^5.2.1",
     "npm-run-all": "^1.4.0",
     "phantomjs": "^1.9.19",
     "rimraf": "^2.4.5",
