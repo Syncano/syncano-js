@@ -68,7 +68,11 @@ export const Meta = stampit()
 export const Model = stampit({
   static: {
     please() {
-      return QuerySet({model: this, _config: this.getConfig()});
+      return QuerySet({model: this, _config: this.getConfig(), properties: this.properties || {}});
+    },
+    setProperties(props) {
+      this.properties = props;
+      return this;
     }
   },
 
