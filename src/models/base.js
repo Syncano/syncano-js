@@ -75,7 +75,6 @@ export const Model = stampit({
       return this;
     }
   },
-
   methods: {
     isNew() {
       return !_.has(this, 'links');
@@ -143,6 +142,13 @@ export const Model = stampit({
   if (!stamp.fixed.methods.getStamp) {
     stamp.fixed.methods.getStamp = () => stamp;
   }
+})
+.init(function() {
+  _.forEach(this.getConfig(), (model, name) => {
+    if(this.getMeta().relatedModels && this.getMeta().relatedModels.indexOf(name) > -1) {
+      this[name] = stampit().compose(model).setProperties({instance: this.name}).please();
+    }
+  });
 })
 .compose(ConfigMixin, MetaMixin, ConstraintsMixin, Request);
 
