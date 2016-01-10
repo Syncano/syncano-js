@@ -5,7 +5,7 @@ import {ValidationError} from '../../src/errors';
 import nock from 'nock';
 import {instanceName, testEndpoint, testBaseUrl, testName} from './utils';
 
-describe('Base model meta', function() {
+describe('Meta', function() {
   let model = null;
   let meta = null;
 
@@ -60,7 +60,7 @@ describe('Base model meta', function() {
 
 });
 
-describe('Base model methods', function() {
+describe('Model', function() {
   let model = null;
   let modelSingle = null;
   let api = null
@@ -170,11 +170,7 @@ describe('Base model methods', function() {
 
     it('should throw error when server response is error', function() {
       api.delete('/v1/instances/${instanceName}/', '*').reply(404);
-      model({name: instanceName}).delete().catch((err) => {
-        should(function() {
-          throw err;
-        }).throw(new Error());
-      });
+      should(model({name: instanceName}).delete()).rejectedWith(Error);
     });
   })
 
