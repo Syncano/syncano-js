@@ -24,11 +24,7 @@ describe('Instance', function() {
   });
 
   it('should be validated', function() {
-    connection.Instance().save().catch((err) => {
-      should(function() {
-        throw err;
-      }).throw(new ValidationError());
-    });
+    should(connection.Instance().save()).be.rejectedWith(ValidationError);
   });
 
   it('should be able to save via model instance', function() {

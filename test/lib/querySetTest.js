@@ -203,6 +203,13 @@ describe('QuerySet', function() {
       should(outcome).have.property('endpoint').which.is.an.String().equal('detail');
     });
 
+    it('has defaults', function() {
+      const outcome = qs.get();
+
+      should(outcome).be.an.Object();
+      should(outcome).have.property('properties').which.is.an.Object();
+    });
+
   });
 
   describe('#getOrCreate()', function() {
