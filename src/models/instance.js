@@ -1,6 +1,5 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
-import _ from 'lodash';
 
 const InstanceMeta = Meta({
   name: 'instance',
