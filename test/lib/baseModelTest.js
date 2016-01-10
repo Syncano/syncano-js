@@ -62,12 +62,12 @@ describe('Base model meta', function() {
 
 describe('Base model methods', function() {
   let model = null;
-  let model_single = null;
+  let modelSingle = null;
   let api = null
 
   beforeEach(function() {
     model = Syncano({ name: instanceName, baseUrl: testBaseUrl }).Instance;
-    model_single = Instance;
+    modelSingle = Instance;
     api = nock(testBaseUrl)
             .filteringRequestBody(function() {
               return '*';
@@ -90,15 +90,15 @@ describe('Base model methods', function() {
   describe('#isNew()', function() {
 
     it('should be a method of the model', function() {
-      should(model_single()).have.property('isNew').which.is.Function();
+      should(modelSingle()).have.property('isNew').which.is.Function();
     });
 
     it('should return true if no "links" property is fond on the model', function() {
-      should(model_single().isNew()).equal(true);
+      should(modelSingle().isNew()).equal(true);
     });
 
     it('should return false if "links" property is fond on the model', function() {
-      should(model_single({ links: {} }).isNew()).equal(false);
+      should(modelSingle({ links: {} }).isNew()).equal(false);
     });
 
   });
@@ -106,13 +106,13 @@ describe('Base model methods', function() {
   describe('#validate()', function() {
 
     it('should be a method of the model', function() {
-      should(model_single()).have.property('validate').which.is.Function();
+      should(modelSingle()).have.property('validate').which.is.Function();
     });
 
     it('should enable validation', function() {
-      should(model_single.setConstraints({})().validate()).not.be.ok;
-      should(model_single().validate()).have.property('name').which.is.Array();
-      should(model_single({ name: testName}).validate()).not.be.ok;
+      should(modelSingle.setConstraints({})().validate()).not.be.ok;
+      should(modelSingle().validate()).have.property('name').which.is.Array();
+      should(modelSingle({ name: testName}).validate()).not.be.ok;
     });
 
   });
@@ -120,23 +120,32 @@ describe('Base model methods', function() {
   describe('#save()', function() {
 
     it('should be a method of the model', function(){
-      should(model_single()).have.property('save').which.is.Function();
+      should(modelSingle()).have.property('save').which.is.Function();
     });
 
     it('should check if required data is present', function() {
-      model_single().save().catch((err) => {
-        should(function() {
-          throw err;
-        }).throw(new ValidationError());
-      });
+      should(modelSingle().save()).rejectedWith(ValidationError);
     })
 
     it('should save model', function() {
       api.post('/v1/instances/', '*').reply(201, {
-            name: instanceName,
-            links: {}
-          });
+        name: instanceName,
+        links: {}
+      });
+
       model({name: instanceName}).save().then((instance) => {
+        should(instance).be.an.Object();
+        should(instance).have.property('name').which.is.String().equal(instanceName);
+      });
+    });
+
+    it('should update model', function() {
+      api.put(`/v1/instances/${instanceName}/`, '*').reply(201, {
+        name: instanceName,
+        links: {}
+      });
+
+      model({name: instanceName, links: {a: 1}}).save().then((instance) => {
         should(instance).be.an.Object();
         should(instance).have.property('name').which.is.String().equal(instanceName);
       });
@@ -144,18 +153,14 @@ describe('Base model methods', function() {
 
     it('should throw error when server response is error', function() {
       api.post('/v1/instances/', '*').reply(404);
-      model({name: instanceName}).save().catch((err) => {
-        should(function() {
-          throw err;
-        }).throw(new Error());
-      });
+      should(model({name: instanceName}).save()).rejectedWith(Error);
     });
 
   });
 
   describe('#delete()', function() {
     it('should be a method of the model', function(){
-      should(model_single()).have.property('delete').which.is.Function();
+      should(modelSingle()).have.property('delete').which.is.Function();
     });
 
     it('should delete model record', function() {

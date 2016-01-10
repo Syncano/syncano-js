@@ -17,10 +17,9 @@ export function ValidationError(errors = {}) {
   this.name = 'ValidationError';
   this.stack = (new Error()).stack;
   this.errors = errors;
-  this.message = _.reduce(errors, (result, value, key) => {
-    result += `${key} - ${value.join()} `;
-    return result;
-  }, '');
+  this.message = _.map(errors, (value, key) => {
+    return `"${key}" ${value.join(', ')}`;
+  }).join('\n');
 }
 
 ValidationError.prototype = Object.create(SyncanoError.prototype);
@@ -41,12 +40,12 @@ export function RequestError(statusCode = 400, errors = {}, response = null) {
     }, this.message);
 
     if (_.isEmpty(this.message)) {
-      _.forEach(errors, (value, key) => {
+      this.message = _.map(errors, (value, key) => {
         if (_.isArray(value)) {
-          value = value.join();
+          value = value.join(', ');
         }
-        this.message += `${key}: ${value}\n`;
-      });
+        return `"${key}" ${value}`;
+      }).join('\n');
     }
   }
 }
