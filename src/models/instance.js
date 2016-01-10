@@ -15,7 +15,10 @@ const InstanceMeta = Meta({
     }
   },
   relatedModels: [
-    'Class'
+    'Admin', 'Class', 'CodeBox', 'Schedule', 'InstanceInvitation', 'ApiKey'
+    , 'Trigger', 'Webhook', 'User', 'Group', 'Channel', 'GCMDevice'
+    , 'APNSDevice'
+
   ]
 });
 
