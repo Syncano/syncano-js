@@ -134,16 +134,14 @@ export const Model = stampit({
     }
   }
 })
-.init((stamp) => {
+.init(({instance, stamp}) => {
   if (!stamp.fixed.methods.getStamp) {
     stamp.fixed.methods.getStamp = () => stamp;
   }
-})
-.init(function() {
-  if(this.getMeta().relatedModels) {
-    _.forEach(this.getConfig(), (model, name) => {
-      if(this.getMeta().relatedModels.indexOf(name) > -1) {
-        this[name] = stampit().compose(model).please({ instance: this.name });
+  if(instance.getMeta().relatedModels) {
+    _.forEach(instance.getConfig(), (model, name) => {
+      if(instance.getMeta().relatedModels.indexOf(name) > -1) {
+        instance[name] = stampit().compose(model).please({ instance: instance.name });
       }
     });
   }
