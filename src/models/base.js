@@ -134,7 +134,7 @@ export const Model = stampit({
     }
   }
 })
-.init(({stamp}) => {
+.init(() => {
   if (!stamp.fixed.methods.getStamp) {
     stamp.fixed.methods.getStamp = () => stamp;
   }
