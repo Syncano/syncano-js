@@ -140,12 +140,13 @@ export const Model = stampit({
   }
 })
 .init(function(instance, stamp) {
-  instance.clone = () => stamp(instance)
-  _.forEach(this.getConfig(), (model, name) => {
-    if(this.getMeta().relatedModels && this.getMeta().relatedModels.indexOf(name) > -1) {
-      this[name] = stampit().compose(model).please({ instance: this.name });
-    }
-  });
+  if(this.getMeta().relatedModels) {
+    _.forEach(this.getConfig(), (model, name) => {
+      if(this.getMeta().relatedModels.indexOf(name) > -1) {
+        this[name] = stampit().compose(model).please({ instance: this.name });
+      }
+    });
+  }
 })
 .compose(ConfigMixin, MetaMixin, ConstraintsMixin, Request);
 
