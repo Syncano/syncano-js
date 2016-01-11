@@ -134,12 +134,12 @@ export const Model = stampit({
     }
   }
 })
-.init(() => {
+.init((stamp) => {
   if (!stamp.fixed.methods.getStamp) {
     stamp.fixed.methods.getStamp = () => stamp;
   }
 })
-.init(function(instance, stamp) {
+.init(function() {
   if(this.getMeta().relatedModels) {
     _.forEach(this.getConfig(), (model, name) => {
       if(this.getMeta().relatedModels.indexOf(name) > -1) {
