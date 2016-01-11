@@ -13,7 +13,13 @@ const InstanceMeta = Meta({
       'methods': ['post', 'get'],
       'path': '/v1/instances/'
     }
-  }
+  },
+  relatedModels: [
+    'Admin', 'Class', 'CodeBox', 'Schedule', 'InstanceInvitation', 'ApiKey'
+    , 'Trigger', 'Webhook', 'User', 'Group', 'Channel', 'GCMDevice'
+    , 'APNSDevice'
+
+  ]
 });
 
 const InstanceConstraints = {
@@ -28,6 +34,6 @@ const InstanceConstraints = {
 const Instance = stampit()
   .compose(Model)
   .setMeta(InstanceMeta)
-  .setConstraints(InstanceConstraints);
+  .setConstraints(InstanceConstraints)
 
 export default Instance;
