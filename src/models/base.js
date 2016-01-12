@@ -14,14 +14,27 @@ export const Meta = stampit()
   .props({
     name: null,
     pluralName: null,
+    properties: [],
     endpoints: {}
   })
   .init(function({ instance }) {
     _.forEach(instance.endpoints, (value) => {
       value.properties = this.getPathProperties(value.path);
+      instance.properties = _.union(instance.properties, value.properties);
     });
   })
   .methods({
+    getObjectProperties(object) {
+      return _.reduce(this.properties, (result, property) => {
+        result[property] = object[property];
+        return result;
+      }, {});
+    },
+
+    assingProperties(source, target) {
+      return _.assign({}, this.getObjectProperties(source), target);
+    },
+
     getPathProperties(path) {
       const re = /{([^}]*)}/gi;
       let match = null;
@@ -33,6 +46,7 @@ export const Meta = stampit()
 
       return result;
     },
+
     resolveEndpointPath(endpointName, properties) {
       if (_.isEmpty(this.endpoints[endpointName])) {
         throw new Error(`Invalid endpoit name: "${endpointName}".`);
@@ -43,7 +57,7 @@ export const Meta = stampit()
       let path = endpoint.path;
 
       if (diff.length > 0) {
-        throw new Error(`Missing "${endpointName}" path properties "${diff.join()}"`)
+        throw new Error(`Missing path properties "${diff.join()}" for "${endpointName}" endpoint.`)
       }
 
       _.forEach(endpoint.properties, (property) => {
@@ -67,8 +81,18 @@ export const Meta = stampit()
 
 export const Model = stampit({
   static: {
-    please() {
-      return QuerySet({model: this, _config: this.getConfig()});
+    please(properties = {}) {
+      return QuerySet({
+        model: this,
+        properties: properties,
+        _config: this.getConfig()
+      });
+    },
+
+    fromJSON(rawJSON, properties = {}) {
+      const meta = this.getMeta();
+      const attrs = meta.assingProperties(properties, rawJSON);
+      return this(attrs);
     }
   },
 
@@ -88,30 +112,40 @@ export const Model = stampit({
       return validate(attributes, constraints);
     },
 
+    serialize(object) {
+      const meta = this.getMeta();
+      return this.getStamp()(meta.assingProperties(this, object));
+    },
+
     save() {
       const meta = this.getMeta();
       const errors = this.validate();
+      let path = null;
       let endpoint = 'list';
       let method = 'POST';
       let payload = JSON.stringify(this);
-
-      if (!this.isNew()) {
-        endpoint = 'detail';
-        method = meta.findAllowedMethod(endpoint, 'PUT', 'POST');
-      }
-
-      const path = meta.resolveEndpointPath(endpoint, this);
 
       return new Promise((resolve, reject) => {
         if (!_.isEmpty(errors)) {
           return reject(new ValidationError(errors));
         }
 
+        try {
+          if (!this.isNew()) {
+            endpoint = 'detail';
+            method = meta.findAllowedMethod(endpoint, 'PUT', 'POST');
+          }
+
+          path = meta.resolveEndpointPath(endpoint, this);
+        } catch(err) {
+          return reject(err);
+        }
+
         this.makeRequest(method, path, {payload}, (err, res) => {
           if (err || !res.ok) {
             return reject(err, res);
           }
-          resolve(this.getStamp()(res.body), res);
+          resolve(this.serialize(res.body), res);
         });
       });
     },
