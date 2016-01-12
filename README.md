@@ -137,6 +137,8 @@ my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - ret
 * Daniel Kopka - [twitter](https://twitter.com/danielkopka), [github](https://github.com/dancio)
 
 ### Change Log
+* **0.4.6** - 2016-01-12
+    * Quick fix for browser FormData
 * **0.4.5** - 2015-12-18
     * Integration with [Fuse](https://www.fusetools.com/)
 * **0.4.4** - 2015-12-16

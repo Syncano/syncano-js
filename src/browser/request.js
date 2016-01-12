@@ -54,7 +54,7 @@ Request.prototype._formData = function(formData) {
     }
   });
 
-  this.sendOptions.data = form.toString();
+  this.sendOptions.data = (form.fake === true) ? form.toString(): form;
   this.sendOptions.headers = helpers.merge(this.sendOptions.headers, {
     'Content-Type': 'multipart/form-data; boundary=' + form.boundary
   });
