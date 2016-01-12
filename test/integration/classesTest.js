@@ -1,9 +1,6 @@
 import should from 'should/as-function';
-<<<<<<< HEAD
-=======
 import Promise from 'bluebird';
 import _ from 'lodash';
->>>>>>> origin/release/1.0.0
 import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
 import {suffix, credentials} from './utils';
