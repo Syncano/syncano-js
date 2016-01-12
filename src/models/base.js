@@ -43,7 +43,7 @@ export const Meta = stampit()
       let path = endpoint.path;
 
       if (diff.length > 0) {
-        throw new Error(`Missing "${endpointName}" path properties "${diff.join()}"`)
+         throw new Error(`Missing path properties "${diff.join()}" for "${endpointName}" endpoint.`);
       }
 
       _.forEach(endpoint.properties, (property) => {
@@ -90,21 +90,26 @@ export const Model = stampit({
     save() {
       const meta = this.getMeta();
       const errors = this.validate();
+      let path = null;
       let endpoint = 'list';
       let method = 'POST';
       let payload = JSON.stringify(this);
-
-      if (!this.isNew()) {
-        endpoint = 'detail';
-        method = meta.findAllowedMethod(endpoint, 'PUT', 'POST');
-      }
-
-      const path = meta.resolveEndpointPath(endpoint, this);
 
       return new Promise((resolve, reject) => {
         if (!_.isEmpty(errors)) {
           return reject(new ValidationError(errors));
         }
+
+        try {
+           if (!this.isNew()) {
+             endpoint = 'detail';
+             method = meta.findAllowedMethod(endpoint, 'PUT', 'POST');
+           }
+
+           path = meta.resolveEndpointPath(endpoint, this);
+         } catch(err) {
+           return reject(err);
+         }
 
         this.makeRequest(method, path, {payload}, (err, res) => {
           if (err || !res.ok) {
@@ -139,9 +144,9 @@ export const Model = stampit({
     stamp.fixed.methods.getStamp = () => stamp;
   }
   if(instance.getMeta().relatedModels) {
-    var props = { };
+    let props = {};
     props[instance.getMeta().name] = instance.name;
-    if(instance.instance) props.instance = instance.instance;
+    if(_.has(instance, 'instanceName')) props.instanceName = instance.instanceName;
     _.forEach(instance.getConfig(), (model, name) => {
       if(instance.getMeta().relatedModels.indexOf(name) > -1) {
         instance[model.getMeta().pluralName] = stampit().props(props).compose(model);
