@@ -7,11 +7,11 @@ const DataObjectMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instance}/classes/{class}/objects/{id}/'
+      'path': '/v1/instances/{instanceName}/classes/{class}/objects/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instance}/classes/{class}/objects/'
+      'path': '/v1/instances/{instanceName}/classes/{class}/objects/'
     }
   }
 });

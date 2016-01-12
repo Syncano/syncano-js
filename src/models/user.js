@@ -7,19 +7,19 @@ const UserMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instance}/users/{id}/'
+      'path': '/v1/instances/{instanceName}/users/{id}/'
     },
     'reset_key': {
       'methods': ['post'],
-      'path': '/v1/instances/{instance}/users/{id}/reset_key/'
+      'path': '/v1/instances/{instanceName}/users/{id}/reset_key/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instance}/users/'
+      'path': '/v1/instances/{instanceName}/users/'
     },
     'groups': {
       'methods': ['get', 'post'],
-      'path': '/v1/instances/{instance}/users/{id}/groups/'
+      'path': '/v1/instances/{instanceName}/users/{id}/groups/'
     }
   }
 });

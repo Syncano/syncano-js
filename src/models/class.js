@@ -7,18 +7,34 @@ const ClassMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instance}/classes/{name}/'
+      'path': '/v1/instances/{instanceName}/classes/{name}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instance}/classes/'
+      'path': '/v1/instances/{instanceName}/classes/'
     }
   },
   relatedModels: [ 'DataObject' ]
 });
 
+const ClassConstraints = {
+   name: {
+     presence: true,
+     length: {
+       minimum: 5
+     }
+   },
+   instanceName: {
+     presence: true,
+     length: {
+       minimum: 5
+     }
+   }
+ };
+
 const Class = stampit()
   .compose(Model)
-  .setMeta(ClassMeta);
+  .setMeta(ClassMeta)
+  .setConstraints(ClassConstraints);
 
 export default Class;

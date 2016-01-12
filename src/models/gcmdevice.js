@@ -7,11 +7,11 @@ const GCMDeviceMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instance}/push_notifications/gcm/devices/{id}'
+      'path': '/v1/instances/{instanceName}/push_notifications/gcm/devices/{id}'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instance}/push_notifications/gcm/devices/'
+      'path': '/v1/instances/{instanceName}/push_notifications/gcm/devices/'
     }
   }
 });
