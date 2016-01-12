@@ -33,6 +33,7 @@ export const Meta = stampit()
 
       return result;
     },
+
     resolveEndpointPath(endpointName, properties) {
       if (_.isEmpty(this.endpoints[endpointName])) {
         throw new Error(`Invalid endpoit name: "${endpointName}".`);
@@ -43,7 +44,7 @@ export const Meta = stampit()
       let path = endpoint.path;
 
       if (diff.length > 0) {
-        throw new Error(`Missing "${endpointName}" path properties "${diff.join()}"`)
+        throw new Error(`Missing path properties "${diff.join()}" for "${endpointName}" endpoint.`)
       }
 
       _.forEach(endpoint.properties, (property) => {
@@ -91,20 +92,25 @@ export const Model = stampit({
     save() {
       const meta = this.getMeta();
       const errors = this.validate();
+      let path = null;
       let endpoint = 'list';
       let method = 'POST';
       let payload = JSON.stringify(this);
 
-      if (!this.isNew()) {
-        endpoint = 'detail';
-        method = meta.findAllowedMethod(endpoint, 'PUT', 'POST');
-      }
-
-      const path = meta.resolveEndpointPath(endpoint, this);
-
       return new Promise((resolve, reject) => {
         if (!_.isEmpty(errors)) {
           return reject(new ValidationError(errors));
+        }
+
+        try {
+          if (!this.isNew()) {
+            endpoint = 'detail';
+            method = meta.findAllowedMethod(endpoint, 'PUT', 'POST');
+          }
+
+          path = meta.resolveEndpointPath(endpoint, this);
+        } catch(err) {
+          return reject(err);
         }
 
         this.makeRequest(method, path, {payload}, (err, res) => {

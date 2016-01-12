@@ -5,7 +5,7 @@ import Syncano from '../../src/syncano';
 import {suffix, credentials} from './utils';
 import {ValidationError} from '../../src/errors';
 
-describe('Instance', function() {
+describe.skip('Instance', function() {
   this.timeout(15000);
 
   let connection = null;
