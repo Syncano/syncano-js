@@ -13,7 +13,8 @@ const ClassMeta = Meta({
       'methods': ['post', 'get'],
       'path': '/v1/instances/{instance}/classes/'
     }
-  }
+  },
+  relatedModels: [ 'DataObject' ]
 });
 
 const Class = stampit()

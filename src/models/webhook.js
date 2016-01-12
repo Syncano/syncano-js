@@ -25,7 +25,8 @@ const WebhookMeta = Meta({
       'methods': ['get'],
       'path': '/v1/instances/{instance}/webhooks/p/{publicLink}/{name}/'
     }
-  }
+  },
+  relatedModels: [ 'WebhookTrace' ]
 });
 
 const Webhook = stampit()

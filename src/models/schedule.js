@@ -13,7 +13,8 @@ const ScheduleMeta = Meta({
       'methods': ['post', 'get'],
       'path': '/v1/instances/{instance}/schedules/'
     }
-  }
+  },
+  relatedModels: [ 'ScheduleTrace' ]
 });
 
 const Schedule = stampit()

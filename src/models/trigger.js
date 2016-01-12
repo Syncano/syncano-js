@@ -13,7 +13,8 @@ const TriggerMeta = Meta({
       'methods': ['post', 'get'],
       'path': '/v1/instances/{instance}/triggers/'
     }
-  }
+  },
+  relatedModels: [ 'TriggerTrace' ]
 });
 
 const Trigger = stampit()

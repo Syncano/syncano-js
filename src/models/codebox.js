@@ -17,7 +17,8 @@ const CodeBoxMeta = Meta({
       'methods': ['post'],
       'path': '/v1/instances/{instance}/codeboxes/{id}/run/'
     }
-  }
+  },
+  relatedModels: [ 'CodeBoxTrace' ]
 });
 
 const CodeBox = stampit()
