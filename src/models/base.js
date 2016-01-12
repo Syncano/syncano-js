@@ -14,14 +14,27 @@ export const Meta = stampit()
   .props({
     name: null,
     pluralName: null,
+    properties: [],
     endpoints: {}
   })
   .init(function({ instance }) {
     _.forEach(instance.endpoints, (value) => {
       value.properties = this.getPathProperties(value.path);
+      instance.properties = _.union(instance.properties, value.properties);
     });
   })
   .methods({
+    getObjectProperties(object) {
+      return _.reduce(this.properties, (result, property) => {
+        result[property] = object[property];
+        return result;
+      }, {});
+    },
+
+    assingProperties(source, target) {
+      return _.assign({}, this.getObjectProperties(source), target);
+    },
+
     getPathProperties(path) {
       const re = /{([^}]*)}/gi;
       let match = null;
@@ -68,8 +81,18 @@ export const Meta = stampit()
 
 export const Model = stampit({
   static: {
-    please() {
-      return QuerySet({model: this, _config: this.getConfig()});
+    please(properties = {}) {
+      return QuerySet({
+        model: this,
+        properties: properties,
+        _config: this.getConfig()
+      });
+    },
+
+    fromJSON(rawJSON, properties = {}) {
+      const meta = this.getMeta();
+      const attrs = meta.assingProperties(properties, rawJSON);
+      return this(attrs);
     }
   },
 
@@ -87,6 +110,11 @@ export const Model = stampit({
       }
 
       return validate(attributes, constraints);
+    },
+
+    serialize(object) {
+      const meta = this.getMeta();
+      return this.getStamp()(meta.assingProperties(this, object));
     },
 
     save() {
@@ -117,7 +145,7 @@ export const Model = stampit({
           if (err || !res.ok) {
             return reject(err, res);
           }
-          resolve(this.getStamp()(res.body), res);
+          resolve(this.serialize(res.body), res);
         });
       });
     },

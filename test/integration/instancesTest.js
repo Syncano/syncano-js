@@ -5,15 +5,11 @@ import Syncano from '../../src/syncano';
 import {suffix, credentials} from './utils';
 import {ValidationError} from '../../src/errors';
 
-describe.skip('Instance', function() {
+describe('Instance', function() {
   this.timeout(15000);
 
-  let connection = null;
-  let instanceName = suffix.get('name');
-
-  beforeEach(function() {
-    connection = Syncano(credentials);
-  });
+  const connection = Syncano(credentials);
+  const instanceName = suffix.get('name');
 
   afterEach(function(done) {
     connection.Instance
@@ -232,7 +228,7 @@ describe.skip('Instance', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => connection.Instance.please().create({name: name})))
+        .all(_.map(names, (name) => connection.Instance.please().create({name})))
         .then(() => {
           return connection.Instance.please().first();
         })
@@ -240,7 +236,7 @@ describe.skip('Instance', function() {
           should(instance).be.an.Object();
         })
         .finally(() => {
-          return Promise.all(_.map(names, (name) => connection.Instance.please().delete({name: name})));
+          return Promise.all(_.map(names, (name) => connection.Instance.please().delete({name})));
         });
     });
 

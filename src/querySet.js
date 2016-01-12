@@ -26,9 +26,9 @@ const QuerySetRequest = stampit().compose(Request)
       }
 
       if (this.endpoint === 'list') {
-        return _.map(response.objects, (object) => this.model(object));
+        return _.map(response.objects, (object) => this.model.fromJSON(object, this.properties));
       } else if (this.endpoint === 'detail') {
-        return this.model(response);
+        return this.model.fromJSON(response, this.properties);
       }
 
       return response;
