@@ -18,19 +18,19 @@ const ClassMeta = Meta({
 });
 
 const ClassConstraints = {
-   name: {
-     presence: true,
-     length: {
-       minimum: 5
-     }
-   },
-   instanceName: {
-     presence: true,
-     length: {
-       minimum: 5
-     }
-   }
- };
+  name: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  }
+};
 
 const Class = stampit()
   .compose(Model)

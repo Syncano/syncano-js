@@ -99,7 +99,10 @@ const Request = stampit().compose(ConfigMixin, Logger)
       });
 
       request.end(_.wrap(callback, (_callback, err, res) => {
-        this.log(`makeRequest\n${method} ${path}\n${JSON.stringify(options, null, 2)}\n---`);
+        if (!res.ok) {
+          this.log(`\n${method} ${path}\n${JSON.stringify(options, null, 2)}\n`);
+          this.log('Response', res.body);
+        }
         return _callback(err, res);
       }));
 
