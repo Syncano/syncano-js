@@ -173,13 +173,36 @@ export const Model = stampit({
     stamp.fixed.methods.getStamp = () => stamp;
   }
   if(_.has(instance, '_meta.relatedModels')) {
-    let passedProps = {};
-    if(_.has(instance, 'name')) passedProps.instanceName = instance.name;
-    if(_.has(instance, 'instanceName')) passedProps.instanceName = instance.instanceName;
-    if(_.has(instance, 'id')) passedProps[instance.getMeta().name + 'Id'] = instance.id;
+    const relatedModels = instance._meta.relatedModels;
+    const properties = instance._meta.properties.slice();
+    const last = _.last(properties);
+    const lastIndex = _.lastIndexOf(properties, last);
+    properties[lastIndex] = _.camelCase(`${instance._meta.name} ${last}`);
+    let map = {};
+    map[last] = properties[lastIndex];
+
+    map = _.reduce(properties, (result, property) => {
+      result[property] = property;
+      return result;
+    }, map);
+
     _.forEach(instance.getConfig(), (model, name) => {
-      if(instance.getMeta().relatedModels.indexOf(name) > -1) {
-        instance[model.getMeta().pluralName] = (properties) => stampit().compose(model).please(_.assign(passedProps, properties));
+      if(_.includes(relatedModels, name)) {
+
+        instance[model.getMeta().pluralName] = (_properties = {}) => {
+
+          const parentProperties = _.reduce(map, (result, target, source) => {
+            const value = _.get(instance, source, null);
+
+            if (value !== null) {
+              result[target] = value;
+            }
+
+            return result;
+          }, {});
+
+          return stampit().compose(model).please(_.assign(parentProperties, _properties));
+        };
       }
     });
   }
