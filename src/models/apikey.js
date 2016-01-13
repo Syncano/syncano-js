@@ -7,11 +7,11 @@ const ApiKeyMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'get'],
-      'path': '/v1/instances/{instance}/api_keys/{id}/'
+      'path': '/v1/instances/{instanceName}/api_keys/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instance}/api_keys/'
+      'path': '/v1/instances/{instanceName}/api_keys/'
     }
   }
 });

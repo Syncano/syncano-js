@@ -7,11 +7,11 @@ const WebhookTraceMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instance}/webhooks/{name}/traces/{traceId}/'
+      'path': '/v1/instances/{instanceName}/webhooks/{webhookName}/traces/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instance}/webhooks/{name}/traces/'
+      'path': '/v1/instances/{instanceName}/webhooks/{webhookName}/traces/'
     }
   }
 });

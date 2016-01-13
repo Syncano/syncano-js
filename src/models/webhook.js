@@ -7,25 +7,26 @@ const WebhookMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instance}/webhooks/{name}/'
+      'path': '/v1/instances/{instanceName}/webhooks/{name}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instance}/webhooks/'
+      'path': '/v1/instances/{instanceName}/webhooks/'
     },
     'run': {
       'methods': ['post'],
-      'path': '/v1/instances/{instance}/webhooks/{name}/run/'
+      'path': '/v1/instances/{instanceName}/webhooks/{name}/run/'
     },
     'reset': {
       'methods': ['post'],
-      'path': '/v1/instances/{instance}/webhooks/{name}/reset_link/'
+      'path': '/v1/instances/{instanceName}/webhooks/{name}/reset_link/'
     },
     'public': {
       'methods': ['get'],
-      'path': '/v1/instances/{instance}/webhooks/p/{publicLink}/{name}/'
+      'path': '/v1/instances/{instanceName}/webhooks/p/{publicLink}/{name}/'
     }
-  }
+  },
+  relatedModels: [ 'WebhookTrace' ]
 });
 
 const Webhook = stampit()

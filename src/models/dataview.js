@@ -7,23 +7,23 @@ const DataViewMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instance}/api/objects/{name}/'
+      'path': '/v1/instances/{instanceName}/api/objects/{name}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instance}/api/objects/'
+      'path': '/v1/instances/{instanceName}/api/objects/'
     },
     'get': {
       'methods': ['get'],
-      'path': '/v1/instances/{instance}/api/objects/{name}/get/'
+      'path': '/v1/instances/{instanceName}/api/objects/{name}/get/'
     },
     'rename': {
       'methods': ['post'],
-      'path': '/v1/instances/{instance}/api/objects/{name}/rename/'
+      'path': '/v1/instances/{instanceName}/api/objects/{name}/rename/'
     },
     'clear_cache': {
       'methods': ['post'],
-      'path': '/v1/instances/{instance}/api/objects/{name}/clear_cache/'
+      'path': '/v1/instances/{instanceName}/api/objects/{name}/clear_cache/'
     }
   }
 });

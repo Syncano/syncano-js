@@ -7,11 +7,11 @@ const APNSMessageMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'get'],
-      'path': '/v1/instances/{instance}/push_notifications/apns/messages/{id}'
+      'path': '/v1/instances/{instanceName}/push_notifications/apns/messages/{id}'
     },
     'list': {
       'methods': ['get'],
-      'path': '/v1/instances/{instance}/push_notifications/apns/messages/'
+      'path': '/v1/instances/{instanceName}/push_notifications/apns/messages/'
     }
   }
 });

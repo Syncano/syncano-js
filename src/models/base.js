@@ -95,7 +95,6 @@ export const Model = stampit({
       return this(attrs);
     }
   },
-
   methods: {
     isNew() {
       return !_.has(this, 'links');
@@ -169,9 +168,43 @@ export const Model = stampit({
     }
   }
 })
-.init(({stamp}) => {
+.init(({instance, stamp}) => {
   if (!stamp.fixed.methods.getStamp) {
     stamp.fixed.methods.getStamp = () => stamp;
+  }
+  if(_.has(instance, '_meta.relatedModels')) {
+    const relatedModels = instance._meta.relatedModels;
+    const properties = instance._meta.properties.slice();
+    const last = _.last(properties);
+    const lastIndex = _.lastIndexOf(properties, last);
+    properties[lastIndex] = _.camelCase(`${instance._meta.name} ${last}`);
+    let map = {};
+    map[last] = properties[lastIndex];
+
+    map = _.reduce(properties, (result, property) => {
+      result[property] = property;
+      return result;
+    }, map);
+
+    _.forEach(instance.getConfig(), (model, name) => {
+      if(_.includes(relatedModels, name)) {
+
+        instance[model.getMeta().pluralName] = (_properties = {}) => {
+
+          const parentProperties = _.reduce(map, (result, target, source) => {
+            const value = _.get(instance, source, null);
+
+            if (value !== null) {
+              result[target] = value;
+            }
+
+            return result;
+          }, {});
+
+          return stampit().compose(model).please(_.assign(parentProperties, _properties));
+        };
+      }
+    });
   }
 })
 .compose(ConfigMixin, MetaMixin, ConstraintsMixin, Request);

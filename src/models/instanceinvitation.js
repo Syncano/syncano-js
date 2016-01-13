@@ -7,11 +7,11 @@ const InstanceInvitationMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'get'],
-      'path': '/v1/instances/{instance}/invitations/{id}/'
+      'path': '/v1/instances/{instanceName}/invitations/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instance}/invitations/'
+      'path': '/v1/instances/{instanceName}/invitations/'
     }
   }
 });

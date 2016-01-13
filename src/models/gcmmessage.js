@@ -7,11 +7,11 @@ const GCMMessageMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'get'],
-      'path': '/v1/instances/{instance}/push_notifications/gcm/messages/{id}'
+      'path': '/v1/instances/{instanceName}/push_notifications/gcm/messages/{id}'
     },
     'list': {
       'methods': ['get'],
-      'path': '/v1/instances/{instance}/push_notifications/gcm/messages/'
+      'path': '/v1/instances/{instanceName}/push_notifications/gcm/messages/'
     }
   }
 });

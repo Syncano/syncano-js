@@ -13,7 +13,8 @@ const ClassMeta = Meta({
       'methods': ['post', 'get'],
       'path': '/v1/instances/{instanceName}/classes/'
     }
-  }
+  },
+  relatedModels: [ 'DataObject' ]
 });
 
 const ClassConstraints = {
