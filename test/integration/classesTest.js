@@ -331,4 +331,7 @@ describe('Class', function() {
     });
 
   });
+
+
+
 });
