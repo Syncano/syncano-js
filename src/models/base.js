@@ -173,13 +173,13 @@ export const Model = stampit({
     stamp.fixed.methods.getStamp = () => stamp;
   }
   if(_.has(instance, '_meta.relatedModels')) {
-    let modelName = instance.getMeta().name + (instance.getMeta().name === 'instance' ? 'Name' : '');
-    let props = {};
-    props[modelName] = instance.name;
-    if(_.has(instance, 'instanceName')) props.instanceName = instance.instanceName;
+    let passedProps = {};
+    let modelName = `${instance.getMeta().name}${(instance.getMeta().name === 'instance' ? 'Name' : '')}`
+    if(_.has(instance, 'instanceName')) passedProps.instanceName = instance.instanceName;
+    if(_.has(instance, 'id')) passedProps[instance.getMeta().name + 'Id'] = instance.id;
     _.forEach(instance.getConfig(), (model, name) => {
       if(instance.getMeta().relatedModels.indexOf(name) > -1) {
-        instance[model.getMeta().pluralName] = (properties) => stampit().compose(model).please(_.assign(props, properties));
+        instance[model.getMeta().pluralName] = (properties) => stampit().compose(model).please(_.assign(passedProps, properties));
       }
     });
   }
