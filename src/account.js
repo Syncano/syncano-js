@@ -1,6 +1,5 @@
 import stampit from 'stampit';
 import Promise from 'bluebird';
-import _ from 'lodash';
 import Request from './request';
 
 const Account = stampit().compose(Request)
