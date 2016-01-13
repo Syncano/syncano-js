@@ -71,6 +71,7 @@
     "karma-phantomjs-launcher": "^0.2.1",
     "karma-webpack": "^1.7.0",
     "mocha": "^2.3.4",
+    "mocha-logger": "^1.0.2",
     "mockery": "^1.4.0",
     "nock": "^5.2.1",
     "npm-run-all": "^1.4.0",

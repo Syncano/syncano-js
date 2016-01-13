@@ -11,8 +11,26 @@ export const suffix = {
 };
 
 export const credentials = {
+  user: null,
   baseUrl: process.env.INTEGRATION_BASE_URL,
   accountKey: process.env.INTEGRATION_ACCOUNT_KEY,
   userKey: process.env.INTEGRATION_USER_KEY,
-  socialToken: process.env.INTEGRATION_SOCIAL_TOKEN
+  socialToken: process.env.INTEGRATION_SOCIAL_TOKEN,
+
+  setCredentials(_credentials = {}) {
+    _.assign(this, _credentials);
+  },
+
+  getCredentials() {
+    return this;
+  },
+
+  isAuthenticated() {
+    const keys = ['accountKey', 'userKey', 'socialToken', 'user'];
+    const values = _.filter(keys, (key) => {
+      return !_.isEmpty(this[key]) && !_.isUndefined(this[key]);
+    });
+
+    return values.length > 0;
+  }
 };

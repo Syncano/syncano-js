@@ -1,6 +1,7 @@
 import stampit from 'stampit';
-import models from './models';
 import _ from 'lodash';
+import models from './models';
+import Account from './account';
 
 /**
  * Main Syncano object.
@@ -10,6 +11,8 @@ import _ from 'lodash';
 const Syncano = stampit()
   // We need function here, do not use arrow syntax!
   .init(function() {
+    this.Account = Account.setConfig(this)();
+
     _.forEach(models, (model, name) => {
       this[name] = model.setConfig(this);
     });

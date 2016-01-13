@@ -9,21 +9,26 @@ import {suffix, credentials} from './utils';
 describe('Class', function() {
   this.timeout(15000);
 
-  const connection = Syncano(credentials);
-  const Class = connection.Class;
+  let connection = null;
+  let Class = null;
+  let Instance = null;
   const instanceName = suffix.get('instance');
   const className = suffix.get('class');
 
   before(function() {
-    return connection.Instance.please().create({name: instanceName});
+    connection = Syncano(credentials.getCredentials());
+    Instance = connection.Instance;
+    Class = connection.Class;
+
+    return Instance.please().create({name: instanceName});
   });
 
   after(function() {
-    return connection.Instance.please().delete({name: instanceName});
+    return Instance.please().delete({name: instanceName});
   });
 
   afterEach(function(done) {
-    return connection.Class.please().delete({
+    return Class.please().delete({
       instanceName: instanceName,
       name: className
     })
@@ -100,6 +105,16 @@ describe('Class', function() {
   });
 
   describe('#please()', function() {
+
+    afterEach(function() {
+      return Class
+        .please()
+        .list({instanceName})
+        .then((classes) => {
+          const names = _.filter(_.map(classes, 'name'), (name) => name !== 'user_profile');
+          return Promise.all(_.map(names, (name) => Class.please().delete({name, instanceName})));
+        });
+    });
 
     it('should be able to list classes', function() {
       return Class.please().list({instanceName}).then((classes) => {
@@ -262,9 +277,6 @@ describe('Class', function() {
         })
         .then((cls) => {
           should(cls).be.an.Object();
-        })
-        .finally(() => {
-          return Promise.all(_.map(names, (name) => Class.please().delete({name, instanceName})));
         });
     });
 
@@ -282,9 +294,6 @@ describe('Class', function() {
         })
         .then((classes) => {
           should(classes).be.an.Array().with.length(1);
-        })
-        .finally(() => {
-          return Promise.all(_.map(names, (name) => Class.please().delete({name, instanceName})));
         });
     });
 
@@ -298,11 +307,11 @@ describe('Class', function() {
       return Promise
         .all(_.map(names, (name) => Class.please().create({name, instanceName})))
         .then((classes) => {
-          should(classes).be.an.Array();
+          should(classes).be.an.Array().with.length(2);
           return Class.please({instanceName}).ordering('asc');
         })
         .then((classes) => {
-          should(classes).be.an.Array();
+          should(classes).be.an.Array().with.length(3);
           asc = classes;
           return Class.please({instanceName}).ordering('desc');
         }).then((desc) => {
@@ -310,14 +319,11 @@ describe('Class', function() {
           const descNames = _.map(desc, 'name');
           descNames.reverse();
 
-          should(desc).be.an.Array();
+          should(desc).be.an.Array().with.length(3);
 
           _.forEach(ascNames, (ascName, index) => {
             should(ascName).be.equal(descNames[index]);
           });
-        })
-        .finally(() => {
-          return Promise.all(_.map(names, (name) => Class.please().delete({name, instanceName})));
         });
     });
 
