@@ -1,9 +1,15 @@
+/** @namespace Request */
+
 import stampit from 'stampit';
 import superagent from 'superagent';
 import _ from 'lodash';
 import {ConfigMixin, Logger} from './utils';
 
-
+/**
+ * Base request class.
+ * @constructor
+ * @type {Request}
+ */
 const Request = stampit().compose(ConfigMixin, Logger)
   .refs({
     _request: {
@@ -19,15 +25,35 @@ const Request = stampit().compose(ConfigMixin, Logger)
     }
   })
   .methods({
+
+   /**
+    * Sets request handler, used for mocking.
+    * @memberOf Request
+    * @method
+    * @inner
+    * @param {function} handler
+    */
     setRequestHandler(handler) {
       this._request.handler = handler;
       return this;
     },
 
+    /**
+    * Gets request handler.
+    * @memberOf Request
+    * @method
+    * @inner
+    */
     getRequestHandler() {
       return this._request.handler;
     },
 
+    /**
+    * Builds full URL based on path.
+    * @memberOf Request
+    * @method
+    * @inner
+    */
     buildUrl(path) {
       const config = this.getConfig();
 
@@ -42,6 +68,12 @@ const Request = stampit().compose(ConfigMixin, Logger)
       return `${config.getBaseUrl()}${path}`;
     },
 
+    /**
+    * NANANA.
+    * @memberOf Request
+    * @method
+    * @inner
+    */
     makeRequest(methodName, path, requestOptions, callback) {
       const config = this.getConfig();
       let method = (methodName || '').toUpperCase();
@@ -110,12 +142,25 @@ const Request = stampit().compose(ConfigMixin, Logger)
     }
 
   }).static({
+
+    /**
+    * NANANA.
+    * @memberOf Request
+    * @static
+    * @inner
+    */
     setRequestHandler(handler) {
       let _request = this.fixed.refs._request || {};
       _request.handler = handler;
       return this.refs({_request});
     },
 
+    /**
+    * NANANA.
+    * @memberOf Request
+    * @static
+    * @inner
+    */
     getRequestHandler() {
       return this.fixed.refs._request.handler;
     }

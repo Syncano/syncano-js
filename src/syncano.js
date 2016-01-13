@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 /**
  * Main Syncano object.
+ * @constructor
  * @type {Syncano}
  */
 const Syncano = stampit()
