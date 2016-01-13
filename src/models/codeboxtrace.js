@@ -7,7 +7,7 @@ const CodeBoxTraceMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instanceName}/codeboxes/{codeboxId}/traces/{traceId}/'
+      'path': '/v1/instances/{instanceName}/codeboxes/{codeboxId}/traces/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
