@@ -6,7 +6,7 @@ const ApiKeyMeta = Meta({
   pluralName: 'apiKeys',
   endpoints: {
     'detail': {
-      'methods': ['delete', 'get'],
+      'methods': ['delete', 'patch', 'put', 'get'],
       'path': '/v1/instances/{instanceName}/api_keys/{id}/'
     },
     'list': {
