@@ -8,11 +8,17 @@ import {ValidationError} from '../../src/errors';
 describe('Instance', function() {
   this.timeout(15000);
 
-  const connection = Syncano(credentials);
+  let connection = null;
+  let Instance = null;
   const instanceName = suffix.get('name');
 
+  before(function() {
+    connection = Syncano(credentials.getCredentials());
+    Instance = connection.Instance;
+  });
+
   afterEach(function(done) {
-    connection.Instance
+    Instance
       .please()
       .delete({name: instanceName})
       .then(() => done())
@@ -20,7 +26,7 @@ describe('Instance', function() {
   });
 
   it('should be validated', function() {
-    should(connection.Instance().save()).be.rejectedWith(ValidationError);
+    should(Instance().save()).be.rejectedWith(ValidationError);
   });
 
   it('should be able to save via model instance', function() {
@@ -29,7 +35,7 @@ describe('Instance', function() {
       description: suffix.get('description')
     };
 
-    return connection.Instance(data).save()
+    return Instance(data).save()
       .then((instance) => {
         should(instance).be.a.Object();
         should(instance).have.property('name').which.is.String().equal(data.name);
@@ -48,7 +54,7 @@ describe('Instance', function() {
       description: suffix.get('description')
     };
 
-    return connection.Instance(data).save()
+    return Instance(data).save()
       .then((instance) => {
         should(instance).be.an.Object();
         should(instance).have.property('name').which.is.String().equal(data.name);
@@ -70,7 +76,7 @@ describe('Instance', function() {
       description: suffix.get('description')
     };
 
-    return connection.Instance(data).save()
+    return Instance(data).save()
       .then((instance) => {
         should(instance).be.an.Object();
         should(instance).have.property('name').which.is.String().equal(data.name);
@@ -82,14 +88,23 @@ describe('Instance', function() {
 
   describe('#please()', function() {
 
+    afterEach(function() {
+      return Instance
+        .please()
+        .list()
+        .then((instances) => {
+          return Promise.all(_.map(instances, (instance) => Instance.please().delete({name: instance.name})));
+        });
+    });
+
     it('should be able to list instances', function() {
-      return connection.Instance.please().list().then((instances) => {
+      return Instance.please().list().then((instances) => {
         should(instances).be.an.Array();
       });
     });
 
     it('should be able to create an instance', function() {
-      return connection.Instance.please().create({name: instanceName}).then((instance) => {
+      return Instance.please().create({name: instanceName}).then((instance) => {
         should(instance).be.a.Object();
         should(instance).have.property('name').which.is.String().equal(instanceName);
         should(instance).have.property('description').which.is.String();
@@ -102,7 +117,7 @@ describe('Instance', function() {
     });
 
     it('should be able to get an instance', function() {
-      return connection.Instance.please().create({name: instanceName})
+      return Instance.please().create({name: instanceName})
         .then((instance) => {
           should(instance).be.an.Object();
           should(instance).have.property('name').which.is.String().equal(instanceName);
@@ -128,7 +143,7 @@ describe('Instance', function() {
     });
 
     it('should be able to delete an instance', function() {
-      return connection.Instance.please().create({name: instanceName})
+      return Instance.please().create({name: instanceName})
         .then((instance) => {
           should(instance).be.an.Object();
           should(instance).have.property('name').which.is.String().equal(instanceName);
@@ -144,7 +159,7 @@ describe('Instance', function() {
     });
 
     it('should be able to get or create instance (CREATE)', function() {
-      return connection.Instance.please().getOrCreate({name: instanceName}, {description: 'test'}).then((instance) => {
+      return Instance.please().getOrCreate({name: instanceName}, {description: 'test'}).then((instance) => {
         should(instance).be.an.Object();
         should(instance).have.property('name').which.is.String().equal(instanceName);
         should(instance).have.property('description').which.is.String().equal('test');
@@ -157,12 +172,12 @@ describe('Instance', function() {
     });
 
     it('should be able to get or create instance (GET)', function() {
-      return connection.Instance.please().create({name: instanceName, description: 'test'}).then((instance) => {
+      return Instance.please().create({name: instanceName, description: 'test'}).then((instance) => {
         should(instance).be.an.Object();
         should(instance).have.property('name').which.is.String().equal(instanceName);
         should(instance).have.property('description').which.is.String().equal('test');
 
-        return connection.Instance.please().getOrCreate({name: instanceName}, {description: 'newTest'});
+        return Instance.please().getOrCreate({name: instanceName}, {description: 'newTest'});
       })
       .then((instance) => {
         should(instance).be.an.Object();
@@ -172,12 +187,12 @@ describe('Instance', function() {
     });
 
     it('should be able to update an instance', function() {
-      return connection.Instance.please().create({name: instanceName, description: 'test'}).then((instance) => {
+      return Instance.please().create({name: instanceName, description: 'test'}).then((instance) => {
         should(instance).be.an.Object();
         should(instance).have.property('name').which.is.String().equal(instanceName);
         should(instance).have.property('description').which.is.String().equal('test');
 
-        return connection.Instance.please().update({name: instance.name}, {description: 'newTest'});
+        return Instance.please().update({name: instance.name}, {description: 'newTest'});
       })
       .then((instance) => {
         should(instance).be.an.Object();
@@ -187,12 +202,12 @@ describe('Instance', function() {
     });
 
     it('should be able to update or create instance (UPDATE)', function() {
-      return connection.Instance.please().create({name: instanceName, description: 'test'}).then((instance) => {
+      return Instance.please().create({name: instanceName, description: 'test'}).then((instance) => {
         should(instance).be.an.Object();
         should(instance).have.property('name').which.is.String().equal(instanceName);
         should(instance).have.property('description').which.is.String().equal('test');
 
-        return connection.Instance.please().updateOrCreate({name: instance.name}, {description: 'newTest'});
+        return Instance.please().updateOrCreate({name: instance.name}, {description: 'newTest'});
       })
       .then((instance) => {
         should(instance).be.an.Object();
@@ -209,7 +224,7 @@ describe('Instance', function() {
           metadata: {'test': 1}
       };
 
-      return connection.Instance.please().updateOrCreate(properties, object, defaults).then((instance) => {
+      return Instance.please().updateOrCreate(properties, object, defaults).then((instance) => {
         should(instance).be.an.Object();
         should(instance).have.property('name').which.is.String().equal(instanceName);
         should(instance).have.property('description').which.is.String().equal('createTest');
@@ -228,15 +243,12 @@ describe('Instance', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => connection.Instance.please().create({name})))
+        .all(_.map(names, (name) => Instance.please().create({name})))
         .then(() => {
-          return connection.Instance.please().first();
+          return Instance.please().first();
         })
         .then((instance) => {
           should(instance).be.an.Object();
-        })
-        .finally(() => {
-          return Promise.all(_.map(names, (name) => connection.Instance.please().delete({name})));
         });
     });
 
@@ -247,16 +259,13 @@ describe('Instance', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => connection.Instance.please().create({name: name})))
+        .all(_.map(names, (name) => Instance.please().create({name: name})))
         .then((instances) => {
-          should(instances).be.an.Array();
-          return connection.Instance.please().pageSize(1);
+          should(instances).be.an.Array().with.length(2);
+          return Instance.please().pageSize(1);
         })
         .then((instances) => {
           should(instances).be.an.Array().with.length(1);
-        })
-        .finally(() => {
-          return Promise.all(_.map(names, (name) => connection.Instance.please().delete({name: name})));
         });
     });
 
@@ -268,15 +277,15 @@ describe('Instance', function() {
       let ascInstances = null;
 
       return Promise
-        .all(_.map(names, (name) => connection.Instance.please().create({name: name})))
+        .all(_.map(names, (name) => Instance.please().create({name: name})))
         .then((instances) => {
           should(instances).be.an.Array().with.length(2);
-          return connection.Instance.please().ordering('asc');
+          return Instance.please().ordering('asc');
         })
         .then((instances) => {
           should(instances).be.an.Array().with.length(2);
           ascInstances = instances;
-          return connection.Instance.please().ordering('desc');
+          return Instance.please().ordering('desc');
         }).then((descInstances) => {
           const ascNames = _.map(ascInstances, 'name');
           const descNames = _.map(descInstances, 'name');
@@ -286,14 +295,11 @@ describe('Instance', function() {
           _.forEach(ascNames, (ascName, index) => {
             should(ascName).be.equal(descNames[index]);
           });
-        })
-        .finally(() => {
-          return Promise.all(_.map(names, (name) => connection.Instance.please().delete({name: name})));
         });
     });
 
     it('should be able to get raw data', function() {
-      return connection.Instance.please().list().raw().then((response) => {
+      return Instance.please().list().raw().then((response) => {
         should(response).be.a.Object();
         should(response).have.property('objects').which.is.Array();
         should(response).have.property('next').which.is.null();
