@@ -174,7 +174,7 @@ export const Model = stampit({
   }
   if(_.has(instance, '_meta.relatedModels')) {
     let passedProps = {};
-    let modelName = `${instance.getMeta().name}${(instance.getMeta().name === 'instance' ? 'Name' : '')}`
+    if(_.has(instance, 'name')) passedProps.instanceName = instance.name;
     if(_.has(instance, 'instanceName')) passedProps.instanceName = instance.instanceName;
     if(_.has(instance, 'id')) passedProps[instance.getMeta().name + 'Id'] = instance.id;
     _.forEach(instance.getConfig(), (model, name) => {
