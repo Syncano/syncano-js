@@ -29,8 +29,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
    /**
     * Sets request handler, used for mocking.
     * @memberOf Request
-    * @method
-    * @inner
+    * @instance
     * @param {function} handler
     */
     setRequestHandler(handler) {
@@ -41,8 +40,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
     /**
     * Gets request handler.
     * @memberOf Request
-    * @method
-    * @inner
+    * @instance
     */
     getRequestHandler() {
       return this._request.handler;
@@ -51,8 +49,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
     /**
     * Builds full URL based on path.
     * @memberOf Request
-    * @method
-    * @inner
+    * @instance
     */
     buildUrl(path) {
       const config = this.getConfig();
@@ -71,8 +68,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
     /**
     * NANANA.
     * @memberOf Request
-    * @method
-    * @inner
+    * @instance
     */
     makeRequest(methodName, path, requestOptions, callback) {
       const config = this.getConfig();
@@ -147,7 +143,6 @@ const Request = stampit().compose(ConfigMixin, Logger)
     * NANANA.
     * @memberOf Request
     * @static
-    * @inner
     */
     setRequestHandler(handler) {
       let _request = this.fixed.refs._request || {};
@@ -159,7 +154,6 @@ const Request = stampit().compose(ConfigMixin, Logger)
     * NANANA.
     * @memberOf Request
     * @static
-    * @inner
     */
     getRequestHandler() {
       return this.fixed.refs._request.handler;
