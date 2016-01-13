@@ -1,7 +1,7 @@
 import stampit from 'stampit';
 import _ from 'lodash';
 import models from './models';
-import Account from './Account';
+import Account from './account';
 
 /**
  * Main Syncano object.
