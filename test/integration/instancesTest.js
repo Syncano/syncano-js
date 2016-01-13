@@ -249,7 +249,7 @@ describe('Instance', function() {
       return Promise
         .all(_.map(names, (name) => connection.Instance.please().create({name: name})))
         .then((instances) => {
-          should(instances).be.an.Array().with.length(2);
+          should(instances).be.an.Array();
           return connection.Instance.please().pageSize(1);
         })
         .then((instances) => {
