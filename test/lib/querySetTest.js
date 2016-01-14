@@ -1,5 +1,6 @@
 import should from 'should/as-function';
 import sinon from 'sinon';
+import Promise from 'bluebird';
 import _ from 'lodash';
 
 import QuerySet from '../../src/querySet';
