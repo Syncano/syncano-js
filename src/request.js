@@ -6,7 +6,7 @@ import _ from 'lodash';
 import {ConfigMixin, Logger} from './utils';
 
 /**
- * Base request class.
+ * Base request object.
  * @constructor
  * @type {Request}
  */
