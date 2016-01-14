@@ -6,9 +6,11 @@ import _ from 'lodash';
 import {ConfigMixin, Logger} from './utils';
 
 /**
- * Base request class.
+ * Base request object **not** meant to be used directly more like mixin in other stamps.
  * @constructor
  * @type {Request}
+ * @example {@lang javascript}
+ * var MyStamp = stampit().compose(Request);
  */
 const Request = stampit().compose(ConfigMixin, Logger)
   .refs({
@@ -31,6 +33,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
     * @memberOf Request
     * @instance
     * @param {function} handler
+    * @returns {Request}
     */
     setRequestHandler(handler) {
       this._request.handler = handler;
@@ -41,6 +44,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
     * Gets request handler.
     * @memberOf Request
     * @instance
+    * @returns {function}
     */
     getRequestHandler() {
       return this._request.handler;
@@ -48,8 +52,13 @@ const Request = stampit().compose(ConfigMixin, Logger)
 
     /**
     * Builds full URL based on path.
+
     * @memberOf Request
     * @instance
+
+    * @param {string} path path part of URL e.g: /v1/instances/
+    * @returns {string}
+
     */
     buildUrl(path) {
       const config = this.getConfig();
@@ -66,9 +75,24 @@ const Request = stampit().compose(ConfigMixin, Logger)
     },
 
     /**
-    * NANANA.
+    * Wrapper around *superagent* which validates and calls requests.
+
     * @memberOf Request
     * @instance
+
+    * @param {string} methodName e.g GET, POST
+    * @param {string} path e.g /v1/instances/
+    * @param {Object} requestOptions All options required to build request
+    * @param {string} [requestOptions.type = 'json'] request type e.g form, json, png
+    * @param {string} [requestOptions.accept = 'json'] request accept e.g form, json, png
+    * @param {Number} [requestOptions.timeout = 15000] request timeout
+    * @param {Object} [requestOptions.headers = {}] request headers
+    * @param {Object} [requestOptions.query = {}] request query
+    * @param {Object} [requestOptions.payload = {}] request payload
+    * @param {Object} [requestOptions.attachments = {}] request attachments
+    * @param {function} callback
+    * @returns {Request}
+
     */
     makeRequest(methodName, path, requestOptions, callback) {
       const config = this.getConfig();
@@ -127,7 +151,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
       });
 
       request.end(_.wrap(callback, (_callback, err, res) => {
-        if (!res.ok) {
+        if (!_.isUndefined(res) && !res.ok) {
           this.log(`\n${method} ${path}\n${JSON.stringify(options, null, 2)}\n`);
           this.log('Response', res.body);
         }
@@ -140,9 +164,10 @@ const Request = stampit().compose(ConfigMixin, Logger)
   }).static({
 
     /**
-    * NANANA.
+    * Sets request handler and returs new stampit object, used for mocking.
     * @memberOf Request
     * @static
+    * @returns {stampit}
     */
     setRequestHandler(handler) {
       let _request = this.fixed.refs._request || {};
@@ -151,9 +176,10 @@ const Request = stampit().compose(ConfigMixin, Logger)
     },
 
     /**
-    * NANANA.
+    * Sets request handler from stampit definition.
     * @memberOf Request
     * @static
+    * @returns {function}
     */
     getRequestHandler() {
       return this.fixed.refs._request.handler;

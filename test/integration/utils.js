@@ -12,7 +12,7 @@ export const suffix = {
 
 export const credentials = {
   user: null,
-  baseUrl: process.env.INTEGRATION_BASE_URL,
+  baseUrl: process.env.INTEGRATION_BASE_URL || 'https://api.syncano.rocks',
   accountKey: process.env.INTEGRATION_ACCOUNT_KEY,
   userKey: process.env.INTEGRATION_USER_KEY,
   socialToken: process.env.INTEGRATION_SOCIAL_TOKEN,
