@@ -205,6 +205,69 @@ describe('ApiKey', function() {
       })
     });
 
+    it('should be able to get first api key', function() {
+      const descriptions = [
+        'description_1',
+        'description_2'
+      ];
+
+      return Promise
+        .all(_.map(descriptions, (desc) => ApiKey.please().create({description: desc, instanceName})))
+        .then(() => {
+          return ApiKey.please().first({instanceName});
+        })
+        .then((apk) => {
+          should(apk).be.an.Object();
+        });
+    });
+
+    it('should be able to change page size', function() {
+      const descriptions = [
+        'description_1',
+        'description_2'
+      ];
+
+      return Promise
+        .all(_.map(descriptions, (desc) => ApiKey.please().create({description: desc, instanceName})))
+        .then((keys) => {
+            should(keys).be.an.Array().with.length(2);
+            return ApiKey.please({instanceName}).pageSize(1);
+        })
+        .then((keys) => {
+          should(keys).be.an.Array().with.length(1);
+        });
+    });
+
+    it('should be able to change ordering', function() {
+      const descriptions = [
+        'description_1',
+        'description_2'
+      ];
+      let asc = null;
+
+      return Promise
+        .all(_.map(descriptions, (desc) => ApiKey.please().create({description: desc, instanceName})))
+        .then((keys) => {
+          should(keys).be.an.Array().with.length(2);
+          return ApiKey.please({instanceName}).ordering('asc');
+        })
+        .then((keys) => {
+          should(keys).be.an.Array().with.length(2);
+          asc = keys;
+          return ApiKey.please({instanceName}).ordering('desc');
+        })
+        .then((desc) => {
+          const asdDescs = _.map(asc, 'description');
+          const descDescs = _.map(desc, 'description');
+          descDescs.reverse();
+          should(desc).be.an.Array().with.length(2);
+
+          _.forEach(asdDescs, (ascDesc, index) => {
+            should(ascDesc).be.equal(descDescs[index]);
+          });
+        })
+    });
+
     it('should be able to get raw data', function() {
       return ApiKey.please().list({instanceName}).raw().then((response) => {
         should(response).be.a.Object();
