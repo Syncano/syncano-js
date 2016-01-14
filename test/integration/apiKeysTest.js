@@ -190,7 +190,7 @@ describe('ApiKey', function() {
         });
     });
 
-    it('shold be able to update an api key', function() {
+    it('should be able to update an api key', function() {
       return ApiKey.please().create({instanceName, description: 'test'}).then((apk) => {
         should(apk).be.an.Object();
         should(apk).have.property('instanceName').which.is.String().equal(instanceName);
