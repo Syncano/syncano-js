@@ -43,7 +43,7 @@ const Syncano = stampit()
     * @memberOf Syncano
     * @instance
 
-    * @param {string} baseUrl Base URL for all api calls
+    * @param {String} baseUrl Base URL for all api calls
     * @returns {Syncano}
     * @throws {Error} Base URL is required.
 
@@ -63,7 +63,7 @@ const Syncano = stampit()
 
     * @memberOf Syncano
     * @instance
-    * @returns {string}
+    * @returns {String}
 
     * @example {@lang javascript}
     * var connection = Syncano({accountKey: '123'});
@@ -80,7 +80,7 @@ const Syncano = stampit()
     * @memberOf Syncano
     * @instance
 
-    * @param {string} accountKey Your Syncano account key
+    * @param {String} accountKey Your {@link https://syncano.io|Syncano} account key
     * @returns {Syncano}
     * @throws {Error} Account key is required.
 
@@ -100,7 +100,7 @@ const Syncano = stampit()
 
     * @memberOf Syncano
     * @instance
-    * @returns {string}
+    * @returns {String}
 
     * @example {@lang javascript}
     * var connection = Syncano({accountKey: '123'});
@@ -117,7 +117,7 @@ const Syncano = stampit()
     * @memberOf Syncano
     * @instance
 
-    * @param {string} userKey Instance user api key
+    * @param {String} userKey Instance user api key
     * @returns {Syncano}
     * @throws {Error} User key is required.
 
@@ -137,7 +137,7 @@ const Syncano = stampit()
 
     * @memberOf Syncano
     * @instance
-    * @returns {string}
+    * @returns {String}
 
     * @example {@lang javascript}
     * var connection = Syncano({userKey: '123'});
@@ -154,7 +154,7 @@ const Syncano = stampit()
     * @memberOf Syncano
     * @instance
 
-    * @param {string} socialToken Instance social authentication token
+    * @param {String} socialToken Instance social authentication token
     * @returns {Syncano}
     * @throws {Error} Social token is required.
 
@@ -174,7 +174,7 @@ const Syncano = stampit()
 
     * @memberOf Syncano
     * @instance
-    * @returns {string}
+    * @returns {String}
 
     * @example {@lang javascript}
     * var connection = Syncano({socialToken: '123'});

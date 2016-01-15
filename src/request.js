@@ -1,14 +1,18 @@
-/** @namespace Request */
-
 import stampit from 'stampit';
 import superagent from 'superagent';
 import _ from 'lodash';
 import {ConfigMixin, Logger} from './utils';
 
 /**
- * Base request object **not** meant to be used directly more like mixin in other stamps.
+ * Base request object **not** meant to be used directly more like mixin in other {@link https://github.com/stampit-org/stampit|stamps}.
+
  * @constructor
  * @type {Request}
+
+ * @property {Object} _request
+ * @property {Function} [_request.handler = superagent]
+ * @property {Array} [_request.allowedMethods = ['GET', 'POST', 'DELETE', 'HEAD', 'PUT', 'PATCH']]
+
  * @example {@lang javascript}
  * var MyStamp = stampit().compose(Request);
  */
@@ -32,7 +36,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
     * Sets request handler, used for mocking.
     * @memberOf Request
     * @instance
-    * @param {function} handler
+    * @param {Function} handler
     * @returns {Request}
     */
     setRequestHandler(handler) {
@@ -44,7 +48,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
     * Gets request handler.
     * @memberOf Request
     * @instance
-    * @returns {function}
+    * @returns {Function}
     */
     getRequestHandler() {
       return this._request.handler;
@@ -56,8 +60,8 @@ const Request = stampit().compose(ConfigMixin, Logger)
     * @memberOf Request
     * @instance
 
-    * @param {string} path path part of URL e.g: /v1/instances/
-    * @returns {string}
+    * @param {String} path path part of URL e.g: /v1/instances/
+    * @returns {String}
 
     */
     buildUrl(path) {
@@ -75,22 +79,22 @@ const Request = stampit().compose(ConfigMixin, Logger)
     },
 
     /**
-    * Wrapper around *superagent* which validates and calls requests.
+    * Wrapper around {@link http://visionmedia.github.io/superagent/|superagent} which validates and calls requests.
 
     * @memberOf Request
     * @instance
 
-    * @param {string} methodName e.g GET, POST
-    * @param {string} path e.g /v1/instances/
+    * @param {String} methodName e.g GET, POST
+    * @param {String} path e.g /v1/instances/
     * @param {Object} requestOptions All options required to build request
-    * @param {string} [requestOptions.type = 'json'] request type e.g form, json, png
-    * @param {string} [requestOptions.accept = 'json'] request accept e.g form, json, png
+    * @param {String} [requestOptions.type = 'json'] request type e.g form, json, png
+    * @param {String} [requestOptions.accept = 'json'] request accept e.g form, json, png
     * @param {Number} [requestOptions.timeout = 15000] request timeout
     * @param {Object} [requestOptions.headers = {}] request headers
     * @param {Object} [requestOptions.query = {}] request query
     * @param {Object} [requestOptions.payload = {}] request payload
     * @param {Object} [requestOptions.attachments = {}] request attachments
-    * @param {function} callback
+    * @param {Function} callback
     * @returns {Request}
 
     */
@@ -108,7 +112,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
       });
 
       if (!_.isFunction(callback)) {
-        throw new Error('"callback" needs to be a function.');
+        throw new Error('"callback" needs to be a Function.');
       }
 
       if (_.isEmpty(methodName) || !_.includes(this._request.allowedMethods, method)) {
@@ -164,7 +168,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
   }).static({
 
     /**
-    * Sets request handler and returs new stampit object, used for mocking.
+    * Sets request handler and returns new {@link https://github.com/stampit-org/stampit|stampit} object, used for mocking.
     * @memberOf Request
     * @static
     * @returns {stampit}
@@ -176,10 +180,10 @@ const Request = stampit().compose(ConfigMixin, Logger)
     },
 
     /**
-    * Sets request handler from stampit definition.
+    * Sets request handler from {@link https://github.com/stampit-org/stampit|stampit} definition.
     * @memberOf Request
     * @static
-    * @returns {function}
+    * @returns {Function}
     */
     getRequestHandler() {
       return this.fixed.refs._request.handler;
