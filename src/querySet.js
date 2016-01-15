@@ -1,5 +1,3 @@
-/** @namespace QuerySet */
-
 import stampit from 'stampit';
 import Promise from 'bluebird';
 import _ from 'lodash';
@@ -403,7 +401,7 @@ const Ordering = stampit().methods({
   * @memberOf QuerySet
   * @instance
 
-  * @param {string} [value = 'asc'] allowed choices are "asc" and "desc"
+  * @param {String} [value = 'asc'] allowed choices are "asc" and "desc"
   * @returns {QuerySet}
 
   * @example {@lang javascript}
@@ -448,7 +446,18 @@ const Raw = stampit().methods({
 /**
  * Base class responsible for all ORM (``please``) actions.
  * @constructor
+ * @typedef {QuerySet}
  * @type {QuerySet}
+
+ * @property {Object}  model
+ * @property {String}  [endpoint = 'list']
+ * @property {String}  [method = 'GET']
+ * @property {Object}  [headers = {}]
+ * @property {Object}  [properties = {}]
+ * @property {Object}  [query = {}]
+ * @property {Object}  [payload = {}]
+ * @property {Object}  [attachments = {}]
+ * @property {Boolean}  [_serialize = true]
  */
 const QuerySet = stampit.compose(
   QuerySetRequest,

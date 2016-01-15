@@ -2,9 +2,12 @@ import stampit from 'stampit';
 
 
 /**
- * Used as a manager for *Config* base object. **Not** meant to be used directly.
+ * Used as a manager for {@link Syncano} base object. **Not** meant to be used directly.
  * @constructor
+ * @typedef {ConfigMixin}
  * @type {ConfigMixin}
+
+ * @property {Syncano} _config private attribute which holds {@link Syncano} object
 
  * @example {@lang javascript}
  * var MyStamp = stampit().compose(ConfigMixin);
@@ -18,7 +21,7 @@ export const ConfigMixin = stampit({
     * @memberOf ConfigMixin
     * @instance
 
-    * @param {Object} config instance of *Syncano* object
+    * @param {Syncano} config instance of {@link Syncano} object
     * @returns {ConfigMixin}
 
     * @example {@lang javascript}
@@ -36,7 +39,7 @@ export const ConfigMixin = stampit({
 
     * @memberOf ConfigMixin
     * @instance
-    * @returns {Object}
+    * @returns {Syncano}
 
     * @example {@lang javascript}
     * var MyStamp = stampit().compose(ConfigMixin);
@@ -56,7 +59,7 @@ export const ConfigMixin = stampit({
     * @memberOf ConfigMixin
     * @static
 
-    * @param {Object} config instance of *Syncano* object
+    * @param {Syncano} config instance of {@link Syncano} object
     * @returns {stampit}
 
     * @example {@lang javascript}
@@ -72,7 +75,7 @@ export const ConfigMixin = stampit({
 
     * @memberOf ConfigMixin
     * @static
-    * @returns {Object}
+    * @returns {Syncano}
 
     * @example {@lang javascript}
     * var config = stampit().compose(ConfigMixin).getConfig();
@@ -87,7 +90,10 @@ export const ConfigMixin = stampit({
 /**
  * Used as a manager for *Meta* object. **Not** meant to be used directly.
  * @constructor
+ * @typedef {MetaMixin}
  * @type {MetaMixin}
+
+ * @property {Object} _meta private attribute which holds {@link Meta} object
 
  * @example {@lang javascript}
  * var MyStamp = stampit().compose(MetaMixin);
@@ -101,7 +107,7 @@ export const MetaMixin = stampit({
     * @memberOf MetaMixin
     * @instance
 
-    * @param {Object} meta instance of *Meta* object
+    * @param {Meta} meta instance of {@link Meta} object
     * @returns {MetaMixin}
 
     * @example {@lang javascript}
@@ -119,7 +125,7 @@ export const MetaMixin = stampit({
 
     * @memberOf MetaMixin
     * @instance
-    * @returns {Object}
+    * @returns {Meta}
 
     * @example {@lang javascript}
     * var MyStamp = stampit().compose(MetaMixin);
@@ -139,7 +145,7 @@ export const MetaMixin = stampit({
     * @memberOf MetaMixin
     * @static
 
-    * @param {Object} meta instance of *Meta* object
+    * @param {Meta} meta instance of {@link Meta} object
     * @returns {stampit}
 
     * @example {@lang javascript}
@@ -155,7 +161,7 @@ export const MetaMixin = stampit({
 
     * @memberOf MetaMixin
     * @static
-    * @returns {Object}
+    * @returns {Meta}
 
     * @example {@lang javascript}
     * var meta = stampit().compose(MetaMixin).getMeta();
@@ -170,7 +176,10 @@ export const MetaMixin = stampit({
 /**
  * Used as a manager for *Constraints* object (validation). **Not** meant to be used directly.
  * @constructor
+ * @typedef {ConstraintsMixin}
  * @type {ConstraintsMixin}
+
+ * @property {Object} _constraints private attribute which holds constraints object
 
  * @example {@lang javascript}
  * var MyStamp = stampit().compose(ConstraintsMixin);
@@ -253,6 +262,7 @@ export const ConstraintsMixin = stampit({
 /**
  * Adds logging functionality.
  * @constructor
+ * @typedef {Logger}
  * @type {Logger}
 
  * @example {@lang javascript}
