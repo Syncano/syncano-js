@@ -4,7 +4,7 @@ If you don't have a Syncano account yet, you can read about how to create one [h
 
 # Installation
 
-We offer a few ways of installing the library - `npm`, `bower`, a GitHub repository or through our cdn.
+We offer a few ways of installing the library - `npm`, `bower`, a GitHub repository or through our CDN.
 
 ### NPM
 
@@ -71,3 +71,58 @@ var connection = Syncano().setAccountKey('123');
 ```
 
 For a full list of the main object's properties, please refer to it's [documentation]{@link Syncano}.
+
+# Interacting with the API
+
+The library provides a set of models that reflect the objects available in our API. To see a list of available objects, head on to the [FAQ](http://docs.syncano.io/docs/faq/#section-what-is-an-instance-).
+
+There are two ways of accessing the models: by instatiating the model via a factory or by calling the static `please()` method that returns a {@link QuerySet}.
+
+With a model instance, you can `save`, `update` and `delete` objects:
+
+```
+connection.Instance({ name: 'myInstance', description: 'This is my instance'}).save();
+```
+
+With a {@link QuerySet} object returned from the `please()` method, you can perform additional operations like listing objects:
+
+```
+connection.Instance.please().list();
+```
+
+# Queries and Promises
+
+The library uses Promises for hadling the results of operations on the API. They help you write more readable and maintainable code while interacting with our services.
+
+To get the result of a successful query, use the `then()` method:
+
+```
+connection.Instance.please().get({ name: 'myInstance' }).then(function(result) {
+  // manipulate the result
+});
+```
+
+To catch errors returned from the API, use the `catch()` method:
+
+```
+connection.Instance({ name: 'myInstance', description: 'This is my instance'}).save().then(function(error) {
+  // handle the error
+})
+```
+
+This pattern also provides you with an elegant way of chaining operations:
+
+```
+// create an instance
+connection.Instance({ name: 'myInstance', description: 'This is my instance'}).save().then(function(instance) {
+  // update the instance's description
+  instance.description = 'This is a new description.';
+  return instance.save();
+})
+.then(function(instance) {
+  // the instance was updated
+});
+
+```
+
+For a list of available query methods, check the {@link QuerySet} documentation.
