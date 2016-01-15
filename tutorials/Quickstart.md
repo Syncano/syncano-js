@@ -2,7 +2,7 @@ This quickstart guide will walk you through the installation steps of the Syncan
 
 If you don't have a Syncano account yet, you can read about how to create one [here](http://docs.syncano.io/docs/getting-started-with-syncano).
 
-## Installation
+# Installation
 
 We offer a few ways of installing the library - `npm`, `bower`, a GitHub repository or through our cdn.
 
@@ -28,7 +28,7 @@ The library is available on our official [CDN](http://cdn.syncano.com/syncano.js
 
 `http://cdn.syncano.com/syncano.js` 
 
-## Including the library in your project
+# Including the library in your project
 
 ### Script tag
 
@@ -46,4 +46,28 @@ The library can be used as CommonJS module via `require`:
 
 You can also use the library via `import`:
 
-`import Syncano from 'syncano'`
+`import Syncano from 'syncano';`
+
+# Making connections
+
+Connecting to our services is as easy as calling the main object factory:
+
+```
+import Syncano from 'syncano';
+
+var connection = Syncano();
+```
+
+You can configure your connection by passing a configuration object to the main `Syncano` object:
+
+```
+var connection = Syncano({ accountKey: '123' });
+```
+
+The main object also provides setters for the parameters:
+
+```
+var connection = Syncano().setAccountKey('123');
+```
+
+For a full list of the main object's properties, please refer to it's [documentation]{@link Syncano}.
