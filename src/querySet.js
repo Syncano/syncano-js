@@ -22,7 +22,7 @@ const QuerySetRequest = stampit().compose(Request)
   .methods({
 
     /**
-    * Converts raw objects to stampit instances
+    * Converts raw objects to {@link https://github.com/stampit-org/stampit|stampit} instances
 
     * @memberOf QuerySet
     * @instance
@@ -84,7 +84,7 @@ const QuerySetRequest = stampit().compose(Request)
     },
 
     /**
-    * Wrapper around *request* method
+    * Wrapper around {@link Queryset.request} method
 
     * @memberOf QuerySet
     * @instance

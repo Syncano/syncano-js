@@ -80,7 +80,7 @@ const Syncano = stampit()
     * @memberOf Syncano
     * @instance
 
-    * @param {String} accountKey Your Syncano account key
+    * @param {String} accountKey Your {@link https://syncano.io|Syncano} account key
     * @returns {Syncano}
     * @throws {Error} Account key is required.
 

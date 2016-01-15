@@ -10,6 +10,22 @@ import {ConfigMixin, MetaMixin, ConstraintsMixin} from '../utils';
 validate.Promise = Promise;
 
 
+/**
+ * Object which holds whole configuration for {@link Model}.
+
+ * @constructor
+ * @type {Meta}
+
+ * @property {String} [name = null]
+ * @property {String} [pluralName = null]
+ * @property {Array}  [properties = []]
+ * @property {Array}  [endpoints = {}]
+ * @property {Array}  [relatedModels = undefined]
+
+ * @example {@lang javascript}
+ * var MyMeta = Meta({name: 'test'});
+ * var MyModel = SomeModel.setMeta(MyMeta);
+ */
 export const Meta = stampit()
   .props({
     name: null,
@@ -24,6 +40,14 @@ export const Meta = stampit()
     });
   })
   .methods({
+
+    /**
+    * Gets required properties from object. Used mostly during serialization.
+    * @memberOf Meta
+    * @instance
+    * @param {Object} object
+    * @returns {Object}
+    */
     getObjectProperties(object) {
       return _.reduce(this.properties, (result, property) => {
         result[property] = object[property];
@@ -31,7 +55,18 @@ export const Meta = stampit()
       }, {});
     },
 
-    assingProperties(source, target) {
+    /**
+    * Makes a copy of target and adds required properties from source.
+
+    * @memberOf Meta
+    * @instance
+
+    * @param {Object} source
+    * @param {Object} target
+
+    * @returns {Object}
+    */
+    assignProperties(source, target) {
       return _.assign({}, this.getObjectProperties(source), target);
     },
 
@@ -47,6 +82,17 @@ export const Meta = stampit()
       return result;
     },
 
+    /**
+    * Resolves endpoint path e.g: `/v1/instances/{name}/` will be converted to `/v1/instances/someName/`.
+
+    * @memberOf Meta
+    * @instance
+
+    * @param {String} endpointName
+    * @param {Object} properties
+
+    * @returns {String}
+    */
     resolveEndpointPath(endpointName, properties) {
       if (_.isEmpty(this.endpoints[endpointName])) {
         throw new Error(`Invalid endpoit name: "${endpointName}".`);
@@ -67,6 +113,17 @@ export const Meta = stampit()
       return path;
     },
 
+    /**
+    * Looks for the first allowed method from `methodNames` for selected endpoint.
+
+    * @memberOf Meta
+    * @instance
+
+    * @param {String} endpointName
+    * @param {...String} methodNames
+
+    * @returns {String}
+    */
     findAllowedMethod(endpointName, ...methodNames) {
       const endpoint = this.endpoints[endpointName];
       const methods = _.intersection(_.map(methodNames, (m) => m.toLowerCase()), endpoint.methods);
@@ -79,8 +136,40 @@ export const Meta = stampit()
     }
   });
 
+/**
+ * Base {@link https://github.com/stampit-org/stampit|stamp} for all models which wraps all raw JavaScript objects.
+ * **Not** meant to be used directly more like mixin in other {@link https://github.com/stampit-org/stampit|stamps}.
+
+ * @constructor
+ * @type {Model}
+
+ * @property {Syncano} _config private attribute which holds {@link Syncano} object
+ * @property {Meta} _meta private attribute which holds {@link Meta} object
+ * @property {Object} _constraints private attribute which holds validation constraints
+ * @property {Request} _request private attribute which holds {@link Request} configuration
+
+ * @example {@lang javascript}
+ * var MyModel = stampit()
+    .compose(Model)
+    .setMeta(MyMeta)
+    .setConstraints(MyConstraints);
+ */
 export const Model = stampit({
   static: {
+
+    /**
+    * Returns {@link QuerySet} instance which allows to do ORM like operations on {@link https://syncano.io/|Syncano} API.
+
+    * @memberOf Model
+    * @static
+
+    * @param {Object} [properties = {}] some default properties for all ORM operations
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * MyModel.please().list();
+
+    */
     please(properties = {}) {
       return QuerySet({
         model: this,
@@ -89,17 +178,41 @@ export const Model = stampit({
       });
     },
 
+    /**
+    * Used only for serialization for raw object to {@link https://github.com/stampit-org/stampit|stamp}.
+
+    * @memberOf Model
+    * @static
+
+    * @param {Object} rawJSON
+    * @param {Object} [properties = {}] some default properties which will be assigned to model instance
+    * @returns {Model}
+
+    */
     fromJSON(rawJSON, properties = {}) {
       const meta = this.getMeta();
-      const attrs = meta.assingProperties(properties, rawJSON);
+      const attrs = meta.assignProperties(properties, rawJSON);
       return this(attrs);
     }
   },
   methods: {
+
+    /**
+    * Checks if model instance if already saved.
+    * @memberOf Model
+    * @instance
+    * @returns {Boolean}
+    */
     isNew() {
       return !_.has(this, 'links');
     },
 
+    /**
+    * Validates current model instance in context of defined constraints.
+    * @memberOf Model
+    * @instance
+    * @returns {Object|undefined}
+    */
     validate() {
       const constraints = this.getConstraints();
       const attributes = this.toJSON();
@@ -111,11 +224,23 @@ export const Model = stampit({
       return validate(attributes, constraints);
     },
 
+    /**
+    * Serializes raw JavaScript object into {@link Model} instance.
+    * @memberOf Model
+    * @instance
+    * @returns {Model}
+    */
     serialize(object) {
       const meta = this.getMeta();
-      return this.getStamp()(meta.assingProperties(this, object));
+      return this.getStamp()(meta.assignProperties(this, object));
     },
 
+    /**
+    * Creates or updates the current instance.
+    * @memberOf Model
+    * @instance
+    * @returns {Promise}
+    */
     save() {
       const meta = this.getMeta();
       const errors = this.validate();
@@ -149,6 +274,12 @@ export const Model = stampit({
       });
     },
 
+    /**
+    * Removes the current instance.
+    * @memberOf Model
+    * @instance
+    * @returns {Promise}
+    */
     delete() {
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('detail', this);

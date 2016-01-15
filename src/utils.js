@@ -53,7 +53,7 @@ export const ConfigMixin = stampit({
   static: {
 
     /**
-    * Sets config and returns new stampit definition.
+    * Sets config and returns new {@link https://github.com/stampit-org/stampit|stampit} definition.
 
     * @memberOf ConfigMixin
     * @static
@@ -70,7 +70,7 @@ export const ConfigMixin = stampit({
     },
 
     /**
-    * Gets config from stampit definition.
+    * Gets config from {@link https://github.com/stampit-org/stampit|stampit} definition.
 
     * @memberOf ConfigMixin
     * @static
@@ -87,7 +87,7 @@ export const ConfigMixin = stampit({
 });
 
 /**
- * Used as a manager for *Meta* object. **Not** meant to be used directly.
+ * Used as a manager for {@link Meta} object. **Not** meant to be used directly.
  * @constructor
  * @type {MetaMixin}
 
@@ -138,7 +138,7 @@ export const MetaMixin = stampit({
   static: {
 
     /**
-    * Sets meta and returns new stampit definition.
+    * Sets meta and returns new {@link https://github.com/stampit-org/stampit|stampit} definition.
 
     * @memberOf MetaMixin
     * @static
@@ -155,7 +155,7 @@ export const MetaMixin = stampit({
     },
 
     /**
-    * Gets meta from stampit definition.
+    * Gets meta from {@link https://github.com/stampit-org/stampit|stampit} definition.
 
     * @memberOf MetaMixin
     * @static
@@ -172,7 +172,7 @@ export const MetaMixin = stampit({
 });
 
 /**
- * Used as a manager for *Constraints* object (validation). **Not** meant to be used directly.
+ * Used as a manager for {@link http://validatejs.org/#constraints|Constraints} object (validation). **Not** meant to be used directly.
  * @constructor
  * @type {ConstraintsMixin}
 
@@ -223,7 +223,7 @@ export const ConstraintsMixin = stampit({
   static: {
 
     /**
-    * Sets constraints in stamp definition used for validation.
+    * Sets constraints in {@link https://github.com/stampit-org/stampit|stampit} definition used for validation.
 
     * @memberOf ConstraintsMixin
     * @static
@@ -240,7 +240,7 @@ export const ConstraintsMixin = stampit({
     },
 
     /**
-    * Gets constraints from stampit definition.
+    * Gets constraints from {@link https://github.com/stampit-org/stampit|stampit} definition.
 
     * @memberOf ConstraintsMixin
     * @static
@@ -275,9 +275,9 @@ export const Logger = stampit({
     log(...args) {
       const env = process.env.BABEL_ENV || process.env.NODE_ENV;
       if (env === 'development') {
-        /*eslint-disable no-console */
+        /* eslint-disable no-console */
         console.log(...args);
-        /*eslint-enable no-console */
+        /* eslint-enable no-console */
       }
     }
   }

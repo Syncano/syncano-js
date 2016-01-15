@@ -4,7 +4,7 @@ import _ from 'lodash';
 import {ConfigMixin, Logger} from './utils';
 
 /**
- * Base request object **not** meant to be used directly more like mixin in other stamps.
+ * Base request object **not** meant to be used directly more like mixin in other {@link https://github.com/stampit-org/stampit|stamps}.
 
  * @constructor
  * @type {Request}
@@ -79,7 +79,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
     },
 
     /**
-    * Wrapper around *superagent* which validates and calls requests.
+    * Wrapper around {@link http://visionmedia.github.io/superagent/|superagent} which validates and calls requests.
 
     * @memberOf Request
     * @instance
@@ -168,7 +168,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
   }).static({
 
     /**
-    * Sets request handler and returs new stampit object, used for mocking.
+    * Sets request handler and returns new {@link https://github.com/stampit-org/stampit|stampit} object, used for mocking.
     * @memberOf Request
     * @static
     * @returns {stampit}
@@ -180,7 +180,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
     },
 
     /**
-    * Sets request handler from stampit definition.
+    * Sets request handler from {@link https://github.com/stampit-org/stampit|stampit} definition.
     * @memberOf Request
     * @static
     * @returns {Function}
