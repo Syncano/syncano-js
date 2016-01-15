@@ -4,7 +4,6 @@ import stampit from 'stampit';
 /**
  * Used as a manager for {@link Syncano} base object. **Not** meant to be used directly.
  * @constructor
- * @typedef {ConfigMixin}
  * @type {ConfigMixin}
 
  * @property {Syncano} _config private attribute which holds {@link Syncano} object
@@ -90,7 +89,6 @@ export const ConfigMixin = stampit({
 /**
  * Used as a manager for *Meta* object. **Not** meant to be used directly.
  * @constructor
- * @typedef {MetaMixin}
  * @type {MetaMixin}
 
  * @property {Object} _meta private attribute which holds {@link Meta} object
@@ -176,7 +174,6 @@ export const MetaMixin = stampit({
 /**
  * Used as a manager for *Constraints* object (validation). **Not** meant to be used directly.
  * @constructor
- * @typedef {ConstraintsMixin}
  * @type {ConstraintsMixin}
 
  * @property {Object} _constraints private attribute which holds constraints object
@@ -262,7 +259,6 @@ export const ConstraintsMixin = stampit({
 /**
  * Adds logging functionality.
  * @constructor
- * @typedef {Logger}
  * @type {Logger}
 
  * @example {@lang javascript}

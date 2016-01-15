@@ -6,7 +6,6 @@ import Account from './account';
 /**
  * Main Syncano object.
  * @constructor
- * @typedef {Syncano}
  * @type {Syncano}
 
  * @param {Object} options All configuration options

@@ -446,7 +446,6 @@ const Raw = stampit().methods({
 /**
  * Base class responsible for all ORM (``please``) actions.
  * @constructor
- * @typedef {QuerySet}
  * @type {QuerySet}
 
  * @property {Object}  model

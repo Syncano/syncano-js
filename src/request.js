@@ -7,7 +7,6 @@ import {ConfigMixin, Logger} from './utils';
  * Base request object **not** meant to be used directly more like mixin in other stamps.
 
  * @constructor
- * @typedef {Request}
  * @type {Request}
 
  * @property {Object} _request
