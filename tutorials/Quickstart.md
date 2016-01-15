@@ -126,3 +126,5 @@ connection.Instance({ name: 'myInstance', description: 'This is my instance'}).s
 ```
 
 For a list of available query methods, check the {@link QuerySet} documentation.
+
+# Next steps
