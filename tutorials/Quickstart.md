@@ -26,7 +26,7 @@ Download the latest release [here](https://github.com/Syncano/syncano-js/release
 
 The library is available on our official [CDN](http://cdn.syncano.com/syncano.js):
 
-`http://cdn.syncano.com/syncano.js` 
+`http://cdn.syncano.com/syncano.js`
 
 # Including the library in your project
 
@@ -50,7 +50,7 @@ You can also use the library via `import`:
 
 # Making connections
 
-Connecting to our services is as easy as calling the main object factory:
+Connecting to our services is as easy as instantiating the main object.
 
 ```
 import Syncano from 'syncano';
@@ -127,4 +127,14 @@ connection.Instance({ name: 'myInstance', description: 'This is my instance'}).s
 
 For a list of available query methods, check the {@link QuerySet} documentation.
 
-# Next steps
+# Nested models
+
+The javascript library is designed so that it reflects the platfom's structure, therefore some of the models have child models. For example, a `Class` has mutliple `Dataobjects`. If we would like to list the `Dataobjects` for a particular Class, we can do it like this:
+
+```
+connection.Class({name: 'class-name', instanceName: 'instance-name'}).dataobjects().list().then(function(dataobjects) {
+  // list od dataobjects
+});
+```
+
+Please note that all objects that belong to an `Instance` require the `instanceName` property in the configuration object.
