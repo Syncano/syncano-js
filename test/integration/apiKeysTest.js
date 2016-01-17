@@ -81,14 +81,14 @@ describe('ApiKey', function() {
 
         ApiKeyId = apk.id;
 
-        apk.description = 'new descripiton';
+        apk.description = 'new description';
         apk.ignore_acl = true;
         apk.allow_anonymous_read = true;
         apk.allow_user_create = true;
         return apk.save();
       })
       .then((apk) => {
-        should(apk).have.property('description').which.is.String().equal('new descripiton');
+        should(apk).have.property('description').which.is.String().equal('new description');
         should(apk).have.property('ignore_acl').which.is.Boolean().equal(true);
         should(apk).have.property('allow_anonymous_read').which.is.Boolean().equal(true);
         should(apk).have.property('allow_user_create').which.is.Boolean().equal(true);
