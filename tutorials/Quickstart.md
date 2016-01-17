@@ -1,0 +1,138 @@
+This quickstart guide will walk you through the installation steps of the Syncano javascript library.
+
+If you don't have a Syncano account yet, you can read about how to create one [here](http://docs.syncano.io/docs/getting-started-with-syncano).
+
+# Installation
+
+We offer a few ways of installing the library - `npm`, `bower`, a GitHub repository or through our CDN.
+
+### NPM
+
+Install the [npm module](https://www.npmjs.com/package/syncano) using:
+
+`npm install syncano --save`
+
+### Bower
+
+Install the [bower module](https://www.bower.io/) using:
+
+`bower install syncano`
+
+### Github
+
+Download the latest release [here](https://github.com/Syncano/syncano-js/releases) or [browse the library](https://github.com/Syncano/syncano-js).
+
+### CDN
+
+The library is available on our official [CDN](http://cdn.syncano.com/syncano.js):
+
+`http://cdn.syncano.com/syncano.js`
+
+# Including the library in your project
+
+### Script tag
+
+To use the library on the client side, include it via a script tag in your HTML document:
+
+`<script src="path/to/bower_components/syncano/dist/syncano.min.js"></script>`
+
+### CommonJS
+
+The library can be used as CommonJS module via `require`:
+
+`var Syncano = require('syncano');`
+
+### ES6 modules
+
+You can also use the library via `import`:
+
+`import Syncano from 'syncano';`
+
+# Making connections
+
+Connecting to our services is as easy as instantiating the main object.
+
+```
+import Syncano from 'syncano';
+
+var connection = Syncano();
+```
+
+You can configure your connection by passing a configuration object to the main `Syncano` object:
+
+```
+var connection = Syncano({ accountKey: '123' });
+```
+
+The main object also provides setters for the parameters:
+
+```
+var connection = Syncano().setAccountKey('123');
+```
+
+For a full list of the main object's properties, please refer to it's [documentation]{@link Syncano}.
+
+# Interacting with the API
+
+The library provides a set of models that reflect the objects available in our API. To see a list of available objects, head on to the [FAQ](http://docs.syncano.io/docs/faq/#section-what-is-an-instance-).
+
+There are two ways of accessing the models: by instatiating the model or by calling the static `please()` method that returns a {@link QuerySet}.
+
+With a model instance, you can `save`, `update` and `delete` objects:
+
+```
+connection.Instance({ name: 'myInstance', description: 'This is my instance'}).save();
+```
+
+With a {@link QuerySet} object returned from the `please()` method, you can perform additional operations like listing objects:
+
+```
+connection.Instance.please().list();
+```
+
+# Queries and Promises
+
+The library uses Promises for hadling the results of operations on the API. They help you write more readable and maintainable code while interacting with our services.
+
+To get the result of a successful query, use the `then()` method:
+
+```
+connection.Instance.please().get({ name: 'myInstance' }).then(function(result) {
+  // manipulate the result
+});
+```
+
+To catch errors returned from the API, use the `catch()` method:
+
+```
+connection.Instance({ name: 'myInstance', description: 'This is my instance'}).save().then(function(error) {
+  // handle the error
+})
+```
+
+This pattern also provides you with an elegant way of chaining operations:
+
+```
+// create an instance
+connection.Instance({ name: 'myInstance', description: 'This is my instance'}).save().then(function(instance) {
+  // update the instance's description
+  instance.description = 'This is a new description.';
+  return instance.save();
+})
+.then(function(instance) {
+  // the instance was updated
+});
+
+```
+
+For a list of available query methods, check the {@link QuerySet} documentation.
+
+# Nested models
+
+The javascript library is designed so that it reflects the platfom's structure, therefore some of the models have child models. For example, an `Instance` has mutliple `Classes`. If we would like to list the `Classes` belonging to an `Instance` we can do something like this:
+
+```
+connection.Instance({name: 'silent-dawn-3609'}).classes().list().then(function(classes) {
+  // classes list
+});
+```
