@@ -135,7 +135,7 @@ describe('CodeBox', function() {
       });
     });
 
-    it('should be able to create an codeBox', function() {
+    it('should be able to create a codeBox', function() {
       return CodeBox.please().create({instanceName, label: codeBoxName, runtime_name: runtimeName}).then((codebox) => {
         should(codebox).have.property('instanceName').which.is.String().equal(instanceName);
         should(codebox).have.property('description').which.is.String();
@@ -150,7 +150,7 @@ describe('CodeBox', function() {
       });
     });
 
-    it('should be able to get an codeBox', function() {
+    it('should be able to get a codeBox', function() {
       let codeBoxId = null;
 
       return CodeBox.please().create({instanceName, label: codeBoxName, runtime_name: runtimeName}).then((codebox) => {
@@ -180,7 +180,7 @@ describe('CodeBox', function() {
       });
     });
 
-    it('should be able to delete an codeBox', function() {
+    it('should be able to delete a codeBox', function() {
       let codeBoxId = null;
 
       return CodeBox.please().create({instanceName, label: codeBoxName, runtime_name: runtimeName})
@@ -198,7 +198,7 @@ describe('CodeBox', function() {
         });
     });
 
-    it('should be able to update an codeBox', function() {
+    it('should be able to update a codeBox', function() {
       return CodeBox.please().create({instanceName, label: codeBoxName, runtime_name: runtimeName}).then((codebox) => {
         should(codebox).be.an.Object();
         should(codebox).have.property('instanceName').which.is.String().equal(instanceName);
