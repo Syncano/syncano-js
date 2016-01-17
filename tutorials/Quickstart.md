@@ -129,12 +129,10 @@ For a list of available query methods, check the {@link QuerySet} documentation.
 
 # Nested models
 
-The javascript library is designed so that it reflects the platfom's structure, therefore some of the models have child models. For example, a `Class` has mutliple `Dataobjects`. If we would like to list the `Dataobjects` for a particular Class, we can do it like this:
+The javascript library is designed so that it reflects the platfom's structure, therefore some of the models have child models. For example, an `Instance` has mutliple `Classes`. If we would like to list the `Classes` belonging to an `Instance` we can do something like this:
 
 ```
-connection.Class({name: 'class-name', instanceName: 'instance-name'}).dataobjects().list().then(function(dataobjects) {
-  // list od dataobjects
+connection.Instance({name: 'silent-dawn-3609'}).classes().list().then(function(classes) {
+  // classes list
 });
 ```
-
-Please note that all objects that belong to an `Instance` (like the `Class` in this example) require the `instanceName` property in the configuration object.
