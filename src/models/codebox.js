@@ -8,11 +8,11 @@ const CodeBoxQuerySet = stampit().compose(QuerySet).methods({
 
   /**
   * Runs CodeBox matching the given lookup properties.
-  * @memberOf QuerySet
+  * @memberOf CodeBoxQuerySet
   * @instance
 
   * @param {Object} properties lookup properties used for path resolving
-  * @returns {QuerySet}
+  * @returns {CodeBoxQuerySet}
 
   * @example {@lang javascript}
   * CodeBox.please().run({id: 1, instanceName: 'test-one'}).then(function(trace) {});
