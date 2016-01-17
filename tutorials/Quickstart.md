@@ -76,7 +76,7 @@ For a full list of the main object's properties, please refer to it's [documenta
 
 The library provides a set of models that reflect the objects available in our API. To see a list of available objects, head on to the [FAQ](http://docs.syncano.io/docs/faq/#section-what-is-an-instance-).
 
-There are two ways of accessing the models: by instatiating the model via a factory or by calling the static `please()` method that returns a {@link QuerySet}.
+There are two ways of accessing the models: by instatiating the model or by calling the static `please()` method that returns a {@link QuerySet}.
 
 With a model instance, you can `save`, `update` and `delete` objects:
 
@@ -137,4 +137,4 @@ connection.Class({name: 'class-name', instanceName: 'instance-name'}).dataobject
 });
 ```
 
-Please note that all objects that belong to an `Instance` require the `instanceName` property in the configuration object.
+Please note that all objects that belong to an `Instance` (like the `Class` in this example) require the `instanceName` property in the configuration object.
