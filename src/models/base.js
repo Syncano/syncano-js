@@ -147,6 +147,7 @@ export const Meta = stampit()
  * @property {Meta} _meta private attribute which holds {@link Meta} object
  * @property {Object} _constraints private attribute which holds validation constraints
  * @property {Request} _request private attribute which holds {@link Request} configuration
+ * @property {Request} _querySet private attribute which holds {@link QuerySet} stamp
 
  * @example {@lang javascript}
  * var MyModel = stampit()
@@ -155,7 +156,42 @@ export const Meta = stampit()
     .setConstraints(MyConstraints);
  */
 export const Model = stampit({
+  refs: {
+    _querySet: QuerySet
+  },
+
   static: {
+    /**
+    * Sets {@link QuerySet} and returns new {@link https://github.com/stampit-org/stampit|stampit} definition.
+
+    * @memberOf Model
+    * @static
+
+    * @param {QuerySet} querySet {@link QuerySet} definition
+    * @returns {Model}
+
+    * @example {@lang javascript}
+    * var MyStamp = stampit().compose(Model).setQuerySet({});
+
+    */
+    setQuerySet(querySet) {
+      return this.refs({_querySet: querySet});
+    },
+
+    /**
+    * Gets {@link QuerySet} from {@link https://github.com/stampit-org/stampit|stampit} definition.
+
+    * @memberOf Model
+    * @static
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * var querySet = stampit().compose(Model).getQuerySet();
+
+    */
+    getQuerySet() {
+      return this.fixed.refs._querySet;
+    },
 
     /**
     * Returns {@link QuerySet} instance which allows to do ORM like operations on {@link https://syncano.io/|Syncano} API.
@@ -171,7 +207,8 @@ export const Model = stampit({
 
     */
     please(properties = {}) {
-      return QuerySet({
+      const querySet = this.getQuerySet();
+      return querySet({
         model: this,
         properties: properties,
         _config: this.getConfig()
@@ -295,7 +332,7 @@ export const Model = stampit({
     },
 
     toJSON() {
-      return _.omit(this, '_config', '_meta', '_request', '_constraints');
+      return _.omit(this, '_config', '_meta', '_request', '_constraints', '_querySet');
     }
   }
 })

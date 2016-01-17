@@ -117,6 +117,33 @@ describe('CodeBox', function() {
       });
   });
 
+  it('should be able to run via model instance', function() {
+    const data = {
+      instanceName: instanceName,
+      label: codeBoxName,
+      runtime_name: runtimeName,
+      source: 'print "test"'
+    };
+
+    return CodeBox(data).save()
+      .then((codebox) => {
+        should(codebox).have.property('instanceName').which.is.String().equal(data.instanceName);
+        should(codebox).have.property('source').which.is.String().equal(data.source);
+        should(codebox).have.property('label').which.is.String().equal(data.label);
+
+        CodeBoxId = codebox.id;
+
+        return codebox.run();
+      }).then((trace) => {
+        should(trace).be.an.Object();
+        should(trace).have.property('status').which.is.String();
+        should(trace).have.property('executed_at');
+        should(trace).have.property('duration');
+        should(trace).have.property('result');
+        should(trace).have.property('links').which.is.Object();
+      });
+  });
+
   describe('#please()', function() {
 
     afterEach(function() {
@@ -283,6 +310,33 @@ describe('CodeBox', function() {
         should(response).have.property('next').which.is.null();
         should(response).have.property('prev').which.is.null();
       });
+    });
+
+    it('should be able to run a codeBox', function() {
+      let codeBoxId = null;
+      const data = {
+        instanceName,
+        label: codeBoxName,
+        runtime_name: runtimeName,
+        source: 'print "test"'
+      };
+
+      return CodeBox.please().create(data)
+        .then((codebox) => {
+          should(codebox).be.an.Object();
+          should(codebox).have.property('instanceName').which.is.String().equal(instanceName);
+          codeBoxId = codebox.id;
+
+          return CodeBox.please().run({id: codeBoxId, instanceName}, {x: 1});
+        })
+        .then((trace) => {
+          should(trace).be.an.Object();
+          should(trace).have.property('status').which.is.String();
+          should(trace).have.property('executed_at');
+          should(trace).have.property('duration');
+          should(trace).have.property('result');
+          should(trace).have.property('links').which.is.Object();
+        });
     });
 
   });
