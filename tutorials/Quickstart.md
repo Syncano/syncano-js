@@ -105,7 +105,7 @@ connection.Instance.please().get({ name: 'myInstance' }).then(function(result) {
 To catch errors returned from the API, use the `catch()` method:
 
 ```
-connection.Instance({ name: 'myInstance', description: 'This is my instance'}).save().then(function(error) {
+connection.Instance({ name: 'myInstance', description: 'This is my instance'}).save().catch(function(error) {
   // handle the error
 })
 ```
