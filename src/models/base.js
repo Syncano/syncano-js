@@ -186,7 +186,7 @@ export const Model = stampit({
     * @returns {QuerySet}
 
     * @example {@lang javascript}
-    * var querySet = stampit().compose(ConfigMixin).getQuerySet();
+    * var querySet = stampit().compose(Model).getQuerySet();
 
     */
     getQuerySet() {
