@@ -83,7 +83,7 @@ const CodeBox = stampit()
           resolve(res.body, res);
         });
       });
-    },
+    }
 
   });
 
