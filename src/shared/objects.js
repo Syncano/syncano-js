@@ -8,7 +8,7 @@
 var SingleObj  = require('./methods.js').SingleObj;
 var PluralObj  = require('./methods.js').PluralObj;
 var helpers  = require('./helpers.js');
-
+var pinger = require('./pinger.js');
 
 var Account = function(config) {
 
@@ -19,6 +19,11 @@ var Account = function(config) {
     this.instance = classBuilder(Instance, opts);
   } else {
     PluralObj.call(this, opts, ['login', 'register', 'resendEmail', 'resetPw', 'confirmResetPw', 'activate']);
+  }
+
+  if(opts && opts.monitorConnection) {
+    this.monitor = pinger;
+    this.monitor.start();
   }
 
   return this;
@@ -150,6 +155,11 @@ var Instance = function(config, id) {
   if (opts && opts.apiKey) {
     singleFunc = ['detail'];
     pluralFunc = ['list', 'detail'];
+  }
+
+  if(opts && opts.monitorConnection) {
+    this.monitor = pinger;
+    this.monitor.start();
   }
 
   if (id || opts.instance) {

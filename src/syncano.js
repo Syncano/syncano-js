@@ -25,6 +25,10 @@ var Syncano = function Syncano(opt) {
       this.config.baseUrl = opt.baseUrl;
     }
 
+    if(opt.monitorConnection) {
+      this.config.monitorConnection = opt.monitorConnection || false;
+    }
+
     if (opt.debug) {
       this.config.debug = opt.debug;
     }
@@ -35,6 +39,7 @@ var Syncano = function Syncano(opt) {
     this.config.accountKey = accountKey;
     return new AccountScope(this.config);
   }
+
 
   if (apiKey) {
     this.config.apiKey = apiKey;
@@ -48,7 +53,6 @@ var Syncano = function Syncano(opt) {
   if (!accountKey && !apiKey) {
     return new EmptyScope(this.config);
   }
-
 };
 
 Syncano.prototype.constructor = Syncano;
@@ -75,6 +79,7 @@ AccountScope.prototype.constructor = AccountScope;
 
 
 var InstanceScope = function(config) {
+  console.log(config);
   Objects.Instance.call(this, config);
   return this;
 };
