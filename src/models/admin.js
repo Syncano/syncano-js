@@ -10,7 +10,7 @@ const AdminMeta = Meta({
       'path': '/v1/instances/{instanceName}/admins/{id}/'
     },
     'list': {
-      'methods': ['post', 'get'],
+      'methods': ['get'],
       'path': '/v1/instances/{instanceName}/admins/'
     }
   }
