@@ -32,7 +32,6 @@
   "devDependencies": {
     "aliasify": "^1.8.0",
     "babel": "^5.8.34",
-    "babel-plugin-inline-package-json": "^1.0.1",
     "browserify": "^10.2.4",
     "codeclimate-test-reporter": "^0.1.1",
     "gulp": "^3.9.0",
