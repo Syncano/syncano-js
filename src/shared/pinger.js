@@ -12,6 +12,7 @@ var Promise  = require('bluebird');
 var Pinger = (function() {
 
   var url = 'http://syncano.io';
+  var options = { protocol: 'http:', host: 'syncano.io', method: 'HEAD'};
   var timeout = 5000;
   var interval = null;
   var onConnectCb = null;
@@ -20,18 +21,17 @@ var Pinger = (function() {
 
   function ping() {
     var time = Date.now();
-    http.get(url, function(res) {
-      if(onConnectCb) {
-        connected = true;
-        onConnectCb();
-      }
-    })
-    .on('error', function(e) {
-        if(onDisconnectCb) {
-          connected = false;
-          onDisconnectCb();
-        }
+    var req = http.request(options, function(res) {
+      connected = true;
+      onConnectCb();
     });
+
+    req.on('error', function() {
+      connected = false;
+      onDisconnectCb();
+    });
+
+    req.end();
   }
 
   function startPinging() {
