@@ -16,8 +16,24 @@ const DataObjectMeta = Meta({
   }
 });
 
+const DataobjectConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  className: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  }
+};
+
 const DataObject = stampit()
   .compose(Model)
-  .setMeta(DataObjectMeta);
+  .setMeta(DataObjectMeta)
+  .setConstraints(DataobjectConstraints);
 
 export default DataObject;
