@@ -12,15 +12,16 @@ describe('Dataobject', function() {
   let Class = null;
   let Instance = null;
   let DataObject = null;
-  const schema = [
-    { name: 'title', type: 'string'}
-  ];
   const instanceName = suffix.get('instance');
   const className = suffix.get('class');
   const data = {
     name: className,
     instanceName: instanceName,
-    description: suffix.get('description')
+    description: suffix.get('description'),
+    schema: [
+      { name: "title", type: "string" },
+      { name: "author", type: "string" }
+    ]
   };
 
   before(function() {
@@ -59,6 +60,57 @@ describe('Dataobject', function() {
 
   it('should require "className"', function() {
     should(DataObject({instanceName: instanceName}).save()).be.rejectedWith(/className/);
+  });
+
+  it('should be able to save via model instance', function() {
+    const dataobj = {
+      title: "Pulp",
+      author: "Bukowski",
+      className: className,
+      instanceName: instanceName
+    };
+
+    return DataObject(dataobj).save()
+      .then((dataobj) => {
+        should(dataobj).be.a.Object();
+        should(dataobj).have.property('id').which.is.Number();
+        should(dataobj).have.property('instanceName').which.is.String().equal(data.instanceName);
+        should(dataobj).have.property('created_at').which.is.String();
+        should(dataobj).have.property('updated_at').which.is.String();
+        should(dataobj).have.property('links').which.is.Object();
+        should(dataobj).have.property('channel').which.is.Null();
+        should(dataobj).have.property('owner').which.is.Null();
+        should(dataobj).have.property('group_permissions').which.is.String().equal('none');
+        should(dataobj).have.property('other_permissions').which.is.String().equal('none');
+        should(dataobj).have.property('owner_permissions').which.is.String().equal('full');
+        should(dataobj).have.property('title').which.is.String().equal('Pulp');
+        should(dataobj).have.property('author').which.is.String().equal('Bukowski');
+      });
+  });
+
+  it('should be able to update via model instance', function() {
+    const dataobj = {
+      title: "Pulp",
+      author: "Bukowski",
+      className: className,
+      instanceName: instanceName
+    };
+
+    return DataObject(dataobj).save()
+      .then((dataobj) => {
+        should(dataobj).have.property('instanceName').which.is.String().equal(data.instanceName);
+        should(dataobj).have.property('title').which.is.String().equal('Pulp');
+        should(dataobj).have.property('author').which.is.String().equal('Bukowski');
+
+        dataobj.title = "Brave New World";
+        dataobj.author = "Aldous Huxley";
+        return dataobj.save();
+      })
+      .then((dataobj) => {
+        should(dataobj).have.property('instanceName').which.is.String().equal(data.instanceName);
+        should(dataobj).have.property('title').which.is.String().equal('Brave New World');
+        should(dataobj).have.property('author').which.is.String().equal('Aldous Huxley');
+      })
   });
 
 });
