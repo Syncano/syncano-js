@@ -5,13 +5,13 @@
 
 'use strict';
 
-var http = require('http');
+var http = require('https');
 var statusCodes = require('http').STATUS_CODES;
 var Promise  = require('bluebird');
 
 var Pinger = (function() {
 
-  var options = { protocol: 'http:', host: 'api.syncano.io', method: 'HEAD'};
+  var options = { protocol: 'https:', host: 'api.syncano.io', method: 'HEAD'};
   var timeout = 5000;
   var interval = null;
   var onConnectCb = null;
@@ -20,7 +20,6 @@ var Pinger = (function() {
 
   function ping() {
     var time = Date.now();
-    console.log(options.url);
     var req = http.request(options, function(res) {
       connected = true;
       if(onConnectCb) onConnectCb();
