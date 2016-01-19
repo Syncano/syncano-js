@@ -6,7 +6,7 @@ const DataObjectMeta = Meta({
   pluralName: 'dataobjects',
   endpoints: {
     'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
+      'methods': ['delete', 'patch', 'post', 'get'],
       'path': '/v1/instances/{instanceName}/classes/{className}/objects/{id}/'
     },
     'list': {
@@ -16,8 +16,24 @@ const DataObjectMeta = Meta({
   }
 });
 
+const DataobjectConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  className: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  }
+};
+
 const DataObject = stampit()
   .compose(Model)
-  .setMeta(DataObjectMeta);
+  .setMeta(DataObjectMeta)
+  .setConstraints(DataobjectConstraints);
 
 export default DataObject;
