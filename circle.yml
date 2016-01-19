@@ -3,6 +3,9 @@ machine:
     version: 4.2.4
 
 general:
+  branches:
+    ignore:
+      - gh-pages
   artifacts:
     - "coverage/"
 
@@ -10,4 +13,5 @@ deployment:
   production:
     branch: master
     commands:
+      - npm run release
       - npm run codeclimate

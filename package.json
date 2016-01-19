@@ -37,7 +37,9 @@
     "watch": "npm-run-all --parallel watch:*",
     "watch:lint": "esw src/** test/** --watch --format simple-detail",
     "watch:lib": "npm run build:lib -- --watch",
-    "watch:dist": "npm run build:dist -- --watch"
+    "watch:dist": "npm run build:dist -- --watch",
+    "release": "npm-run-all release:*",
+    "release:docs": "gh-pages -d docs -m Docs"
   },
   "repository": {
     "type": "git",
@@ -61,6 +63,7 @@
     "babel-register": "^6.3.13",
     "eslint": "^1.10.3",
     "eslint-watch": "^2.1.4",
+    "gh-pages": "^0.8.0",
     "ink-docstrap": "^1.1.0",
     "isparta": "^4.0.0",
     "istanbul": "^0.4.1",
