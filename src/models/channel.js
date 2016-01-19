@@ -32,6 +32,21 @@ const ChannelMeta = Meta({
   }
 });
 
+const channelConstraints = {
+  name: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  }
+};
+
 /**
   * Wrapper around {@link http://docs.syncano.io/v0.1/docs/channels-poll|channels poll} endpoint which implements `EventEmitter` interface.
 
@@ -176,6 +191,7 @@ const Channel = stampit()
       });
     }
 
-  });
+  })
+  .setConstraints(channelConstraints);
 
 export default Channel;
