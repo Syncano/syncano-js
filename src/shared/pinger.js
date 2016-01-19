@@ -6,7 +6,6 @@
 'use strict';
 
 var http = require('https');
-var statusCodes = require('http').STATUS_CODES;
 var Promise  = require('bluebird');
 
 var Pinger = (function() {
