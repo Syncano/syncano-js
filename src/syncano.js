@@ -79,7 +79,6 @@ AccountScope.prototype.constructor = AccountScope;
 
 
 var InstanceScope = function(config) {
-  console.log(config);
   Objects.Instance.call(this, config);
   return this;
 };

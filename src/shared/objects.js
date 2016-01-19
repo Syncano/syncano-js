@@ -23,6 +23,7 @@ var Account = function(config) {
 
   if(opts && opts.monitorConnection) {
     this.monitor = pinger;
+    this.monitor.setUrl((opts.baseUrl ? opts.baseUrl : 'api.syncano.io'))
     this.monitor.start();
   }
 
@@ -159,6 +160,7 @@ var Instance = function(config, id) {
 
   if(opts && opts.monitorConnection) {
     this.monitor = pinger;
+    this.monitor.setUrl((opts.baseUrl ? opts.baseUrl : 'api.syncano.io'))
     this.monitor.start();
   }
 
