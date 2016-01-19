@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Syncano Source: models/channel.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cosmo.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Syncano</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="Syncano.html">Syncano</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="tutorial-Quickstart.html">Quickstart</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: models/channel.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
+import Promise from 'bluebird';
+import {Meta, Model} from './base';
+import Request from '../request';
+import {EventEmittable} from '../utils';
+
+
+const ChannelMeta = Meta({
+  name: 'channel',
+  pluralName: 'channels',
+  endpoints: {
+    'detail': {
+      'methods': ['delete', 'patch', 'put', 'get'],
+      'path': '/v1/instances/{instanceName}/channels/{name}/'
+    },
+    'list': {
+      'methods': ['post', 'get'],
+      'path': '/v1/instances/{instanceName}/channels/'
+    },
+    'poll': {
+      'methods': ['get'],
+      'path': '/v1/instances/{instanceName}/channels/{name}/poll/'
+    },
+    'publish': {
+      'methods': ['post'],
+      'path': '/v1/instances/{instanceName}/channels/{name}/publish/'
+    },
+    'history': {
+      'methods': ['get'],
+      'path': '/v1/instances/{instanceName}/channels/{name}/history/'
+    }
+  }
+});
+
+/**
+  * Wrapper around {@link http://docs.syncano.io/v0.1/docs/channels-poll|channels poll} endpoint which implements `EventEmitter` interface.
+
+  * @constructor
+  * @type {ChannelPoll}
+
+  * @property {Number} [timeout = 300000] 5 mins
+  * @property {String} [path = null] request path
+  * @property {Number} [lastId = null] used internally in for loop
+  * @property {Number} [room = null]
+  * @property {Boolean} [abort = false]  used internally to conrole for loop
+
+  * @example {@lang javascript}
+  * var poll = ChannelPoll.setConfig(config)({
+  *   path: '/v1/instances/some-instance/channels/some-channel/poll/'
+  * });
+  *
+  * poll.on('start', function() {
+  *   console.log('poll::start');
+  * });
+  *
+  * poll.on('stop', function() {
+  *   console.log('poll::stop');
+  * });
+  *
+  * poll.on('message', function(message) {
+  *   console.log('poll::message', message);
+  * });
+  *
+  * poll.on('error', function(error) {
+  *   console.log('poll::error', error);
+  * });
+  *
+  * poll.start();
+  *
+  */
+export const ChannelPoll = stampit()
+  .compose(Request, EventEmittable)
+  .props({
+    timeout: 1000 * 60 * 5,
+    path: null,
+    lastId: null,
+    room: null,
+    abort: false
+  })
+  .methods({
+
+    request() {
+      const options = {
+        timeout: this.timeout,
+        query: {
+          last_id: this.lastId,
+          room: this.room
+        }
+      };
+
+      return new Promise((resolve, reject) => {
+        this.makeRequest('GET', this.path, options, (err, res) => {
+          if (err || !res.ok) {
+            return reject(err, res);
+          }
+          resolve(res.body, res);
+        });
+      });
+    },
+
+    start() {
+      this.emit('start');
+
+      // some kind of while loop which uses Promises
+      const loop = () => {
+        if (this.abort === true) {
+          this.emit('stop');
+          return
+        }
+
+        return this.request()
+          .then((message) => {
+            this.emit('message', message);
+            this.lastId = message.id;
+            return message;
+          })
+          .then(loop)
+          .catch((error) => {
+            this.emit('error', error);
+            this.stop();
+          });
+      }
+
+      process.nextTick(loop);
+      return this.stop;
+    },
+
+    stop() {
+      this.abort = true;
+      return this;
+    }
+
+  });
+
+const Channel = stampit()
+  .compose(Model)
+  .setMeta(ChannelMeta)
+  .methods({
+
+    poll(options = {}, start = true) {
+      const config = this.getConfig();
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('poll', this);
+
+      options.path = path;
+
+      const channelPoll = ChannelPoll.setConfig(config)(options);
+
+      if (start === true) {
+        channelPoll.start();
+      }
+
+      return channelPoll;
+    },
+
+    publish(message, room = null) {
+      const options = {
+        payload: {
+          payload: JSON.stringify(message)
+        }
+      };
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('publish', this);
+
+      if (room !== null) {
+        options.payload.room = room;
+      }
+
+      return new Promise((resolve, reject) => {
+        this.makeRequest('POST', path, options, (err, res) => {
+          if (err || !res.ok) {
+            return reject(err, res);
+          }
+          resolve(res.body, res);
+        });
+      });
+    }
+
+  });
+
+export default Channel;
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<footer>
+
+
+	<span class="copyright">
+	Syncano
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on Tue Jan 19th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
+
+</body>
+</html>

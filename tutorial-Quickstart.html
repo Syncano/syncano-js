@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Syncano Tutorial: Quickstart</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cosmo.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Syncano</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="Syncano.html">Syncano</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="tutorial-Quickstart.html">Quickstart</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			<section class="tutorial-section">
+
+<header>
+    
+
+    <h2>Quickstart</h2>
+</header>
+
+<article>
+    <p>This quickstart guide will walk you through the installation steps of the Syncano javascript library.</p>
+<p>If you don't have a Syncano account yet, you can read about how to create one <a href="http://docs.syncano.io/docs/getting-started-with-syncano">here</a>.</p>
+<h1>Installation</h1><p>We offer a few ways of installing the library - <code>npm</code>, <code>bower</code>, a GitHub repository or through our CDN.</p>
+<h3>NPM</h3><p>Install the <a href="https://www.npmjs.com/package/syncano">npm module</a> using:</p>
+<p><code>npm install syncano --save</code></p>
+<h3>Bower</h3><p>Install the <a href="https://www.bower.io/">bower module</a> using:</p>
+<p><code>bower install syncano</code></p>
+<h3>Github</h3><p>Download the latest release <a href="https://github.com/Syncano/syncano-js/releases">here</a> or <a href="https://github.com/Syncano/syncano-js">browse the library</a>.</p>
+<h3>CDN</h3><p>The library is available on our official <a href="http://cdn.syncano.com/syncano.js">CDN</a>:</p>
+<p><code>http://cdn.syncano.com/syncano.js</code></p>
+<h1>Including the library in your project</h1><h3>Script tag</h3><p>To use the library on the client side, include it via a script tag in your HTML document:</p>
+<p><code>&lt;script src=&quot;path/to/bower_components/syncano/dist/syncano.min.js&quot;&gt;&lt;/script&gt;</code></p>
+<h3>CommonJS</h3><p>The library can be used as CommonJS module via <code>require</code>:</p>
+<p><code>var Syncano = require('syncano');</code></p>
+<h3>ES6 modules</h3><p>You can also use the library via <code>import</code>:</p>
+<p><code>import Syncano from 'syncano';</code></p>
+<h1>Making connections</h1><p>Connecting to our services is as easy as instantiating the main object.</p>
+<pre class="prettyprint source"><code>import Syncano from 'syncano';
+
+var connection = Syncano();</code></pre><p>You can configure your connection by passing a configuration object to the main <code>Syncano</code> object:</p>
+<pre class="prettyprint source"><code>var connection = Syncano({ accountKey: '123' });</code></pre><p>The main object also provides setters for the parameters:</p>
+<pre class="prettyprint source"><code>var connection = Syncano().setAccountKey('123');</code></pre><p>For a full list of the main object's properties, please refer to it's <a href="Syncano.html">documentation</a>.</p>
+<h1>Interacting with the API</h1><p>The library provides a set of models that reflect the objects available in our API. To see a list of available objects, head on to the <a href="http://docs.syncano.io/docs/faq/#section-what-is-an-instance-">FAQ</a>.</p>
+<p>There are two ways of accessing the models: by instatiating the model or by calling the static <code>please()</code> method that returns a <a href="QuerySet.html">QuerySet</a>.</p>
+<p>With a model instance, you can <code>save</code>, <code>update</code> and <code>delete</code> objects:</p>
+<pre class="prettyprint source"><code>connection.Instance({ name: 'myInstance', description: 'This is my instance'}).save();</code></pre><p>With a <a href="QuerySet.html">QuerySet</a> object returned from the <code>please()</code> method, you can perform additional operations like listing objects:</p>
+<pre class="prettyprint source"><code>connection.Instance.please().list();</code></pre><h1>Queries and Promises</h1><p>The library uses Promises for hadling the results of operations on the API. They help you write more readable and maintainable code while interacting with our services.</p>
+<p>To get the result of a successful query, use the <code>then()</code> method:</p>
+<pre class="prettyprint source"><code>connection.Instance.please().get({ name: 'myInstance' }).then(function(result) {
+  // manipulate the result
+});</code></pre><p>To catch errors returned from the API, use the <code>catch()</code> method:</p>
+<pre class="prettyprint source"><code>connection.Instance({ name: 'myInstance', description: 'This is my instance'}).save().catch(function(error) {
+  // handle the error
+})</code></pre><p>This pattern also provides you with an elegant way of chaining operations:</p>
+<pre class="prettyprint source"><code>// create an instance
+connection.Instance({ name: 'myInstance', description: 'This is my instance'}).save().then(function(instance) {
+  // update the instance's description
+  instance.description = 'This is a new description.';
+  return instance.save();
+})
+.then(function(instance) {
+  // the instance was updated
+});</code></pre><p>For a list of available query methods, check the <a href="QuerySet.html">QuerySet</a> documentation.</p>
+<h1>Nested models</h1><p>The javascript library is designed so that it reflects the platfom's structure, therefore some of the models have child models. For example, an <code>Instance</code> has mutliple <code>Classes</code>. If we would like to list the <code>Classes</code> belonging to an <code>Instance</code> we can do something like this:</p>
+<pre class="prettyprint source"><code>connection.Instance({name: 'silent-dawn-3609'}).classes().list().then(function(classes) {
+  // classes list
+});</code></pre>
+</article>
+
+</section>
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<footer>
+
+
+	<span class="copyright">
+	Syncano
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on Tue Jan 19th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
+
+</body>
+</html>

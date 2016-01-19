@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Syncano Source: models/base.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cosmo.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Syncano</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="Syncano.html">Syncano</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="tutorial-Quickstart.html">Quickstart</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: models/base.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
+import Promise from 'bluebird';
+import _ from 'lodash';
+import validate from 'validate.js';
+import QuerySet from '../querySet';
+import Request from '../request';
+import {ValidationError} from '../errors';
+import {ConfigMixin, MetaMixin, ConstraintsMixin} from '../utils';
+
+validate.Promise = Promise;
+
+
+/**
+ * Object which holds whole configuration for {@link Model}.
+
+ * @constructor
+ * @type {Meta}
+
+ * @property {String} [name = null]
+ * @property {String} [pluralName = null]
+ * @property {Array}  [properties = []]
+ * @property {Array}  [endpoints = {}]
+ * @property {Array}  [relatedModels = undefined]
+
+ * @example {@lang javascript}
+ * var MyMeta = Meta({name: 'test'});
+ * var MyModel = SomeModel.setMeta(MyMeta);
+ */
+export const Meta = stampit()
+  .props({
+    name: null,
+    pluralName: null,
+    properties: [],
+    endpoints: {}
+  })
+  .init(function({ instance }) {
+    _.forEach(instance.endpoints, (value) => {
+      value.properties = this.getPathProperties(value.path);
+      instance.properties = _.union(instance.properties, value.properties);
+    });
+  })
+  .methods({
+
+    /**
+    * Gets required properties from object. Used mostly during serialization.
+    * @memberOf Meta
+    * @instance
+    * @param {Object} object
+    * @returns {Object}
+    */
+    getObjectProperties(object) {
+      return _.reduce(this.properties, (result, property) => {
+        result[property] = object[property];
+        return result;
+      }, {});
+    },
+
+    /**
+    * Makes a copy of target and adds required properties from source.
+
+    * @memberOf Meta
+    * @instance
+
+    * @param {Object} source
+    * @param {Object} target
+
+    * @returns {Object}
+    */
+    assignProperties(source, target) {
+      return _.assign({}, this.getObjectProperties(source), target);
+    },
+
+    getPathProperties(path) {
+      const re = /{([^}]*)}/gi;
+      let match = null;
+      let result = [];
+
+      while ((match = re.exec(path)) !== null) {
+        result.push(match[1]);
+      }
+
+      return result;
+    },
+
+    /**
+    * Resolves endpoint path e.g: `/v1/instances/{name}/` will be converted to `/v1/instances/someName/`.
+
+    * @memberOf Meta
+    * @instance
+
+    * @param {String} endpointName
+    * @param {Object} properties
+
+    * @returns {String}
+    */
+    resolveEndpointPath(endpointName, properties) {
+      if (_.isEmpty(this.endpoints[endpointName])) {
+        throw new Error(`Invalid endpoit name: "${endpointName}".`);
+      }
+
+      const endpoint = this.endpoints[endpointName];
+      const diff = _.difference(endpoint.properties, _.keys(properties));
+      let path = endpoint.path;
+
+      if (diff.length > 0) {
+        throw new Error(`Missing path properties "${diff.join()}" for "${endpointName}" endpoint.`)
+      }
+
+      _.forEach(endpoint.properties, (property) => {
+        path = path.replace(`{${property}}`, properties[property]);
+      });
+
+      return path;
+    },
+
+    /**
+    * Looks for the first allowed method from `methodNames` for selected endpoint.
+
+    * @memberOf Meta
+    * @instance
+
+    * @param {String} endpointName
+    * @param {...String} methodNames
+
+    * @returns {String}
+    */
+    findAllowedMethod(endpointName, ...methodNames) {
+      const endpoint = this.endpoints[endpointName];
+      const methods = _.intersection(_.map(methodNames, (m) => m.toLowerCase()), endpoint.methods);
+
+      if (_.isEmpty(methods)) {
+        throw Error(`Unsupported request methods: ${methodNames.join()}.`);
+      }
+
+      return methods[0];
+    }
+  });
+
+/**
+ * Base {@link https://github.com/stampit-org/stampit|stamp} for all models which wraps all raw JavaScript objects.
+ * **Not** meant to be used directly more like mixin in other {@link https://github.com/stampit-org/stampit|stamps}.
+
+ * @constructor
+ * @type {Model}
+
+ * @property {Syncano} _config private attribute which holds {@link Syncano} object
+ * @property {Meta} _meta private attribute which holds {@link Meta} object
+ * @property {Object} _constraints private attribute which holds validation constraints
+ * @property {Request} _request private attribute which holds {@link Request} configuration
+ * @property {Request} _querySet private attribute which holds {@link QuerySet} stamp
+
+ * @example {@lang javascript}
+ * var MyModel = stampit()
+    .compose(Model)
+    .setMeta(MyMeta)
+    .setConstraints(MyConstraints);
+ */
+export const Model = stampit({
+  refs: {
+    _querySet: QuerySet
+  },
+
+  static: {
+    /**
+    * Sets {@link QuerySet} and returns new {@link https://github.com/stampit-org/stampit|stampit} definition.
+
+    * @memberOf Model
+    * @static
+
+    * @param {QuerySet} querySet {@link QuerySet} definition
+    * @returns {Model}
+
+    * @example {@lang javascript}
+    * var MyStamp = stampit().compose(Model).setQuerySet({});
+
+    */
+    setQuerySet(querySet) {
+      return this.refs({_querySet: querySet});
+    },
+
+    /**
+    * Gets {@link QuerySet} from {@link https://github.com/stampit-org/stampit|stampit} definition.
+
+    * @memberOf Model
+    * @static
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * var querySet = stampit().compose(Model).getQuerySet();
+
+    */
+    getQuerySet() {
+      return this.fixed.refs._querySet;
+    },
+
+    /**
+    * Returns {@link QuerySet} instance which allows to do ORM like operations on {@link https://syncano.io/|Syncano} API.
+
+    * @memberOf Model
+    * @static
+
+    * @param {Object} [properties = {}] some default properties for all ORM operations
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * MyModel.please().list();
+
+    */
+    please(properties = {}) {
+      const querySet = this.getQuerySet();
+      return querySet({
+        model: this,
+        properties: properties,
+        _config: this.getConfig()
+      });
+    },
+
+    /**
+    * Used only for serialization for raw object to {@link https://github.com/stampit-org/stampit|stamp}.
+
+    * @memberOf Model
+    * @static
+
+    * @param {Object} rawJSON
+    * @param {Object} [properties = {}] some default properties which will be assigned to model instance
+    * @returns {Model}
+
+    */
+    fromJSON(rawJSON, properties = {}) {
+      const meta = this.getMeta();
+      const attrs = meta.assignProperties(properties, rawJSON);
+      return this(attrs);
+    }
+  },
+  methods: {
+
+    /**
+    * Checks if model instance if already saved.
+    * @memberOf Model
+    * @instance
+    * @returns {Boolean}
+    */
+    isNew() {
+      return !_.has(this, 'links');
+    },
+
+    /**
+    * Validates current model instance in context of defined constraints.
+    * @memberOf Model
+    * @instance
+    * @returns {Object|undefined}
+    */
+    validate() {
+      const constraints = this.getConstraints();
+      const attributes = this.toJSON();
+
+      if (_.isEmpty(constraints)) {
+        return;
+      }
+
+      return validate(attributes, constraints);
+    },
+
+    /**
+    * Serializes raw JavaScript object into {@link Model} instance.
+    * @memberOf Model
+    * @instance
+    * @returns {Model}
+    */
+    serialize(object) {
+      const meta = this.getMeta();
+      return this.getStamp()(meta.assignProperties(this, object));
+    },
+
+    /**
+    * Creates or updates the current instance.
+    * @memberOf Model
+    * @instance
+    * @returns {Promise}
+    */
+    save() {
+      const meta = this.getMeta();
+      const errors = this.validate();
+      let path = null;
+      let endpoint = 'list';
+      let method = 'POST';
+      let payload = JSON.stringify(this);
+
+      return new Promise((resolve, reject) => {
+        if (!_.isEmpty(errors)) {
+          return reject(new ValidationError(errors));
+        }
+
+        try {
+          if (!this.isNew()) {
+            endpoint = 'detail';
+            method = meta.findAllowedMethod(endpoint, 'PUT', 'POST');
+          }
+
+          path = meta.resolveEndpointPath(endpoint, this);
+        } catch(err) {
+          return reject(err);
+        }
+
+        this.makeRequest(method, path, {payload}, (err, res) => {
+          if (err || !res.ok) {
+            return reject(err, res);
+          }
+          resolve(this.serialize(res.body), res);
+        });
+      });
+    },
+
+    /**
+    * Removes the current instance.
+    * @memberOf Model
+    * @instance
+    * @returns {Promise}
+    */
+    delete() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('detail', this);
+
+      return new Promise((resolve, reject) => {
+        this.makeRequest('DELETE', path, {}, (err, res) => {
+          if (err || !res.ok) {
+            return reject(err, res);
+          }
+          resolve(null, res);
+        });
+      });
+    },
+
+    toJSON() {
+      return _.omit(this, '_config', '_meta', '_request', '_constraints', '_querySet');
+    }
+  }
+})
+.init(({instance, stamp}) => {
+  if (!stamp.fixed.methods.getStamp) {
+    stamp.fixed.methods.getStamp = () => stamp;
+  }
+  if(_.has(instance, '_meta.relatedModels')) {
+    const relatedModels = instance._meta.relatedModels;
+    const properties = instance._meta.properties.slice();
+    const last = _.last(properties);
+    const lastIndex = _.lastIndexOf(properties, last);
+    properties[lastIndex] = _.camelCase(`${instance._meta.name} ${last}`);
+    let map = {};
+    map[last] = properties[lastIndex];
+
+    map = _.reduce(properties, (result, property) => {
+      result[property] = property;
+      return result;
+    }, map);
+
+    _.forEach(instance.getConfig(), (model, name) => {
+      if(_.includes(relatedModels, name)) {
+
+        instance[model.getMeta().pluralName] = (_properties = {}) => {
+
+          const parentProperties = _.reduce(map, (result, target, source) => {
+            const value = _.get(instance, source, null);
+
+            if (value !== null) {
+              result[target] = value;
+            }
+
+            return result;
+          }, {});
+
+          return stampit().compose(model).please(_.assign(parentProperties, _properties));
+        };
+      }
+    });
+  }
+})
+.compose(ConfigMixin, MetaMixin, ConstraintsMixin, Request);
+
+export default Model;
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<footer>
+
+
+	<span class="copyright">
+	Syncano
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on Tue Jan 19th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
+
+</body>
+</html>

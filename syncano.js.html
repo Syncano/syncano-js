@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Syncano Source: syncano.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cosmo.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Syncano</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="Syncano.html">Syncano</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="tutorial-Quickstart.html">Quickstart</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: syncano.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
+import _ from 'lodash';
+import models from './models';
+import Account from './account';
+
+/**
+ * Main Syncano object.
+ * @constructor
+ * @type {Syncano}
+
+ * @param {Object} options All configuration options
+ * @param {Object} [options.baseUrl = 'https://api.syncano.io'] Base URL for all api calls.
+ * @param {Object} [options.accountKey = null] Your Syncano account key.
+ * @param {Object} [options.userKey = null] Instance user api key.
+ * @param {Object} [options.socialToken = null] Instance social authentication token.
+ * @returns {Syncano}
+
+ * @example {@lang javascript}
+ * var connection = Syncano({accountKey: '123'});
+ * var connection = Syncano({userKey: '123'});
+ * var connection = Syncano({socialToken: '123'});
+ */
+const Syncano = stampit()
+  // We need function here, do not use arrow syntax!
+  .init(function() {
+    this.Account = Account.setConfig(this)();
+
+    _.forEach(models, (model, name) => {
+      this[name] = model.setConfig(this);
+    });
+  })
+  .refs({
+    baseUrl: 'https://api.syncano.io',
+    accountKey: null,
+    userKey: null,
+    socialToken: null
+  })
+  .methods({
+
+    /**
+    * Sets *baseUrl*.
+
+    * @memberOf Syncano
+    * @instance
+
+    * @param {String} baseUrl Base URL for all api calls
+    * @returns {Syncano}
+    * @throws {Error} Base URL is required.
+
+    * @example {@lang javascript}
+    * var connection = Syncano({accountKey: '123'});
+    * connection.setBaseUrl('https://dummy.com/');
+
+    */
+    setBaseUrl(baseUrl) {
+      if(_.isEmpty(baseUrl)) throw new Error('Base URL is required.');
+      this.baseUrl = baseUrl;
+      return this;
+    },
+
+    /**
+    * Gets *baseUrl*.
+
+    * @memberOf Syncano
+    * @instance
+    * @returns {String}
+
+    * @example {@lang javascript}
+    * var connection = Syncano({accountKey: '123'});
+    * var baseUrl = connection.getBaseUrl();
+
+    */
+    getBaseUrl() {
+      return this.baseUrl;
+    },
+
+    /**
+    * Sets *accountKey*.
+
+    * @memberOf Syncano
+    * @instance
+
+    * @param {String} accountKey Your {@link https://syncano.io|Syncano} account key
+    * @returns {Syncano}
+    * @throws {Error} Account key is required.
+
+    * @example {@lang javascript}
+    * var connection = Syncano({accountKey: '123'});
+    * connection.setAccountKey('abcd');
+
+    */
+    setAccountKey(accountKey) {
+      if(_.isEmpty(accountKey)) throw new Error('Account key is required.');
+      this.accountKey = accountKey;
+      return this;
+    },
+
+    /**
+    * Gets *accountKey*.
+
+    * @memberOf Syncano
+    * @instance
+    * @returns {String}
+
+    * @example {@lang javascript}
+    * var connection = Syncano({accountKey: '123'});
+    * var accountKey = connection.getAccountKey();
+
+    */
+    getAccountKey() {
+      return this.accountKey;
+    },
+
+    /**
+    * Sets *userKey*.
+
+    * @memberOf Syncano
+    * @instance
+
+    * @param {String} userKey Instance user api key
+    * @returns {Syncano}
+    * @throws {Error} User key is required.
+
+    * @example {@lang javascript}
+    * var connection = Syncano({userKey: '123'});
+    * connection.setUserKey('abcd');
+
+    */
+    setUserKey(userKey) {
+      if(_.isEmpty(userKey)) throw new Error('User key is required.');
+      this.userKey = userKey;
+      return this;
+    },
+
+    /**
+    * Gets *userKey*.
+
+    * @memberOf Syncano
+    * @instance
+    * @returns {String}
+
+    * @example {@lang javascript}
+    * var connection = Syncano({userKey: '123'});
+    * var userKey = connection.getUserKey();
+
+    */
+    getUserKey() {
+      return this.userKey;
+    },
+
+    /**
+    * Sets *socialToken*.
+
+    * @memberOf Syncano
+    * @instance
+
+    * @param {String} socialToken Instance social authentication token
+    * @returns {Syncano}
+    * @throws {Error} Social token is required.
+
+    * @example {@lang javascript}
+    * var connection = Syncano({socialToken: '123'});
+    * connection.setSocialToken('abcd');
+
+    */
+    setSocialToken(socialToken) {
+      if(_.isEmpty(socialToken)) throw new Error('Social token is required.');
+      this.socialToken = socialToken;
+      return this;
+    },
+
+    /**
+    * Gets *socialToken*.
+
+    * @memberOf Syncano
+    * @instance
+    * @returns {String}
+
+    * @example {@lang javascript}
+    * var connection = Syncano({socialToken: '123'});
+    * var socialToken = connection.getSocialToken();
+
+    */
+    getSocialToken() {
+      return this.socialToken;
+    }
+  });
+
+export default Syncano;
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<footer>
+
+
+	<span class="copyright">
+	Syncano
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on Tue Jan 19th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
+
+</body>
+</html>
