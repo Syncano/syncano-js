@@ -7,6 +7,7 @@
 
 var http = require('https');
 var Promise  = require('bluebird');
+var Url = require('url');
 
 var Pinger = (function() {
 
@@ -55,7 +56,7 @@ var Pinger = (function() {
   }
 
   function setBaseUrl(url) {
-    options.url = url;
+    options.url = Url.parse(url).host;
   }
 
   return {
