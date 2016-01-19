@@ -44,7 +44,7 @@ describe('Syncano (Instance Scope)', function() {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('GET');
       (res.url).should.equal('/v1/instances/' + config.instance + '/');
-      (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+      (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
       (res.headers['X-API-KEY']).should.equal(config.apiKey);
       done();
     }).catch(function(err) {

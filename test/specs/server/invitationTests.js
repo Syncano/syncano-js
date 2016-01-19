@@ -38,7 +38,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/account/invitations/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -53,7 +53,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/account/invitations/' + config.inviteId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -68,7 +68,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
         (res.url).should.equal('/v1/account/invitations/accept/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -83,7 +83,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
         (res.url).should.equal('/v1/account/invitations/' + config.inviteId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -106,7 +106,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/account/invitations/' + config.inviteId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -121,7 +121,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
         (res.url).should.equal('/v1/account/invitations/' + config.inviteId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -165,7 +165,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/instances/' + config.instance + '/invitations/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -180,7 +180,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/instances/' + config.instance + '/invitations/' + config.inviteId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -195,7 +195,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/invitations/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -210,7 +210,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/invitations/resend/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -225,7 +225,7 @@ describe('Invitation', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
         (res.url).should.equal('/v1/instances/' + config.instance + '/invitations/' + config.inviteId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {

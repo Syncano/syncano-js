@@ -39,7 +39,7 @@ describe('Syncano (Empty Scope)', function() {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
       (res.url).should.equal('/v1/account/auth/');
-      (res.headers).should.have.properties(['User-Agent', 'Content-Type']);
+      (res.headers).should.have.properties(['Content-Type']);
       done();
     }).catch(function(err) {
       done(err);
@@ -53,7 +53,7 @@ describe('Syncano (Empty Scope)', function() {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
       (res.url).should.equal('/v1/account/register/');
-      (res.headers).should.have.properties(['User-Agent', 'Content-Type']);
+      (res.headers).should.have.properties(['Content-Type']);
       done();
     }).catch(function(err) {
       done(err);
@@ -67,7 +67,7 @@ describe('Syncano (Empty Scope)', function() {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
       (res.url).should.equal('/v1/account/resend_email/');
-      (res.headers).should.have.properties(['User-Agent', 'Content-Type']);
+      (res.headers).should.have.properties(['Content-Type']);
       done();
     }).catch(function(err) {
       done(err);
@@ -81,7 +81,7 @@ describe('Syncano (Empty Scope)', function() {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
       (res.url).should.equal('/v1/account/password/reset/');
-      (res.headers).should.have.properties(['User-Agent', 'Content-Type']);
+      (res.headers).should.have.properties(['Content-Type']);
       done();
     }).catch(function(err) {
       done(err);
@@ -95,7 +95,7 @@ describe('Syncano (Empty Scope)', function() {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
       (res.url).should.equal('/v1/account/password/reset/confirm/');
-      (res.headers).should.have.properties(['User-Agent', 'Content-Type']);
+      (res.headers).should.have.properties(['Content-Type']);
       done();
     }).catch(function(err) {
       done(err);
@@ -109,7 +109,7 @@ describe('Syncano (Empty Scope)', function() {
       (res).should.have.properties(['method', 'url', 'headers']);
       (res.method).should.equal('POST');
       (res.url).should.equal('/v1/account/activate/');
-      (res.headers).should.have.properties(['User-Agent', 'Content-Type']);
+      (res.headers).should.have.properties(['Content-Type']);
       done();
     }).catch(function(err) {
       done(err);

@@ -1,6 +1,6 @@
 {
   "name": "syncano",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "A library to intereact with the Syncano API.",
   "main": "lib/syncano.js",
   "browser": {
@@ -8,8 +8,14 @@
   },
   "author": "Kelly Andrews",
   "contributors": [
-    {"name": "Jakub Bilko", "email": "jakub.bilko@syncano.com"},
-    {"name": "Daniel Kopka", "email": "daniel.kopka@syncano.com"}
+    {
+      "name": "Jakub Bilko",
+      "email": "jakub.bilko@syncano.com"
+    },
+    {
+      "name": "Daniel Kopka",
+      "email": "daniel.kopka@syncano.com"
+    }
   ],
   "license": "ISC",
   "scripts": {
@@ -32,7 +38,6 @@
   "devDependencies": {
     "aliasify": "^1.8.0",
     "babel": "^5.8.34",
-    "babel-plugin-inline-package-json": "^1.0.1",
     "browserify": "^10.2.4",
     "codeclimate-test-reporter": "^0.1.1",
     "gulp": "^3.9.0",

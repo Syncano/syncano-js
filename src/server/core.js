@@ -5,7 +5,6 @@
 
 'use strict';
 
-var version  = require('../../package.json').version;
 var helpers  = require('../shared/helpers.js');
 var request  = require('./request.js');
 var Promise  = require('bluebird');
@@ -14,7 +13,6 @@ var util = require('util');
 
 var defaultOptions = {
   headers: {
-    'User-Agent': 'syncano/version:' + version,
     'Content-Type': 'application/json'
   }
 };

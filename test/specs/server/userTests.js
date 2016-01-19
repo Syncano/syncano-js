@@ -40,7 +40,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -55,7 +55,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/' + config.userId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -70,7 +70,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/' + config.userId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -85,7 +85,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/' + config.userId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -100,7 +100,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/' + config.userId + '/reset_key/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -127,7 +127,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/' + config.userId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -142,7 +142,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/' + config.userId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -157,7 +157,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/' + config.userId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -172,7 +172,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/' + config.userId + '/reset_key/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -187,7 +187,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/' + config.userId + '/groups/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -202,7 +202,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/' + config.userId + '/groups/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -217,7 +217,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/' + config.userId + '/groups/' + config.groupId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -232,7 +232,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('DELETE');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/' + config.userId + '/groups/' + config.groupId + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.accountKey);
         done();
       }).catch(function(err) {
@@ -280,7 +280,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         done();
       }).catch(function(err) {
@@ -295,7 +295,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/user/auth/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         done();
       }).catch(function(err) {
@@ -310,7 +310,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/user/auth/' + config.backend + '/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         done();
       }).catch(function(err) {
@@ -355,7 +355,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('POST');
         (res.url).should.equal('/v1/instances/' + config.instance + '/users/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY', 'X-USER-KEY']);
+        (res.headers).should.have.properties(['Content-Type', , 'X-API-KEY', 'X-USER-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         (res.headers['X-USER-KEY']).should.equal(config.userKey);
         done();
@@ -371,7 +371,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('GET');
         (res.url).should.equal('/v1/instances/' + config.instance + '/user/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         done();
       }).catch(function(err) {
@@ -386,7 +386,7 @@ describe('User', function() {
         (res).should.have.properties(['method', 'url', 'headers']);
         (res.method).should.equal('PATCH');
         (res.url).should.equal('/v1/instances/' + config.instance + '/user/');
-        (res.headers).should.have.properties(['User-Agent', 'Content-Type', 'X-API-KEY']);
+        (res.headers).should.have.properties(['Content-Type', 'X-API-KEY']);
         (res.headers['X-API-KEY']).should.equal(config.apiKey);
         done();
       }).catch(function(err) {
