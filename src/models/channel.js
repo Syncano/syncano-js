@@ -92,11 +92,8 @@ const ChannelPoll = stampit()
     stop() {
       this.abort = true;
       return this;
-    },
-
-    then(callback) {
-      return this.resolver.promise.then(callback);
     }
+
   });
 
 const Channel = stampit()
