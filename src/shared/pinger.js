@@ -23,12 +23,12 @@ var Pinger = (function() {
     console.log(options.url);
     var req = http.request(options, function(res) {
       connected = true;
-      onConnectCb();
+      if(onConnectCb) onConnectCb();
     });
 
     req.on('error', function() {
       connected = false;
-      onDisconnectCb();
+      if(onDisconnectCb) onDisconnectCb();
     });
 
     req.end();
