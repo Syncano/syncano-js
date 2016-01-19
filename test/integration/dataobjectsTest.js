@@ -275,36 +275,6 @@ describe('Dataobject', function() {
 
     });
 
-    it('should be able to change ordering', function() {
-      const descriptions = [
-        { title: "Pulp", author: "Bukowski"},
-        { title: "Pulp", author: "Women" }
-      ];
-      let asc = null;
-
-      return Promise
-        .all(_.map(descriptions, (item) => DataObject.please().create({title: item.title, author: item.author, instanceName, className})))
-        .then((dataobjects) => {
-          should(dataobjects).be.an.Array().with.length(2);
-          return DataObject.please({instanceName, className}).ordering('asc');
-        })
-        .then((dataobjects) => {
-          should(dataobjects).be.an.Array().with.length(2);
-          asc = dataobjects;
-          return DataObject.please({instanceName, className}).ordering('desc');
-        })
-        .then((desc) => {
-          const asdTitles= _.map(asc, 'title');
-          const descTitles = _.map(desc, 'title');
-          descTitles.reverse();
-          should(desc).be.an.Array().with.length(2);
-
-          _.forEach(asdTitles, (ascTitle, index) => {
-            should(asdTitles).be.equal(descTitles[index]);
-          });
-        });
-    });
-
     it('should be able to get raw data', function() {
       return DataObject.please().list({instanceName, className}).raw().then((response) => {
         should(response).be.a.Object();
