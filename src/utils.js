@@ -1,4 +1,15 @@
 import stampit from 'stampit';
+import {EventEmitter} from 'events';
+
+/**
+ * Simple wrapper around `EventEmitter`
+ * @constructor
+ * @type {EventEmittable}
+
+ * @example {@lang javascript}
+ * var EmittableModel = stampit().compose(EventEmittable);
+ */
+export const EventEmittable = stampit.convertConstructor(EventEmitter);
 
 
 /**
