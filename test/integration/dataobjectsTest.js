@@ -293,7 +293,7 @@ describe('Dataobject', function() {
           asc = dataobjects;
           return DataObject.please({instanceName, className}).ordering('desc');
         })
-        then((desc) => {
+        .then((desc) => {
           const asdTitles= _.map(asc, 'title');
           const descTitles = _.map(desc, 'title');
           descTitles.reverse();
