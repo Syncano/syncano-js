@@ -6,7 +6,7 @@ const DataObjectMeta = Meta({
   pluralName: 'dataobjects',
   endpoints: {
     'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
+      'methods': ['delete', 'patch', 'post', 'get'],
       'path': '/v1/instances/{instanceName}/classes/{className}/objects/{id}/'
     },
     'list': {
