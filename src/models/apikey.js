@@ -16,8 +16,18 @@ const ApiKeyMeta = Meta({
   }
 });
 
+const ApiKeyConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  }
+};
+
 const ApiKey = stampit()
   .compose(Model)
-  .setMeta(ApiKeyMeta);
+  .setMeta(ApiKeyMeta)
+  .setConstraints(ApiKeyConstraints);
 
 export default ApiKey;
