@@ -32,7 +32,43 @@ const ChannelMeta = Meta({
   }
 });
 
-const ChannelPoll = stampit()
+/**
+  * Wrapper around {@link http://docs.syncano.io/v0.1/docs/channels-poll|channels poll} endpoint which implements `EventEmitter` interface.
+
+  * @constructor
+  * @type {ChannelPoll}
+
+  * @property {Number} [timeout = 300000] 5 mins
+  * @property {String} [path = null] request path
+  * @property {Number} [lastId = null] used internally in for loop
+  * @property {Number} [room = null]
+  * @property {Boolean} [abort = false]  used internally to conrole for loop
+
+  * @example {@lang javascript}
+  * var poll = ChannelPoll.setConfig(config)({
+  *   path: '/v1/instances/some-instance/channels/some-channel/poll/'
+  * });
+  *
+  * poll.on('start', function() {
+  *   console.log('poll::start');
+  * });
+  *
+  * poll.on('stop', function() {
+  *   console.log('poll::stop');
+  * });
+  *
+  * poll.on('message', function(message) {
+  *   console.log('poll::message', message);
+  * });
+  *
+  * poll.on('error', function(error) {
+  *   console.log('poll::error', error);
+  * });
+  *
+  * poll.start();
+  *
+  */
+export const ChannelPoll = stampit()
   .compose(Request, EventEmittable)
   .props({
     timeout: 1000 * 60 * 5,
