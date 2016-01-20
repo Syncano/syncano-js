@@ -2,6 +2,7 @@ import should from 'should/as-function';
 import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
+import {ValidationError} from '../../src/errors';
 import {suffix, credentials} from './utils';
 
 describe('ApiKey', function() {
@@ -36,7 +37,7 @@ describe('ApiKey', function() {
   });
 
   it('should be validated', function() {
-    should(ApiKey().save()).be.rejectedWith(Error);
+    should(ApiKey().save()).be.rejectedWith(ValidationError);
   });
 
   it('should require "instanceName"', function() {

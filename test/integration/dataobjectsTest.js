@@ -24,30 +24,19 @@ describe('Dataobject', function() {
     ]
   };
 
-  before(function() {
+  before(function(done) {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
     Class = connection.Class;
     DataObject = connection.DataObject;
 
-    return Instance.please().create({name: instanceName});
+    Instance.please().create({name: instanceName}).then(() => {
+      Class.please().create(data).then(() => done());
+    })
   });
 
   after(function() {
     return Instance.please().delete({name: instanceName});
-  });
-
-  beforeEach(function() {
-    return Class.please().create(data);
-  });
-
-  afterEach(function(done) {
-    return Class.please().delete({
-      instanceName: instanceName,
-      name: className
-    })
-    .then(() => done())
-    .catch(() => done());
   });
 
   it('should be validated', function() {
