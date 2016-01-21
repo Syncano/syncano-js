@@ -49,6 +49,7 @@ const channelConstraints = {
 
 /**
   * Wrapper around {@link http://docs.syncano.io/v0.1/docs/channels-poll|channels poll} endpoint which implements `EventEmitter` interface.
+  * Use it via `Channel` poll method.
 
   * @constructor
   * @type {ChannelPoll}
@@ -103,6 +104,8 @@ export const ChannelPoll = stampit()
         }
       };
 
+      this.emit('request', options);
+
       return new Promise((resolve, reject) => {
         this.makeRequest('GET', this.path, options, (err, res) => {
           if (err || !res.ok) {
@@ -129,8 +132,12 @@ export const ChannelPoll = stampit()
             this.lastId = message.id;
             return message;
           })
-          .then(loop)
+          .finally(loop)
           .catch((error) => {
+            if (error.timeout && error.timeout === this.timeout) {
+              return this.emit('timeout', error);
+            }
+
             this.emit('error', error);
             this.stop();
           });
