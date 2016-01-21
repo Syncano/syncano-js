@@ -7,7 +7,7 @@ const Pinger = stampit()
   .props({
     timeout: 5000,
     interval: null,
-    connected: null,
+    connected: null
   })
   .methods({
 
