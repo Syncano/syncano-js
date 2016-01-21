@@ -21,6 +21,7 @@ import GCMDevice from './gcmdevice';
 import APNSDevice from './apnsdevice';
 import GCMMessage from './gcmmessage';
 import APNSMessage from './apnsmessage';
+import Template from './template'
 
 export default {
   Instance,
@@ -45,5 +46,6 @@ export default {
   GCMDevice,
   APNSDevice,
   GCMMessage,
-  APNSMessage
+  APNSMessage,
+  Template
 };
