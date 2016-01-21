@@ -6,7 +6,8 @@ const Pinger = stampit()
   .compose(Request, EventEmittable)
   .props({
     timeout: 5000,
-    interval: null
+    interval: null,
+    connected: null,
   })
   .methods({
 
@@ -29,8 +30,18 @@ const Pinger = stampit()
 
     ping() {
       this.request()
-        .then(() => this.emit('connect'))
-        .catch((error) => this.emit('disconnect', error));
+        .then(() => {
+          if(!this.connected) {
+            this.connected = true;
+            this.emit('connected')
+          }
+        })
+        .catch((error) => {
+          if(this.connected) {
+            this.connected = false;
+            this.emit('disconnected', error)
+          }
+        });
     },
 
     stopMonitoring() {
