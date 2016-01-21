@@ -2,6 +2,7 @@ import stampit from 'stampit';
 import _ from 'lodash';
 import models from './models';
 import Account from './account';
+import Pinger from './pinger';
 
 /**
  * Main Syncano object.
@@ -24,6 +25,7 @@ const Syncano = stampit()
   // We need function here, do not use arrow syntax!
   .init(function() {
     this.Account = Account.setConfig(this)();
+    this.Monitor = Pinger.setConfig(this)();
 
     _.forEach(models, (model, name) => {
       this[name] = model.setConfig(this);
