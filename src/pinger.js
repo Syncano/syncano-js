@@ -11,7 +11,7 @@ const Pinger = stampit()
   .methods({
 
     request() {
-      const path = this._config.baseUrl;
+      const path = this.getConfig().getBaseUrl();
 
       return new Promise((resolve, reject) => {
         this.makeRequest('GET', path, {}, (err, res) => {
