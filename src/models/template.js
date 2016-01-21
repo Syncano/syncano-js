@@ -36,6 +36,15 @@ const TemplateConstraints = {
     length: {
       minimum: 5
     }
+  },
+  content: {
+    presence: true
+  },
+  content_type: {
+    presence: true
+  },
+  context: {
+    presence: true
   }
 };
 
