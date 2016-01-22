@@ -23,7 +23,7 @@ describe('Request', function() {
     ];
 
     stubs = _.reduce(methods, (result, method) => {
-      result[`_${method}`] = (method === 'end') ? sinon.stub().yields(null, {}) : sinon.spy();
+      result[`_${method}`] = (method === 'end') ? sinon.stub().yields(null, {ok: true}) : sinon.spy();
       result[method] = (...args) => {
         result[`_${method}`](...args);
         return result;
