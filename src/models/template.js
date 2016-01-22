@@ -61,9 +61,9 @@ const Template = stampit()
       });
     },
 
-    rename(new_name = this.name) {
+    rename(data = { new_name: this.name }) {
       const options = {
-        payload: {new_name}
+        payload: data
       }
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('rename', this);
