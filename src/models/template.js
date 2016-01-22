@@ -42,9 +42,6 @@ const TemplateConstraints = {
   },
   content_type: {
     presence: true
-  },
-  context: {
-    presence: true
   }
 };
 
@@ -53,29 +50,35 @@ const Template = stampit()
   .setMeta(TemplateMeta)
   .methods({
 
-    request(path, options) {
+    request(path, options, type) {
       return new Promise((resolve, reject) => {
         this.makeRequest('POST', path, options, (err, res) => {
           if (err || !res.ok) {
             return reject(err, res);
           }
-          resolve(res.body, res);
+          resolve(res[type], res);
         });
       });
     },
 
-    rename(options = {}) {
+    rename(new_name = this.name) {
+      const options = {
+        payload: {new_name}
+      }
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('rename', this);
 
-      return this.request(path, options);
+      return this.request(path, options, 'body');
     },
 
-    render(options = {}) {
+    render(context = {}) {
+      const options = {
+        payload: {context}
+      }
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('render', this);
 
-      return this.request(path, options);
+      return this.request(path, options, 'text');
     }
 
   })
