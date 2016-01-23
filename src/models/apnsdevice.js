@@ -22,6 +22,15 @@ const APNSDeviceConstraints = {
     length: {
       minimum: 5
     }
+  },
+  user_id: {
+    presence: true
+  },
+  registration_id: {
+    presence: true
+  },
+  device_id: {
+    presence: true
   }
 };
 
