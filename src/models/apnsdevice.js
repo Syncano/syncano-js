@@ -16,8 +16,18 @@ const APNSDeviceMeta = Meta({
   }
 });
 
+const APNSDeviceConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  }
+};
+
 const APNSDevice = stampit()
   .compose(Model)
-  .setMeta(APNSDeviceMeta);
+  .setMeta(APNSDeviceMeta)
+  .setConstraints(APNSDeviceConstraints);
 
 export default APNSDevice;
