@@ -12,13 +12,15 @@ const WebhookQuerySet = stampit().compose(QuerySet).methods({
   * @instance
 
   * @param {Object} properties lookup properties used for path resolving
-  * @returns {WebhookQuerySet}
+  * @returns {Promise}
 
   * @example {@lang javascript}
   * Webhook.please().run({name: 'test', instanceName: 'test-one'}).then(function(trace) {});
 
   */
   run(properties = {}, payload = {}) {
+    const WebhookTrace = this.getConfig().WebhookTrace;
+
     this.properties = _.assign({}, this.properties, properties);
 
     this.method = 'POST';
@@ -26,7 +28,12 @@ const WebhookQuerySet = stampit().compose(QuerySet).methods({
     this.payload = payload;
     this._serialize = false;
 
-    return this;
+    return this.then((trace) => {
+      return WebhookTrace.fromJSON(trace, {
+        instanceName: this.properties.instanceName,
+        webhookName: this.properties.name
+      });
+    });
   },
 
   /**
@@ -41,13 +48,11 @@ const WebhookQuerySet = stampit().compose(QuerySet).methods({
   * Webhook.please().reset({name: 'test', instanceName: 'test-one'}).then(function(trace) {});
 
   */
-  reset(properties = {}, payload = {}) {
+  reset(properties = {}) {
     this.properties = _.assign({}, this.properties, properties);
 
     this.method = 'POST';
     this.endpoint = 'reset';
-    this.payload = payload;
-    this._serialize = false;
 
     return this;
   }
@@ -82,10 +87,29 @@ const WebhookMeta = Meta({
   relatedModels: ['WebhookTrace']
 });
 
+const WebhookConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  name: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  codebox: {
+    presence: true
+  }
+};
+
 const Webhook = stampit()
   .compose(Model)
   .setMeta(WebhookMeta)
   .setQuerySet(WebhookQuerySet)
+  .setConstraints(WebhookConstraints)
   .methods({
 
     /**
@@ -102,6 +126,7 @@ const Webhook = stampit()
       });
     */
     run(payload = {}) {
+      const WebhookTrace = this.getConfig().WebhookTrace;
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('run', this);
 
@@ -110,7 +135,13 @@ const Webhook = stampit()
           if (err || !res.ok) {
             return reject(err, res);
           }
-          resolve(res.body, res);
+
+          const trace = WebhookTrace.fromJSON(res.body, {
+            instanceName: this.instanceName,
+            webhookName: this.name
+          });
+
+          resolve(trace, res);
         });
       });
     },
@@ -122,8 +153,8 @@ const Webhook = stampit()
     * @returns {Promise}
 
     * @example {@lang javascript}
-    * Webhook.please().get({instanceName: 'test-one', name: 'test'}).then(function(codebox) {
-        codebox.reset().then(function() {});
+    * Webhook.please().get({instanceName: 'test-one', name: 'test'}).then(function(webhook) {
+        webhook.reset().then(function() {});
       });
     */
     reset() {
@@ -131,11 +162,11 @@ const Webhook = stampit()
       const path = meta.resolveEndpointPath('reset', this);
 
       return new Promise((resolve, reject) => {
-        this.makeRequest('POST', path, {payload}, (err, res) => {
+        this.makeRequest('POST', path, {}, (err, res) => {
           if (err || !res.ok) {
             return reject(err, res);
           }
-          resolve(res.body, res);
+          resolve(this.serialize(res.body), res);
         });
       });
     }

@@ -2,6 +2,7 @@ import stampit from 'stampit';
 import superagent from 'superagent';
 import _ from 'lodash';
 import {ConfigMixin, Logger} from './utils';
+import {RequestError} from './errors';
 
 /**
  * Base request object **not** meant to be used directly more like mixin in other {@link https://github.com/stampit-org/stampit|stamps}.
@@ -158,6 +159,8 @@ const Request = stampit().compose(ConfigMixin, Logger)
         if (!_.isUndefined(res) && !res.ok) {
           this.log(`\n${method} ${path}\n${JSON.stringify(options, null, 2)}\n`);
           this.log('Response', res.body);
+
+          err = new RequestError(err, res);
         }
         return _callback(err, res);
       }));

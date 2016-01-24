@@ -26,27 +26,32 @@ ValidationError.prototype = Object.create(SyncanoError.prototype);
 ValidationError.prototype.constructor = ValidationError;
 
 
-export function RequestError(statusCode = 400, errors = {}, response = null) {
+export function RequestError(error, response) {
   this.name = 'RequestError';
-  this.statusCode = statusCode;
-  this.errors = errors;
+  this.statusCode = response.status;
+  this.errors = response.body;
   this.response = response;
   this.message = '';
   this.stack = (new Error()).stack;
 
-  if (_.isObject(errors)) {
+  if (_.isObject(this.errors)) {
     this.message = _.reduce(['detail', 'error', '__all__'], (result, value) => {
-      result += errors[value] || '';
+      result += this.errors[value] || '';
+      return result;
     }, this.message);
 
     if (_.isEmpty(this.message)) {
-      this.message = _.map(errors, (value, key) => {
+      this.message = _.map(this.errors, (value, key) => {
         if (_.isArray(value)) {
           value = value.join(', ');
         }
         return `"${key}" ${value}`;
       }).join('\n');
     }
+  }
+
+  if (_.isEmpty(this.message)) {
+    this.message = error.message;
   }
 }
 
