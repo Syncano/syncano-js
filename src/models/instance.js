@@ -17,7 +17,7 @@ const InstanceMeta = Meta({
   relatedModels: [
     'Admin', 'Class', 'CodeBox', 'Schedule', 'InstanceInvitation', 'ApiKey'
     , 'Trigger', 'Webhook', 'User', 'Group', 'GCMDevice', 'Channel'
-    , 'APNSDevice'
+    , 'APNSDevice', 'Template'
   ]
 });
 
