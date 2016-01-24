@@ -42,8 +42,8 @@ after(function() {
   const Instance = Syncano(credentials).Instance;
 
   return Instance.please().list().then((instances) => {
-    return Promise.all(_.map(instances), (instance) => Instance.please().delete({name: instance.name}));
-  }).then(() => {
-    mlog.success('Instances removed.');
+    return Promise.all(_.map(instances, (instance) => Instance.please().delete({name: instance.name})));
+  }).then((instances) => {
+    mlog.success(`${instances.length} instances removed.`);
   });
 });

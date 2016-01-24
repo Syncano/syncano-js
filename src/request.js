@@ -158,7 +158,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
       request.end(_.wrap(callback, (_callback, err, res) => {
         if (!_.isUndefined(res) && !res.ok) {
           this.log(`\n${method} ${path}\n${JSON.stringify(options, null, 2)}\n`);
-          this.log('Response', res.body);
+          this.log(`Response ${res.status}:`, res.body);
 
           err = new RequestError(err, res);
         }
