@@ -264,7 +264,7 @@ describe('Class', function() {
       });
     });
 
-    it('should be able to get first instance (SUCCESS)', function() {
+    it('should be able to get first class (SUCCESS)', function() {
       const names = [
         `${className}_1`,
         `${className}_2`

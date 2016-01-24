@@ -70,7 +70,7 @@ describe('RequestError', function() {
   let error = null;
 
   beforeEach(function() {
-    error = new RequestError(400, {name: ['is required']}, {x: 1});
+    error = new RequestError({status: 400}, {body: {name: ['is required']}});
   });
 
   it('is a function', function() {
@@ -91,13 +91,6 @@ describe('RequestError', function() {
 
   it('has a proper errors attr', function() {
     should(error).have.property('errors').which.is.Object().properties('name');
-  });
-
-  it('has defaults', function() {
-    error = new RequestError();
-    should(error).have.property('statusCode').which.is.Number().equal(400);
-    should(error).have.property('errors').which.is.Object();
-    should(error).have.property('response').which.is.null();
   });
 
 });
