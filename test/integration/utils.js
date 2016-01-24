@@ -10,6 +10,14 @@ export const suffix = {
   }
 };
 
+export const hex = {
+
+  getRandom(len) {
+    return crypto.randomBytes(Math.ceil(len/2)).toString('hex').slice(0, len);
+  }
+
+};
+
 export const credentials = {
   user: null,
   baseUrl: process.env.INTEGRATION_BASE_URL || 'https://api.syncano.rocks',

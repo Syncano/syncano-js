@@ -7,7 +7,7 @@ const APNSDeviceMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instanceName}/push_notifications/apns/devices/{id}'
+      'path': '/v1/instances/{instanceName}/push_notifications/apns/devices/{registration_id}/'
     },
     'list': {
       'methods': ['post', 'get'],
@@ -16,8 +16,27 @@ const APNSDeviceMeta = Meta({
   }
 });
 
+const APNSDeviceConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  user_id: {
+    presence: true
+  },
+  registration_id: {
+    presence: true
+  },
+  device_id: {
+    presence: true
+  }
+};
+
 const APNSDevice = stampit()
   .compose(Model)
-  .setMeta(APNSDeviceMeta);
+  .setMeta(APNSDeviceMeta)
+  .setConstraints(APNSDeviceConstraints);
 
 export default APNSDevice;
