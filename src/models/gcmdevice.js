@@ -7,7 +7,7 @@ const GCMDeviceMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instanceName}/push_notifications/gcm/devices/{id}'
+      'path': '/v1/instances/{instanceName}/push_notifications/gcm/devices/{registration_id}/'
     },
     'list': {
       'methods': ['post', 'get'],
@@ -16,8 +16,21 @@ const GCMDeviceMeta = Meta({
   }
 });
 
+const GCMDevicConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  registration_id: {
+    presence: true
+  }
+};
+
 const GCMDevice = stampit()
   .compose(Model)
-  .setMeta(GCMDeviceMeta);
+  .setMeta(GCMDeviceMeta)
+  .setConstraints(GCMDevicConstraints);
 
 export default GCMDevice;
