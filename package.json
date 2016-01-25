@@ -27,7 +27,7 @@
     "build:lib": "babel src --out-dir lib",
     "build:dist": "webpack",
     "build:docs": "jsdoc -c ./conf.json -t ./node_modules/ink-docstrap/template -R README.md -d ./docs -r ./src -u ./tutorials",
-    "lint": "eslint src/** test/**",
+    "lint": "eslint src/** test/** *.config.js",
     "pretest": "npm run lint",
     "test": "npm-run-all test:*",
     "test:lib": "mocha 'test/lib/**/*.js' --compilers js:babel-register",

@@ -23,7 +23,7 @@ module.exports = [
     resolve: {
       modulesDirectories: ['node_modules'],
       extensions: ['', '.js', '.json']
-    },
+    }
   },
   {
     name: 'uglified-package',

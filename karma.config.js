@@ -39,6 +39,6 @@ module.exports = function(config) {
       'karma-mocha',
       'karma-webpack',
       'karma-phantomjs-launcher'
-    ],
+    ]
   });
 };
