@@ -2,27 +2,28 @@ import should from 'should/as-function';
 import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
-import {suffix, credentials} from './utils';
+import {suffix, credentials, createCleaner} from './utils';
 import {ValidationError} from '../../src/errors';
 
-describe('Instance', function() {
-  this.timeout(15000);
+describe.only('Instance', function() {
+  this.timeout(25000);
 
+  const cleaner = createCleaner();
   let connection = null;
   let Instance = null;
   const instanceName = suffix.get('name');
+  const data = {
+    name: instanceName,
+    description: suffix.get('description')
+  };
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
   });
 
-  afterEach(function(done) {
-    Instance
-      .please()
-      .delete({name: instanceName})
-      .then(() => done())
-      .catch(() => done());
+  afterEach(function() {
+    return cleaner.clean();
   });
 
   it('should be validated', function() {
@@ -30,12 +31,8 @@ describe('Instance', function() {
   });
 
   it('should be able to save via model instance', function() {
-    const data = {
-      name: instanceName,
-      description: suffix.get('description')
-    };
-
     return Instance(data).save()
+      .then(cleaner.mark)
       .then((instance) => {
         should(instance).be.a.Object();
         should(instance).have.property('name').which.is.String().equal(data.name);
@@ -49,12 +46,8 @@ describe('Instance', function() {
   });
 
   it('should be able to update via model instance', function() {
-    const data = {
-      name: instanceName,
-      description: suffix.get('description')
-    };
-
     return Instance(data).save()
+      .then(cleaner.mark)
       .then((instance) => {
         should(instance).be.an.Object();
         should(instance).have.property('name').which.is.String().equal(data.name);
@@ -71,11 +64,6 @@ describe('Instance', function() {
   });
 
   it('should be able to delete via model instance', function() {
-    const data = {
-      name: instanceName,
-      description: suffix.get('description')
-    };
-
     return Instance(data).save()
       .then((instance) => {
         should(instance).be.an.Object();
@@ -88,15 +76,6 @@ describe('Instance', function() {
 
   describe('#please()', function() {
 
-    afterEach(function() {
-      return Instance
-        .please()
-        .list()
-        .then((instances) => {
-          return Promise.all(_.map(instances, (instance) => Instance.please().delete({name: instance.name})));
-        });
-    });
-
     it('should be able to list instances', function() {
       return Instance.please().list().then((instances) => {
         should(instances).be.an.Array();
@@ -104,30 +83,32 @@ describe('Instance', function() {
     });
 
     it('should be able to create an instance', function() {
-      return Instance.please().create({name: instanceName}).then((instance) => {
-        should(instance).be.a.Object();
-        should(instance).have.property('name').which.is.String().equal(instanceName);
-        should(instance).have.property('description').which.is.String();
-        should(instance).have.property('created_at').which.is.String();
-        should(instance).have.property('updated_at').which.is.String();
-        should(instance).have.property('links').which.is.Object();
-        should(instance).have.property('owner').which.is.Object();
-        should(instance).have.property('metadata').which.is.Object();
-      });
+      return Instance.please().create(data)
+        .then(cleaner.mark)
+        .then((instance) => {
+          should(instance).be.a.Object();
+          should(instance).have.property('name').which.is.String().equal(instanceName);
+          should(instance).have.property('description').which.is.String();
+          should(instance).have.property('created_at').which.is.String();
+          should(instance).have.property('updated_at').which.is.String();
+          should(instance).have.property('links').which.is.Object();
+          should(instance).have.property('owner').which.is.Object();
+          should(instance).have.property('metadata').which.is.Object();
+        });
     });
 
     it('should be able to get an instance', function() {
-      return Instance.please().create({name: instanceName})
+      return Instance.please().create(data)
+        .then(cleaner.mark)
         .then((instance) => {
           should(instance).be.an.Object();
           should(instance).have.property('name').which.is.String().equal(instanceName);
           return instance;
         })
         .then(() => {
-          return connection
-            .Instance
+          return Instance
             .please()
-            .get({name: instanceName})
+            .get(data)
             .request();
         })
         .then((instance) => {
@@ -159,81 +140,87 @@ describe('Instance', function() {
     });
 
     it('should be able to get or create instance (CREATE)', function() {
-      return Instance.please().getOrCreate({name: instanceName}, {description: 'test'}).then((instance) => {
-        should(instance).be.an.Object();
-        should(instance).have.property('name').which.is.String().equal(instanceName);
-        should(instance).have.property('description').which.is.String().equal('test');
-        should(instance).have.property('created_at').which.is.String();
-        should(instance).have.property('updated_at').which.is.String();
-        should(instance).have.property('links').which.is.Object();
-        should(instance).have.property('owner').which.is.Object();
-        should(instance).have.property('metadata').which.is.Object();
-      });
+      return Instance.please().getOrCreate({name: instanceName}, {description: 'test'})
+        .then(cleaner.mark)
+        .then((instance) => {
+          should(instance).be.an.Object();
+          should(instance).have.property('name').which.is.String().equal(instanceName);
+          should(instance).have.property('description').which.is.String().equal('test');
+          should(instance).have.property('created_at').which.is.String();
+          should(instance).have.property('updated_at').which.is.String();
+          should(instance).have.property('links').which.is.Object();
+          should(instance).have.property('owner').which.is.Object();
+          should(instance).have.property('metadata').which.is.Object();
+        });
     });
 
     it('should be able to get or create instance (GET)', function() {
-      return Instance.please().create({name: instanceName, description: 'test'}).then((instance) => {
-        should(instance).be.an.Object();
-        should(instance).have.property('name').which.is.String().equal(instanceName);
-        should(instance).have.property('description').which.is.String().equal('test');
+      return Instance.please().create(data)
+        .then(cleaner.mark)
+        .then((instance) => {
+          should(instance).be.an.Object();
+          should(instance).have.property('name').which.is.String().equal(data.name);
+          should(instance).have.property('description').which.is.String().equal(data.description);
 
-        return Instance.please().getOrCreate({name: instanceName}, {description: 'newTest'});
-      })
-      .then((instance) => {
-        should(instance).be.an.Object();
-        should(instance).have.property('name').which.is.String().equal(instanceName);
-        should(instance).have.property('description').which.is.String().equal('test');
-      });
+          return Instance.please().getOrCreate({name: instanceName}, {description: 'newTest'});
+        })
+        .then((instance) => {
+          should(instance).be.an.Object();
+          should(instance).have.property('name').which.is.String().equal(data.name);
+          should(instance).have.property('description').which.is.String().equal(data.description);
+        });
     });
 
     it('should be able to update an instance', function() {
-      return Instance.please().create({name: instanceName, description: 'test'}).then((instance) => {
-        should(instance).be.an.Object();
-        should(instance).have.property('name').which.is.String().equal(instanceName);
-        should(instance).have.property('description').which.is.String().equal('test');
+      return Instance.please().create(data)
+        .then(cleaner.mark)
+        .then((instance) => {
+          should(instance).be.an.Object();
+          should(instance).have.property('name').which.is.String().equal(data.name);
+          should(instance).have.property('description').which.is.String().equal(data.description);
 
-        return Instance.please().update({name: instance.name}, {description: 'newTest'});
-      })
-      .then((instance) => {
-        should(instance).be.an.Object();
-        should(instance).have.property('name').which.is.String().equal(instanceName);
-        should(instance).have.property('description').which.is.String().equal('newTest');
-      });
+          return Instance.please().update({name: instance.name}, {description: 'newTest'});
+        })
+        .then((instance) => {
+          should(instance).be.an.Object();
+          should(instance).have.property('name').which.is.String().equal(instanceName);
+          should(instance).have.property('description').which.is.String().equal('newTest');
+        });
     });
 
     it('should be able to update or create instance (UPDATE)', function() {
-      return Instance.please().create({name: instanceName, description: 'test'}).then((instance) => {
-        should(instance).be.an.Object();
-        should(instance).have.property('name').which.is.String().equal(instanceName);
-        should(instance).have.property('description').which.is.String().equal('test');
+      return Instance.please().create(data)
+        .then(cleaner.mark)
+        .then((instance) => {
+          should(instance).be.an.Object();
+          should(instance).have.property('name').which.is.String().equal(data.name);
+          should(instance).have.property('description').which.is.String().equal(data.description);
 
-        return Instance.please().updateOrCreate({name: instance.name}, {description: 'newTest'});
-      })
-      .then((instance) => {
-        should(instance).be.an.Object();
-        should(instance).have.property('name').which.is.String().equal(instanceName);
-        should(instance).have.property('description').which.is.String().equal('newTest');
-      });
+          return Instance.please().updateOrCreate({name: instance.name}, {description: 'newTest'});
+        })
+        .then((instance) => {
+          should(instance).be.an.Object();
+          should(instance).have.property('name').which.is.String().equal(instanceName);
+          should(instance).have.property('description').which.is.String().equal('newTest');
+        });
     });
 
     it('should be able to update or create instance (CREATE)', function() {
-      let properties = {name: instanceName};
       let object = {description: 'updateTest'};
-      let defaults = {
-          description: 'createTest',
-          metadata: {'test': 1}
-      };
+      let defaults = {description: 'createTest'};
 
-      return Instance.please().updateOrCreate(properties, object, defaults).then((instance) => {
-        should(instance).be.an.Object();
-        should(instance).have.property('name').which.is.String().equal(instanceName);
-        should(instance).have.property('description').which.is.String().equal('createTest');
-        should(instance).have.property('created_at').which.is.String();
-        should(instance).have.property('updated_at').which.is.String();
-        should(instance).have.property('links').which.is.Object();
-        should(instance).have.property('owner').which.is.Object();
-        should(instance).have.property('metadata').which.is.Object();
-      });
+      return Instance.please().updateOrCreate(data, object, defaults)
+        .then(cleaner.mark)
+        .then((instance) => {
+          should(instance).be.an.Object();
+          should(instance).have.property('name').which.is.String().equal(data.name);
+          should(instance).have.property('description').which.is.String().equal('createTest');
+          should(instance).have.property('created_at').which.is.String();
+          should(instance).have.property('updated_at').which.is.String();
+          should(instance).have.property('links').which.is.Object();
+          should(instance).have.property('owner').which.is.Object();
+          should(instance).have.property('metadata').which.is.Object();
+        });
     });
 
     it('should be able to get first instance (SUCCESS)', function() {
@@ -244,6 +231,7 @@ describe('Instance', function() {
 
       return Promise
         .all(_.map(names, (name) => Instance.please().create({name})))
+        .then(cleaner.mark)
         .then(() => {
           return Instance.please().first();
         })
@@ -260,6 +248,7 @@ describe('Instance', function() {
 
       return Promise
         .all(_.map(names, (name) => Instance.please().create({name: name})))
+        .then(cleaner.mark)
         .then((instances) => {
           should(instances).be.an.Array().with.length(2);
           return Instance.please().pageSize(1);
@@ -278,6 +267,7 @@ describe('Instance', function() {
 
       return Promise
         .all(_.map(names, (name) => Instance.please().create({name: name})))
+        .then(cleaner.mark)
         .then((instances) => {
           should(instances).be.an.Array().with.length(2);
           return Instance.please().ordering('asc');

@@ -3,12 +3,13 @@ import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
-import {suffix, credentials} from './utils';
+import {suffix, credentials, createCleaner} from './utils';
 
 
 describe('Group', function() {
   this.timeout(15000);
 
+  const cleaner = createCleaner();
   let connection = null;
   let Model = null;
   let Instance = null;
@@ -20,15 +21,6 @@ describe('Group', function() {
     label: groupLabel,
     description: 'test',
     id: null
-  }
-
-  const markForCleaning = function(value) {
-    if (_.isArray(value)) {
-      _clean.push.apply(_clean, value)
-    } else {
-      _clean.push(value);
-    }
-    return value;
   };
 
   before(function() {
@@ -44,11 +36,7 @@ describe('Group', function() {
   });
 
   afterEach(function() {
-    return Promise
-      .all(_.map(_clean, (object) => object.delete()))
-      .finally(() => {
-        _clean = [];
-      });
+    return cleaner.clean();
   });
 
   it('should be validated', function() {
@@ -65,7 +53,7 @@ describe('Group', function() {
 
   it('should be able to save via model instance', function() {
     return Model(data).save()
-      .then(markForCleaning)
+      .then(cleaner.mark)
       .then((object) => {
         should(object).be.a.Object();
         should(object).have.property('id').which.is.Number();
@@ -78,7 +66,7 @@ describe('Group', function() {
 
   it('should be able to update via model instance', function() {
     return Model(data).save()
-      .then(markForCleaning)
+      .then(cleaner.mark)
       .then((object) => {
         should(object).be.a.Object();
         should(object).have.property('id').which.is.Number();
@@ -122,7 +110,7 @@ describe('Group', function() {
 
     it('should be able to create an object', function() {
       return Model.please().create(data)
-        .then(markForCleaning)
+        .then(cleaner.mark)
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('id').which.is.Number();
@@ -135,7 +123,7 @@ describe('Group', function() {
 
     it('should be able to get an object', function() {
       return Model.please().create(data)
-        .then(markForCleaning)
+        .then(cleaner.mark)
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('id').which.is.Number();
@@ -186,7 +174,7 @@ describe('Group', function() {
 
     it('should be able to get or create an object (CREATE)', function() {
       return Model.please().getOrCreate(data, {label: 'test2'})
-        .then(markForCleaning)
+        .then(cleaner.mark)
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('id').which.is.Number();
@@ -197,7 +185,7 @@ describe('Group', function() {
 
     it('should be able to get or create an object (GET)', function() {
       return Model.please().create(data)
-        .then(markForCleaning)
+        .then(cleaner.mark)
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('id').which.is.Number();
@@ -217,7 +205,7 @@ describe('Group', function() {
 
     it('should be able to update an object', function() {
       return Model.please().create(data)
-        .then(markForCleaning)
+        .then(cleaner.mark)
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('id').which.is.Number();
@@ -238,7 +226,7 @@ describe('Group', function() {
 
     it('should be able to update or create an object (UPDATE)', function() {
       return Model.please().create(data)
-        .then(markForCleaning)
+        .then(cleaner.mark)
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('id').which.is.Number();
@@ -262,7 +250,7 @@ describe('Group', function() {
       let defaults = {description: 'createTest'};
 
       return Model.please().updateOrCreate(data, object, defaults)
-        .then(markForCleaning)
+        .then(cleaner.mark)
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('id').which.is.Number();
@@ -280,7 +268,7 @@ describe('Group', function() {
 
       return Promise
         .all(_.map(labels, (label) => Model.please().create(_.assign({}, data, {label}))))
-        .then(markForCleaning)
+        .then(cleaner.mark)
         .then(() => {
           return Model.please().first(data);
         })
@@ -297,7 +285,7 @@ describe('Group', function() {
 
       return Promise
         .all(_.map(labels, (label) => Model.please().create(_.assign({}, data, {label}))))
-        .then(markForCleaning)
+        .then(cleaner.mark)
         .then((objects) => {
           should(objects).be.an.Array().with.length(2);
           return Model.please(data).pageSize(1);
@@ -316,7 +304,7 @@ describe('Group', function() {
 
       return Promise
         .all(_.map(labels, (label) => Model.please().create(_.assign({}, data, {label}))))
-        .then(markForCleaning)
+        .then(cleaner.mark)
         .then((objects) => {
           should(objects).be.an.Array().with.length(2);
           return Model.please(data).ordering('asc');

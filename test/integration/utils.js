@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import Promise from 'bluebird';
 import  _  from 'lodash';
 
 const hashData = `_${new Date().getTime()}_${_.random(0, 99999)}`;
@@ -42,3 +43,27 @@ export const credentials = {
     return values.length > 0;
   }
 };
+
+export function createCleaner() {
+  let _data = [];
+
+  return {
+    mark(value) {
+      if (_.isArray(value)) {
+        _data.push.apply(_data, value)
+      } else {
+        _data.push(value);
+      }
+
+      return value;
+    },
+
+    clean() {
+      return Promise
+        .all(_.map(_data, (object) => object.delete()))
+        .finally(() => {
+          _data = [];
+        });
+    }
+  }
+}
