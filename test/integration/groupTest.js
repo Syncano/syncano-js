@@ -13,7 +13,6 @@ describe('Group', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
-  let _clean = [];
   const instanceName = suffix.get('instance');
   const groupLabel = suffix.get('group');
   const data = {

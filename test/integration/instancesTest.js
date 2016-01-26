@@ -5,7 +5,7 @@ import Syncano from '../../src/syncano';
 import {suffix, credentials, createCleaner} from './utils';
 import {ValidationError} from '../../src/errors';
 
-describe.only('Instance', function() {
+describe('Instance', function() {
   this.timeout(25000);
 
   const cleaner = createCleaner();
