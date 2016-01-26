@@ -7,7 +7,7 @@ const GCMMessageMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'get'],
-      'path': '/v1/instances/{instanceName}/push_notifications/gcm/messages/{id}'
+      'path': '/v1/instances/{instanceName}/push_notifications/gcm/messages/{id}/'
     },
     'list': {
       'methods': ['get'],
@@ -16,8 +16,21 @@ const GCMMessageMeta = Meta({
   }
 });
 
+const GCMMessageConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  content: {
+    presence: true
+  }
+};
+
 const GCMMessage = stampit()
   .compose(Model)
-  .setMeta(GCMMessageMeta);
+  .setMeta(GCMMessageMeta)
+  .setConstraints(GCMMessageConstraints);
 
 export default GCMMessage;
