@@ -18,6 +18,7 @@ import ScheduleTrace from './scheduletrace';
 import TriggerTrace from './triggertrace';
 import WebhookTrace from './webhooktrace';
 import GCMDevice from './gcmdevice';
+import GCMConfig from './gcmconfig';
 import APNSDevice from './apnsdevice';
 import GCMMessage from './gcmmessage';
 import APNSMessage from './apnsmessage';
@@ -46,6 +47,7 @@ export default {
   GCMDevice,
   APNSDevice,
   GCMMessage,
+  GCMConfig,
   APNSMessage,
   Template
 };
