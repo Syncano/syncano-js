@@ -20,8 +20,22 @@ const GroupMeta = Meta({
   }
 });
 
+const GroupConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  label: {
+    presence: true
+  }
+};
+
+
 const Group = stampit()
   .compose(Model)
-  .setMeta(GroupMeta);
+  .setMeta(GroupMeta)
+  .setConstraints(GroupConstraints);
 
 export default Group;
