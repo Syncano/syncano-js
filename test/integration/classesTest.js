@@ -3,17 +3,23 @@ import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
-import {suffix, credentials} from './utils';
+import {suffix, credentials, createCleaner} from './utils';
 
 
 describe('Class', function() {
   this.timeout(15000);
 
+  const cleaner = createCleaner();
   let connection = null;
   let Class = null;
   let Instance = null;
   const instanceName = suffix.get('instance');
   const className = suffix.get('class');
+  const data = {
+    name: className,
+    instanceName: instanceName,
+    description: 'test'
+  };
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
@@ -27,13 +33,8 @@ describe('Class', function() {
     return Instance.please().delete({name: instanceName});
   });
 
-  afterEach(function(done) {
-    return Class.please().delete({
-      instanceName: instanceName,
-      name: className
-    })
-    .then(() => done())
-    .catch(() => done());
+  afterEach(function() {
+    return cleaner.clean();
   });
 
   it('should be validated', function() {
@@ -45,13 +46,8 @@ describe('Class', function() {
   });
 
   it('should be able to save via model instance', function() {
-    const data = {
-      name: className,
-      instanceName: instanceName,
-      description: 'test'
-    };
-
     return Class(data).save()
+      .then(cleaner.mark)
       .then((cls) => {
         should(cls).be.a.Object();
         should(cls).have.property('name').which.is.String().equal(data.name);
@@ -65,13 +61,8 @@ describe('Class', function() {
   });
 
   it('should be able to update via model instance', function() {
-    const data = {
-      name: className,
-      instanceName: instanceName,
-      description: suffix.get('description')
-    };
-
     return Class(data).save()
+      .then(cleaner.mark)
       .then((cls) => {
         should(cls).have.property('name').which.is.String().equal(data.name);
         should(cls).have.property('instanceName').which.is.String().equal(data.instanceName);
@@ -88,12 +79,6 @@ describe('Class', function() {
   });
 
   it('should be able to delete via model instance', function() {
-    const data = {
-      name: className,
-      instanceName: instanceName,
-      description: suffix.get('description')
-    };
-
     return Class(data).save()
       .then((cls) => {
         should(cls).have.property('name').which.is.String().equal(data.name);
@@ -106,16 +91,6 @@ describe('Class', function() {
 
   describe('#please()', function() {
 
-    afterEach(function() {
-      return Class
-        .please()
-        .list({instanceName})
-        .then((classes) => {
-          const names = _.filter(_.map(classes, 'name'), (name) => name !== 'user_profile');
-          return Promise.all(_.map(names, (name) => Class.please().delete({name, instanceName})));
-        });
-    });
-
     it('should be able to list classes', function() {
       return Class.please().list({instanceName}).then((classes) => {
         should(classes).be.an.Array();
@@ -123,21 +98,24 @@ describe('Class', function() {
     });
 
     it('should be able to create a class', function() {
-      return Class.please().create({name: className, instanceName}).then((cls) => {
-        should(cls).be.a.Object();
-        should(cls).have.property('name').which.is.String().equal(className);
-        should(cls).have.property('instanceName').which.is.String().equal(instanceName);
-        should(cls).have.property('description').which.is.String();
-        should(cls).have.property('created_at').which.is.String();
-        should(cls).have.property('updated_at').which.is.String();
-        should(cls).have.property('links').which.is.Object();
-        should(cls).have.property('metadata').which.is.Object();
-        should(cls).have.property('schema').which.is.Array();
-      });
+      return Class.please().create(data)
+        .then(cleaner.mark)
+        .then((cls) => {
+          should(cls).be.a.Object();
+          should(cls).have.property('name').which.is.String().equal(className);
+          should(cls).have.property('instanceName').which.is.String().equal(instanceName);
+          should(cls).have.property('description').which.is.String();
+          should(cls).have.property('created_at').which.is.String();
+          should(cls).have.property('updated_at').which.is.String();
+          should(cls).have.property('links').which.is.Object();
+          should(cls).have.property('metadata').which.is.Object();
+          should(cls).have.property('schema').which.is.Array();
+        });
     });
 
     it('should be able to get a class', function() {
-      return Class.please().create({name: className, instanceName})
+      return Class.please().create(data)
+        .then(cleaner.mark)
         .then((cls) => {
           should(cls).be.an.Object();
           should(cls).have.property('name').which.is.String().equal(className);
@@ -148,7 +126,7 @@ describe('Class', function() {
         .then(() => {
           return Class
             .please()
-            .get({name: className, instanceName})
+            .get(data)
             .request();
         })
         .then((cls) => {
@@ -165,7 +143,7 @@ describe('Class', function() {
     });
 
     it('should be able to delete a class', function() {
-      return Class.please().create({name: className, instanceName})
+      return Class.please().create(data)
         .then((cls) => {
           should(cls).be.an.Object();
           should(cls).have.property('name').which.is.String().equal(className);
@@ -175,73 +153,81 @@ describe('Class', function() {
         .then(() => {
           return Class
             .please()
-            .delete({name: className, instanceName})
+            .delete(data)
             .request();
         });
     });
 
     it('should be able to get or create a class (CREATE)', function() {
-      return Class.please().getOrCreate({name: className, instanceName}, {description: 'test'}).then((cls) => {
-        should(cls).be.an.Object();
-        should(cls).have.property('name').which.is.String().equal(className);
-        should(cls).have.property('instanceName').which.is.String().equal(instanceName);
-        should(cls).have.property('description').which.is.String().equal('test');
-        should(cls).have.property('created_at').which.is.String();
-        should(cls).have.property('updated_at').which.is.String();
-        should(cls).have.property('links').which.is.Object();
-        should(cls).have.property('metadata').which.is.Object();
-      });
+      return Class.please().getOrCreate({name: className, instanceName}, {description: 'test'})
+        .then(cleaner.mark)
+        .then((cls) => {
+          should(cls).be.an.Object();
+          should(cls).have.property('name').which.is.String().equal(className);
+          should(cls).have.property('instanceName').which.is.String().equal(instanceName);
+          should(cls).have.property('description').which.is.String().equal('test');
+          should(cls).have.property('created_at').which.is.String();
+          should(cls).have.property('updated_at').which.is.String();
+          should(cls).have.property('links').which.is.Object();
+          should(cls).have.property('metadata').which.is.Object();
+        });
     });
 
     it('should be able to get or create a class (GET)', function() {
-      return Class.please().create({name: className, instanceName, description: 'test'}).then((cls) => {
-        should(cls).be.an.Object();
-        should(cls).have.property('name').which.is.String().equal(className);
-        should(cls).have.property('instanceName').which.is.String().equal(instanceName);
-        should(cls).have.property('description').which.is.String().equal('test');
+      return Class.please().create({name: className, instanceName, description: 'test'})
+        .then(cleaner.mark)
+        .then((cls) => {
+          should(cls).be.an.Object();
+          should(cls).have.property('name').which.is.String().equal(className);
+          should(cls).have.property('instanceName').which.is.String().equal(instanceName);
+          should(cls).have.property('description').which.is.String().equal('test');
 
-        return Class.please().getOrCreate({name: className, instanceName}, {description: 'newTest'});
-      })
-      .then((cls) => {
-        should(cls).be.an.Object();
-        should(cls).have.property('name').which.is.String().equal(className);
-        should(cls).have.property('instanceName').which.is.String().equal(instanceName);
-        should(cls.description).which.is.String().equal('test');
-      });
+          return Class.please().getOrCreate({name: className, instanceName}, {description: 'newTest'});
+        })
+        .then((cls) => {
+          should(cls).be.an.Object();
+          should(cls).have.property('name').which.is.String().equal(className);
+          should(cls).have.property('instanceName').which.is.String().equal(instanceName);
+          should(cls.description).which.is.String().equal('test');
+        });
     });
 
     it('should be able to update a class', function() {
-      return Class.please().create({name: className, description: 'test', instanceName}).then((cls) => {
-        should(cls).be.an.Object();
-        should(cls).have.property('name').which.is.String().equal(className);
-        should(cls).have.property('instanceName').which.is.String().equal(instanceName);
-        should(cls).have.property('description').which.is.String().equal('test');
+      return Class.please().create({name: className, description: 'test', instanceName})
+        .then(cleaner.mark)
+        .then((cls) => {
+          should(cls).be.an.Object();
+          should(cls).have.property('name').which.is.String().equal(className);
+          should(cls).have.property('instanceName').which.is.String().equal(instanceName);
+          should(cls).have.property('description').which.is.String().equal('test');
 
-        return Class.please().update({name: className, instanceName}, {description: 'newTest'});
-      })
-      .then((cls) => {
-        should(cls).be.an.Object();
-        should(cls).have.property('name').which.is.String().equal(className);
-        should(cls).have.property('instanceName').which.is.String().equal(instanceName);
-        should(cls.description).which.is.String().equal('newTest');
-      });
+          return Class.please().update({name: className, instanceName}, {description: 'newTest'});
+        })
+        .then((cls) => {
+          should(cls).be.an.Object();
+          should(cls).have.property('name').which.is.String().equal(className);
+          should(cls).have.property('instanceName').which.is.String().equal(instanceName);
+          should(cls.description).which.is.String().equal('newTest');
+        });
     });
 
     it('should be able to update or create class (UPDATE)', function() {
-      return Class.please().create({name: className, instanceName, description: 'test'}).then((cls) => {
-        should(cls).be.an.Object();
-        should(cls).have.property('name').which.is.String().equal(className);
-        should(cls).have.property('instanceName').which.is.String().equal(instanceName);
-        should(cls).have.property('description').which.is.String().equal('test');
+      return Class.please().create({name: className, instanceName, description: 'test'})
+        .then(cleaner.mark)
+        .then((cls) => {
+          should(cls).be.an.Object();
+          should(cls).have.property('name').which.is.String().equal(className);
+          should(cls).have.property('instanceName').which.is.String().equal(instanceName);
+          should(cls).have.property('description').which.is.String().equal('test');
 
-        return Class.please().updateOrCreate({name: className, instanceName}, {description: 'newTest'});
-      })
-      .then((cls) => {
-        should(cls).be.an.Object();
-        should(cls).have.property('name').which.is.String().equal(className);
-        should(cls).have.property('instanceName').which.is.String().equal(instanceName);
-        should(cls).have.property('description').which.is.String().equal('newTest');
-      });
+          return Class.please().updateOrCreate({name: className, instanceName}, {description: 'newTest'});
+        })
+        .then((cls) => {
+          should(cls).be.an.Object();
+          should(cls).have.property('name').which.is.String().equal(className);
+          should(cls).have.property('instanceName').which.is.String().equal(instanceName);
+          should(cls).have.property('description').which.is.String().equal('newTest');
+        });
     });
 
     it('should be able to update or create class (CREATE)', function() {
@@ -252,16 +238,18 @@ describe('Class', function() {
           metadata: {'test': 1}
       };
 
-      return Class.please().updateOrCreate(properties, object, defaults).then((cls) => {
-        should(cls).be.an.Object();
-        should(cls).have.property('name').which.is.String().equal(className);
-        should(cls).have.property('instanceName').which.is.String().equal(instanceName);
-        should(cls).have.property('description').which.is.String().equal('createTest');
-        should(cls).have.property('created_at').which.is.String();
-        should(cls).have.property('updated_at').which.is.String();
-        should(cls).have.property('links').which.is.Object();
-        should(cls).have.property('metadata').which.is.Object();
-      });
+      return Class.please().updateOrCreate(properties, object, defaults)
+        .then(cleaner.mark)
+        .then((cls) => {
+          should(cls).be.an.Object();
+          should(cls).have.property('name').which.is.String().equal(className);
+          should(cls).have.property('instanceName').which.is.String().equal(instanceName);
+          should(cls).have.property('description').which.is.String().equal('createTest');
+          should(cls).have.property('created_at').which.is.String();
+          should(cls).have.property('updated_at').which.is.String();
+          should(cls).have.property('links').which.is.Object();
+          should(cls).have.property('metadata').which.is.Object();
+        });
     });
 
     it('should be able to get first class (SUCCESS)', function() {
@@ -272,6 +260,7 @@ describe('Class', function() {
 
       return Promise
         .all(_.map(names, (name) => Class.please().create({name, instanceName})))
+        .then(cleaner.mark)
         .then(() => {
           return Class.please().first({instanceName});
         })
@@ -288,6 +277,7 @@ describe('Class', function() {
 
       return Promise
         .all(_.map(names, (name) => Class.please().create({name, instanceName})))
+        .then(cleaner.mark)
         .then((classes) => {
           should(classes).be.an.Array().with.length(2);
           return Class.please({instanceName}).pageSize(1);
@@ -306,6 +296,7 @@ describe('Class', function() {
 
       return Promise
         .all(_.map(names, (name) => Class.please().create({name, instanceName})))
+        .then(cleaner.mark)
         .then((classes) => {
           should(classes).be.an.Array().with.length(2);
           return Class.please({instanceName}).ordering('asc');
