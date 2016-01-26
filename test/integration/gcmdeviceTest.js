@@ -6,7 +6,7 @@ import {ValidationError} from '../../src/errors';
 import {suffix, credentials} from './utils';
 
 
-describe.only('GCMDevice', function() {
+describe('GCMDevice', function() {
   this.timeout(15000);
 
   let connection = null;
