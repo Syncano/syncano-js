@@ -24,8 +24,24 @@ const UserMeta = Meta({
   }
 });
 
+const UserConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  username: {
+    presence: true
+  },
+  password: {
+    presence: true
+  }
+};
+
 const User = stampit()
   .compose(Model)
-  .setMeta(UserMeta);
+  .setMeta(UserMeta)
+  .setConstraints(UserConstraints);
 
 export default User;
