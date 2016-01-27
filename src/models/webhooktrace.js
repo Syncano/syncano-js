@@ -6,18 +6,31 @@ const WebhookTraceMeta = Meta({
   pluralName: 'triggertraces',
   endpoints: {
     'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
+      'methods': ['get'],
       'path': '/v1/instances/{instanceName}/webhooks/{webhookName}/traces/{id}/'
     },
     'list': {
-      'methods': ['post', 'get'],
+      'methods': ['get'],
       'path': '/v1/instances/{instanceName}/webhooks/{webhookName}/traces/'
     }
   }
 });
 
+const WebhookTraceConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  webhookName: {
+    presence: true
+  }
+};
+
 const WebhookTrace = stampit()
   .compose(Model)
-  .setMeta(WebhookTraceMeta);
+  .setMeta(WebhookTraceMeta)
+  .setConstraints(WebhookTraceConstraints);
 
 export default WebhookTrace;
