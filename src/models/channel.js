@@ -77,6 +77,18 @@ const channelConstraints = {
   *   console.log('poll::message', message);
   * });
   *
+  * poll.on('create', function(data) {
+  *   console.log('poll::create', data);
+  * });
+  *
+  * poll.on('delete', function(data) {
+  *   console.log('poll::delete', data);
+  * });
+  *
+  * poll.on('update', function(data) {
+  *   console.log('poll::update', data);
+  * });
+  *
   * poll.on('error', function(error) {
   *   console.log('poll::error', error);
   * });
