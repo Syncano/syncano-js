@@ -128,6 +128,7 @@ export const ChannelPoll = stampit()
 
         return this.request()
           .then((message) => {
+            this.emit('message', message);
             this.emit(message.action, message);
             this.lastId = message.id;
             return message;
