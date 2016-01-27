@@ -37,6 +37,10 @@ describe('User', function() {
     return cleaner.clean();
   });
 
+  after(function() {
+    return Instance.please().delete({name: instanceName});
+  });
+
   it('should be validated', function() {
     should(Model().save()).be.rejectedWith(ValidationError);
   });
