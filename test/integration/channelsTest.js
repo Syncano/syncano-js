@@ -3,12 +3,13 @@ import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
-import {suffix, credentials} from './utils';
+import {suffix, credentials, createCleaner} from './utils';
 
 
 describe('Channel', function() {
   this.timeout(15000);
 
+  const cleaner = createCleaner();
   let connection = null;
   let Channel = null;
   let Instance = null;
@@ -27,13 +28,8 @@ describe('Channel', function() {
     return Instance.please().delete({name: instanceName});
   });
 
-  afterEach(function(done) {
-    return Channel.please().delete({
-      instanceName: instanceName,
-      name: channelName
-    })
-    .then(() => done())
-    .catch(() => done());
+  afterEach(function() {
+    return cleaner.clean();
   });
 
   it('should be validated', function() {
@@ -52,6 +48,7 @@ describe('Channel', function() {
     };
 
     return Channel(data).save()
+      .then(cleaner.mark)
       .then((chn) => {
         should(chn).be.a.Object();
         should(chn).have.property('name').which.is.String().equal(data.name);
@@ -76,6 +73,7 @@ describe('Channel', function() {
     };
 
     return Channel(data).save()
+      .then(cleaner.mark)
       .then((chn) => {
         should(chn).have.property('name').which.is.String().equal(data.name);
         should(chn).have.property('instanceName').which.is.String().equal(data.instanceName);
@@ -110,16 +108,6 @@ describe('Channel', function() {
 
   describe('#please()', function() {
 
-    afterEach(function() {
-      return Channel
-        .please()
-        .list({instanceName})
-        .then((channels) => {
-          const names = _.map(channels, 'name');
-          return Promise.all(_.map(names, (name) => Channel.please().delete({name, instanceName})));
-        });
-    });
-
     it('should be able to list channels', function() {
       return Channel.please().list({instanceName}).then((channels) => {
         should(channels).be.an.Array();
@@ -127,23 +115,26 @@ describe('Channel', function() {
     });
 
     it('should be able to create a channel', function() {
-      return Channel.please().create({name: channelName, instanceName}).then((chn) => {
-        should(chn).be.a.Object();
-        should(chn).have.property('name').which.is.String().equal(channelName);
-        should(chn).have.property('instanceName').which.is.String().equal(instanceName);
-        should(chn).have.property('type').which.is.String().equal('default');
-        should(chn).have.property('created_at').which.is.String();
-        should(chn).have.property('updated_at').which.is.String();
-        should(chn).have.property('links').which.is.Object();
-        should(chn).have.property('group').which.is.Null()
-        should(chn).have.property('group_permissions').which.is.String().equal('none');
-        should(chn).have.property('other_permissions').which.is.String().equal('none');
-        should(chn).have.property('custom_publish').which.is.Boolean().equal(false);
-      });
+      return Channel.please().create({name: channelName, instanceName})
+        .then(cleaner.mark)
+        .then((chn) => {
+          should(chn).be.a.Object();
+          should(chn).have.property('name').which.is.String().equal(channelName);
+          should(chn).have.property('instanceName').which.is.String().equal(instanceName);
+          should(chn).have.property('type').which.is.String().equal('default');
+          should(chn).have.property('created_at').which.is.String();
+          should(chn).have.property('updated_at').which.is.String();
+          should(chn).have.property('links').which.is.Object();
+          should(chn).have.property('group').which.is.Null()
+          should(chn).have.property('group_permissions').which.is.String().equal('none');
+          should(chn).have.property('other_permissions').which.is.String().equal('none');
+          should(chn).have.property('custom_publish').which.is.Boolean().equal(false);
+        });
     });
 
     it('should be able to get a channel', function() {
       return Channel.please().create({name: channelName, instanceName})
+        .then(cleaner.mark)
         .then((chn) => {
           should(chn).be.a.Object();
           should(chn).have.property('name').which.is.String().equal(channelName);
@@ -188,71 +179,79 @@ describe('Channel', function() {
     });
 
     it('should be able to get or create a channel (CREATE)', function() {
-      return Channel.please().getOrCreate({name: channelName, instanceName}, {description: 'test'}).then((chn) => {
-        should(chn).be.a.Object();
-        should(chn).have.property('name').which.is.String().equal(channelName);
-        should(chn).have.property('instanceName').which.is.String().equal(instanceName);
-        should(chn).have.property('description').which.is.String().equal('test');
-        should(chn).have.property('type').which.is.String().equal('default');
-        should(chn).have.property('created_at').which.is.String();
-        should(chn).have.property('updated_at').which.is.String();
-        should(chn).have.property('links').which.is.Object();
-        should(chn).have.property('group').which.is.Null()
-        should(chn).have.property('group_permissions').which.is.String().equal('none');
-        should(chn).have.property('other_permissions').which.is.String().equal('none');
-        should(chn).have.property('custom_publish').which.is.Boolean().equal(false);
-      });
+      return Channel.please().getOrCreate({name: channelName, instanceName}, {description: 'test'})
+        .then(cleaner.mark)
+        .then((chn) => {
+          should(chn).be.a.Object();
+          should(chn).have.property('name').which.is.String().equal(channelName);
+          should(chn).have.property('instanceName').which.is.String().equal(instanceName);
+          should(chn).have.property('description').which.is.String().equal('test');
+          should(chn).have.property('type').which.is.String().equal('default');
+          should(chn).have.property('created_at').which.is.String();
+          should(chn).have.property('updated_at').which.is.String();
+          should(chn).have.property('links').which.is.Object();
+          should(chn).have.property('group').which.is.Null()
+          should(chn).have.property('group_permissions').which.is.String().equal('none');
+          should(chn).have.property('other_permissions').which.is.String().equal('none');
+          should(chn).have.property('custom_publish').which.is.Boolean().equal(false);
+        });
     });
 
     it('should be able to get or create a channel (GET)', function() {
-      return Channel.please().create({name: channelName, instanceName, description: 'test'}).then((chn) => {
-        should(chn).be.an.Object();
-        should(chn).have.property('name').which.is.String().equal(channelName);
-        should(chn).have.property('instanceName').which.is.String().equal(instanceName);
-        should(chn).have.property('description').which.is.String().equal('test');
+      return Channel.please().create({name: channelName, instanceName, description: 'test'})
+        .then(cleaner.mark)
+        .then((chn) => {
+          should(chn).be.an.Object();
+          should(chn).have.property('name').which.is.String().equal(channelName);
+          should(chn).have.property('instanceName').which.is.String().equal(instanceName);
+          should(chn).have.property('description').which.is.String().equal('test');
 
-        return Channel.please().getOrCreate({name: channelName, instanceName}, {description: 'newTest'});
-      })
-      .then((chn) => {
-        should(chn).be.an.Object();
-        should(chn).have.property('name').which.is.String().equal(channelName);
-        should(chn).have.property('instanceName').which.is.String().equal(instanceName);
-        should(chn.description).which.is.String().equal('test');
-      });
+          return Channel.please().getOrCreate({name: channelName, instanceName}, {description: 'newTest'});
+        })
+        .then((chn) => {
+          should(chn).be.an.Object();
+          should(chn).have.property('name').which.is.String().equal(channelName);
+          should(chn).have.property('instanceName').which.is.String().equal(instanceName);
+          should(chn.description).which.is.String().equal('test');
+        });
     });
 
     it('should be able to update a channel', function() {
-      return Channel.please().create({name: channelName, description: 'test', instanceName}).then((chn) => {
-        should(chn).be.an.Object();
-        should(chn).have.property('name').which.is.String().equal(channelName);
-        should(chn).have.property('instanceName').which.is.String().equal(instanceName);
-        should(chn).have.property('description').which.is.String().equal('test');
+      return Channel.please().create({name: channelName, description: 'test', instanceName})
+        .then(cleaner.mark)
+        .then((chn) => {
+          should(chn).be.an.Object();
+          should(chn).have.property('name').which.is.String().equal(channelName);
+          should(chn).have.property('instanceName').which.is.String().equal(instanceName);
+          should(chn).have.property('description').which.is.String().equal('test');
 
-        return Channel.please().update({name: channelName, instanceName}, {description: 'newTest'});
-      })
-      .then((chn) => {
-        should(chn).be.an.Object();
-        should(chn).have.property('name').which.is.String().equal(channelName);
-        should(chn).have.property('instanceName').which.is.String().equal(instanceName);
-        should(chn.description).which.is.String().equal('newTest');
-      });
+          return Channel.please().update({name: channelName, instanceName}, {description: 'newTest'});
+        })
+        .then((chn) => {
+          should(chn).be.an.Object();
+          should(chn).have.property('name').which.is.String().equal(channelName);
+          should(chn).have.property('instanceName').which.is.String().equal(instanceName);
+          should(chn.description).which.is.String().equal('newTest');
+        });
     });
 
     it('should be able to update or create channel (UPDATE)', function() {
-      return Channel.please().create({name: channelName, instanceName, description: 'test'}).then((chn) => {
-        should(chn).be.an.Object();
-        should(chn).have.property('name').which.is.String().equal(channelName);
-        should(chn).have.property('instanceName').which.is.String().equal(instanceName);
-        should(chn).have.property('description').which.is.String().equal('test');
+      return Channel.please().create({name: channelName, instanceName, description: 'test'})
+        .then(cleaner.mark)
+        .then((chn) => {
+          should(chn).be.an.Object();
+          should(chn).have.property('name').which.is.String().equal(channelName);
+          should(chn).have.property('instanceName').which.is.String().equal(instanceName);
+          should(chn).have.property('description').which.is.String().equal('test');
 
-        return Channel.please().updateOrCreate({name: channelName, instanceName}, {description: 'newTest'});
-      })
-      .then((chn) => {
-        should(chn).be.an.Object();
-        should(chn).have.property('name').which.is.String().equal(channelName);
-        should(chn).have.property('instanceName').which.is.String().equal(instanceName);
-        should(chn).have.property('description').which.is.String().equal('newTest');
-      });
+          return Channel.please().updateOrCreate({name: channelName, instanceName}, {description: 'newTest'});
+        })
+        .then((chn) => {
+          should(chn).be.an.Object();
+          should(chn).have.property('name').which.is.String().equal(channelName);
+          should(chn).have.property('instanceName').which.is.String().equal(instanceName);
+          should(chn).have.property('description').which.is.String().equal('newTest');
+        });
     });
 
     it('should be able to update or create channel (CREATE)', function() {
@@ -262,20 +261,22 @@ describe('Channel', function() {
           description: 'createTest'
       };
 
-      return Channel.please().updateOrCreate(properties, object, defaults).then((chn) => {
-        should(chn).be.a.Object();
-        should(chn).have.property('name').which.is.String().equal(channelName);
-        should(chn).have.property('instanceName').which.is.String().equal(instanceName);
-        should(chn).have.property('description').which.is.String().equal('createTest');
-        should(chn).have.property('type').which.is.String().equal('default');
-        should(chn).have.property('created_at').which.is.String();
-        should(chn).have.property('updated_at').which.is.String();
-        should(chn).have.property('links').which.is.Object();
-        should(chn).have.property('group').which.is.Null()
-        should(chn).have.property('group_permissions').which.is.String().equal('none');
-        should(chn).have.property('other_permissions').which.is.String().equal('none');
-        should(chn).have.property('custom_publish').which.is.Boolean().equal(false);
-      });
+      return Channel.please().updateOrCreate(properties, object, defaults)
+        .then(cleaner.mark)
+        .then((chn) => {
+          should(chn).be.a.Object();
+          should(chn).have.property('name').which.is.String().equal(channelName);
+          should(chn).have.property('instanceName').which.is.String().equal(instanceName);
+          should(chn).have.property('description').which.is.String().equal('createTest');
+          should(chn).have.property('type').which.is.String().equal('default');
+          should(chn).have.property('created_at').which.is.String();
+          should(chn).have.property('updated_at').which.is.String();
+          should(chn).have.property('links').which.is.Object();
+          should(chn).have.property('group').which.is.Null()
+          should(chn).have.property('group_permissions').which.is.String().equal('none');
+          should(chn).have.property('other_permissions').which.is.String().equal('none');
+          should(chn).have.property('custom_publish').which.is.Boolean().equal(false);
+        });
     });
 
     it('should be able to get first channel (SUCCESS)', function() {
@@ -286,6 +287,7 @@ describe('Channel', function() {
 
       return Promise
         .all(_.map(names, (name) => Channel.please().create({name, instanceName})))
+        .then(cleaner.mark)
         .then(() => {
           return Channel.please().first({instanceName});
         })
@@ -302,6 +304,7 @@ describe('Channel', function() {
 
       return Promise
         .all(_.map(names, (name) => Channel.please().create({name, instanceName})))
+        .then(cleaner.mark)
         .then((chns) => {
           should(chns).be.an.Array().with.length(2);
           return Channel.please({instanceName}).pageSize(1);
@@ -320,6 +323,7 @@ describe('Channel', function() {
 
       return Promise
         .all(_.map(names, (name) => Channel.please().create({name, instanceName})))
+        .then(cleaner.mark)
         .then((chns) => {
           should(chns).be.an.Array().with.length(2);
           return Channel.please({instanceName}).ordering('asc');
