@@ -13,20 +13,36 @@ describe('Channel', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
+  let Class = null;
+  let dataObject = null;
   const instanceName = suffix.get('instance');
   const channelName = suffix.get('channel');
+  const className = suffix.get('class');
   const data = {
     name: channelName,
     instanceName: instanceName,
     description: 'test'
+  };
+  const classData = {
+    name: className,
+    instanceName: instanceName
+  };
+  const objectData = {
+    className: className,
+    instanceName: instanceName,
+    channel: channelName
   };
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
     Model = connection.Channel;
+    Class = connection.Class;
+    dataObject = connection.DataObject;
 
-    return Instance.please().create({name: instanceName});
+    return Instance.please().create({name: instanceName}).then(() => {
+      return Class.please().create(classData);
+    });
   });
 
   after(function() {
@@ -93,9 +109,90 @@ describe('Channel', function() {
       });
   });
 
-  // it('should be able to start and stop polling a Model', function() {
-  //
-  // });
+  it('should be able to start and stop polling a channel', function() {
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((chn) => {
+        let poll = chn.poll();
+
+        poll.on('start', function() {
+          should(true).ok;
+        });
+
+        poll.start();
+
+        poll.on('stop', function() {
+          should(true).ok;
+        });
+
+        poll.stop();
+      });
+  });
+
+  it('should be able to poll for messages', function(done) {
+    return Model(Object.assign({}, data, { custom_publish: true })).save()
+      .then(cleaner.mark)
+      .then((chn) => {
+        let poll = chn.poll();
+
+        poll.on('message', function(message) {
+          should(message).have.property('author').which.is.Object();
+          should(message).have.property('created_at').which.is.String();
+          should(message).have.property('id').which.is.Number().equal(1);
+          should(message).have.property('action').which.is.String().equal('custom');
+          should(message).have.property('payload').which.is.Object();
+          should(message.payload).have.property('content').which.is.String().equal('message content');
+          should(message).have.property('metadata').which.is.Object();
+          should(message.metadata).have.property('type').which.is.String().equal('message');
+          poll.stop();
+          done();
+        });
+
+        chn.publish({ content: 'message content' });
+
+      });
+  });
+
+  it('should be able to poll for dataobject events', function() {
+    let poll = null;
+
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((chn) => {
+          poll = chn.poll();
+
+          poll.on('create', function(data) {
+            should(data).have.property('author').which.is.Object();
+            should(data).have.property('id').which.is.Number();
+            should(data).have.property('action').which.is.String().equal('create');
+            should(data).have.property('payload').which.is.Object();
+            should(data).have.property('metadata').which.is.Object();
+          });
+          poll.on('update', function(data) {
+            should(data).have.property('author').which.is.Object();
+            should(data).have.property('id').which.is.Number();
+            should(data).have.property('action').which.is.String().equal('update');
+            should(data).have.property('payload').which.is.Object();
+            should(data).have.property('metadata').which.is.Object();
+          });
+          poll.on('delete', function(data) {
+            should(data).have.property('author').which.is.Object();
+            should(data).have.property('id').which.is.Number();
+            should(data).have.property('action').which.is.String().equal('delete');
+            should(data).have.property('payload').which.is.Object();
+            should(data).have.property('metadata').which.is.Object();
+          });
+
+          return dataObject(objectData).save()
+        })
+        .then((obj) => {
+          obj.group_permissions = 'full';
+          return obj.save();
+        })
+        .then((obj) => {
+          return obj.delete();
+        });
+  });
 
   describe('#please()', function() {
 
