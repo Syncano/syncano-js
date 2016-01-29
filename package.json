@@ -23,6 +23,7 @@
     "clean:coverage": "rimraf ./coverage",
     "coverage": "babel-node ./node_modules/isparta/bin/isparta cover --report text --report html _mocha -- 'test/lib/**/*.js' --reporter dot",
     "prebuild": "npm run clean",
+    "prepublish": "npm run build",
     "build": "npm-run-all build:*",
     "build:lib": "babel src --out-dir lib",
     "build:dist": "webpack",
