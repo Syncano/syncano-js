@@ -391,27 +391,6 @@ const PageSize = stampit().methods({
   }
 });
 
-const Filter = stampit().methods({
-
-  /**
-  * Filters DataObjects.
-
-  * @memberOf QuerySet
-  * @instance
-
-  * @param {Object} query
-  * @returns {QuerySet}
-
-  * @example {@lang javascript}
-  * DataObject.list({ instanceName: 'test-instace', className: 'test-class' }).filter({ field_name: { _contains: 'Lord Of The Rings' }}).then(function(dataobjects) {});
-
-  */
-  filter(query = {}) {
-    this.query = _.assign({}, this.query, query);
-    return this;
-  }
-});
-
 const Ordering = stampit().methods({
 
   /**
@@ -489,7 +468,6 @@ const QuerySet = stampit.compose(
   First,
   PageSize,
   Ordering,
-  Filter,
   Raw
 );
 
