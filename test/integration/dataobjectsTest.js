@@ -3,11 +3,12 @@ import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
-import {suffix, credentials} from './utils';
+import {suffix, credentials, createCleaner} from './utils';
 
 describe('Dataobject', function() {
   this.timeout(15000);
 
+  const cleaner = createCleaner();
   let connection = null;
   let Class = null;
   let Instance = null;
@@ -19,9 +20,15 @@ describe('Dataobject', function() {
     instanceName: instanceName,
     description: suffix.get('description'),
     schema: [
-      { name: "title", type: "string" },
-      { name: "author", type: "string" }
+      { name: "title", type: "string", "order_index": true, "filter_index": true },
+      { name: "author", type: "string", "order_index": true, "filter_index": true  }
     ]
+  };
+  const dataObj = {
+    title: "Pulp",
+    author: "Bukowski",
+    className: className,
+    instanceName: instanceName
   };
 
   before(function(done) {
@@ -33,6 +40,10 @@ describe('Dataobject', function() {
     Instance.please().create({name: instanceName}).then(() => {
       Class.please().create(data).then(() => done());
     })
+  });
+
+  afterEach(function() {
+    return cleaner.clean();
   });
 
   after(function() {
@@ -52,14 +63,8 @@ describe('Dataobject', function() {
   });
 
   it('should be able to save via model instance', function() {
-    const dataobj = {
-      title: "Pulp",
-      author: "Bukowski",
-      className: className,
-      instanceName: instanceName
-    };
-
-    return DataObject(dataobj).save()
+    return DataObject(dataObj).save()
+      .then(cleaner.mark)
       .then((dataobj) => {
         should(dataobj).be.a.Object();
         should(dataobj).have.property('id').which.is.Number();
@@ -78,14 +83,8 @@ describe('Dataobject', function() {
   });
 
   it('should be able to update via model instance', function() {
-    const dataobj = {
-      title: "Pulp",
-      author: "Bukowski",
-      className: className,
-      instanceName: instanceName
-    };
-
-    return DataObject(dataobj).save()
+    return DataObject(dataObj).save()
+      .then(cleaner.mark)
       .then((dataobj) => {
         should(dataobj).have.property('instanceName').which.is.String().equal(data.instanceName);
         should(dataobj).have.property('title').which.is.String().equal('Pulp');
@@ -105,31 +104,17 @@ describe('Dataobject', function() {
 
   describe('#please()', function() {
 
-    afterEach(function() {
-      return DataObject
-        .please()
-        .list({instanceName, className})
-        .then((dataobjects) => {
-          const ids = _.map(dataobjects, 'id');
-          return Promise.all(_.map(ids, (id) => DataObject.please().delete({id, instanceName, className})));
-        });
-    });
-
-    it('should be able to list dataobjects', function() {
+    it('should be able to list Models', function() {
       return DataObject.please().list({instanceName, className}).then((dataobjects) => {
         should(dataobjects).be.an.Array();
       });
     });
 
-    it('should be able to create a dataobject', function() {
-      const dataobj = {
-        title: "Pulp",
-        author: "Bukowski",
-        className: className,
-        instanceName: instanceName
-      };
+    it('should be able to create a Model', function() {
 
-      return DataObject.please().create(dataobj).then((dataobject) => {
+      return DataObject.please().create(dataObj)
+      .then(cleaner.mark)
+      .then((dataobject) => {
         should(dataobject).be.a.Object();
         should(dataobject).have.property('id').which.is.Number();
         should(dataobject).have.property('instanceName').which.is.String().equal(data.instanceName);
@@ -146,16 +131,12 @@ describe('Dataobject', function() {
       });
     });
 
-    it('should be able to get a dataobject', function() {
-      const dataobj = {
-        title: "Pulp",
-        author: "Bukowski",
-        className: className,
-        instanceName: instanceName
-      };
+    it('should be able to get a Model', function() {
       let objId = null;
 
-      return DataObject.please().create(dataobj).then((dataobject) => {
+      return DataObject.please().create(dataObj)
+      .then(cleaner.mark)
+      .then((dataobject) => {
         should(dataobject).have.property('instanceName').which.is.String().equal(instanceName);
         objId = dataobject.id;
 
@@ -184,16 +165,10 @@ describe('Dataobject', function() {
       });
     });
 
-    it('should be able to delete a dataobject', function() {
-      const dataobj = {
-        title: "Pulp",
-        author: "Bukowski",
-        className: className,
-        instanceName: instanceName
-      };
+    it('should be able to delete a Model', function() {
       let objId = null;
 
-      return DataObject.please().create(dataobj)
+      return DataObject.please().create(dataObj)
         .then((dataobject) => {
           should(dataobject).be.an.Object();
           should(dataobject).have.property('instanceName').which.is.String().equal(instanceName);
@@ -208,36 +183,33 @@ describe('Dataobject', function() {
         });
     });
 
-    it('should be able to update a dataobject', function() {
-      const dataobj = {
-        title: "Pulp",
-        author: "Bukowski",
-        className: className,
-        instanceName: instanceName
-      };
+    it('should be able to update a Model', function() {
 
-      return DataObject.please().create(dataobj).then((dataobject) => {
-        should(dataobject).be.an.Object();
-        should(dataobject).have.property('instanceName').which.is.String().equal(instanceName);
-        should(dataobject).have.property('author').which.is.String().equal('Bukowski');
+      return DataObject.please().create(dataObj)
+        .then(cleaner.mark)
+        .then((dataobject) => {
+          should(dataobject).be.an.Object();
+          should(dataobject).have.property('instanceName').which.is.String().equal(instanceName);
+          should(dataobject).have.property('author').which.is.String().equal('Bukowski');
 
-        return DataObject.please().update({id: dataobject.id, instanceName, className}, {title: 'Women'});
-      })
-      .then((dataobject) => {
-        should(dataobject).be.an.Object();
-        should(dataobject).have.property('instanceName').which.is.String().equal(instanceName);
-        should(dataobject).have.property('title').which.is.String().equal('Women');
-      })
+          return DataObject.please().update({id: dataobject.id, instanceName, className}, {title: 'Women'});
+        })
+        .then((dataobject) => {
+          should(dataobject).be.an.Object();
+          should(dataobject).have.property('instanceName').which.is.String().equal(instanceName);
+          should(dataobject).have.property('title').which.is.String().equal('Women');
+        });
     });
 
-    it('should be able to get first dataobject', function() {
+    it('should be able to get first Model', function() {
       const descriptions = [
         { title: "Pulp", author: "Bukowski"},
-        { title: "Pulp", author: "Women" }
+        { title: "Blade Runner", author: "Dick" }
       ];
 
       return Promise
         .all(_.map(descriptions, (item) => DataObject.please().create({title: item.title, author: item.author, instanceName, className})))
+        .then(cleaner.mark)
         .then(() => {
           return DataObject.please().first({instanceName, className});
         })
@@ -246,34 +218,80 @@ describe('Dataobject', function() {
         });
     });
 
-    it('should be able to change ordering', function() {
+    it('should be able to get specific model fields', function() {
+      let objId = null;
+
+      return DataObject.please().create(dataObj)
+      .then(cleaner.mark)
+      .then((dataobject) => {
+        should(dataobject).have.property('instanceName').which.is.String().equal(instanceName);
+        objId = dataobject.id;
+
+        return dataobject;
+      })
+      .then(() => {
+        return DataObject
+          .please()
+          .get({id: objId, instanceName, className})
+          .fields(['author'])
+          .request();
+      })
+      .then((dataobject) => {
+        should(dataobject).have.property('author').equal(dataObj.author);
+        should(dataobject).not.have.property('title');
+      });
+    });
+
+     it('should be able to change ordering by field', function() {
        const descriptions = [
          { title: "Pulp", author: "Bukowski"},
-         { title: "Pulp", author: "Women" }
+         { title: "Blade Runner", author: "Dick" }
        ];
        let asc = null;
 
+        return Promise
+          .all(_.map(descriptions, (item) => DataObject.please().create({title: item.title, author: item.author, instanceName, className})))
+          .then(cleaner.mark)
+          .then((dataobjects) => {
+            should(dataobjects).be.an.Array().with.length(2);
+            return DataObject.please({instanceName, className}).orderBy('author');
+          })
+          .then((dataobjects) => {
+            should(dataobjects).be.an.Array().with.length(2);
+            asc = dataobjects;
+            return DataObject.please({instanceName, className}).orderBy('-author');
+          })
+          .then((desc) => {
+            const ascTitles= _.map(asc, 'title');
+            const descTitles = _.map(desc, 'title');
+            descTitles.reverse();
+            should(desc).be.an.Array().with.length(2);
+
+            _.forEach(ascTitles, (ascTitle, index) => {
+              should(ascTitle).be.equal(descTitles[index]);
+            });
+          });
+      });
+
+     it('should be able to filter model by field', function() {
+       const descriptions = [
+         { title: "Pulp", author: "Bukowski"},
+         { title: "Blade Runner", author: "Dick" }
+       ];
+
        return Promise
          .all(_.map(descriptions, (item) => DataObject.please().create({title: item.title, author: item.author, instanceName, className})))
+         .then(cleaner.mark)
          .then((dataobjects) => {
            should(dataobjects).be.an.Array().with.length(2);
-           return DataObject.please({instanceName, className}).ordering('asc');
+           return DataObject.please({instanceName, className}).filter({ title: { _eq: "Pulp"} })
          })
          .then((dataobjects) => {
-           should(dataobjects).be.an.Array().with.length(2);
-           asc = dataobjects;
-           return DataObject.please({instanceName, className}).ordering('desc');
-         })
-         .then((desc) => {
-           const ascTitles= _.map(asc, 'title');
-           const descTitles = _.map(desc, 'title');
-           descTitles.reverse();
-           should(desc).be.an.Array().with.length(2);
-
-           _.forEach(ascTitles, (ascTitle, index) => {
-             should(ascTitle).be.equal(descTitles[index]);
-           });
+           should(dataobjects).be.an.Array().with.length(1);
+           should(dataobjects[0]).have.property('title').equal('Pulp');
+           should(dataobjects[0]).have.property('author').equal('Bukowski');
          });
+
      });
 
     it('should be able to change page size', function() {
@@ -284,6 +302,7 @@ describe('Dataobject', function() {
 
       return Promise
         .all(_.map(descriptions, (item) => DataObject.please().create({title: item.title, author: item.author, instanceName, className})))
+        .then(cleaner.mark)
         .then((dataobjects) => {
           should(dataobjects).be.an.Array().with.length(2);
           return DataObject.please({instanceName, className}).pageSize(1);
