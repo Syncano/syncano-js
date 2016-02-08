@@ -1,0 +1,10 @@
+node_modules
+coverage
+docs
+tutorials
+dist
+src
+.DS_Store
+.idea
+npm-debug.log
+*.sublime-*
