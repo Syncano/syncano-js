@@ -336,6 +336,26 @@ const UpdateOrCreate = stampit().methods({
   }
 });
 
+const Fields = stampit().methods({
+  /**
+    * Selects specified fields from object.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {Object} fields
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * DataObject.please().list({ instanceName: 'test-instace', className: 'test-class' }).fields(['title', 'author']).then(function(dataobjects) {});
+
+    */
+  fields(fields = []) {
+    this.query['fields'] = fields.join();
+    return this;
+  }
+});
+
 const First = stampit().methods({
 
   /**
@@ -468,6 +488,7 @@ const QuerySet = stampit.compose(
   First,
   PageSize,
   Ordering,
+  Fields,
   Raw
 );
 

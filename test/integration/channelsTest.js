@@ -148,7 +148,9 @@ describe('Channel', function() {
           done();
         });
 
-        chn.publish({ content: 'message content' });
+        setTimeout(() => {
+          chn.publish({ content: 'message content' });
+        }, 100);
 
       });
   });
