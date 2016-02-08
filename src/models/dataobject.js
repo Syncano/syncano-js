@@ -21,23 +21,6 @@ const DataObjectQuerySet = stampit().compose(QuerySet).methods({
     return this;
   },
   /**
-    * Selects specified fields from DataObject.
-
-    * @memberOf QuerySet
-    * @instance
-
-    * @param {Object} fields
-    * @returns {QuerySet}
-
-    * @example {@lang javascript}
-    * DataObject.please().list({ instanceName: 'test-instace', className: 'test-class' }).fields(['title', 'author']).then(function(dataobjects) {});
-
-    */
-  fields(fields = []) {
-    this.query['fields'] = fields.join();
-    return this;
-  },
-  /**
     * Orders DataObject by field.
 
     * @memberOf QuerySet
