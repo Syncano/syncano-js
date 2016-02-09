@@ -5,7 +5,7 @@ import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
-describe('Dataobject', function() {
+describe.only('Dataobject', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();
@@ -21,12 +21,14 @@ describe('Dataobject', function() {
     description: suffix.get('description'),
     schema: [
       { name: "title", type: "string", "order_index": true, "filter_index": true },
-      { name: "author", type: "string", "order_index": true, "filter_index": true  }
+      { name: "author", type: "string", "order_index": true, "filter_index": true  },
+      { name: "reads", type: "integer" }
     ]
   };
   const dataObj = {
     title: "Pulp",
     author: "Bukowski",
+    reads: 0,
     className: className,
     instanceName: instanceName
   };
@@ -79,6 +81,7 @@ describe('Dataobject', function() {
         should(dataobj).have.property('owner_permissions').which.is.String().equal('full');
         should(dataobj).have.property('title').which.is.String().equal('Pulp');
         should(dataobj).have.property('author').which.is.String().equal('Bukowski');
+        should(dataobj).have.property('reads').which.is.Number().equal(0);
       });
   });
 
@@ -89,6 +92,7 @@ describe('Dataobject', function() {
         should(dataobj).have.property('instanceName').which.is.String().equal(data.instanceName);
         should(dataobj).have.property('title').which.is.String().equal('Pulp');
         should(dataobj).have.property('author').which.is.String().equal('Bukowski');
+        should(dataobj).have.property('reads').which.is.Number().equal(0);
 
         dataobj.title = "Brave New World";
         dataobj.author = "Aldous Huxley";
@@ -101,6 +105,24 @@ describe('Dataobject', function() {
       })
   });
 
+  it('should be able to increment a model field', function() {
+    return DataObject(dataObj).save()
+      .then(cleaner.mark)
+      .then((dataobj) => {
+        should(dataobj).have.property('instanceName').which.is.String().equal(data.instanceName);
+        should(dataobj).have.property('title').which.is.String().equal('Pulp');
+        should(dataobj).have.property('author').which.is.String().equal('Bukowski');
+        should(dataobj).have.property('reads').which.is.Number().equal(0);
+
+        return dataobj.increment('reads', 1);
+      })
+      .then((dataobj) => {
+        should(dataobj).have.property('instanceName').which.is.String().equal(data.instanceName);
+        should(dataobj).have.property('title').which.is.String().equal('Pulp');
+        should(dataobj).have.property('author').which.is.String().equal('Bukowski');
+        should(dataobj).have.property('reads').which.is.Number().equal(1);
+      })
+  });
 
   describe('#please()', function() {
 

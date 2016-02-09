@@ -1,5 +1,6 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import _ from 'lodash';
 import QuerySet from '../querySet';
 
 const DataObjectQuerySet = stampit().compose(QuerySet).methods({
@@ -74,6 +75,16 @@ const DataobjectConstraints = {
 const DataObject = stampit()
   .compose(Model)
   .setMeta(DataObjectMeta)
+  .methods({
+    increment(field, by) {
+      if(!_.isNumber(this[field])) throw new Error(`The ${field} is not numeric.`);
+      if(!_.isNumber(by)) throw new Error('The provided value is not numeric.');
+
+      this[field] += _.add(this[field], by);
+
+      return this.save();
+    }
+  })
   .setQuerySet(DataObjectQuerySet)
   .setConstraints(DataobjectConstraints);
 
