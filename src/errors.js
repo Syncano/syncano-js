@@ -13,6 +13,16 @@ SyncanoError.prototype = Object.create(Error.prototype);
 SyncanoError.prototype.constructor = SyncanoError;
 
 
+export function PaginationError(message) {
+  this.name = 'PaginationError';
+  this.message = message || '';
+  this.stack = (new Error()).stack;
+}
+
+PaginationError.prototype = Object.create(SyncanoError.prototype);
+PaginationError.prototype.constructor = SyncanoError;
+
+
 export function ValidationError(errors = {}) {
   this.name = 'ValidationError';
   this.stack = (new Error()).stack;

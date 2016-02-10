@@ -12,7 +12,7 @@ describe('GCMDevice', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('instance');
+  const instanceName = suffix.get('GCMDevice');
   const registrationId = suffix.get('gcm');
   const data = {
     instanceName,

@@ -2,7 +2,31 @@ import stampit from 'stampit';
 import Promise from 'bluebird';
 import _ from 'lodash';
 import Request from './request';
+import PaginationError from './errors';
 
+
+const ResultSet = function(querySet, response, objects) {
+  let results = [];
+  results.push.apply(results, objects);
+
+  results.next = () => {
+    if (!response.next) {
+      return Promise.reject(new PaginationError('There is no next page'));
+    }
+
+    return querySet.request(response.next, {query: {}});
+  };
+
+  results.prev = () => {
+    if (!response.prev) {
+      return Promise.reject(new PaginationError('There is no previous page'));
+    }
+
+    return querySet.request(response.prev, {query: {}});
+  };
+
+  return results;
+}
 
 const QuerySetRequest = stampit().compose(Request)
   .refs({
@@ -37,7 +61,8 @@ const QuerySetRequest = stampit().compose(Request)
       }
 
       if (this.endpoint === 'list') {
-        return _.map(response.objects, (object) => this.model.fromJSON(object, this.properties));
+        const objects = _.map(response.objects, (object) => this.model.fromJSON(object, this.properties));
+        return ResultSet(this, response, objects);
       }
 
       return this.model.fromJSON(response, this.properties);
@@ -48,31 +73,34 @@ const QuerySetRequest = stampit().compose(Request)
 
     * @memberOf QuerySet
     * @instance
+
+    * @param {String} [requestPath = null]
+    * @param {Object} [requestOptions = {}]
     * @returns {Promise}
 
     * @example {@lang javascript}
     * Instance.please().list().request().then(function(instance) {});
 
     */
-    request() {
+    request(requestPath = null, requestOptions = {}) {
       const meta = this.model.getMeta();
       const endpoint = meta.endpoints[this.endpoint] || {};
       const allowedMethods = endpoint.methods || [];
-      const path = meta.resolveEndpointPath(this.endpoint, this.properties);
+      const path = requestPath || meta.resolveEndpointPath(this.endpoint, this.properties);
       const method = this.method.toLowerCase();
-      const requestOptions = {
+      const options = _.defaults(requestOptions, {
         headers: this.headers,
         query: this.query,
         payload: this.payload,
         attachments: this.attachments
-      };
+      });
 
       return new Promise((resolve, reject) => {
         if (!_.includes(allowedMethods, method)) {
           return reject(new Error(`Invalid request method: "${this.method}".`));
         }
 
-        this.makeRequest(method, path, requestOptions, (err, res) => {
+        this.makeRequest(method, path, options, (err, res) => {
           if (err || !res.ok) {
             return reject(err, res);
           }
