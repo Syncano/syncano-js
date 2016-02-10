@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Class: EventEmittable</title>
+	<title>Syncano Tutorial: Interacting</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,157 +65,51 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
-			
-
-	<h1 class="page-title">Class: EventEmittable</h1>
-<section>
+			<section class="tutorial-section">
 
 <header>
     
-        <h2>
-        EventEmittable
-        </h2>
-        
-    
+
+    <h2>Interacting</h2>
 </header>
 
-
 <article>
-    <div class="container-overview">
-    
-        
-<hr>
-<dt>
-    <h4 class="name" id="EventEmittable"><span class="type-signature"></span>new EventEmittable()</h4>
-    
-    
-</dt>
-<dd>
+    <p>This tutorial will walk you through our ORM syntax and how to use it to make proper API calls.</p>
+<h3>Creating a Connection</h3><p>In each example I'll be assuming that you have configured connection to <code>syncano</code> and you are using <code>ES6</code> syntax:</p>
+<pre class="prettyprint source"><code>import Syncano from 'syncano';
 
-    
-    <div class="description">
-        <p>Simple wrapper around <code>EventEmitter</code></p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="utils.js.html">utils.js</a>,
-				 <a href="utils.js.html#sunlight-1-line-12">line 12</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">
-var EmittableModel = stampit().compose(EventEmittable);</pre>
-
-
-    
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
+const connection = Syncano({accountKey: 'YOUR_KEY'})</code></pre><h3>Creating objects</h3><p>A model class represents a single <code>Syncano API</code> endpoint, and an instance of that class represents a particular record in this endpoint.</p>
+<p>To create an object, instantiate it using <strong>object</strong> argument and then call Model.save to save it to the <code>Syncano API</code>.</p>
+<p>Here’s an example:</p>
+<pre class="prettyprint source"><code>connection.Instance({name: 'test-one', description:''}).save().then((instance) => {
+   // your new instance
+});</code></pre><p>This performs a <strong>POST</strong> request to <code>Syncano API</code> behind the scenes.<br>Syncano doesn’t hit the API until you explicitly call <a href="Model.html#save">Model#save</a>.</p>
+<h5>Note</h5><p>To create and save <strong>an object</strong> in a single step, use the <a href="QuerySet.html#create">QuerySet#create</a> method.</p>
+<h3>Saving changes to objects</h3><p>To save changes to an object that’s already in the <code>Syncano API</code>, use <a href="Model.html#save">Model#save</a>.<br>Regarding our <strong>instance</strong> from previous example, this example changes its description and updates its record in the <code>Syncano API</code>:</p>
+<pre class="prettyprint source"><code>instance.description = 'new description'
+instance.save().then((updatedInstance) => {
+    console.log(updatedInstance.description); // will produce 'new description'
+});</code></pre><p>This performs a <strong>PUT</strong> request to <code>Syncano API</code> behind the scenes.<br>Syncano doesn’t hit the API until you explicitly call <a href="Model.html#save">Model#save</a>.</p>
+<h5>Note</h5><p>To change and save <strong>an object</strong> in a single step, use the <a href="QuerySet.html#create">QuerySet#create</a> method.</p>
+<h2>Retrieving objects</h2><p>To retrieve objects from <code>Syncano API</code>, construct a query via a <a href="QuerySet.html">QuerySet</a> on your model class.</p>
+<p>Each model has only one <a href="QuerySet.html#create">QuerySet#create</a>, and it’s called <strong>please</strong> by default.<br>Access it directly via the model class, like so:</p>
+<pre class="prettyprint source"><code>connection.Instance.please()</code></pre><h5>Note</h5><p><a href="QuerySet.html">QuerySet</a> is accessible only via model classes, rather than from model instances,<br>to enforce a separation between “table-level” operations and “record-level” operations.</p>
+<h3>Retrieving all objects</h3><p>The simplest way to retrieve objects from a <code>Syncano API</code> is to get all of them.<br>To do this, use the <a href="QuerySet.html#list">QuerySet#list</a> method on a <a href="QuerySet.html">QuerySet</a>:</p>
+<pre class="prettyprint source"><code>connection.Instance.please().list().then((instances) => {
+    console.log('instances', instances);
+});</code></pre><h5>Note</h5><p>This performs a <strong>GET</strong> request to <code>Syncano API</code> list endpoint behind the scenes.</p>
 </article>
 
 </section>
-
-
-
 
 		</div>
 	</div>
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>

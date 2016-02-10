@@ -3,7 +3,8 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Syncano Namespaces</title>
+	<meta name="viewport" content="width=device-width">
+	<title>Syncano Source: models/dataobject.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -30,16 +31,16 @@
 		<ul class="nav navbar-nav">
 			
 			<li class="dropdown">
-				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#Request">Request</a></li>
+					<li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="Syncano.html">Syncano</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
-				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html">Global</a></li>
+					<li><a href="tutorial-Interacting.html">Interacting</a></li><li><a href="tutorial-Quickstart.html">Quickstart</a></li>
 				</ul>
 			</li>
 			
@@ -64,100 +65,135 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
 			
 
-	<h1 class="page-title">Namespaces</h1>
+		<h1 class="page-title">Source: models/dataobject.js</h1>
+    
 <section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
+import {Meta, Model} from './base';
+import _ from 'lodash';
+import QuerySet from '../querySet';
 
-<header>
-    
-        <h2>
-        
-        </h2>
-        
-    
-</header>
+const DataObjectQuerySet = stampit().compose(QuerySet).methods({
+  /**
+    * Filters DataObjects.
 
+    * @memberOf QuerySet
+    * @instance
 
-<article>
-    <div class="container-overview">
-    
-        
+    * @param {Object} filters
+    * @returns {QuerySet}
 
-        
-<dl class="details">
-    
+    * @example {@lang javascript}
+    * DataObject.please().list({ instanceName: 'test-instace', className: 'test-class' }).filter({ field_name: { _contains: 'Lord Of The Rings' }}).then(function(dataobjects) {});
 
-	
+    */
+  filter(filters = {}) {
+    this.query['query'] = JSON.stringify(filters);
+    return this;
+  },
+  /**
+    * Orders DataObject by field.
 
-	
+    * @memberOf QuerySet
+    * @instance
 
-	
+    * @param {String} field
+    * @returns {QuerySet}
 
-    
+    * @example {@lang javascript}
+    * DataObject.please().list({ instanceName: 'test-instace', className: 'test-class' }).orderBy('author').then(function(dataobjects) {});
+    * DataObject.please().list({ instanceName: 'test-instace', className: 'test-class' }).orderBy('-author').then(function(dataobjects) {});
 
-    
+    */
+  orderBy(field) {
+    this.query['order_by'] = field;
+    return this;
+  },
+  /**
+  * Updates single object based on provided arguments
 
-    
+  * @memberOf QuerySet
+  * @instance
 
-    
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} field to increment.
+  * @returns {QuerySet}
 
-	
+  * @example {@lang javascript}
+  * DataObject.please().increment({instanceName: 'my-instance', className: 'my-class'', id: 1}, {views: 1})
 
-	
+  */
+  increment(properties = {}, object = {}) {
+    const payload = {};
+    payload[_.keys(object)[0]] = { _increment: object[_.keys(object)[0]] };
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = JSON.stringify(payload);
 
-	
+    this.method = 'PATCH';
+    this.endpoint = 'detail';
+    return this;
+  }
 
-	
+});
 
-	
+const DataObjectMeta = Meta({
+  name: 'dataobject',
+  pluralName: 'dataobjects',
+  endpoints: {
+    'detail': {
+      'methods': ['delete', 'patch', 'post', 'get'],
+      'path': '/v1/instances/{instanceName}/classes/{className}/objects/{id}/'
+    },
+    'list': {
+      'methods': ['post', 'get'],
+      'path': '/v1/instances/{instanceName}/classes/{className}/objects/'
+    }
+  }
+});
 
+const DataobjectConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  className: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  }
+};
 
+const DataObject = stampit()
+  .compose(Model)
+  .setMeta(DataObjectMeta)
+  .methods({
+    increment(field, by) {
+      if(!_.isNumber(this[field])) throw new Error(`The ${field} is not numeric.`);
+      if(!_.isNumber(by)) throw new Error('The provided value is not numeric.');
 
-	
+      this[field] += _.add(this[field], by);
 
-	
+      return this.save();
+    }
+  })
+  .setQuerySet(DataObjectQuerySet)
+  .setConstraints(DataobjectConstraints);
 
-	
-
-	
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Namespaces</h3>
-
-        <dl>
-            <dt><a href="namespaces.html#Request"><a href="global.html#Request">Request</a></a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
+export default DataObject;
+</pre>
+    </article>
 </section>
+
 
 
 
@@ -167,10 +203,6 @@
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>
@@ -201,7 +233,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Fri Jan 15th 2016
+		on Wed Feb 10th 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

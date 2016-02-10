@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
 	<title>Syncano Class: QuerySet</title>
 
 	<!--[if lt IE 9]>
@@ -39,7 +40,7 @@
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-Quickstart.html">Quickstart</a></li>
+					<li><a href="tutorial-Interacting.html">Interacting</a></li><li><a href="tutorial-Quickstart.html">Quickstart</a></li>
 				</ul>
 			</li>
 			
@@ -514,7 +515,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="querySet.js.html">querySet.js</a>,
-				 <a href="querySet.js.html#sunlight-1-line-461">line 461</a>
+				 <a href="querySet.js.html#sunlight-1-line-507">line 507</a>
 			</li>
 		</ul>
 	</dd>
@@ -670,7 +671,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="querySet.js.html">querySet.js</a>,
-				 <a href="querySet.js.html#sunlight-1-line-128">line 128</a>
+				 <a href="querySet.js.html#sunlight-1-line-154">line 154</a>
 			</li>
 		</ul>
 	</dd>
@@ -847,7 +848,7 @@ instance.save().then(function(instance) {});
 		<ul class="dummy">
 			<li>
 				<a href="querySet.js.html">querySet.js</a>,
-				 <a href="querySet.js.html#sunlight-1-line-250">line 250</a>
+				 <a href="querySet.js.html#sunlight-1-line-276">line 276</a>
 			</li>
 		</ul>
 	</dd>
@@ -899,6 +900,336 @@ instance.save().then(function(instance) {});
     <pre class="sunlight-highlight-javascript">
 Instance.please().delete({name: &#x27;test-instance&#x27;}).then(function() {});
 Class.please().delete({name: &#x27;test&#x27;, instanceName: &#x27;test-one&#x27;}).then(function() {});</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="fields"><span class="type-signature"></span>fields(fields)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Selects specified fields from object.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fields</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="querySet.js.html">querySet.js</a>,
+				 <a href="querySet.js.html#sunlight-1-line-381">line 381</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="QuerySet.html">QuerySet</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">
+DataObject.please().list({ instanceName: &#x27;test-instace&#x27;, className: &#x27;test-class&#x27; }).fields([&#x27;title&#x27;, &#x27;author&#x27;]).then(function(dataobjects) {});</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="filter"><span class="type-signature"></span>filter(filters)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Filters DataObjects.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>filters</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="models_dataobject.js.html">models/dataobject.js</a>,
+				 <a href="models_dataobject.js.html#sunlight-1-line-20">line 20</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="QuerySet.html">QuerySet</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">
+DataObject.please().list({ instanceName: &#x27;test-instace&#x27;, className: &#x27;test-class&#x27; }).filter({ field_name: { _contains: &#x27;Lord Of The Rings&#x27; }}).then(function(dataobjects) {});</pre>
 
 
     
@@ -1073,7 +1404,7 @@ Class.please().delete({name: &#x27;test&#x27;, instanceName: &#x27;test-one&#x27
 		<ul class="dummy">
 			<li>
 				<a href="querySet.js.html">querySet.js</a>,
-				 <a href="querySet.js.html#sunlight-1-line-358">line 358</a>
+				 <a href="querySet.js.html#sunlight-1-line-404">line 404</a>
 			</li>
 		</ul>
 	</dd>
@@ -1239,7 +1570,7 @@ Class.please().first({instanceName: &#x27;test-one&#x27;}).then(function(cls) {}
 		<ul class="dummy">
 			<li>
 				<a href="querySet.js.html">querySet.js</a>,
-				 <a href="querySet.js.html#sunlight-1-line-150">line 150</a>
+				 <a href="querySet.js.html#sunlight-1-line-176">line 176</a>
 			</li>
 		</ul>
 	</dd>
@@ -1428,7 +1759,7 @@ Instance.please().get({name: &#x27;test-one&#x27;}).then(function(instance) {});
 		<ul class="dummy">
 			<li>
 				<a href="querySet.js.html">querySet.js</a>,
-				 <a href="querySet.js.html#sunlight-1-line-193">line 193</a>
+				 <a href="querySet.js.html#sunlight-1-line-219">line 219</a>
 			</li>
 		</ul>
 	</dd>
@@ -1495,6 +1826,195 @@ Instance
     // Create
     return Instance.please().create({name: &#x27;test-one&#x27;, description: &#x27;test&#x27;});
   });</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="increment"><span class="type-signature"></span>increment(properties, field)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Updates single object based on provided arguments</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>properties</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>lookup properties used for path resolving</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>field</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>to increment.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="models_dataobject.js.html">models/dataobject.js</a>,
+				 <a href="models_dataobject.js.html#sunlight-1-line-56">line 56</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="QuerySet.html">QuerySet</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">
+DataObject.please().increment({instanceName: &#x27;my-instance&#x27;, className: &#x27;my-class&#x27;&#x27;, id: 1}, {views: 1})</pre>
 
 
     
@@ -1669,7 +2189,7 @@ Instance
 		<ul class="dummy">
 			<li>
 				<a href="querySet.js.html">querySet.js</a>,
-				 <a href="querySet.js.html#sunlight-1-line-224">line 224</a>
+				 <a href="querySet.js.html#sunlight-1-line-250">line 250</a>
 			</li>
 		</ul>
 	</dd>
@@ -1721,6 +2241,172 @@ Instance
     <pre class="sunlight-highlight-javascript">
 Instance.please().list().then(function(instances) {});
 Class.please().list({instanceName: &#x27;test-one&#x27;}).then(function(classes) {});</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="orderBy"><span class="type-signature"></span>orderBy(field)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Orders DataObject by field.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>field</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="models_dataobject.js.html">models/dataobject.js</a>,
+				 <a href="models_dataobject.js.html#sunlight-1-line-38">line 38</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="QuerySet.html">QuerySet</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">
+DataObject.please().list({ instanceName: &#x27;test-instace&#x27;, className: &#x27;test-class&#x27; }).orderBy(&#x27;author&#x27;).then(function(dataobjects) {});
+DataObject.please().list({ instanceName: &#x27;test-instace&#x27;, className: &#x27;test-class&#x27; }).orderBy(&#x27;-author&#x27;).then(function(dataobjects) {});</pre>
 
 
     
@@ -1855,7 +2541,7 @@ Class.please().list({instanceName: &#x27;test-one&#x27;}).then(function(classes)
 		<ul class="dummy">
 			<li>
 				<a href="querySet.js.html">querySet.js</a>,
-				 <a href="querySet.js.html#sunlight-1-line-412">line 412</a>
+				 <a href="querySet.js.html#sunlight-1-line-458">line 458</a>
 			</li>
 		</ul>
 	</dd>
@@ -2021,7 +2707,7 @@ Class.please({instanceName: &#x27;test-one&#x27;}).ordering(&#x27;desc&#x27;).th
 		<ul class="dummy">
 			<li>
 				<a href="querySet.js.html">querySet.js</a>,
-				 <a href="querySet.js.html#sunlight-1-line-390">line 390</a>
+				 <a href="querySet.js.html#sunlight-1-line-436">line 436</a>
 			</li>
 		</ul>
 	</dd>
@@ -2137,7 +2823,7 @@ Class.please({instanceName: &#x27;test-one&#x27;}).pageSize(2).then(function(cla
 		<ul class="dummy">
 			<li>
 				<a href="querySet.js.html">querySet.js</a>,
-				 <a href="querySet.js.html#sunlight-1-line-440">line 440</a>
+				 <a href="querySet.js.html#sunlight-1-line-486">line 486</a>
 			</li>
 		</ul>
 	</dd>
@@ -2198,7 +2884,7 @@ Class.please({instanceName: &#x27;test-one&#x27;}).raw().then(function(response)
             
 <hr>
 <dt>
-    <h4 class="name" id="request"><span class="type-signature"></span>request()</h4>
+    <h4 class="name" id="request"><span class="type-signature"></span>request(<span class="optional">requestPath</span>, <span class="optional">requestOptions</span>)</h4>
     
     
 </dt>
@@ -2215,6 +2901,116 @@ Class.please({instanceName: &#x27;test-one&#x27;}).raw().then(function(response)
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>requestPath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>requestOptions</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    {}
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -2253,7 +3049,7 @@ Class.please({instanceName: &#x27;test-one&#x27;}).raw().then(function(response)
 		<ul class="dummy">
 			<li>
 				<a href="querySet.js.html">querySet.js</a>,
-				 <a href="querySet.js.html#sunlight-1-line-59">line 59</a>
+				 <a href="querySet.js.html#sunlight-1-line-85">line 85</a>
 			</li>
 		</ul>
 	</dd>
@@ -2418,7 +3214,7 @@ Instance.please().list().request().then(function(instance) {});</pre>
 		<ul class="dummy">
 			<li>
 				<a href="querySet.js.html">querySet.js</a>,
-				 <a href="querySet.js.html#sunlight-1-line-95">line 95</a>
+				 <a href="querySet.js.html#sunlight-1-line-121">line 121</a>
 			</li>
 		</ul>
 	</dd>
@@ -2600,7 +3396,7 @@ Instance.please().list().request().then(function(instance) {});</pre>
 		<ul class="dummy">
 			<li>
 				<a href="querySet.js.html">querySet.js</a>,
-				 <a href="querySet.js.html#sunlight-1-line-283">line 283</a>
+				 <a href="querySet.js.html#sunlight-1-line-309">line 309</a>
 			</li>
 		</ul>
 	</dd>
@@ -2868,7 +3664,7 @@ Class
 		<ul class="dummy">
 			<li>
 				<a href="querySet.js.html">querySet.js</a>,
-				 <a href="querySet.js.html#sunlight-1-line-327">line 327</a>
+				 <a href="querySet.js.html#sunlight-1-line-353">line 353</a>
 			</li>
 		</ul>
 	</dd>
@@ -2992,7 +3788,7 @@ Instance
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Tue Jan 19th 2016
+		on Wed Feb 10th 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
