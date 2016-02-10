@@ -38,6 +38,30 @@ const DataObjectQuerySet = stampit().compose(QuerySet).methods({
   orderBy(field) {
     this.query['order_by'] = field;
     return this;
+  },
+  /**
+  * Updates single object based on provided arguments
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} field to increment.
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DataObject.please().increment({instanceName: 'my-instance', className: 'my-class'', id: 1}, {views: 1})
+
+  */
+  increment(properties = {}, object = {}) {
+    const payload = {};
+    payload[_.keys(object)[0]] = { _increment: object[_.keys(object)[0]] };
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = JSON.stringify(payload);
+
+    this.method = 'PATCH';
+    this.endpoint = 'detail';
+    return this;
   }
 
 });

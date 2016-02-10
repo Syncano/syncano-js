@@ -223,6 +223,24 @@ describe('Dataobject', function() {
         });
     });
 
+    it('should be able to increment a field', function() {
+
+      return DataObject.please().create(dataObj)
+        .then(cleaner.mark)
+        .then((dataobject) => {
+          should(dataobject).be.an.Object();
+          should(dataobject).have.property('instanceName').which.is.String().equal(instanceName);
+          should(dataobject).have.property('author').which.is.String().equal('Bukowski');
+
+          return DataObject.please().increment({id: dataobject.id, instanceName, className}, {reads: 1});
+        })
+        .then((dataobject) => {
+          should(dataobject).be.an.Object();
+          should(dataobject).have.property('instanceName').which.is.String().equal(instanceName);
+          should(dataobject).have.property('reads').which.is.Number().equal(1);
+        });
+    });
+
     it('should be able to get first Model', function() {
       const descriptions = [
         { title: "Pulp", author: "Bukowski"},
