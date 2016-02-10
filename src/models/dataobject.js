@@ -1,5 +1,6 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import _ from 'lodash';
 import QuerySet from '../querySet';
 
 const DataObjectQuerySet = stampit().compose(QuerySet).methods({
@@ -36,6 +37,30 @@ const DataObjectQuerySet = stampit().compose(QuerySet).methods({
     */
   orderBy(field) {
     this.query['order_by'] = field;
+    return this;
+  },
+  /**
+  * Updates single object based on provided arguments
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} field to increment.
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DataObject.please().increment({instanceName: 'my-instance', className: 'my-class'', id: 1}, {views: 1})
+
+  */
+  increment(properties = {}, object = {}) {
+    const payload = {};
+    payload[_.keys(object)[0]] = { _increment: object[_.keys(object)[0]] };
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = JSON.stringify(payload);
+
+    this.method = 'PATCH';
+    this.endpoint = 'detail';
     return this;
   }
 
@@ -74,6 +99,16 @@ const DataobjectConstraints = {
 const DataObject = stampit()
   .compose(Model)
   .setMeta(DataObjectMeta)
+  .methods({
+    increment(field, by) {
+      if(!_.isNumber(this[field])) throw new Error(`The ${field} is not numeric.`);
+      if(!_.isNumber(by)) throw new Error('The provided value is not numeric.');
+
+      this[field] += _.add(this[field], by);
+
+      return this.save();
+    }
+  })
   .setQuerySet(DataObjectQuerySet)
   .setConstraints(DataobjectConstraints);
 
