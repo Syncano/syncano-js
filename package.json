@@ -21,6 +21,7 @@
     "clean:dist": "rimraf ./dist",
     "clean:docs": "rimraf ./docs",
     "clean:coverage": "rimraf ./coverage",
+    "clean:gh-pages": "rimraf ./node_modules/gh-pages/.cache",
     "coverage": "babel-node ./node_modules/isparta/bin/isparta cover --report text --report html _mocha -- 'test/lib/**/*.js' --reporter dot",
     "prebuild": "npm run clean",
     "prepublish": "npm run build",
@@ -40,7 +41,7 @@
     "watch:lib": "npm run build:lib -- --watch",
     "watch:dist": "npm run build:dist -- --watch",
     "release": "npm-run-all release:*",
-    "release:docs": "gh-pages -d docs -m Docs"
+    "release:docs": "gh-pages -d docs -m 'Docs [ci skip]'"
   },
   "repository": {
     "type": "git",
