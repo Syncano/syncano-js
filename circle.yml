@@ -15,3 +15,10 @@ deployment:
     commands:
       - npm run release
       - npm run codeclimate
+
+  docs:
+    branch: release/1.0.0
+    commands:
+      - npm run build:docs
+      - npm run release:docs
+
