@@ -57,10 +57,32 @@ const DataViewMeta = Meta({
   }
 });
 
+const DataViewConstraints = {
+  name: {
+    presence: true,
+    length: {
+      maximum: 64
+    }
+  },
+  query: {
+    presence: true
+  },
+  class: {
+    presence: true
+  },
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  }
+};
+
 const DataView = stampit()
   .compose(Model)
   .setMeta(DataViewMeta)
   .setQuerySet(DataViewQerySet)
+  .setConstraints(DataViewConstraints)
   .methods({
 
     /**
