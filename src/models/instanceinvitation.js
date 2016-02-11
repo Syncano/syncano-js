@@ -16,8 +16,25 @@ const InstanceInvitationMeta = Meta({
   }
 });
 
+const InstanceInvitationConstraints = {
+  email: {
+    presence: true
+  },
+  role: {
+    presence: true
+  },
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  }
+};
+
 const InstanceInvitation = stampit()
   .compose(Model)
-  .setMeta(InstanceInvitationMeta);
+  .setMeta(InstanceInvitationMeta)
+  .setConstraints(InstanceInvitationConstraints);
+
 
 export default InstanceInvitation;
