@@ -41,7 +41,7 @@
     "watch:lib": "npm run build:lib -- --watch",
     "watch:dist": "npm run build:dist -- --watch",
     "release": "npm-run-all release:*",
-    "release:docs": "gh-pages -d docs -m Docs"
+    "release:docs": "gh-pages -d docs -m 'Docs [ci skip]'"
   },
   "repository": {
     "type": "git",
