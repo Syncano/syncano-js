@@ -64,9 +64,6 @@ const DataViewConstraints = {
       maximum: 64
     }
   },
-  query: {
-    presence: true
-  },
   class: {
     presence: true
   },
