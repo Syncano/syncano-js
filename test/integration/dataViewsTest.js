@@ -70,6 +70,7 @@ describe('DataView', function() {
 
     return Promise
       .all(_.map(_.range(10), (int) => dataObject({className, instanceName, int}).save()))
+      .then(cleaner.mark)
       .then(() => {
         return Model.please().create(data)
       })
