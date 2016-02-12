@@ -58,12 +58,6 @@ describe('DataView', function() {
     return cleaner.clean();
   });
 
-  const createObjects = function() {
-    for (var i = 0; i <= 10; i++) {
-      dataObject({className, instanceName, int: i}).save()
-    }
-  };
-
   it('should be validated', function() {
     should(Model().save()).be.rejectedWith(ValidationError);
   });
@@ -73,9 +67,16 @@ describe('DataView', function() {
   });
 
   it('should be able to fetch Data Objects', function() {
-    return Model.please().create(data)
+
+    return Promise
+      .all(_.map(_.range(10), (int) => dataObject({className, instanceName, int}).save()))
+      .then(() => {
+        return Model.please().create(data)
+      })
       .then(cleaner.mark)
-      .then(createObjects())
+      .then((dta) => {
+        should(dta).be.an.Object();
+      })
       .then(() => {
           return Model
             .please()
@@ -85,9 +86,9 @@ describe('DataView', function() {
       .then((data) => {
         should(data).be.a.Object();
         should(data).have.property('objects').which.is.Array();
-        should(data.objects[0]).have.property('int').which.is.Number().equal(10);
+        should(data.objects[0]).have.property('int').which.is.Number().equal(9);
         should(data.objects.length).equal(5);
-      })
+      });
   });
 
   it('should be able to save via model instance', function() {
