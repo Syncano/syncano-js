@@ -60,7 +60,7 @@ export function createCleaner() {
 
     clean() {
       return Promise
-        .all(_.map(_data, (object) => object.delete()))
+        .mapSeries(_data, (object) => object.delete())
         .finally(() => {
           _data = [];
         });
