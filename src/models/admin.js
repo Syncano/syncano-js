@@ -1,5 +1,15 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import {BaseQuerySet, Get, List, First, PageSize, Raw} from '../querySet';
+
+const AdminQuerySet = stampit().compose(
+  BaseQuerySet,
+  Get,
+  List,
+  First,
+  PageSize,
+  Raw
+);
 
 const AdminMeta = Meta({
   name: 'admin',
@@ -18,6 +28,7 @@ const AdminMeta = Meta({
 
 const Admin = stampit()
   .compose(Model)
+  .setQuerySet(AdminQuerySet)
   .setMeta(AdminMeta);
 
 export default Admin;

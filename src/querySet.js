@@ -159,7 +159,7 @@ const Create = stampit().methods({
   }
 });
 
-const Get = stampit().methods({
+export const Get = stampit().methods({
 
   /**
   * Returns the object matching the given lookup properties.
@@ -230,7 +230,7 @@ const GetOrCreate = stampit().methods({
   }
 });
 
-const List = stampit().methods({
+export const List = stampit().methods({
 
   /**
   * Returns list of objects that match the given lookup properties.
@@ -384,7 +384,7 @@ const Fields = stampit().methods({
   }
 });
 
-const First = stampit().methods({
+export const First = stampit().methods({
 
   /**
   * Returns the first object matched by the lookup properties or undefined, if there is no matching object.
@@ -417,7 +417,7 @@ const First = stampit().methods({
   }
 });
 
-const PageSize = stampit().methods({
+export const PageSize = stampit().methods({
 
   /**
   * Sets page size.
@@ -468,7 +468,7 @@ const Ordering = stampit().methods({
   }
 });
 
-const Raw = stampit().methods({
+export const Raw = stampit().methods({
 
   /**
   * Disables serialization. Callback will will recive raw JavaScript objects.
@@ -519,5 +519,7 @@ const QuerySet = stampit.compose(
   Fields,
   Raw
 );
+
+export const BaseQuerySet = stampit.compose(QuerySetRequest);
 
 export default QuerySet;
