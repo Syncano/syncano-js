@@ -1,5 +1,18 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import {BaseQuerySet, Create, Delete, Get, GetOrCreate, List, First, PageSize, Ordering} from '../querySet';
+
+const GCMDeviceQuerySet = stampit().compose(
+  BaseQuerySet,
+  List,
+  Create,
+  Delete,
+  Get,
+  GetOrCreate,
+  First,
+  PageSize,
+  Ordering
+);
 
 const GCMDeviceMeta = Meta({
   name: 'gcmdevice',
@@ -31,6 +44,7 @@ const GCMDevicConstraints = {
 const GCMDevice = stampit()
   .compose(Model)
   .setMeta(GCMDeviceMeta)
+  .setQuerySet(GCMDeviceQuerySet)
   .setConstraints(GCMDevicConstraints);
 
 export default GCMDevice;

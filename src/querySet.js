@@ -183,7 +183,7 @@ export const Get = stampit().methods({
   }
 });
 
-const GetOrCreate = stampit().methods({
+export const GetOrCreate = stampit().methods({
 
   /**
   * A convenience method for looking up an object with the given lookup properties, creating one if necessary.
