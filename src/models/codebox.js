@@ -52,6 +52,22 @@ const CodeBoxMeta = Meta({
   relatedModels: [ 'CodeBoxTrace' ]
 });
 
+/**
+ * OO wrapper around codeboxes {@link http://docs.syncano.com/v4.0/docs/codebox-list-codeboxes endpoint}.
+ * **CodeBox** has special method called ``run`` which will execute attached source code.
+ * @constructor
+ * @type {CodeBox}
+
+ * @property {Number} id
+ * @property {String} instanceName
+ * @property {String} label
+ * @property {String} source
+ * @property {String} runtime_name
+ * @property {String} [description = null]
+ * @property {String} [links = {}]
+ * @property {String} [created_at = null]
+ * @property {String} [updated_at = null]
+ */
 const CodeBox = stampit()
   .compose(Model)
   .setMeta(CodeBoxMeta)
@@ -68,8 +84,8 @@ const CodeBox = stampit()
 
     * @example {@lang javascript}
     * CodeBox.please().get({instanceName: 'test-one', id: 1}).then(function(codebox) {
-        codebox.run({some: 'variable'}).then(function(trace) {});
-      });
+    *   codebox.run({some: 'variable'}).then(function(trace) {});
+    * });
     */
     run(payload = {}) {
       const meta = this.getMeta();

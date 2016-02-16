@@ -32,6 +32,28 @@ const ClassConstraints = {
   }
 };
 
+/**
+ * OO wrapper around instance groups {@link http://docs.syncano.com/v4.0/docs/instancesinstanceclasses endpoint}.
+ * @constructor
+ * @type {Class}
+
+ * @property {String} name
+ * @property {String} instanceName
+ * @property {Number} objects_count
+ * @property {Array} schema
+ * @property {String} status
+ * @property {Object} metadata
+ * @property {String} revision
+ * @property {String} expected_revision
+ * @property {String} group
+ * @property {String} group_permissions
+ * @property {String} other_permissions
+ * @property {String} [description = null]
+ * @property {String} [links = {}]
+ * @property {String} [created_at = null]
+ * @property {String} [updated_at = null]
+
+ */
 const Class = stampit()
   .compose(Model)
   .setMeta(ClassMeta)

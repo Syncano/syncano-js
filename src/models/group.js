@@ -33,6 +33,19 @@ const GroupConstraints = {
 };
 
 
+/**
+ * OO wrapper around instance groups {@link http://docs.syncano.com/v4.0/docs/groups endpoint}.
+ * @constructor
+ * @type {Group}
+
+ * @property {Number} id
+ * @property {String} instanceName
+ * @property {String} label
+ * @property {String} [description = null]
+ * @property {String} [links = {}]
+ * @property {String} [created_at = null]
+ * @property {String} [updated_at = null]
+ */
 const Group = stampit()
   .compose(Model)
   .setMeta(GroupMeta)
