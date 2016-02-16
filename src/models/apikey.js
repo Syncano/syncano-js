@@ -1,5 +1,18 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import {BaseQuerySet, Get, Create, Delete, Update, List, First, Ordering, PageSize} from '../querySet';
+
+const ApiKeyQuerySet = stampit().compose(
+  BaseQuerySet,
+  Get,
+  Create,
+  Delete,
+  Update,
+  List,
+  First,
+  Ordering,
+  PageSize
+);
 
 const ApiKeyMeta = Meta({
   name: 'apiKey',
@@ -28,6 +41,7 @@ const ApiKeyConstraints = {
 const ApiKey = stampit()
   .compose(Model)
   .setMeta(ApiKeyMeta)
+  .setQuerySet(ApiKeyQuerySet)
   .setConstraints(ApiKeyConstraints);
 
 export default ApiKey;

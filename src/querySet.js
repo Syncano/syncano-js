@@ -124,7 +124,7 @@ const QuerySetRequest = stampit().compose(Request)
   });
 
 
-const Create = stampit().methods({
+export const Create = stampit().methods({
 
   /**
   * A convenience method for creating an object and saving it all in one step.
@@ -257,7 +257,7 @@ export const List = stampit().methods({
   }
 });
 
-const Delete = stampit().methods({
+export const Delete = stampit().methods({
 
   /**
   * Removes single object based on provided properties.
@@ -282,7 +282,7 @@ const Delete = stampit().methods({
   }
 });
 
-const Update = stampit().methods({
+export const Update = stampit().methods({
 
   /**
   * Updates single object based on provided arguments
@@ -439,7 +439,7 @@ export const PageSize = stampit().methods({
   }
 });
 
-const Ordering = stampit().methods({
+export const Ordering = stampit().methods({
 
   /**
   * Sets order of returned objects.
