@@ -11,7 +11,7 @@ describe('CodeBox', function() {
   let Instance = null;
   let CodeBox = null;
   let CodeBoxId = null;
-  const instanceName = suffix.get('instance');
+  const instanceName = suffix.get('CodeBox');
   const codeBoxName = suffix.get('codebox');
   const runtimeName = 'python';
 

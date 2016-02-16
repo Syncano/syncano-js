@@ -70,7 +70,7 @@ describe('RequestError', function() {
   let error = null;
 
   beforeEach(function() {
-    error = new RequestError({status: 400}, {body: {name: ['is required']}});
+    error = new RequestError({status: 400, response: {body: {name: ['is required']}}});
   });
 
   it('is a function', function() {

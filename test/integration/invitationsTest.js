@@ -13,7 +13,7 @@ describe('Instance Invitation', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('instance');
+  const instanceName = suffix.get('Invitation');
   const email = Date.now() + '@invitation.com';
   const email2 = Date.now() + '@devitation.com';
   const data = {
@@ -59,7 +59,7 @@ describe('Instance Invitation', function() {
         should(inv).have.property('inviter').which.is.String();
         should(inv).have.property('created_at').which.is.String();
         should(inv).have.property('updated_at').which.is.String();
-        should(inv).have.property('state').which.is.String().equal('new');        
+        should(inv).have.property('state').which.is.String().equal('new');
         should(inv).have.property('links').which.is.Object();
         should(inv).have.property('instanceName').which.is.String().equal(data.instanceName);
       });
@@ -96,7 +96,7 @@ describe('Instance Invitation', function() {
           should(inv).have.property('inviter').which.is.String();
           should(inv).have.property('created_at').which.is.String();
           should(inv).have.property('updated_at').which.is.String();
-          should(inv).have.property('state').which.is.String().equal('new');        
+          should(inv).have.property('state').which.is.String().equal('new');
           should(inv).have.property('links').which.is.Object();
           should(inv).have.property('instanceName').which.is.String().equal(data.instanceName);
         });
@@ -127,7 +127,7 @@ describe('Instance Invitation', function() {
           should(inv).have.property('inviter').which.is.String();
           should(inv).have.property('created_at').which.is.String();
           should(inv).have.property('updated_at').which.is.String();
-          should(inv).have.property('state').which.is.String().equal('new');        
+          should(inv).have.property('state').which.is.String().equal('new');
           should(inv).have.property('links').which.is.Object();
           should(inv).have.property('instanceName').which.is.String().equal(data.instanceName);
         });
@@ -161,7 +161,7 @@ describe('Instance Invitation', function() {
           should(inv).have.property('inviter').which.is.String();
           should(inv).have.property('created_at').which.is.String();
           should(inv).have.property('updated_at').which.is.String();
-          should(inv).have.property('state').which.is.String().equal('new');        
+          should(inv).have.property('state').which.is.String().equal('new');
           should(inv).have.property('links').which.is.Object();
           should(inv).have.property('instanceName').which.is.String().equal(data.instanceName);
         });

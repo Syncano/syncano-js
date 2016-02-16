@@ -15,7 +15,7 @@ describe('DataView', function() {
   let Instance = null;
   let Class = null;
   let dataObject = null;
-  const instanceName = suffix.get('instance');
+  const instanceName = suffix.get('DataView');
   const dataViewName = suffix.get('dataview');
   const className = suffix.get('class');
   const data = {
@@ -31,9 +31,9 @@ describe('DataView', function() {
     name: className,
     instanceName: instanceName,
     schema: [{
-      "order_index": true, 
-      "filter_index": true, 
-      "type": "integer", 
+      "order_index": true,
+      "filter_index": true,
+      "type": "integer",
       "name": "int"
       }]
     };

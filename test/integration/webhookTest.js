@@ -14,7 +14,7 @@ describe('Webhooks', function() {
   let CodeBox = null;
   let Instance = null;
 
-  const instanceName = suffix.get('instance');
+  const instanceName = suffix.get('Webhooks');
   const webhookName = suffix.get('webhook');
   const runtimeName = 'python';
   const codeBoxLabel = suffix.get('codeBox');

@@ -1,6 +1,6 @@
 import stampit from 'stampit';
-import Promise from 'bluebird';
 import Request from './request';
+
 
 const Account = stampit().compose(Request)
   .props({
@@ -13,14 +13,7 @@ const Account = stampit().compose(Request)
       const path = this._account.registerPath;
       const options = {payload: user};
 
-      return new Promise((resolve, reject) => {
-        this.makeRequest('POST', path, options, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-          resolve(res.body, res);
-        });
-      })
+      return this.makeRequest('POST', path, options);
     }
   });
 
