@@ -46,8 +46,14 @@ export function RequestError(error) {
   this.stack = (new Error()).stack;
 
   if (_.isObject(this.errors)) {
-    this.message = _.reduce(['detail', 'error', '__all__'], (result, value) => {
-      result += this.errors[value] || '';
+    this.message = _.reduce(['detail', 'error', '__all__', 'non_field_errors'], (result, value) => {
+      let error = this.errors[value];
+
+      if (_.isArray(error)) {
+        error = error.join(', ');
+      }
+
+      result += error || '';
       return result;
     }, this.message);
 
