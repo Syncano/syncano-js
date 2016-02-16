@@ -13,7 +13,7 @@ describe('Class', function() {
   let connection = null;
   let Class = null;
   let Instance = null;
-  const instanceName = suffix.get('instance');
+  const instanceName = suffix.get('Class');
   const className = suffix.get('class');
   const data = {
     name: className,

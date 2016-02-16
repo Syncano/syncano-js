@@ -12,7 +12,7 @@ describe('ApiKey', function() {
   let Instance = null;
   let ApiKey = null;
   let ApiKeyId = null;
-  const instanceName = suffix.get('instance');
+  const instanceName = suffix.get('ApiKey');
   const apiKeyName = suffix.get('api_key');
 
   before(function() {

@@ -13,7 +13,7 @@ describe('User', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('instance');
+  const instanceName = suffix.get('User');
   const data = {
     instanceName,
     username: 'testuser',
