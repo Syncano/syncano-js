@@ -19,10 +19,9 @@ const WebhookQuerySet = stampit().compose(QuerySet).methods({
 
   */
   run(properties = {}, payload = {}) {
-    const WebhookTrace = this.getConfig().WebhookTrace;
+    const {WebhookTrace} = this.getConfig();
 
     this.properties = _.assign({}, this.properties, properties);
-
     this.method = 'POST';
     this.endpoint = 'run';
     this.payload = payload;
@@ -49,10 +48,9 @@ const WebhookQuerySet = stampit().compose(QuerySet).methods({
 
   */
   runPublic(properties = {}, payload = {}) {
-    const WebhookTrace = this.getConfig().WebhookTrace;
+    const {WebhookTrace} = this.getConfig();
 
     this.properties = _.assign({}, this.properties, properties);
-
     this.method = 'POST';
     this.endpoint = 'public';
     this.payload = payload;
