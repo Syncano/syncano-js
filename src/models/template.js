@@ -60,7 +60,8 @@ const Template = stampit()
 
     render(context = {}) {
       const options = {
-        payload: {context}
+        payload: {context},
+        responseAttr: 'text'
       }
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('render', this);

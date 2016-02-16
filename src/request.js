@@ -109,7 +109,8 @@ const Request = stampit().compose(ConfigMixin, Logger)
         headers: {},
         query: {},
         payload: {},
-        attachments: {}
+        attachments: {},
+        responseAttr: 'body'
       });
 
       if (_.isEmpty(methodName) || !_.includes(this._request.allowedMethods, method)) {
@@ -160,7 +161,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
               message: 'Bad request'
             });
           }
-          return response.body || response.text;
+          return response[options.responseAttr];
         })
         .catch((err) => {
           if (err.status && err.response) {
