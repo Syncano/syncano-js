@@ -7,8 +7,7 @@ const AdminQuerySet = stampit().compose(
   Get,
   List,
   First,
-  PageSize,
-  Raw
+  PageSize
 );
 
 const AdminMeta = Meta({

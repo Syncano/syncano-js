@@ -520,6 +520,6 @@ const QuerySet = stampit.compose(
   Raw
 );
 
-export const BaseQuerySet = stampit.compose(QuerySetRequest);
+export const BaseQuerySet = stampit.compose(QuerySetRequest, Raw);
 
 export default QuerySet;
