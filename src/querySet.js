@@ -316,7 +316,7 @@ export const Update = stampit().methods({
   }
 });
 
-const UpdateOrCreate = stampit().methods({
+export const UpdateOrCreate = stampit().methods({
 
   /**
   * A convenience method for updating an object with the given properties, creating a new one if necessary.

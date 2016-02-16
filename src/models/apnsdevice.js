@@ -1,5 +1,20 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import {BaseQuerySet, Create, Delete, Get, Update, UpdateOrCreate, GetOrCreate, List, First, PageSize, Ordering} from '../querySet';
+
+const APNSDeviceQuerySet = stampit().compose(
+  BaseQuerySet,
+  List,
+  Create,
+  Delete,
+  Get,
+  Update,
+  UpdateOrCreate,
+  GetOrCreate,
+  First,
+  PageSize,
+  Ordering
+);
 
 const APNSDeviceMeta = Meta({
   name: 'apnsdevice',
@@ -37,6 +52,7 @@ const APNSDeviceConstraints = {
 const APNSDevice = stampit()
   .compose(Model)
   .setMeta(APNSDeviceMeta)
+  .setQuerySet(APNSDeviceQuerySet)
   .setConstraints(APNSDeviceConstraints);
 
 export default APNSDevice;

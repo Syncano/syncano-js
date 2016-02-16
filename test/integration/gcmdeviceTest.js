@@ -82,13 +82,13 @@ describe('GCMDevice', function() {
 
   describe('#please()', function() {
 
-    it('should be able to list objects', function() {
+    it('should be able to list Models', function() {
       return Model.please().list(data).then((objects) => {
         should(objects).be.an.Array();
       });
     });
 
-    it('should be able to create an object', function() {
+    it('should be able to create a Model', function() {
       return Model.please().create(data)
       .then(cleaner.mark)
       .then((object) => {
@@ -102,7 +102,7 @@ describe('GCMDevice', function() {
       });
     });
 
-    it('should be able to get an object', function() {
+    it('should be able to get a Model', function() {
       return Model.please().create(data)
         .then(cleaner.mark)
         .then((object) => {
@@ -135,7 +135,7 @@ describe('GCMDevice', function() {
         });
     });
 
-    it('should be able to get or create an object (CREATE)', function() {
+    it('should be able to get or create a Model (CREATE)', function() {
       return Model.please().getOrCreate(data, {label: 'test2'})
       .then(cleaner.mark)
       .then((object) => {
@@ -169,7 +169,63 @@ describe('GCMDevice', function() {
       });
     });
 
-    it('should be able to get first object (SUCCESS)', function() {
+    it('should be able to update a Model', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((gcm) => {
+          should(gcm).be.an.Object();
+          should(gcm).have.property('instanceName').which.is.String().equal(instanceName);
+          should(gcm).have.property('label').which.is.String().equal(data.label);
+          should(gcm).have.property('registration_id').which.is.String().equal(data.registration_id);
+
+        return Model.please().update({registration_id: registrationId, instanceName}, {label: 'new label'});
+      })
+      .then((gcm) => {
+        should(gcm).be.an.Object();
+        should(gcm).have.property('instanceName').which.is.String().equal(instanceName);
+        should(gcm).have.property('registration_id').which.is.String().equal(data.registration_id);
+        should(gcm.label).which.is.String().equal('new label');
+      });
+    });
+
+    it('should be able to update or create a Model (UPDATE)', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((gcm) => {
+          should(gcm).be.an.Object();
+          should(gcm).have.property('instanceName').which.is.String().equal(instanceName);
+          should(gcm).have.property('label').which.is.String().equal(data.label);
+          should(gcm).have.property('registration_id').which.is.String().equal(registrationId);
+
+        return Model.please().updateOrCreate(data, {label: 'new label'});
+      })
+      .then((gcm) => {
+        should(gcm).be.an.Object();
+        should(gcm).have.property('instanceName').which.is.String().equal(instanceName);
+        should(gcm).have.property('registration_id').which.is.String().equal(registrationId);
+        should(gcm.label).which.is.String().equal('new label');
+      });
+    });
+
+    it('should be able to update or create a Model (CREATE)', function() {
+      let properties = {registration_id: registrationId, instanceName};
+      let object = {label: 'new label'};
+      let defaults = {
+          label: 'label',
+          registration_id: registrationId
+      };
+
+      return Model.please().updateOrCreate(properties, object, defaults)
+        .then(cleaner.mark)
+        .then((gcm) => {
+          should(gcm).be.an.Object();
+          should(gcm).have.property('instanceName').which.is.String().equal(instanceName);
+          should(gcm).have.property('registration_id').which.is.String().equal(registrationId);
+          should(gcm.label).which.is.String().equal(defaults.label);
+        });
+      });
+
+    it('should be able to get first Model (SUCCESS)', function() {
       const ids = [
         `${registrationId}1`,
         `${registrationId}2`

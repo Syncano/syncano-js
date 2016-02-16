@@ -10,7 +10,7 @@ describe('APNS Device', function() {
 
   const cleaner = createCleaner();
   let connection = null;
-  let APNSDevice = null;
+  let Model = null;
   let Instance = null;
   const instanceName = suffix.get('instance');
   let deviceLabel = suffix.get('apns');
@@ -28,7 +28,7 @@ describe('APNS Device', function() {
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
-    APNSDevice = connection.APNSDevice;
+    Model = connection.APNSDevice;
 
     return Instance.please().create({name: instanceName});
   });
@@ -42,27 +42,27 @@ describe('APNS Device', function() {
   });
 
   it('should be validated', function() {
-    should(APNSDevice().save()).be.rejectedWith(ValidationError);
+    should(Model().save()).be.rejectedWith(ValidationError);
   });
 
   it('should require "instanceName"', function() {
-    should(APNSDevice({label: deviceLabel}).save()).be.rejectedWith(/instanceName/);
+    should(Model({label: deviceLabel}).save()).be.rejectedWith(/instanceName/);
   });
 
   it('should require "user_id"', function() {
-    should(APNSDevice({label: deviceLabel, instanceName}).save()).be.rejectedWith(/user_id/);
+    should(Model({label: deviceLabel, instanceName}).save()).be.rejectedWith(/user_id/);
   });
 
   it('should require "registration_id"', function() {
-    should(APNSDevice({label: deviceLabel, instanceName, user_id: userId}).save()).be.rejectedWith(/registration_id/);
+    should(Model({label: deviceLabel, instanceName, user_id: userId}).save()).be.rejectedWith(/registration_id/);
   });
 
   it('should require "device_id"', function() {
-    should(APNSDevice({label: deviceLabel, instanceName, user_id: userId, registration_id: hex.getRandom(64)}).save()).be.rejectedWith(/device_id/);
+    should(Model({label: deviceLabel, instanceName, user_id: userId, registration_id: hex.getRandom(64)}).save()).be.rejectedWith(/device_id/);
   });
 
   it('should be able to save via model instance', function() {
-    return APNSDevice(data).save()
+    return Model(data).save()
       .then(cleaner.mark)
       .then((apns) => {
         should(apns).be.an.Object();
@@ -80,7 +80,7 @@ describe('APNS Device', function() {
 
   it('should be able to update via model instance', function() {
 
-    return APNSDevice(data).save()
+    return Model(data).save()
       .then(cleaner.mark)
       .then((apns) => {
         should(apns).have.property('instanceName').which.is.String().equal(data.instanceName);
@@ -99,7 +99,7 @@ describe('APNS Device', function() {
 
   it('should be able to delete via model instance', function() {
 
-    return APNSDevice(data).save()
+    return Model(data).save()
       .then((apns) => {
         should(apns).have.property('instanceName').which.is.String().equal(data.instanceName);
         should(apns).have.property('label').which.is.String().equal(data.label);
@@ -112,13 +112,13 @@ describe('APNS Device', function() {
   describe('#please()', function() {
 
     it('should be able to list Models', function() {
-      return APNSDevice.please().list({instanceName}).then((devices) => {
+      return Model.please().list({instanceName}).then((devices) => {
         should(devices).be.an.Array();
       });
     });
 
     it('should be able to create a Model', function() {
-      return APNSDevice.please().create(data)
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((apns) => {
           should(apns).be.an.Object();
@@ -135,7 +135,7 @@ describe('APNS Device', function() {
     });
 
     it('should be able to get a Model', function() {
-      return APNSDevice.please().create(data)
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((apns) => {
           should(apns).be.an.Object();
@@ -146,7 +146,7 @@ describe('APNS Device', function() {
           return apns;
         })
         .then(() => {
-          return APNSDevice
+          return Model
             .please()
             .get({registration_id: registrationId, instanceName})
             .request();
@@ -166,7 +166,7 @@ describe('APNS Device', function() {
     });
 
     it('should be able to delete a Model', function() {
-      return APNSDevice.please().create(data)
+      return Model.please().create(data)
         .then((apns) => {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
@@ -176,7 +176,7 @@ describe('APNS Device', function() {
           return apns;
         })
         .then(() => {
-          return APNSDevice
+          return Model
             .please()
             .delete({registration_id: registrationId, instanceName})
             .request();
@@ -184,7 +184,7 @@ describe('APNS Device', function() {
     });
 
     it('should be able to get or create a Model (CREATE)', function() {
-      return APNSDevice.please().create(data)
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((apns) => {
           should(apns).be.an.Object();
@@ -201,7 +201,7 @@ describe('APNS Device', function() {
     });
 
     it('should be able to get or create a Model (GET)', function() {
-      return APNSDevice.please().create({label: 'test', instanceName, user_id: userId, registration_id: registrationId, device_id: devId})
+      return Model.please().create({label: 'test', instanceName, user_id: userId, registration_id: registrationId, device_id: devId})
         .then(cleaner.mark)
         .then((apns) => {
           should(apns).be.an.Object();
@@ -209,7 +209,7 @@ describe('APNS Device', function() {
           should(apns).have.property('label').which.is.String().equal('test');
           should(apns).have.property('registration_id').which.is.String().equal(registrationId);
 
-          return APNSDevice.please().getOrCreate(data, {label: 'new label'});
+          return Model.please().getOrCreate(data, {label: 'new label'});
       })
       .then((apns) => {
         should(apns).be.an.Object();
@@ -220,7 +220,7 @@ describe('APNS Device', function() {
     });
 
     it('should be able to update a Model', function() {
-      return APNSDevice.please().create(data)
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((apns) => {
           should(apns).be.an.Object();
@@ -228,7 +228,7 @@ describe('APNS Device', function() {
           should(apns).have.property('label').which.is.String().equal(deviceLabel);
           should(apns).have.property('registration_id').which.is.String().equal(registrationId);
 
-        return APNSDevice.please().update({registration_id: registrationId, instanceName}, {label: 'new label'});
+        return Model.please().update({registration_id: registrationId, instanceName}, {label: 'new label'});
       })
       .then((apns) => {
         should(apns).be.an.Object();
@@ -239,7 +239,7 @@ describe('APNS Device', function() {
     });
 
     it('should be able to update or create a Model (UPDATE)', function() {
-      return APNSDevice.please().create(data)
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((apns) => {
           should(apns).be.an.Object();
@@ -247,7 +247,7 @@ describe('APNS Device', function() {
           should(apns).have.property('label').which.is.String().equal(deviceLabel);
           should(apns).have.property('registration_id').which.is.String().equal(registrationId);
 
-        return APNSDevice.please().updateOrCreate(data, {label: 'new label'});
+        return Model.please().updateOrCreate(data, {label: 'new label'});
       })
       .then((apns) => {
         should(apns).be.an.Object();
@@ -267,7 +267,7 @@ describe('APNS Device', function() {
           device_id: devId
       };
 
-      return APNSDevice.please().updateOrCreate(properties, object, defaults)
+      return Model.please().updateOrCreate(properties, object, defaults)
         .then(cleaner.mark)
         .then((apns) => {
           should(apns).be.an.Object();
@@ -290,10 +290,10 @@ describe('APNS Device', function() {
       ];
 
       return Promise
-        .all(_.map(regIds, (id) => APNSDevice.please().create({registration_id: id, instanceName, label: deviceLabel, user_id: userId, device_id: devId})))
+        .all(_.map(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user_id: userId, device_id: devId})))
         .then(cleaner.mark)
         .then(() => {
-          return APNSDevice.please().first({instanceName});
+          return Model.please().first({instanceName});
         })
         .then((apns) => {
           should(apns).be.an.Object();
@@ -307,11 +307,11 @@ describe('APNS Device', function() {
       ];
 
       return Promise
-        .all(_.map(regIds, (id) => APNSDevice.please().create({registration_id: id, instanceName, label: deviceLabel, user_id: userId, device_id: devId})))
+        .all(_.map(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user_id: userId, device_id: devId})))
         .then(cleaner.mark)
         .then((apns) => {
           should(apns).be.an.Array().with.length(2);
-          return APNSDevice.please({instanceName}).pageSize(1);
+          return Model.please({instanceName}).pageSize(1);
         })
         .then((apns) => {
           should(apns).be.an.Array().with.length(1);
@@ -326,16 +326,16 @@ describe('APNS Device', function() {
       let asc = null;
 
       return Promise
-      .all(_.map(regIds, (id) => APNSDevice.please().create({registration_id: id, instanceName, label: deviceLabel, user_id: userId, device_id: devId})))
+      .all(_.map(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user_id: userId, device_id: devId})))
       .then(cleaner.mark)
       .then((apns) => {
           should(apns).be.an.Array().with.length(2);
-          return APNSDevice.please({instanceName}).ordering('asc');
+          return Model.please({instanceName}).ordering('asc');
         })
         .then((apns) => {
           should(apns).be.an.Array().with.length(2);
           asc = apns;
-          return APNSDevice.please({instanceName}).ordering('desc');
+          return Model.please({instanceName}).ordering('desc');
         }).then((desc) => {
           const ascLabels = _.map(asc, 'label');
           const descLabels = _.map(desc, 'label');
@@ -350,7 +350,7 @@ describe('APNS Device', function() {
     });
 
     it('should be able to get raw data', function() {
-      return APNSDevice.please().list({instanceName}).raw().then((response) => {
+      return Model.please().list({instanceName}).raw().then((response) => {
         should(response).be.a.Object();
         should(response).have.property('objects').which.is.Array();
         should(response).have.property('next').which.is.null();
