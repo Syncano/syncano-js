@@ -47,7 +47,8 @@ describe('Webhooks', function() {
       name: webhookName,
       instanceName: instanceName,
       codebox: codeBoxId,
-      description: 'test'
+      description: 'test',
+      public: true
     };
   });
 
@@ -135,6 +136,28 @@ describe('Webhooks', function() {
         should(webhook).have.property('links').which.is.Object();
 
         return webhook.run();
+      }).then((trace) => {
+        should(trace).be.a.Object();
+        should(trace).have.property('id').which.is.Number();
+        should(trace).have.property('status').which.is.String();
+        should(trace).have.property('status').which.is.String();
+        should(trace).have.property('duration').which.is.Number();
+        should(trace).have.property('result').which.is.Object();
+        should(trace).have.property('executed_at').which.is.String();
+      });
+  });
+
+  it('should be able to run *public* codebox via model instance', function() {
+    return Webhook(webhookData).save()
+      .then((webhook) => {
+        should(webhook).be.a.Object();
+        should(webhook).have.property('name').which.is.String().equal(webhookData.name);
+        should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
+        should(webhook).have.property('description').which.is.String().equal(webhookData.description);
+        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('links').which.is.Object();
+
+        return webhook.runPublic();
       }).then((trace) => {
         should(trace).be.a.Object();
         should(trace).have.property('id').which.is.Number();
@@ -406,7 +429,29 @@ describe('Webhooks', function() {
         should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
         should(webhook).have.property('links').which.is.Object();
 
-        return Webhook.please().run(webhookData);
+        return Webhook.please().run(webhook);
+      }).then((trace) => {
+        should(trace).be.a.Object();
+        should(trace).have.property('id').which.is.Number();
+        should(trace).have.property('status').which.is.String();
+        should(trace).have.property('status').which.is.String();
+        should(trace).have.property('duration').which.is.Number();
+        should(trace).have.property('result').which.is.Object();
+        should(trace).have.property('executed_at').which.is.String();
+      });
+  });
+
+  it('should be able to run *public* codebox', function() {
+    return Webhook(webhookData).save()
+      .then((webhook) => {
+        should(webhook).be.a.Object();
+        should(webhook).have.property('name').which.is.String().equal(webhookData.name);
+        should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
+        should(webhook).have.property('description').which.is.String().equal(webhookData.description);
+        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('links').which.is.Object();
+
+        return Webhook.please().runPublic(webhook);
       }).then((trace) => {
         should(trace).be.a.Object();
         should(trace).have.property('id').which.is.Number();
