@@ -3,7 +3,7 @@ import Request from './request';
 
 
 /**
- * Wrapper around account endpoint. Meant to be used for {@link Syncano} instance.
+ * Wrapper around account endpoint. Meant to be used directly form {@link Syncano} instance.
 
  * @constructor
  * @type {Account}
