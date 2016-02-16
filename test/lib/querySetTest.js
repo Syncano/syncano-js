@@ -32,12 +32,11 @@ describe('QuerySet', function() {
     model = Model.setMeta(meta);
     qs = QuerySet({model: model});
 
-    makeRequestStub = sinon.stub(qs, 'makeRequest').yields(null, {
-      ok: true,
-      body: {
+    makeRequestStub = sinon
+      .stub(qs, 'makeRequest')
+      .returns(Promise.resolve({
         objects: []
-      }
-    });
+      }));
   });
 
   describe('#serialize()', function() {
@@ -142,7 +141,7 @@ describe('QuerySet', function() {
     });
 
     it('should reject request error', function() {
-      makeRequestStub.yields(new Error('Dummy'));
+      makeRequestStub.returns(Promise.reject(new Error('Dummy')))
       should(qs.request()).be.rejectedWith('Dummy');
     });
 

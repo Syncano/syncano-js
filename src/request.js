@@ -1,4 +1,5 @@
 import stampit from 'stampit';
+import Promise from 'bluebird';
 import superagent from 'superagent';
 import _ from 'lodash';
 import {ConfigMixin, Logger} from './utils';
@@ -95,11 +96,10 @@ const Request = stampit().compose(ConfigMixin, Logger)
     * @param {Object} [requestOptions.query = {}] request query
     * @param {Object} [requestOptions.payload = {}] request payload
     * @param {Object} [requestOptions.attachments = {}] request attachments
-    * @param {Function} callback
-    * @returns {Request}
+    * @returns {Promise}
 
     */
-    makeRequest(methodName, path, requestOptions, callback) {
+    makeRequest(methodName, path, requestOptions) {
       const config = this.getConfig();
       let method = (methodName || '').toUpperCase();
       let options = _.defaults({}, requestOptions, {
@@ -112,16 +112,12 @@ const Request = stampit().compose(ConfigMixin, Logger)
         attachments: {}
       });
 
-      if (!_.isFunction(callback)) {
-        throw new Error('"callback" needs to be a Function.');
-      }
-
       if (_.isEmpty(methodName) || !_.includes(this._request.allowedMethods, method)) {
-        return callback(new Error(`Invalid request method: "${methodName}".`));
+        return Promise.reject(new Error(`Invalid request method: "${methodName}".`));
       }
 
       if (_.isEmpty(path)) {
-        return callback(new Error('"path" is required.'));
+        return Promise.reject(new Error('"path" is required.'));
       }
 
       if (!_.isEmpty(options.attachments)) {
@@ -155,17 +151,28 @@ const Request = stampit().compose(ConfigMixin, Logger)
         request = request.attach(key, value);
       });
 
-      request.end(_.wrap(callback, (_callback, err, res) => {
-        if (!_.isUndefined(res) && !res.ok) {
-          this.log(`\n${method} ${path}\n${JSON.stringify(options, null, 2)}\n`);
-          this.log(`Response ${res.status}:`, res.body);
+      return Promise.promisify(request.end, {context: request})()
+        .then((response) => {
+          if (!response.ok) {
+            throw new RequestError({
+              response: response,
+              status: response.status,
+              message: 'Bad request'
+            });
+          }
+          return response.body || response.text;
+        })
+        .catch((err) => {
+          if (err.status && err.response) {
+            this.log(`\n${method} ${path}\n${JSON.stringify(options, null, 2)}\n`);
+            this.log(`Response ${err.status}:`, err.errors);
 
-          err = new RequestError(err, res);
-        }
-        return _callback(err, res);
-      }));
-
-      return request;
+            if (err.name !== 'RequestError') {
+              err = new RequestError(err, err.response);
+            }
+          }
+          throw err;
+        });
     }
 
   }).static({

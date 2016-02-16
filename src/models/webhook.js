@@ -126,24 +126,17 @@ const Webhook = stampit()
       });
     */
     run(payload = {}) {
-      const WebhookTrace = this.getConfig().WebhookTrace;
+      const {WebhookTrace} = this.getConfig();
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('run', this);
 
-      return new Promise((resolve, reject) => {
-        this.makeRequest('POST', path, {payload}, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-
-          const trace = WebhookTrace.fromJSON(res.body, {
+      return this.makeRequest('POST', path, {payload})
+        .then((body) => {
+          return WebhookTrace.fromJSON(body, {
             instanceName: this.instanceName,
             webhookName: this.name
           });
-
-          resolve(trace, res);
         });
-      });
     },
 
     /**
@@ -161,14 +154,7 @@ const Webhook = stampit()
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('reset', this);
 
-      return new Promise((resolve, reject) => {
-        this.makeRequest('POST', path, {}, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-          resolve(this.serialize(res.body), res);
-        });
-      });
+      return this.makeRequest('POST', path).then((body) => this.serialize(body));
     }
 
   });

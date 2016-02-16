@@ -97,14 +97,7 @@ const DataView = stampit()
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('get', this);
 
-      return new Promise((resolve, reject) => {
-        this.makeRequest('GET', path, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-          resolve(res.body, res);
-        });
-      });
+      return this.makeRequest('GET', path);
     }
 
   });
