@@ -1,5 +1,11 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import {Get, List} from '../querySet';
+
+const CodeBoxTraceQuerySet = stampit().compose(
+  Get,
+  List
+);
 
 const CodeBoxTraceMeta = Meta({
   name: 'codeboxtrace',
@@ -16,8 +22,22 @@ const CodeBoxTraceMeta = Meta({
   }
 });
 
+const CodeBoxConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  codeboxId: {
+    presence: true
+  }
+};
+
 const CodeBoxTrace = stampit()
   .compose(Model)
+  .setQuerySet(CodeBoxTraceQuerySet)
+  .setConstraints(CodeBoxConstraints)
   .setMeta(CodeBoxTraceMeta);
 
 export default CodeBoxTrace;
