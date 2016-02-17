@@ -5,14 +5,14 @@ import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
-describe('ApiKey', function() {
+describe.only('ApiKey', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();
   let connection = null;
   let Instance = null;
   let ApiKey = null;
-  const instanceName = suffix.get('instance');
+  const instanceName = suffix.get('ApiKey');
   const apiKeyName = suffix.get('api_key');
   const description = suffix.get('description');
   const data = {

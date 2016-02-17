@@ -13,7 +13,7 @@ describe('Dataobject', function() {
   let Class = null;
   let Instance = null;
   let DataObject = null;
-  const instanceName = suffix.get('instance');
+  const instanceName = suffix.get('Dataobject');
   const className = suffix.get('class');
   const data = {
     name: className,

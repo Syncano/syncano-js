@@ -165,7 +165,7 @@ describe('Model', function() {
 
     it('should delete model record', function() {
       api.delete(`/v1/instances/${instanceName}/`, '*').reply(204);
-      model({name: instanceName}).delete();
+      should(model({name: instanceName}).delete()).be.fulfilled();
     });
 
     it('should throw error when server response is error', function() {

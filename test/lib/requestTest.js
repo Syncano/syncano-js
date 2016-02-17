@@ -70,32 +70,13 @@ describe('Request', function() {
 
   describe('#makeRequest()', function() {
 
-    it('should validate "callback" attribute', function() {
-      should(function() {
-        request.makeRequest('', '', {}, null);
-      }).throw(new Error('"callback" needs to be a function.'));
-    });
-
     it('should validate "methodName" attribute', function() {
-      should(function() {
-        request.makeRequest(null, '', {}, (err) => {
-          throw err;
-        });
-      }).throw(new Error('Invalid request method.'));
-
-      should(function() {
-        request.makeRequest('DUMMY', '', {}, (err) => {
-          throw err;
-        });
-      }).throw(new Error('Invalid request method'));
+      should(request.makeRequest(null, '')).be.rejectedWith('Invalid request method: "null".');
+      should(request.makeRequest('DUMMY', '')).be.rejectedWith('Invalid request method: "DUMMY".');
     });
 
     it('should validate "path" attribute', function() {
-      should(function() {
-        request.makeRequest('GET', '', {}, (err) => {
-          throw err;
-        });
-      }).throw(new Error('"path" is required.'));
+      should(request.makeRequest('GET', '')).be.rejectedWith('"path" is required.');
     });
 
     it('should change request type if attachment is present', function() {
@@ -183,13 +164,6 @@ describe('Request', function() {
       should(stubs._send.calledOnce).be.true();
       should(stubs._end.calledOnce).be.true();
       should(stubs._attach.callCount).be.equal(0);
-    });
-
-    it('should call callback', function(done) {
-      request.makeRequest('GET', '/v1/', {}, () => {
-        should(stubs._send.calledOnce).be.true();
-        done();
-      });
     });
 
   });

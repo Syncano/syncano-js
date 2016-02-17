@@ -19,12 +19,40 @@ const WebhookQuerySet = stampit().compose(QuerySet).methods({
 
   */
   run(properties = {}, payload = {}) {
-    const WebhookTrace = this.getConfig().WebhookTrace;
+    const {WebhookTrace} = this.getConfig();
 
     this.properties = _.assign({}, this.properties, properties);
-
     this.method = 'POST';
     this.endpoint = 'run';
+    this.payload = payload;
+    this._serialize = false;
+
+    return this.then((trace) => {
+      return WebhookTrace.fromJSON(trace, {
+        instanceName: this.properties.instanceName,
+        webhookName: this.properties.name
+      });
+    });
+  },
+
+  /**
+  * Runs `public` Webhook matching the given lookup properties.
+  * @memberOf WebhookQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @returns {Promise}
+
+  * @example {@lang javascript}
+  * Webhook.please().runPublic({public_link: '44cfc5552eacc', instanceName: 'test-one'}).then(function(trace) {});
+
+  */
+  runPublic(properties = {}, payload = {}) {
+    const {WebhookTrace} = this.getConfig();
+
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.endpoint = 'public';
     this.payload = payload;
     this._serialize = false;
 
@@ -80,8 +108,8 @@ const WebhookMeta = Meta({
       'path': '/v1/instances/{instanceName}/webhooks/{name}/reset_link/'
     },
     'public': {
-      'methods': ['get'],
-      'path': '/v1/instances/{instanceName}/webhooks/p/{publicLink}/{name}/'
+      'methods': ['post'],
+      'path': '/v1/instances/{instanceName}/webhooks/p/{public_link}/'
     }
   },
   relatedModels: ['WebhookTrace']
@@ -126,24 +154,44 @@ const Webhook = stampit()
       });
     */
     run(payload = {}) {
-      const WebhookTrace = this.getConfig().WebhookTrace;
+      const {WebhookTrace} = this.getConfig();
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('run', this);
 
-      return new Promise((resolve, reject) => {
-        this.makeRequest('POST', path, {payload}, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-
-          const trace = WebhookTrace.fromJSON(res.body, {
+      return this.makeRequest('POST', path, {payload})
+        .then((body) => {
+          return WebhookTrace.fromJSON(body, {
             instanceName: this.instanceName,
             webhookName: this.name
           });
-
-          resolve(trace, res);
         });
+    },
+
+    /**
+    * Runs current `public` Webhook.
+    * @memberOf Webhook
+    * @instance
+
+    * @param {Object} [payload = {}]
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * Webhook.please().get({instanceName: 'test-one', id: 1}).then(function(codebox) {
+        codebox.runPublic({some: 'variable'}).then(function(trace) {});
       });
+    */
+    runPublic(payload = {}) {
+      const {WebhookTrace} = this.getConfig();
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('public', this);
+
+      return this.makeRequest('POST', path, {payload})
+        .then((body) => {
+          return WebhookTrace.fromJSON(body, {
+            instanceName: this.instanceName,
+            webhookName: this.name
+          });
+        });
     },
 
     /**
@@ -161,14 +209,7 @@ const Webhook = stampit()
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('reset', this);
 
-      return new Promise((resolve, reject) => {
-        this.makeRequest('POST', path, {}, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-          resolve(this.serialize(res.body), res);
-        });
-      });
+      return this.makeRequest('POST', path).then((body) => this.serialize(body));
     }
 
   });

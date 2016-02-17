@@ -50,33 +50,23 @@ const Template = stampit()
   .setMeta(TemplateMeta)
   .methods({
 
-    request(path, options, type) {
-      return new Promise((resolve, reject) => {
-        this.makeRequest('POST', path, options, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-          resolve(res[type], res);
-        });
-      });
-    },
-
     rename(payload = { new_name: this.name }) {
       const options = {payload};
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('rename', this);
 
-      return this.request(path, options, 'body');
+      return this.makeRequest('POST', path, options);
     },
 
     render(context = {}) {
       const options = {
-        payload: {context}
+        payload: {context},
+        responseAttr: 'text'
       }
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('render', this);
 
-      return this.request(path, options, 'text');
+      return this.makeRequest('POST', path, options);
     }
 
   })

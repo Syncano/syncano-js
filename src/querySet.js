@@ -95,18 +95,11 @@ const QuerySetRequest = stampit().compose(Request)
         attachments: this.attachments
       });
 
-      return new Promise((resolve, reject) => {
-        if (!_.includes(allowedMethods, method)) {
-          return reject(new Error(`Invalid request method: "${this.method}".`));
-        }
+      if (!_.includes(allowedMethods, method)) {
+        return Promise.reject(new Error(`Invalid request method: "${this.method}".`));
+      }
 
-        this.makeRequest(method, path, options, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-          resolve(this.serialize(res.body), res);
-        });
-      })
+      return this.makeRequest(method, path, options).then((body) => this.serialize(body));
     },
 
     /**
