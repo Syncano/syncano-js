@@ -1,5 +1,11 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import {Get, List} from '../querySet';
+
+const WebhookTraceQuerySet = stampit().compose(
+  Get,
+  List
+);
 
 const WebhookTraceMeta = Meta({
   name: 'triggertrace',
@@ -31,6 +37,7 @@ const WebhookTraceConstraints = {
 const WebhookTrace = stampit()
   .compose(Model)
   .setMeta(WebhookTraceMeta)
+  .setQuerySet(WebhookTraceQuerySet)
   .setConstraints(WebhookTraceConstraints);
 
 export default WebhookTrace;
