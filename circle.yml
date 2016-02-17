@@ -15,12 +15,3 @@ deployment:
     commands:
       - npm run release
       - npm run codeclimate
-
-  docs:
-    branch: release/1.0.0
-    commands:
-      - git config --global user.email "ci@syncano.com"
-      - git config --global user.name "CI"
-      - npm run build:docs
-      - npm run release:docs
-
