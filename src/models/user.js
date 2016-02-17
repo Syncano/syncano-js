@@ -1,5 +1,13 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import {BaseQuerySet, Get, Create, List} from '../querySet';
+
+const UserQuerySet = stampit().compose(
+  BaseQuerySet,
+  Get,
+  Create,
+  List
+);
 
 const UserMeta = Meta({
   name: 'user',
@@ -42,6 +50,7 @@ const UserConstraints = {
 const User = stampit()
   .compose(Model)
   .setMeta(UserMeta)
+  .setQuerySet(UserQuerySet)
   .setConstraints(UserConstraints);
 
 export default User;
