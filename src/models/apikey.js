@@ -1,6 +1,6 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
-import {BaseQuerySet, Get, Create, Delete, Update, List, First, Ordering, PageSize} from '../querySet';
+import {BaseQuerySet, Get, Create, Delete, Update, List} from '../querySet';
 
 const ApiKeyQuerySet = stampit().compose(
   BaseQuerySet,
@@ -8,10 +8,7 @@ const ApiKeyQuerySet = stampit().compose(
   Create,
   Delete,
   Update,
-  List,
-  First,
-  Ordering,
-  PageSize
+  List
 );
 
 const ApiKeyMeta = Meta({

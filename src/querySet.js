@@ -523,7 +523,10 @@ const QuerySet = stampit.compose(
 export const BaseQuerySet = stampit.compose(
   QuerySetRequest,
   Raw,
-  Fields
+  Fields,
+  Ordering,
+  First,
+  PageSize
 );
 
 export default QuerySet;

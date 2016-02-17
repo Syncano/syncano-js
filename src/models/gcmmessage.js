@@ -1,16 +1,13 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
-import {BaseQuerySet, Create, Get, GetOrCreate, List, First, PageSize, Ordering} from '../querySet';
+import {BaseQuerySet, Create, Get, GetOrCreate, List} from '../querySet';
 
 const GCMMessageQuerySet = stampit().compose(
   BaseQuerySet,
   Create,
   Get,
   List,
-  GetOrCreate,
-  First,
-  PageSize,
-  Ordering
+  GetOrCreate
 );
 
 const GCMMessageMeta = Meta({
