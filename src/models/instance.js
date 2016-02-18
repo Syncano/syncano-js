@@ -12,6 +12,10 @@ const InstanceMeta = Meta({
     'list': {
       'methods': ['post', 'get'],
       'path': '/v1/instances/'
+    },
+    'rename': {
+      'methods': ['post'],
+      'path': '/v1/instances/{name}/rename/'
     }
   },
   relatedModels: [
@@ -33,6 +37,17 @@ const InstanceConstraints = {
 const Instance = stampit()
   .compose(Model)
   .setMeta(InstanceMeta)
+  .methods({
+
+    rename(payload = { new_name: this.name }) {
+      const options = {payload};
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('rename', this);
+
+      return this.makeRequest('POST', path, options);
+    }
+
+  })
   .setConstraints(InstanceConstraints)
 
 export default Instance;

@@ -63,6 +63,22 @@ describe('Instance', function() {
       });
   });
 
+  it('should be able to rename via model instance', function() {
+    const newInstanceName = suffix.get('name');
+    return Instance(data).save()
+      .then(cleaner.mark)
+      .then((instance) => {
+        should(instance).be.an.Object();
+        should(instance).have.property('name').which.is.String().equal(data.name);
+        should(instance).have.property('description').which.is.String().equal(data.description);
+
+        return instance.rename({ new_name: newInstanceName })
+      })
+      .then((instance) => {
+        should(instance).have.property('name').which.is.String().equal(newInstanceName);
+      });
+  });
+
   it('should be able to delete via model instance', function() {
     return Instance(data).save()
       .then((instance) => {
