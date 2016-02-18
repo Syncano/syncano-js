@@ -3,6 +3,7 @@ import _ from 'lodash';
 import models from './models';
 import Account from './account';
 import Pinger from './pinger';
+import SyncanoFile from './file';
 
 /**
  * Main Syncano object.
@@ -185,7 +186,17 @@ const Syncano = stampit()
     */
     getSocialToken() {
       return this.socialToken;
+    },
+
+    file(content) {
+        return new SyncanoFile(content);
     }
+  }).static({
+
+    file(content) {
+        return new SyncanoFile(content);
+    }
+
   });
 
 export default Syncano;

@@ -284,7 +284,7 @@ export const Model = stampit({
       let path = null;
       let endpoint = 'list';
       let method = 'POST';
-      let payload = JSON.stringify(this);
+      let payload = this.toJSON();
 
       if (!_.isEmpty(errors)) {
         return Promise.reject(new ValidationError(errors));
@@ -318,7 +318,21 @@ export const Model = stampit({
     },
 
     toJSON() {
-      return _.omit(this, '_config', '_meta', '_request', '_constraints', '_querySet', 'links');
+      const attrs = [
+        // Private stuff
+        '_config',
+        '_meta',
+        '_request',
+        '_constraints',
+        '_querySet',
+
+        // Read only stuff
+        'links',
+        'created_at',
+        'updated_at'
+      ];
+
+      return _.omit(this, attrs.concat(_.functions(this)));
     }
   }
 })
