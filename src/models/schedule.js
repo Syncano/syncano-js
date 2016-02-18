@@ -17,8 +17,23 @@ const ScheduleMeta = Meta({
   relatedModels: [ 'ScheduleTrace' ]
 });
 
+const ScheduleConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  label: {
+    presence: true
+  }
+};
+
+
+
 const Schedule = stampit()
   .compose(Model)
-  .setMeta(ScheduleMeta);
+  .setMeta(ScheduleMeta)
+  .setConstraints(ScheduleConstraints);
 
 export default Schedule;
