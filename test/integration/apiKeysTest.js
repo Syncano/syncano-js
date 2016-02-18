@@ -5,7 +5,7 @@ import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
-describe.only('ApiKey', function() {
+describe('ApiKey', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();
