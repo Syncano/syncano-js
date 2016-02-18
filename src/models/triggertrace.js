@@ -1,8 +1,9 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
-import {Get, List} from '../querySet';
+import {BaseQuerySet, Get, List} from '../querySet';
 
 const TriggerTraceQuerySet = stampit().compose(
+  BaseQuerySet,
   Get,
   List
 );
