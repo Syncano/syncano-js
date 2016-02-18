@@ -3,12 +3,13 @@ import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
-import {suffix, credentials} from './utils';
+import {suffix, credentials, createCleaner} from './utils';
 
 
 describe('GCMDevice', function() {
   this.timeout(15000);
 
+  const cleaner = createCleaner();
   let connection = null;
   let Model = null;
   let Instance = null;
@@ -32,11 +33,8 @@ describe('GCMDevice', function() {
     return Instance.please().delete({name: instanceName});
   });
 
-  afterEach(function(done) {
-    return Model.please()
-      .delete(data)
-      .then(() => done())
-      .catch(() => done());
+  afterEach(function() {
+    return cleaner.clean();
   });
 
   it('should be validated', function() {
@@ -53,6 +51,7 @@ describe('GCMDevice', function() {
 
   it('should be able to save via model instance', function() {
     return Model(data).save()
+      .then(cleaner.mark)
       .then((object) => {
         should(object).be.a.Object();
         should(object).have.property('label').which.is.String().equal(data.label);
@@ -83,23 +82,16 @@ describe('GCMDevice', function() {
 
   describe('#please()', function() {
 
-    afterEach(function() {
-      return Model
-        .please()
-        .list(data)
-        .then((objects) => {
-          return Promise.all(_.map(objects, (object) => Model.please().delete({registration_id: object.registration_id, instanceName})));
-        });
-    });
-
-    it('should be able to list objects', function() {
+    it('should be able to list Models', function() {
       return Model.please().list(data).then((objects) => {
         should(objects).be.an.Array();
       });
     });
 
-    it('should be able to create an object', function() {
-      return Model.please().create(data).then((object) => {
+    it('should be able to create a Model', function() {
+      return Model.please().create(data)
+      .then(cleaner.mark)
+      .then((object) => {
         should(object).be.a.Object();
         should(object).have.property('label').which.is.String().equal(data.label);
         should(object).have.property('registration_id').which.is.String().equal(data.registration_id);
@@ -110,8 +102,9 @@ describe('GCMDevice', function() {
       });
     });
 
-    it('should be able to get an object', function() {
+    it('should be able to get a Model', function() {
       return Model.please().create(data)
+        .then(cleaner.mark)
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('label').which.is.String().equal(data.label);
@@ -142,8 +135,10 @@ describe('GCMDevice', function() {
         });
     });
 
-    it('should be able to get or create an object (CREATE)', function() {
-      return Model.please().getOrCreate(data, {label: 'test2'}).then((object) => {
+    it('should be able to get or create a Model (CREATE)', function() {
+      return Model.please().getOrCreate(data, {label: 'test2'})
+      .then(cleaner.mark)
+      .then((object) => {
         should(object).be.a.Object();
         should(object).have.property('label').which.is.String().equal('test2');
         should(object).have.property('instanceName').which.is.String().equal(instanceName);
@@ -156,7 +151,9 @@ describe('GCMDevice', function() {
     });
 
     it('should be able to get or create an object (GET)', function() {
-      return Model.please().create(data).then((object) => {
+      return Model.please().create(data)
+      .then(cleaner.mark)
+      .then((object) => {
         should(object).be.a.Object();
         should(object).have.property('label').which.is.String().equal(data.label);
         should(object).have.property('instanceName').which.is.String().equal(instanceName);
@@ -172,7 +169,63 @@ describe('GCMDevice', function() {
       });
     });
 
-    it('should be able to get first object (SUCCESS)', function() {
+    it('should be able to update a Model', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((gcm) => {
+          should(gcm).be.an.Object();
+          should(gcm).have.property('instanceName').which.is.String().equal(instanceName);
+          should(gcm).have.property('label').which.is.String().equal(data.label);
+          should(gcm).have.property('registration_id').which.is.String().equal(data.registration_id);
+
+        return Model.please().update({registration_id: registrationId, instanceName}, {label: 'new label'});
+      })
+      .then((gcm) => {
+        should(gcm).be.an.Object();
+        should(gcm).have.property('instanceName').which.is.String().equal(instanceName);
+        should(gcm).have.property('registration_id').which.is.String().equal(data.registration_id);
+        should(gcm.label).which.is.String().equal('new label');
+      });
+    });
+
+    it('should be able to update or create a Model (UPDATE)', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((gcm) => {
+          should(gcm).be.an.Object();
+          should(gcm).have.property('instanceName').which.is.String().equal(instanceName);
+          should(gcm).have.property('label').which.is.String().equal(data.label);
+          should(gcm).have.property('registration_id').which.is.String().equal(registrationId);
+
+        return Model.please().updateOrCreate(data, {label: 'new label'});
+      })
+      .then((gcm) => {
+        should(gcm).be.an.Object();
+        should(gcm).have.property('instanceName').which.is.String().equal(instanceName);
+        should(gcm).have.property('registration_id').which.is.String().equal(registrationId);
+        should(gcm.label).which.is.String().equal('new label');
+      });
+    });
+
+    it('should be able to update or create a Model (CREATE)', function() {
+      let properties = {registration_id: registrationId, instanceName};
+      let object = {label: 'new label'};
+      let defaults = {
+          label: 'label',
+          registration_id: registrationId
+      };
+
+      return Model.please().updateOrCreate(properties, object, defaults)
+        .then(cleaner.mark)
+        .then((gcm) => {
+          should(gcm).be.an.Object();
+          should(gcm).have.property('instanceName').which.is.String().equal(instanceName);
+          should(gcm).have.property('registration_id').which.is.String().equal(registrationId);
+          should(gcm.label).which.is.String().equal(defaults.label);
+        });
+      });
+
+    it('should be able to get first Model (SUCCESS)', function() {
       const ids = [
         `${registrationId}1`,
         `${registrationId}2`
@@ -180,6 +233,7 @@ describe('GCMDevice', function() {
 
       return Promise
         .all(_.map(ids, (id) => Model.please().create(_.assign({}, data, {registration_id: id}))))
+        .then(cleaner.mark)
         .then(() => {
           return Model.please().first(data);
         })
@@ -196,6 +250,7 @@ describe('GCMDevice', function() {
 
       return Promise
         .all(_.map(ids, (id) => Model.please().create(_.assign({}, data, {registration_id: id}))))
+        .then(cleaner.mark)
         .then((objects) => {
           should(objects).be.an.Array().with.length(2);
           return Model.please(data).pageSize(1);
@@ -214,6 +269,7 @@ describe('GCMDevice', function() {
 
       return Promise
         .all(_.map(ids, (id) => Model.please().create(_.assign({}, data, {registration_id: id}))))
+        .then(cleaner.mark)
         .then((objects) => {
           should(objects).be.an.Array().with.length(2);
           return Model.please(data).ordering('asc');

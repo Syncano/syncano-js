@@ -1,5 +1,16 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import {BaseQuerySet, Create, Get, Delete, GetOrCreate, List} from '../querySet';
+
+const InstanceInvitationQuerySet = stampit().compose(
+  BaseQuerySet,
+  Create,
+  Get,
+  GetOrCreate,
+  Delete,
+  List,
+  Delete
+);
 
 const InstanceInvitationMeta = Meta({
   name: 'invitation',
@@ -34,6 +45,7 @@ const InstanceInvitationConstraints = {
 const InstanceInvitation = stampit()
   .compose(Model)
   .setMeta(InstanceInvitationMeta)
+  .setQuerySet(InstanceInvitationQuerySet)
   .setConstraints(InstanceInvitationConstraints);
 
 

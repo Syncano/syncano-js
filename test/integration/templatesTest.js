@@ -5,7 +5,6 @@ import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
 import {suffix, credentials} from './utils';
 
-
 describe('Template', function() {
   this.timeout(15000);
 
