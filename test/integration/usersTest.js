@@ -147,7 +147,7 @@ it('should be able to save via model instance', function() {
       ];
 
       return Promise
-        .all(_.map(users, (user) => Model.please().create(user)))
+        .mapSeries(users, (user) => Model.please().create(user))
         .then(cleaner.mark)
         .then(() => {
           return Model.please().first(data);
@@ -164,7 +164,7 @@ it('should be able to save via model instance', function() {
       ];
 
       return Promise
-        .all(_.map(users, (user) => Model.please().create(user)))
+        .mapSeries(users, (user) => Model.please().create(user))
         .then(cleaner.mark)
         .then((objects) => {
           should(objects).be.an.Array().with.length(2);
@@ -183,7 +183,7 @@ it('should be able to save via model instance', function() {
       let asc = null;
 
       return Promise
-        .all(_.map(users, (user) => Model.please().create(user)))
+        .mapSeries(users, (user) => Model.please().create(user))
         .then(cleaner.mark)
         .then((objects) => {
           should(objects).be.an.Array().with.length(2);

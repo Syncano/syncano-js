@@ -232,7 +232,7 @@ describe('GCMDevice', function() {
       ];
 
       return Promise
-        .all(_.map(ids, (id) => Model.please().create(_.assign({}, data, {registration_id: id}))))
+        .mapSeries(ids, (id) => Model.please().create(_.assign({}, data, {registration_id: id})))
         .then(cleaner.mark)
         .then(() => {
           return Model.please().first(data);
@@ -249,7 +249,7 @@ describe('GCMDevice', function() {
       ];
 
       return Promise
-        .all(_.map(ids, (id) => Model.please().create(_.assign({}, data, {registration_id: id}))))
+        .mapSeries(ids, (id) => Model.please().create(_.assign({}, data, {registration_id: id})))
         .then(cleaner.mark)
         .then((objects) => {
           should(objects).be.an.Array().with.length(2);
@@ -268,7 +268,7 @@ describe('GCMDevice', function() {
       let asc = null;
 
       return Promise
-        .all(_.map(ids, (id) => Model.please().create(_.assign({}, data, {registration_id: id}))))
+        .mapSeries(ids, (id) => Model.please().create(_.assign({}, data, {registration_id: id})))
         .then(cleaner.mark)
         .then((objects) => {
           should(objects).be.an.Array().with.length(2);

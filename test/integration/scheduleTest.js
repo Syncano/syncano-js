@@ -5,29 +5,37 @@ import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
-
-describe('Group', function() {
+describe('Schedule', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();
-  let connection = null;
-  let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('Group');
-  const groupLabel = suffix.get('group');
-  const data = {
+  let Model = null;
+  const instanceName = suffix.get('Schedule');
+  let data = {
     instanceName,
-    label: groupLabel,
-    description: 'test',
-    id: null
-  };
+    label: instanceName,
+    codebox: null,
+    interval_sec: 600,
+    description: instanceName,
+    timezone: 'UTC'
+  }
 
   before(function() {
-    connection = Syncano(credentials.getCredentials());
+    const connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
-    Model = connection.Group;
+    Model = connection.Schedule;
 
-    return Instance.please().create({name: instanceName});
+    return Instance.please().create({name: instanceName}).then(() => {
+      return connection.CodeBox.please().create({
+        instanceName: instanceName,
+        label: instanceName,
+        runtime_name: 'python',
+        source: 'print "x"'
+      });
+    }).then((codeBox) => {
+      data.codebox = codeBox.id;
+    });
   });
 
   after(function() {
@@ -43,11 +51,15 @@ describe('Group', function() {
   });
 
   it('should require "instanceName"', function() {
-    should(Model({label: groupLabel}).save()).be.rejectedWith(/instanceName/);
+    should(Model({label: instanceName}).save()).be.rejectedWith(/instanceName/);
   });
 
   it('should require "label"', function() {
     should(Model({instanceName}).save()).be.rejectedWith(/label/);
+  });
+
+  it('should require "codebox"', function() {
+    should(Model({instanceName, label: instanceName}).save()).be.rejectedWith(/codebox/);
   });
 
   it('should be able to save via model instance', function() {
@@ -56,9 +68,14 @@ describe('Group', function() {
       .then((object) => {
         should(object).be.a.Object();
         should(object).have.property('id').which.is.Number();
+        should(object).have.property('interval_sec').which.is.Number().equal(data.interval_sec);
         should(object).have.property('label').which.is.String().equal(data.label);
         should(object).have.property('instanceName').which.is.String().equal(instanceName);
-        should(object).have.property('description').which.is.String().equal(data.description);
+        should(object).have.property('description').which.is.String().equal(instanceName);
+        should(object).have.property('timezone').which.is.String().equal(data.timezone);
+        should(object).have.property('scheduled_next').which.is.String();
+        should(object).have.property('crontab').which.is.null();
+        should(object).have.property('created_at').which.is.String();
         should(object).have.property('links').which.is.Object();
       });
   });
@@ -261,8 +278,8 @@ describe('Group', function() {
 
     it('should be able to get first object (SUCCESS)', function() {
       const labels = [
-        `${groupLabel}1`,
-        `${groupLabel}2`
+        `${instanceName}1`,
+        `${instanceName}2`
       ];
 
       return Promise
@@ -278,8 +295,8 @@ describe('Group', function() {
 
     it('should be able to change page size', function() {
       const labels = [
-        `${groupLabel}1`,
-        `${groupLabel}2`
+        `${instanceName}1`,
+        `${instanceName}2`
       ];
 
       return Promise
@@ -296,8 +313,8 @@ describe('Group', function() {
 
     it('should be able to change ordering', function() {
       const labels = [
-        `${groupLabel}1`,
-        `${groupLabel}2`
+        `${instanceName}1`,
+        `${instanceName}2`
       ];
       let asc = null;
 

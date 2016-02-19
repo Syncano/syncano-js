@@ -202,7 +202,7 @@ describe('Webhooks', function() {
         .please()
         .list(webhookData)
         .then((webhooks) => {
-          return Promise.all(_.map(webhooks, (webhook) => Webhook.please().delete({name: webhook.name, instanceName})));
+          return Promise.mapSeries(webhooks, (webhook) => Webhook.please().delete({name: webhook.name, instanceName}));
         });
     });
 
@@ -354,7 +354,7 @@ describe('Webhooks', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => Webhook.please().create({name, instanceName, codebox: codeBoxId})))
+        .mapSeries(names, (name) => Webhook.please().create({name, instanceName, codebox: codeBoxId}))
         .then(() => {
           return Webhook.please().first(webhookData);
         })
@@ -370,7 +370,7 @@ describe('Webhooks', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => Webhook.please().create({name, instanceName, codebox: codeBoxId})))
+        .mapSeries(names, (name) => Webhook.please().create({name, instanceName, codebox: codeBoxId}))
         .then((webhooks) => {
           should(webhooks).be.an.Array().with.length(2);
           return Webhook.please(webhookData).pageSize(1);
@@ -388,7 +388,7 @@ describe('Webhooks', function() {
       let asc = null;
 
       return Promise
-        .all(_.map(names, (name) => Webhook.please().create({name, instanceName, codebox: codeBoxId})))
+        .mapSeries(names, (name) => Webhook.please().create({name, instanceName, codebox: codeBoxId}))
         .then((webhooks) => {
           should(webhooks).be.an.Array().with.length(2);
           return Webhook.please(webhookData).ordering('asc');

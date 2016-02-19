@@ -193,7 +193,7 @@ describe('ApiKey', function() {
       ];
 
       return Promise
-        .all(_.map(descriptions, (desc) => ApiKey.please().create({description: desc, instanceName})))
+        .mapSeries(descriptions, (desc) => ApiKey.please().create({description: desc, instanceName}))
         .then(cleaner.mark)
         .then(() => {
           return ApiKey.please().first({instanceName});
@@ -210,7 +210,7 @@ describe('ApiKey', function() {
       ];
 
       return Promise
-        .all(_.map(descriptions, (desc) => ApiKey.please().create({description: desc, instanceName})))
+        .mapSeries(descriptions, (desc) => ApiKey.please().create({description: desc, instanceName}))
         .then(cleaner.mark)
         .then((keys) => {
             should(keys).be.an.Array().with.length(2);
@@ -229,7 +229,7 @@ describe('ApiKey', function() {
       let asc = null;
 
       return Promise
-        .all(_.map(descriptions, (desc) => ApiKey.please().create({description: desc, instanceName})))
+        .mapSeries(descriptions, (desc) => ApiKey.please().create({description: desc, instanceName}))
         .then(cleaner.mark)
         .then((keys) => {
           should(keys).be.an.Array().with.length(2);

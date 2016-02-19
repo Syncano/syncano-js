@@ -164,7 +164,7 @@ describe('Template', function() {
         .list({instanceName})
         .then((templates) => {
           const names = _.map(templates, 'name');
-          return Promise.all(_.map(names, (name) => Template.please().delete({name, instanceName})));
+          return Promise.mapSeries(names, (name) => Template.please().delete({name, instanceName}));
         });
     });
 
@@ -312,7 +312,7 @@ describe('Template', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => Template.please().create({name, instanceName, content: templateContent, content_type: contentType})))
+        .mapSeries(names, (name) => Template.please().create({name, instanceName, content: templateContent, content_type: contentType}))
         .then(() => {
           return Template.please().first({instanceName});
         })
@@ -328,7 +328,7 @@ describe('Template', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => Template.please().create({name, instanceName, content: templateContent, content_type: contentType})))
+        .mapSeries(names, (name) => Template.please().create({name, instanceName, content: templateContent, content_type: contentType}))
         .then((tpls) => {
           should(tpls).be.an.Array().with.length(2);
           return Template.please({instanceName}).pageSize(1);
@@ -346,7 +346,7 @@ describe('Template', function() {
       let asc = null;
 
       return Promise
-        .all(_.map(names, (name) => Template.please().create({name, instanceName, content: templateContent, content_type: contentType})))
+        .mapSeries(names, (name) => Template.please().create({name, instanceName, content: templateContent, content_type: contentType}))
         .then((tpls) => {
           should(tpls).be.an.Array().with.length(2);
           return Template.please({instanceName}).ordering('asc');

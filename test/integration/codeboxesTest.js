@@ -152,7 +152,7 @@ describe('CodeBox', function() {
         .list({instanceName})
         .then((keys) => {
           const ids = _.map(keys, 'id');
-          return Promise.all(_.map(ids, (id) => CodeBox.please().delete({id, instanceName})));
+          return Promise.mapSeries(ids, (id) => CodeBox.please().delete({id, instanceName}));
         });
     });
 
@@ -247,7 +247,7 @@ describe('CodeBox', function() {
       ];
 
       return Promise
-        .all(_.map(labels, (label) => CodeBox.please().create({label: label, runtime_name: runtimeName, instanceName})))
+        .mapSeries(labels, (label) => CodeBox.please().create({label: label, runtime_name: runtimeName, instanceName}))
         .then(() => {
           return CodeBox.please().first({instanceName});
         })
@@ -263,7 +263,7 @@ describe('CodeBox', function() {
       ];
 
       return Promise
-        .all(_.map(labels, (label) => CodeBox.please().create({label: label, runtime_name: runtimeName, instanceName})))
+        .mapSeries(labels, (label) => CodeBox.please().create({label: label, runtime_name: runtimeName, instanceName}))
         .then((keys) => {
             should(keys).be.an.Array().with.length(2);
             return CodeBox.please({instanceName}).pageSize(1);
@@ -281,7 +281,7 @@ describe('CodeBox', function() {
       let asc = null;
 
       return Promise
-        .all(_.map(labels, (label) => CodeBox.please().create({label: label, runtime_name: runtimeName, instanceName})))
+        .mapSeries(labels, (label) => CodeBox.please().create({label: label, runtime_name: runtimeName, instanceName}))
         .then((keys) => {
           should(keys).be.an.Array().with.length(2);
           return CodeBox.please({instanceName}).ordering('asc');
