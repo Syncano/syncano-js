@@ -259,7 +259,7 @@ describe('Class', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => Class.please().create({name, instanceName})))
+        .mapSeries(names, (name) => Class.please().create({name, instanceName}))
         .then(cleaner.mark)
         .then(() => {
           return Class.please().first({instanceName});
@@ -276,7 +276,7 @@ describe('Class', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => Class.please().create({name, instanceName})))
+        .mapSeries(names, (name) => Class.please().create({name, instanceName}))
         .then(cleaner.mark)
         .then((classes) => {
           should(classes).be.an.Array().with.length(2);
@@ -295,7 +295,7 @@ describe('Class', function() {
       let asc = null;
 
       return Promise
-        .all(_.map(names, (name) => Class.please().create({name, instanceName})))
+        .mapSeries(names, (name) => Class.please().create({name, instanceName}))
         .then(cleaner.mark)
         .then((classes) => {
           should(classes).be.an.Array().with.length(2);

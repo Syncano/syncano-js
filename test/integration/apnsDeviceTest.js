@@ -290,7 +290,7 @@ describe('APNS Device', function() {
       ];
 
       return Promise
-        .all(_.map(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user_id: userId, device_id: devId})))
+        .mapSeries(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user_id: userId, device_id: devId}))
         .then(cleaner.mark)
         .then(() => {
           return Model.please().first({instanceName});
@@ -307,7 +307,7 @@ describe('APNS Device', function() {
       ];
 
       return Promise
-        .all(_.map(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user_id: userId, device_id: devId})))
+        .mapSeries(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user_id: userId, device_id: devId}))
         .then(cleaner.mark)
         .then((apns) => {
           should(apns).be.an.Array().with.length(2);
@@ -326,7 +326,7 @@ describe('APNS Device', function() {
       let asc = null;
 
       return Promise
-      .all(_.map(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user_id: userId, device_id: devId})))
+      .mapSeries(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user_id: userId, device_id: devId}))
       .then(cleaner.mark)
       .then((apns) => {
           should(apns).be.an.Array().with.length(2);

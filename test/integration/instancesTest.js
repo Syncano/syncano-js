@@ -230,7 +230,7 @@ describe('Instance', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => Instance.please().create({name})))
+        .mapSeries(names, (name) => Instance.please().create({name}))
         .then(cleaner.mark)
         .then(() => {
           return Instance.please().first();
@@ -247,7 +247,7 @@ describe('Instance', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => Instance.please().create({name: name})))
+        .mapSeries(names, (name) => Instance.please().create({name: name}))
         .then(cleaner.mark)
         .then((instances) => {
           should(instances).be.an.Array().with.length(2);
@@ -258,7 +258,7 @@ describe('Instance', function() {
         });
     });
 
-    it.skip('should be able to change ordering', function() {
+    it('should be able to change ordering', function() {
       const names = [
         `${instanceName}_1`,
         `${instanceName}_2`
@@ -266,7 +266,7 @@ describe('Instance', function() {
       let ascInstances = null;
 
       return Promise
-        .all(_.map(names, (name) => Instance.please().create({name: name})))
+        .mapSeries(names, (name) => Instance.please().create({name: name}))
         .then(cleaner.mark)
         .then((instances) => {
           should(instances).be.an.Array().with.length(2);

@@ -1,6 +1,5 @@
 import mlog from 'mocha-logger';
 import Promise from 'bluebird';
-import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import {suffix, credentials} from './utils';
 
@@ -42,7 +41,7 @@ after(function() {
   const Instance = Syncano(credentials).Instance;
 
   return Instance.please().list().then((instances) => {
-    return Promise.all(_.map(instances, (instance) => Instance.please().delete({name: instance.name})));
+    return Promise.mapSeries(instances, (instance) => Instance.please().delete({name: instance.name}));
   }).then((instances) => {
     mlog.success(`${instances.length} instances removed.`);
   });

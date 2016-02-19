@@ -26,10 +26,11 @@ const ScheduleConstraints = {
   },
   label: {
     presence: true
+  },
+  codebox: {
+    presence: true
   }
 };
-
-
 
 const Schedule = stampit()
   .compose(Model)

@@ -69,7 +69,7 @@ describe('DataView', function() {
   it('should be able to fetch Data Objects', function() {
 
     return Promise
-      .all(_.map(_.range(10), (int) => dataObject({className, instanceName, int}).save()))
+      .mapSeries(_.range(10), (int) => dataObject({className, instanceName, int}).save())
       .then(cleaner.mark)
       .then(() => {
         return Model.please().create(data)
@@ -320,7 +320,7 @@ describe('DataView', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => Model.please().create({name, instanceName, class: className})))
+        .mapSeries(names, (name) => Model.please().create({name, instanceName, class: className}))
         .then(cleaner.mark)
         .then(() => {
           return Model.please().first({instanceName});
@@ -337,7 +337,7 @@ describe('DataView', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => Model.please().create({name, instanceName, class: className})))
+        .mapSeries(names, (name) => Model.please().create({name, instanceName, class: className}))
         .then(cleaner.mark)
         .then((dta) => {
           should(dta).be.an.Array().with.length(2);
@@ -356,7 +356,7 @@ describe('DataView', function() {
       let asc = null;
 
       return Promise
-        .all(_.map(names, (name) => Model.please().create({name, instanceName, class: className})))
+        .mapSeries(names, (name) => Model.please().create({name, instanceName, class: className}))
         .then(cleaner.mark)
         .then((dta) => {
           should(dta).be.an.Array().with.length(2);

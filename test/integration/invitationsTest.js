@@ -192,7 +192,7 @@ describe('Instance Invitation', function() {
 
 
       return Promise
-        .all(_.map(admins, (admin) => Model.please().create({email: admin, role: 'read', instanceName})))
+        .mapSeries(admins, (admin) => Model.please().create({email: admin, role: 'read', instanceName}))
         .then(cleaner.mark)
         .then(() => {
           return Model.please().first({instanceName});
@@ -210,7 +210,7 @@ describe('Instance Invitation', function() {
 
 
       return Promise
-        .all(_.map(admins, (admin) => Model.please().create({email: admin, role: 'read', instanceName})))
+        .mapSeries(admins, (admin) => Model.please().create({email: admin, role: 'read', instanceName}))
         .then(cleaner.mark)
         .then((inv) => {
           should(inv).be.an.Array().with.length(2);
@@ -229,7 +229,7 @@ describe('Instance Invitation', function() {
       let asc = null;
 
       return Promise
-        .all(_.map(admins, (admin) => Model.please().create({email: admin, role: 'read', instanceName})))
+        .mapSeries(admins, (admin) => Model.please().create({email: admin, role: 'read', instanceName}))
         .then(cleaner.mark)
         .then((inv) => {
           should(inv).be.an.Array().with.length(2);
