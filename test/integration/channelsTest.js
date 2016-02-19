@@ -15,7 +15,7 @@ describe('Channel', function() {
   let Instance = null;
   let Class = null;
   let dataObject = null;
-  const instanceName = suffix.get('instance');
+  const instanceName = suffix.get('Channel');
   const channelName = suffix.get('channel');
   const className = suffix.get('class');
   const data = {
@@ -376,7 +376,7 @@ describe('Channel', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => Model.please().create({name, instanceName})))
+        .mapSeries(names, (name) => Model.please().create({name, instanceName}))
         .then(cleaner.mark)
         .then(() => {
           return Model.please().first({instanceName});
@@ -393,7 +393,7 @@ describe('Channel', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => Model.please().create({name, instanceName})))
+        .mapSeries(names, (name) => Model.please().create({name, instanceName}))
         .then(cleaner.mark)
         .then((chns) => {
           should(chns).be.an.Array().with.length(2);
@@ -412,7 +412,7 @@ describe('Channel', function() {
       let asc = null;
 
       return Promise
-        .all(_.map(names, (name) => Model.please().create({name, instanceName})))
+        .mapSeries(names, (name) => Model.please().create({name, instanceName}))
         .then(cleaner.mark)
         .then((chns) => {
           should(chns).be.an.Array().with.length(2);

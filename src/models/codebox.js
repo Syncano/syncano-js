@@ -91,14 +91,7 @@ const CodeBox = stampit()
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('run', this);
 
-      return new Promise((resolve, reject) => {
-        this.makeRequest('POST', path, {payload}, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-          resolve(res.body, res);
-        });
-      });
+      return this.makeRequest('POST', path, {payload});
     }
 
   });

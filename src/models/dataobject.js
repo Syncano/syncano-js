@@ -89,10 +89,7 @@ const DataobjectConstraints = {
     }
   },
   className: {
-    presence: true,
-    length: {
-      minimum: 5
-    }
+    presence: true
   }
 };
 

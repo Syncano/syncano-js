@@ -1,5 +1,14 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import {BaseQuerySet, Create, Get, GetOrCreate, List} from '../querySet';
+
+const GCMMessageQuerySet = stampit().compose(
+  BaseQuerySet,
+  Create,
+  Get,
+  List,
+  GetOrCreate
+);
 
 const GCMMessageMeta = Meta({
   name: 'gcmmessage',
@@ -44,6 +53,7 @@ const GCMMessageConstraints = {
 const GCMMessage = stampit()
   .compose(Model)
   .setMeta(GCMMessageMeta)
+  .setQuerySet(GCMMessageQuerySet)
   .setConstraints(GCMMessageConstraints);
 
 export default GCMMessage;

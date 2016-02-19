@@ -13,7 +13,7 @@ describe('Dataobject', function() {
   let Class = null;
   let Instance = null;
   let DataObject = null;
-  const instanceName = suffix.get('instance');
+  const instanceName = suffix.get('Dataobject');
   const className = suffix.get('class');
   const data = {
     name: className,
@@ -248,7 +248,7 @@ describe('Dataobject', function() {
       ];
 
       return Promise
-        .all(_.map(descriptions, (item) => DataObject.please().create({title: item.title, author: item.author, instanceName, className})))
+        .mapSeries(descriptions, (item) => DataObject.please().create({title: item.title, author: item.author, instanceName, className}))
         .then(cleaner.mark)
         .then(() => {
           return DataObject.please().first({instanceName, className});
@@ -290,7 +290,7 @@ describe('Dataobject', function() {
        let asc = null;
 
         return Promise
-          .all(_.map(descriptions, (item) => DataObject.please().create({title: item.title, author: item.author, instanceName, className})))
+          .mapSeries(descriptions, (item) => DataObject.please().create({title: item.title, author: item.author, instanceName, className}))
           .then(cleaner.mark)
           .then((dataobjects) => {
             should(dataobjects).be.an.Array().with.length(2);
@@ -320,7 +320,7 @@ describe('Dataobject', function() {
        ];
 
        return Promise
-         .all(_.map(descriptions, (item) => DataObject.please().create({title: item.title, author: item.author, instanceName, className})))
+         .mapSeries(descriptions, (item) => DataObject.please().create({title: item.title, author: item.author, instanceName, className}))
          .then(cleaner.mark)
          .then((dataobjects) => {
            should(dataobjects).be.an.Array().with.length(2);
@@ -341,7 +341,7 @@ describe('Dataobject', function() {
       ];
 
       return Promise
-        .all(_.map(descriptions, (item) => DataObject.please().create({title: item.title, author: item.author, instanceName, className})))
+        .mapSeries(descriptions, (item) => DataObject.please().create({title: item.title, author: item.author, instanceName, className}))
         .then(cleaner.mark)
         .then((dataobjects) => {
           should(dataobjects).be.an.Array().with.length(2);

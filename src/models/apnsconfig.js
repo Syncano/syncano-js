@@ -2,24 +2,24 @@ import stampit from 'stampit';
 import {Meta, Model} from './base';
 import {BaseQuerySet, Update, Get} from '../querySet';
 
-const GCMConfigQuerySet = stampit().compose(
+const APNSConfigQuerySet = stampit().compose(
   BaseQuerySet,
   Update,
   Get
 );
 
-const GCMConfigMeta = Meta({
+const APNSConfigMeta = Meta({
   name: 'gcmconfig',
   pluralName: 'gcmconfig',
   endpoints: {
     'detail': {
       'methods': ['post', 'get', 'patch', 'put'],
-      'path': '/v1/instances/{instanceName}/push_notifications/gcm/config/'
+      'path': '/v1/instances/{instanceName}/push_notifications/apns/config/'
     }
   }
 });
 
-const GCMConfigConstraints = {
+const APNSConfigConstraints = {
   instanceName: {
     presence: true,
     length: {
@@ -28,10 +28,10 @@ const GCMConfigConstraints = {
   }
 };
 
-const GCMConfig = stampit()
+const APNSConfig = stampit()
   .compose(Model)
-  .setMeta(GCMConfigMeta)
-  .setQuerySet(GCMConfigQuerySet)
-  .setConstraints(GCMConfigConstraints);
+  .setMeta(APNSConfigMeta)
+  .setQuerySet(APNSConfigQuerySet)
+  .setConstraints(APNSConfigConstraints);
 
-export default GCMConfig;
+export default APNSConfig;

@@ -18,6 +18,21 @@ const ScheduleMeta = Meta({
 });
 
 
+const ScheduleConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  label: {
+    presence: true
+  },
+  codebox: {
+    presence: true
+  }
+};
+
 /**
  * OO wrapper around instance groups {@link http://docs.syncano.com/v4.0/docs/codebox-schedules-list endpoint}.
  * @constructor
@@ -36,6 +51,7 @@ const ScheduleMeta = Meta({
  */
 const Schedule = stampit()
   .compose(Model)
-  .setMeta(ScheduleMeta);
+  .setMeta(ScheduleMeta)
+  .setConstraints(ScheduleConstraints);
 
 export default Schedule;

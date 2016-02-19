@@ -1,8 +1,12 @@
 import stampit from 'stampit';
+import Promise from 'bluebird';
 import superagent from 'superagent';
 import _ from 'lodash';
 import {ConfigMixin, Logger} from './utils';
 import {RequestError} from './errors';
+import SyncanoFile from './file';
+
+const IS_NODE = typeof module !== 'undefined' && module.exports && typeof __webpack_require__ === 'undefined';
 
 /**
  * Base request object **not** meant to be used directly more like mixin in other {@link https://github.com/stampit-org/stampit|stamps}.
@@ -94,12 +98,10 @@ const Request = stampit().compose(ConfigMixin, Logger)
     * @param {Object} [requestOptions.headers = {}] request headers
     * @param {Object} [requestOptions.query = {}] request query
     * @param {Object} [requestOptions.payload = {}] request payload
-    * @param {Object} [requestOptions.attachments = {}] request attachments
-    * @param {Function} callback
-    * @returns {Request}
+    * @returns {Promise}
 
     */
-    makeRequest(methodName, path, requestOptions, callback) {
+    makeRequest(methodName, path, requestOptions) {
       const config = this.getConfig();
       let method = (methodName || '').toUpperCase();
       let options = _.defaults({}, requestOptions, {
@@ -109,23 +111,15 @@ const Request = stampit().compose(ConfigMixin, Logger)
         headers: {},
         query: {},
         payload: {},
-        attachments: {}
+        responseAttr: 'body'
       });
 
-      if (!_.isFunction(callback)) {
-        throw new Error('"callback" needs to be a Function.');
-      }
-
       if (_.isEmpty(methodName) || !_.includes(this._request.allowedMethods, method)) {
-        return callback(new Error(`Invalid request method: "${methodName}".`));
+        return Promise.reject(new Error(`Invalid request method: "${methodName}".`));
       }
 
       if (_.isEmpty(path)) {
-        return callback(new Error('"path" is required.'));
-      }
-
-      if (!_.isEmpty(options.attachments)) {
-        options.type = 'form';
+        return Promise.reject(new Error('"path" is required.'));
       }
 
       // wtf ?
@@ -142,30 +136,64 @@ const Request = stampit().compose(ConfigMixin, Logger)
         }
       }
 
+      // Grab files
+      const files = _.reduce(options.payload, (result, value, key) => {
+        if (value instanceof SyncanoFile) {
+          result[key] = value;
+        }
+        return result;
+      }, {});
+
       let handler = this.getRequestHandler();
       let request = handler(method, this.buildUrl(path))
-        .type(options.type)
         .accept(options.accept)
         .timeout(options.timeout)
         .set(options.headers)
-        .query(options.query)
-        .send(options.payload);
+        .query(options.query);
 
-      _.forEach(options.attachments, (value, key) => {
-        request = request.attach(key, value);
-      });
+      if (_.isEmpty(files)) {
+        request = request
+          .type(options.type)
+          .send(options.payload);
+      } else if (IS_NODE === false && typeof FormData !== 'undefined' && typeof File !== 'undefined') {
+        options.type = null;
+        options.payload = _.reduce(options.payload, (formData, value, key) => {
+          formData.append(key, (files[key]) ? value.content: value);
+          return formData;
+        }, new FormData());
 
-      request.end(_.wrap(callback, (_callback, err, res) => {
-        if (!_.isUndefined(res) && !res.ok) {
-          this.log(`\n${method} ${path}\n${JSON.stringify(options, null, 2)}\n`);
-          this.log(`Response ${res.status}:`, res.body);
+        request = request
+          .type(options.type)
+          .send(options.payload);
 
-          err = new RequestError(err, res);
-        }
-        return _callback(err, res);
-      }));
+      } else if (IS_NODE === true) {
+        request = _.reduce(options.payload, (result, value, key) => {
+          return (files[key]) ? result.attach(key, value.content): result.field(key, value);
+        }, request.type('form'));
+      }
 
-      return request;
+      return Promise.promisify(request.end, {context: request})()
+        .then((response) => {
+          if (!response.ok) {
+            throw new RequestError({
+              response: response,
+              status: response.status,
+              message: 'Bad request'
+            });
+          }
+          return response[options.responseAttr];
+        })
+        .catch((err) => {
+          if (err.status && err.response) {
+            this.log(`\n${method} ${path}\n${JSON.stringify(options, null, 2)}\n`);
+            this.log(`Response ${err.status}:`, err.errors);
+
+            if (err.name !== 'RequestError') {
+              err = new RequestError(err, err.response);
+            }
+          }
+          throw err;
+        });
     }
 
   }).static({

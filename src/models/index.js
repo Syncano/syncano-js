@@ -20,6 +20,7 @@ import WebhookTrace from './webhooktrace';
 import GCMDevice from './gcmdevice';
 import GCMConfig from './gcmconfig';
 import APNSDevice from './apnsdevice';
+import APNSConfig from './apnsconfig';
 import GCMMessage from './gcmmessage';
 import APNSMessage from './apnsmessage';
 import Template from './template'
@@ -46,6 +47,7 @@ export default {
   WebhookTrace,
   GCMDevice,
   APNSDevice,
+  APNSConfig,
   GCMMessage,
   GCMConfig,
   APNSMessage,

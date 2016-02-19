@@ -284,31 +284,24 @@ export const Model = stampit({
       let path = null;
       let endpoint = 'list';
       let method = 'POST';
-      let payload = JSON.stringify(this);
+      let payload = this.toJSON();
 
-      return new Promise((resolve, reject) => {
-        if (!_.isEmpty(errors)) {
-          return reject(new ValidationError(errors));
+      if (!_.isEmpty(errors)) {
+        return Promise.reject(new ValidationError(errors));
+      }
+
+      try {
+        if (!this.isNew()) {
+          endpoint = 'detail';
+          method = meta.findAllowedMethod(endpoint, 'PUT', 'PATCH', 'POST');
         }
 
-        try {
-          if (!this.isNew()) {
-            endpoint = 'detail';
-            method = meta.findAllowedMethod(endpoint, 'PUT', 'POST');
-          }
+        path = meta.resolveEndpointPath(endpoint, this);
+      } catch(err) {
+        return Promise.reject(err);
+      }
 
-          path = meta.resolveEndpointPath(endpoint, this);
-        } catch(err) {
-          return reject(err);
-        }
-
-        this.makeRequest(method, path, {payload}, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-          resolve(this.serialize(res.body), res);
-        });
-      });
+      return this.makeRequest(method, path, {payload}).then((body) => this.serialize(body));
     },
 
     /**
@@ -321,18 +314,25 @@ export const Model = stampit({
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('detail', this);
 
-      return new Promise((resolve, reject) => {
-        this.makeRequest('DELETE', path, {}, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-          resolve(null, res);
-        });
-      });
+      return this.makeRequest('DELETE', path);
     },
 
     toJSON() {
-      return _.omit(this, '_config', '_meta', '_request', '_constraints', '_querySet');
+      const attrs = [
+        // Private stuff
+        '_config',
+        '_meta',
+        '_request',
+        '_constraints',
+        '_querySet',
+
+        // Read only stuff
+        'links',
+        'created_at',
+        'updated_at'
+      ];
+
+      return _.omit(this, attrs.concat(_.functions(this)));
     }
   }
 })

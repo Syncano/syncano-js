@@ -1,5 +1,12 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import {BaseQuerySet, Get, List} from '../querySet';
+
+const TriggerTraceQuerySet = stampit().compose(
+  BaseQuerySet,
+  Get,
+  List
+);
 
 const TriggerTraceMeta = Meta({
   name: 'triggertrace',
@@ -18,6 +25,7 @@ const TriggerTraceMeta = Meta({
 
 const TriggerTrace = stampit()
   .compose(Model)
+  .setQuerySet(TriggerTraceQuerySet)
   .setMeta(TriggerTraceMeta);
 
 export default TriggerTrace;

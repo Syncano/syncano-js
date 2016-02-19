@@ -19,6 +19,7 @@ describe('Request', function() {
       'query',
       'send',
       'attach',
+      'field',
       'end'
     ];
 
@@ -70,36 +71,22 @@ describe('Request', function() {
 
   describe('#makeRequest()', function() {
 
-    it('should validate "callback" attribute', function() {
-      should(function() {
-        request.makeRequest('', '', {}, null);
-      }).throw(new Error('"callback" needs to be a function.'));
-    });
-
     it('should validate "methodName" attribute', function() {
-      should(function() {
-        request.makeRequest(null, '', {}, (err) => {
-          throw err;
-        });
-      }).throw(new Error('Invalid request method.'));
-
-      should(function() {
-        request.makeRequest('DUMMY', '', {}, (err) => {
-          throw err;
-        });
-      }).throw(new Error('Invalid request method'));
+      should(request.makeRequest(null, '')).be.rejectedWith('Invalid request method: "null".');
+      should(request.makeRequest('DUMMY', '')).be.rejectedWith('Invalid request method: "DUMMY".');
     });
 
     it('should validate "path" attribute', function() {
-      should(function() {
-        request.makeRequest('GET', '', {}, (err) => {
-          throw err;
-        });
-      }).throw(new Error('"path" is required.'));
+      should(request.makeRequest('GET', '')).be.rejectedWith('"path" is required.');
     });
 
     it('should change request type if attachment is present', function() {
-      request.makeRequest('GET', '/v1/', {attachments: {a: 1, b: 2}}, () => {});
+      request.makeRequest('GET', '/v1/', {payload: {
+        a: Syncano.file(1),
+        b: Syncano.file(2),
+        c: 2,
+        d: 3
+      }}, () => {});
 
       should(stubs._init.calledOnce).be.true();
       should(stubs._type.withArgs('form').calledOnce).be.true();
@@ -107,9 +94,10 @@ describe('Request', function() {
       should(stubs._timeout.calledOnce).be.true();
       should(stubs._set.calledOnce).be.true();
       should(stubs._query.calledOnce).be.true();
-      should(stubs._send.calledOnce).be.true();
+      should(stubs._send.calledOnce).be.false();
       should(stubs._end.calledOnce).be.true();
       should(stubs._attach.callCount).be.equal(2);
+      should(stubs._field.callCount).be.equal(2);
     });
 
     it('should set proper headers if user key is present', function() {
@@ -183,13 +171,6 @@ describe('Request', function() {
       should(stubs._send.calledOnce).be.true();
       should(stubs._end.calledOnce).be.true();
       should(stubs._attach.callCount).be.equal(0);
-    });
-
-    it('should call callback', function(done) {
-      request.makeRequest('GET', '/v1/', {}, () => {
-        should(stubs._send.calledOnce).be.true();
-        done();
-      });
     });
 
   });

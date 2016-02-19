@@ -1,5 +1,20 @@
 import stampit from 'stampit';
+import _ from 'lodash';
 import {Meta, Model} from './base';
+import QuerySet from '../querySet';
+
+const InstanceQuerySet = stampit().compose(QuerySet).methods({
+
+  rename(properties = {}, object = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = object;
+
+    this.method = 'POST';
+    this.endpoint = 'rename';
+    return this;
+  }
+
+});
 
 const InstanceMeta = Meta({
   name: 'instance',
@@ -12,6 +27,10 @@ const InstanceMeta = Meta({
     'list': {
       'methods': ['post', 'get'],
       'path': '/v1/instances/'
+    },
+    'rename': {
+      'methods': ['post'],
+      'path': '/v1/instances/{name}/rename/'
     }
   },
   relatedModels: [
@@ -33,6 +52,18 @@ const InstanceConstraints = {
 const Instance = stampit()
   .compose(Model)
   .setMeta(InstanceMeta)
+  .methods({
+
+    rename(payload = { new_name: this.name }) {
+      const options = {payload};
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('rename', this);
+
+      return this.makeRequest('POST', path, options);
+    }
+
+  })
+  .setQuerySet(InstanceQuerySet)
   .setConstraints(InstanceConstraints)
 
 export default Instance;

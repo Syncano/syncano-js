@@ -2,8 +2,12 @@ node_modules
 coverage
 docs
 tutorials
+manual
 dist
+test
 .DS_Store
 .idea
 npm-debug.log
 *.sublime-*
+circle.yml
+.codeclimate.yml

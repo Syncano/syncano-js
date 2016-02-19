@@ -63,6 +63,22 @@ describe('Instance', function() {
       });
   });
 
+  it('should be able to rename via model instance', function() {
+    const newInstanceName = suffix.get('name');
+    return Instance(data).save()
+      .then(cleaner.mark)
+      .then((instance) => {
+        should(instance).be.an.Object();
+        should(instance).have.property('name').which.is.String().equal(data.name);
+        should(instance).have.property('description').which.is.String().equal(data.description);
+
+        return instance.rename({ new_name: newInstanceName })
+      })
+      .then((instance) => {
+        should(instance).have.property('name').which.is.String().equal(newInstanceName);
+      });
+  });
+
   it('should be able to delete via model instance', function() {
     return Instance(data).save()
       .then((instance) => {
@@ -171,6 +187,22 @@ describe('Instance', function() {
         });
     });
 
+    it('should be able to rename an instance', function() {
+      const newInstanceName = suffix.get('name');
+      return Instance.please().create(data)
+        .then(cleaner.mark)
+        .then((instance) => {
+          should(instance).be.an.Object();
+          should(instance).have.property('name').which.is.String().equal(data.name);
+          should(instance).have.property('description').which.is.String().equal(data.description);
+
+          return Instance.please().rename({name: instance.name}, {new_name: newInstanceName});
+        })
+        .then((instance) => {
+          should(instance).have.property('name').which.is.String().equal(newInstanceName);
+        });
+    });
+
     it('should be able to update an instance', function() {
       return Instance.please().create(data)
         .then(cleaner.mark)
@@ -230,7 +262,7 @@ describe('Instance', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => Instance.please().create({name})))
+        .mapSeries(names, (name) => Instance.please().create({name}))
         .then(cleaner.mark)
         .then(() => {
           return Instance.please().first();
@@ -247,7 +279,7 @@ describe('Instance', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => Instance.please().create({name: name})))
+        .mapSeries(names, (name) => Instance.please().create({name: name}))
         .then(cleaner.mark)
         .then((instances) => {
           should(instances).be.an.Array().with.length(2);
@@ -258,7 +290,7 @@ describe('Instance', function() {
         });
     });
 
-    it.skip('should be able to change ordering', function() {
+    it('should be able to change ordering', function() {
       const names = [
         `${instanceName}_1`,
         `${instanceName}_2`
@@ -266,7 +298,7 @@ describe('Instance', function() {
       let ascInstances = null;
 
       return Promise
-        .all(_.map(names, (name) => Instance.please().create({name: name})))
+        .mapSeries(names, (name) => Instance.please().create({name: name}))
         .then(cleaner.mark)
         .then((instances) => {
           should(instances).be.an.Array().with.length(2);

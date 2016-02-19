@@ -5,14 +5,13 @@ import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
 import {suffix, credentials} from './utils';
 
-
 describe('Template', function() {
   this.timeout(15000);
 
   let connection = null;
   let Template = null;
   let Instance = null;
-  const instanceName = suffix.get('instance');
+  const instanceName = suffix.get('Template');
   const templateName = suffix.get('template');
   const templateContent = "<h1>{{ title }}</h1>";
   const contentType = 'text/html';
@@ -165,7 +164,7 @@ describe('Template', function() {
         .list({instanceName})
         .then((templates) => {
           const names = _.map(templates, 'name');
-          return Promise.all(_.map(names, (name) => Template.please().delete({name, instanceName})));
+          return Promise.mapSeries(names, (name) => Template.please().delete({name, instanceName}));
         });
     });
 
@@ -313,7 +312,7 @@ describe('Template', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => Template.please().create({name, instanceName, content: templateContent, content_type: contentType})))
+        .mapSeries(names, (name) => Template.please().create({name, instanceName, content: templateContent, content_type: contentType}))
         .then(() => {
           return Template.please().first({instanceName});
         })
@@ -329,7 +328,7 @@ describe('Template', function() {
       ];
 
       return Promise
-        .all(_.map(names, (name) => Template.please().create({name, instanceName, content: templateContent, content_type: contentType})))
+        .mapSeries(names, (name) => Template.please().create({name, instanceName, content: templateContent, content_type: contentType}))
         .then((tpls) => {
           should(tpls).be.an.Array().with.length(2);
           return Template.please({instanceName}).pageSize(1);
@@ -347,7 +346,7 @@ describe('Template', function() {
       let asc = null;
 
       return Promise
-        .all(_.map(names, (name) => Template.please().create({name, instanceName, content: templateContent, content_type: contentType})))
+        .mapSeries(names, (name) => Template.please().create({name, instanceName, content: templateContent, content_type: contentType}))
         .then((tpls) => {
           should(tpls).be.an.Array().with.length(2);
           return Template.please({instanceName}).ordering('asc');

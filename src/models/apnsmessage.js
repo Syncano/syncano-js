@@ -1,5 +1,14 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import {BaseQuerySet, Create, Get, GetOrCreate, List} from '../querySet';
+
+const APNSMessageQuerySet = stampit().compose(
+  BaseQuerySet,
+  Create,
+  Get,
+  List,
+  GetOrCreate
+);
 
 const APNSMessageMeta = Meta({
   name: 'apnsmessage',
@@ -16,6 +25,15 @@ const APNSMessageMeta = Meta({
   }
 });
 
+const APNSMessageConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  }
+};
+
 /**
  * OO wrapper around instance APNS messages {@link # endpoint}.
  * @constructor
@@ -31,6 +49,8 @@ const APNSMessageMeta = Meta({
  */
 const APNSMessage = stampit()
   .compose(Model)
+  .setQuerySet(APNSMessageQuerySet)
+  .setConstraints(APNSMessageConstraints)
   .setMeta(APNSMessageMeta);
 
 export default APNSMessage;

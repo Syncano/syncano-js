@@ -1,5 +1,12 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import {BaseQuerySet, Get, List} from '../querySet';
+
+const ScheduleTraceQuerySet = stampit().compose(
+  BaseQuerySet,
+  Get,
+  List
+);
 
 const ScheduleTraceMeta = Meta({
   name: 'scheduletrace',
@@ -18,6 +25,7 @@ const ScheduleTraceMeta = Meta({
 
 const ScheduleTrace = stampit()
   .compose(Model)
+  .setQuerySet(ScheduleTraceQuerySet)
   .setMeta(ScheduleTraceMeta);
 
 export default ScheduleTrace;

@@ -196,5 +196,4 @@ describe('GCMMessage', function() {
     });
 
   });
-
 });

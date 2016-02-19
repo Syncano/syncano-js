@@ -1,5 +1,4 @@
 import stampit from 'stampit';
-import Promise from 'bluebird';
 import {Meta, Model} from './base';
 import Request from '../request';
 import {EventEmittable} from '../utils';
@@ -117,15 +116,7 @@ export const ChannelPoll = stampit()
       };
 
       this.emit('request', options);
-
-      return new Promise((resolve, reject) => {
-        this.makeRequest('GET', this.path, options, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-          resolve(res.body, res);
-        });
-      });
+      return this.makeRequest('GET', this.path, options);
     },
 
     start() {
@@ -254,14 +245,7 @@ const Channel = stampit()
         options.payload.room = room;
       }
 
-      return new Promise((resolve, reject) => {
-        this.makeRequest('POST', path, options, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-          resolve(res.body, res);
-        });
-      });
+      return this.makeRequest('POST', path, options);
     }
 
   })
