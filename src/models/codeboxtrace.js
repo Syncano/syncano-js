@@ -35,6 +35,23 @@ const CodeBoxConstraints = {
   }
 };
 
+/**
+ * OO wrapper around codebox trace {@link # endpoint}.
+ * This model is *read only*.
+ * @constructor
+ * @type {CodeBoxTrace}
+
+ * @property {Number} id
+ * @property {String} instanceName
+ * @property {Number} codeboxId
+ * @property {String} status
+ * @property {String} executed_at
+ * @property {Number} duration
+ * @property {Object} [result = {}]
+ * @property {String} result.stderr
+ * @property {String} result.stdout
+ * @property {String} [links = {}]
+ */
 const CodeBoxTrace = stampit()
   .compose(Model)
   .setQuerySet(CodeBoxTraceQuerySet)

@@ -17,6 +17,22 @@ const TriggerMeta = Meta({
   relatedModels: [ 'TriggerTrace' ]
 });
 
+/**
+ * OO wrapper around instance triggers {@link # endpoint}.
+ * @constructor
+ * @type {Trigger}
+
+ * @property {Number} id
+ * @property {String} instanceName
+ * @property {String} label
+ * @property {String} signal
+ * @property {Number} codebox
+ * @property {String} class
+ * @property {String} [description = null]
+ * @property {String} [links = {}]
+ * @property {String} [created_at = null]
+ * @property {String} [updated_at = null]
+ */
 const Trigger = stampit()
   .compose(Model)
   .setMeta(TriggerMeta);

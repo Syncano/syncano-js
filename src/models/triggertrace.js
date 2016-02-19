@@ -14,7 +14,7 @@ const TriggerTraceMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instanceName}/triggers/{triggerId}/traces/{traceId}/'
+      'path': '/v1/instances/{instanceName}/triggers/{triggerId}/traces/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
@@ -23,6 +23,24 @@ const TriggerTraceMeta = Meta({
   }
 });
 
+
+/**
+ * OO wrapper around trigger trace {@link # endpoint}.
+ * This model is *read only*.
+ * @constructor
+ * @type {TriggerTrace}
+
+ * @property {Number} id
+ * @property {String} instanceName
+ * @property {Number} triggerId
+ * @property {String} status
+ * @property {String} executed_at
+ * @property {Number} duration
+ * @property {Object} [result = {}]
+ * @property {String} result.stderr
+ * @property {String} result.stdout
+ * @property {String} [links = {}]
+ */
 const TriggerTrace = stampit()
   .compose(Model)
   .setQuerySet(TriggerTraceQuerySet)

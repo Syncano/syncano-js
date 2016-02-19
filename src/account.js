@@ -10,7 +10,9 @@ import Request from './request';
 
  * @example {@lang javascript}
  * const {Account} = Syncano();
- * Account.login({email: '', password: ''}).then((user) => );
+ * Account.login({email: '', password: ''}).then((user) => {
+ *
+ * });
  */
 const Account = stampit().compose(Request)
   .props({

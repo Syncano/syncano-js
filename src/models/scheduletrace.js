@@ -14,7 +14,7 @@ const ScheduleTraceMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instanceName}/schedules/{scheduleId}/traces/{traceId}/'
+      'path': '/v1/instances/{instanceName}/schedules/{scheduleId}/traces/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
@@ -23,6 +23,22 @@ const ScheduleTraceMeta = Meta({
   }
 });
 
+/**
+ * OO wrapper around shedule traces {@link # endpoint}.
+ * @constructor
+ * @type {ScheduleTrace}
+
+ * @property {Number} id
+ * @property {Number} scheduleId
+ * @property {String} instanceName
+ * @property {String} status
+ * @property {String} executed_at
+ * @property {Number} duration
+ * @property {Object} [result = {}]
+ * @property {String} result.stderr
+ * @property {String} result.stdout
+ * @property {String} [links = {}]
+ */
 const ScheduleTrace = stampit()
   .compose(Model)
   .setQuerySet(ScheduleTraceQuerySet)

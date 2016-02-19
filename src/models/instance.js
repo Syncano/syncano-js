@@ -49,6 +49,26 @@ const InstanceConstraints = {
   }
 };
 
+/**
+ * OO wrapper around instances {@link http://docs.syncano.io/v0.1/docs/instances-list endpoint}.
+ * @constructor
+ * @type {Instance}
+
+ * @property {String} name
+ * @property {Object} owner
+ * @property {Number} owner.id
+ * @property {String} owner.email
+ * @property {String} owner.first_name
+ * @property {String} owner.last_name
+ * @property {Boolean} owner.is_active
+ * @property {Boolean} owner.has_password
+ * @property {String} role
+ * @property {Object} [metadata = {}]
+ * @property {String} [description = null]
+ * @property {String} [links = {}]
+ * @property {String} [created_at = null]
+ * @property {String} [updated_at = null]
+ */
 const Instance = stampit()
   .compose(Model)
   .setMeta(InstanceMeta)

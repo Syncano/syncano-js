@@ -28,6 +28,16 @@ const GCMConfigConstraints = {
   }
 };
 
+/**
+ * OO wrapper around instance GCM config {@link # endpoint}.
+ * @constructor
+ * @type {GCMConfig}
+
+ * @property {String} instanceName
+ * @property {String} production_api_key
+ * @property {String} development_api_key
+ * @property {Object} [links = {}]
+ */
 const GCMConfig = stampit()
   .compose(Model)
   .setMeta(GCMConfigMeta)
