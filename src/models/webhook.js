@@ -133,6 +133,19 @@ const WebhookConstraints = {
   }
 };
 
+/**
+ * OO wrapper around instance webhooks {@link # endpoint}.
+ * @constructor
+ * @type {Webhook}
+
+ * @property {String} name
+ * @property {String} instanceName
+ * @property {String} public_link
+ * @property {Boolean} public
+ * @property {Number} codebox
+ * @property {String} [description = null]
+ * @property {String} [links = {}]
+ */
 const Webhook = stampit()
   .compose(Model)
   .setMeta(WebhookMeta)

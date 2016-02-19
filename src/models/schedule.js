@@ -17,6 +17,7 @@ const ScheduleMeta = Meta({
   relatedModels: [ 'ScheduleTrace' ]
 });
 
+
 const ScheduleConstraints = {
   instanceName: {
     presence: true,
@@ -32,6 +33,22 @@ const ScheduleConstraints = {
   }
 };
 
+/**
+ * OO wrapper around instance groups {@link http://docs.syncano.com/v4.0/docs/codebox-schedules-list endpoint}.
+ * @constructor
+ * @type {Schedule}
+
+ * @property {Number} id
+ * @property {String} instanceName
+ * @property {String} label
+ * @property {Number} interval_sec
+ * @property {String} crontab
+ * @property {Object} payload
+ * @property {String} scheduled_next
+ * @property {String} [links = {}]
+ * @property {String} [created_at = null]
+ * @property {String} [updated_at = null]
+ */
 const Schedule = stampit()
   .compose(Model)
   .setMeta(ScheduleMeta)

@@ -158,6 +158,59 @@ export const ChannelPoll = stampit()
 
   });
 
+/**
+ * OO wrapper around channels {@link http://docs.syncano.io/v0.1/docs/channels-list endpoint}.
+ * **Channel** has two special methods called ``publish`` and ``poll``. First one will send message to the channel and second one will create {@link http://en.wikipedia.org/wiki/Push_technology#Long_polling long polling} connection which will listen for messages.
+
+ * @constructor
+ * @type {Channel}
+
+ * @property {String} name
+ * @property {String} instanceName
+ * @property {String} type
+ * @property {Number} [group = null]
+ * @property {String} [group_permissions = null]
+ * @property {String} [other_permissions = null]
+ * @property {Boolean} [custom_publish = null]
+
+ * @example {@lang javascript}
+ * Channel.please().get('instance-name', 'channel-name').then((channel) => {
+ *   return channel.publish({x: 1});
+ * });
+ *
+ * Channel.please().get('instance-name', 'channel-name').then((channel) => {
+ *   const poll = channel.poll();
+ *   poll.on('start', function() {
+ *     console.log('poll::start');
+ *   });
+ *
+ *   poll.on('stop', function() {
+ *     console.log('poll::stop');
+ *   });
+ *
+ *   poll.on('message', function(message) {
+ *     console.log('poll::message', message);
+ *   });
+ *
+ *   poll.on('create', function(data) {
+ *     console.log('poll::create', data);
+ *   });
+ *
+ *   poll.on('delete', function(data) {
+ *     console.log('poll::delete', data);
+ *   });
+ *
+ *   poll.on('update', function(data) {
+ *     console.log('poll::update', data);
+ *   });
+ *
+ *   poll.on('error', function(error) {
+ *     console.log('poll::error', error);
+ *   });
+ *
+ *   poll.start();
+ * });
+ */
 const Channel = stampit()
   .compose(Model)
   .setMeta(ChannelMeta)

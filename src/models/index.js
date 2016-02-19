@@ -11,7 +11,6 @@ import CodeBox from './codebox';
 import Schedule from './schedule';
 import Trigger from './trigger';
 import Webhook from './webhook';
-import Profile from './profile';
 import DataView from './dataview';
 import CodeBoxTrace from './codeboxtrace';
 import ScheduleTrace from './scheduletrace';
@@ -39,7 +38,6 @@ export default {
   Schedule,
   Trigger,
   Webhook,
-  Profile,
   DataView,
   CodeBoxTrace,
   ScheduleTrace,

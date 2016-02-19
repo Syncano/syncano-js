@@ -47,6 +47,21 @@ const UserConstraints = {
   }
 };
 
+
+/**
+ * OO wrapper around instance users {@link http://docs.syncano.com/v4.0/docs/user-management endpoint}.
+ * @constructor
+ * @type {User}
+
+ * @property {Number} id
+ * @property {String} instanceName
+ * @property {String} username
+ * @property {String} password
+ * @property {String} user_key
+ * @property {String} [links = {}]
+ * @property {String} [created_at = null]
+ * @property {String} [updated_at = null]
+ */
 const User = stampit()
   .compose(Model)
   .setMeta(UserMeta)

@@ -93,6 +93,29 @@ const DataobjectConstraints = {
   }
 };
 
+/**
+ * OO wrapper around instance data objects {@link http://docs.syncano.com/v4.0/docs/view-data-objects endpoint}.
+ * This model is special because each instance will be **dynamically populated** with fields defined in related {@link Class} schema attribute.
+ * @constructor
+ * @type {DataObject}
+
+ * @property {Number} id
+ * @property {String} instanceName
+ * @property {String} className
+ * @property {Number} revision
+ * @property {Number} [owner = null]
+ * @property {String} [owner_permissions = null]
+ * @property {Number} [group = null]
+ * @property {String} [group_permissions = null]
+ * @property {String} [other_permissions = null]
+ * @property {String} [channel = null]
+ * @property {String} [channel_room = null]
+
+ * @property {String} [description = null]
+ * @property {String} [links = {}]
+ * @property {String} [created_at = null]
+ * @property {String} [updated_at = null]
+ */
 const DataObject = stampit()
   .compose(Model)
   .setMeta(DataObjectMeta)

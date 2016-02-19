@@ -45,6 +45,18 @@ const TemplateConstraints = {
   }
 };
 
+/**
+ * OO wrapper around templates {@link # endpoint}.
+ * @constructor
+ * @type {Template}
+
+ * @property {String} name
+ * @property {String} instanceName
+ * @property {String} content
+ * @property {String} content_type
+ * @property {Object} context
+ * @property {String} [links = {}]
+ */
 const Template = stampit()
   .compose(Model)
   .setMeta(TemplateMeta)

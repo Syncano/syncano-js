@@ -75,6 +75,22 @@ const DataViewConstraints = {
   }
 };
 
+/**
+ * OO wrapper around data views {@link # endpoint}.
+ * @constructor
+ * @type {DataView}
+
+ * @property {String} name
+ * @property {String} instanceName
+ * @property {Object} query
+ * @property {String} excluded_fields
+ * @property {String} order_by
+ * @property {Number} page_size
+ * @property {String} expand
+ * @property {String} class
+ * @property {String} [description = null]
+ * @property {String} [links = {}]
+ */
 const DataView = stampit()
   .compose(Model)
   .setMeta(DataViewMeta)

@@ -28,6 +28,22 @@ const APNSConfigConstraints = {
   }
 };
 
+/**
+ * OO wrapper around instance APNS config {@link # endpoint}.
+ * @constructor
+ * @type {APNSConfig}
+
+ * @property {String} instanceName
+ * @property {File} production_certificate
+ * @property {String} [production_certificate_name = null]
+ * @property {String} production_bundle_identifier
+ * @property {String} [production_expiration_date = null]
+ * @property {String} development_certificate_name
+ * @property {File} development_certificate
+ * @property {String} development_bundle_identifier
+ * @property {String} [development_expiration_date = null]
+ * @property {Object} [links = {}]
+ */
 const APNSConfig = stampit()
   .compose(Model)
   .setMeta(APNSConfigMeta)

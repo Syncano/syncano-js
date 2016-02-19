@@ -42,6 +42,22 @@ const InstanceInvitationConstraints = {
   }
 };
 
+/**
+ * OO wrapper around instance invitations {@link # endpoint}.
+ * @constructor
+ * @type {InstanceInvitation}
+
+ * @property {String} email
+ * @property {String} role
+ * @property {String} [key = null]
+ * @property {String} [inviter = null]
+ * @property {String} [status = null]
+ * @property {Number} [id = null]
+ * @property {String} [description = null]
+ * @property {String} [links = {}]
+ * @property {String} [created_at = null]
+ * @property {String} [updated_at = null]
+ */
 const InstanceInvitation = stampit()
   .compose(Model)
   .setMeta(InstanceInvitationMeta)

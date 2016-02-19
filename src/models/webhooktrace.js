@@ -35,6 +35,23 @@ const WebhookTraceConstraints = {
   }
 };
 
+/**
+ * OO wrapper around webhook traces {@link # endpoint}.
+ * This model is *read only*.
+ * @constructor
+ * @type {WebhookTrace}
+
+ * @property {Number} id
+ * @property {String} instanceName
+ * @property {String} webhookName
+ * @property {String} status
+ * @property {String} executed_at
+ * @property {Number} duration
+ * @property {Object} [result = {}]
+ * @property {String} result.stderr
+ * @property {String} result.stdout
+ * @property {String} [links = {}]
+ */
 const WebhookTrace = stampit()
   .compose(Model)
   .setMeta(WebhookTraceMeta)

@@ -37,6 +37,19 @@ const GCMMessageConstraints = {
   }
 };
 
+/**
+ * OO wrapper around instance GCM messages {@link # endpoint}.
+ * @constructor
+ * @type {GCMMessage}
+
+ * @property {Number} id
+ * @property {String} [status = null]
+ * @property {Object} [content = {}]
+ * @property {Object} [result = {}]
+ * @property {String} [links = {}]
+ * @property {String} [created_at = null]
+ * @property {String} [updated_at = null]
+ */
 const GCMMessage = stampit()
   .compose(Model)
   .setMeta(GCMMessageMeta)

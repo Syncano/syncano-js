@@ -34,6 +34,19 @@ const APNSMessageConstraints = {
   }
 };
 
+/**
+ * OO wrapper around instance APNS messages {@link # endpoint}.
+ * @constructor
+ * @type {APNSMessage}
+
+ * @property {Number} id
+ * @property {String} [status = null]
+ * @property {Object} [content = {}]
+ * @property {Object} [result = {}]
+ * @property {String} [links = {}]
+ * @property {String} [created_at = null]
+ * @property {String} [updated_at = null]
+ */
 const APNSMessage = stampit()
   .compose(Model)
   .setQuerySet(APNSMessageQuerySet)

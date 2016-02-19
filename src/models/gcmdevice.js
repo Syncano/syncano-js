@@ -40,6 +40,21 @@ const GCMDevicConstraints = {
   }
 };
 
+/**
+ * OO wrapper around instance GCM devices {@link # endpoint}.
+ * @constructor
+ * @type {GCMDevice}
+
+ * @property {String} registration_id
+ * @property {String} device_id
+ * @property {String} instanceName
+ * @property {String} [label = null]
+ * @property {Number} [user_id = null]
+ * @property {Boolean} [is_active = true]
+ * @property {String} [links = {}]
+ * @property {String} [created_at = null]
+ * @property {String} [updated_at = null]
+ */
 const GCMDevice = stampit()
   .compose(Model)
   .setMeta(GCMDeviceMeta)
