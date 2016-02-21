@@ -83,19 +83,19 @@ describe('WebhookTrace', function() {
       });
     });
 
-    it('should be able to get first object (SUCCESS)', function() {
+    it.skip('should be able to get first object (SUCCESS)', function() {
       return Model.please().first(data).then((object) => {
         should(object).be.an.Object();
       });
     });
 
-    it('should be able to change page size', function() {
+    it.skip('should be able to change page size', function() {
       return Model.please(data).pageSize(1).then((objects) => {
         should(objects).be.an.Array().with.length(1);
       });
     });
 
-    it('should be able to get raw data', function() {
+    it.skip('should be able to get raw data', function() {
       return Model.please().list(data).raw().then((response) => {
         should(response).be.a.Object();
         should(response).have.property('objects').which.is.Array();
