@@ -1,4 +1,5 @@
 import stampit from 'stampit';
+import _ from 'lodash';
 import {Meta, Model} from './base';
 import {BaseQuerySet, Get, Create, Delete, Update, List} from '../querySet';
 
@@ -9,7 +10,16 @@ const ApiKeyQuerySet = stampit().compose(
   Delete,
   Update,
   List
-);
+).methods({
+
+  reset(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.endpoint = 'reset';
+    return this;
+  }
+
+});
 
 const ApiKeyMeta = Meta({
   name: 'apiKey',

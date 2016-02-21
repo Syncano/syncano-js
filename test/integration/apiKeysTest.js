@@ -205,6 +205,26 @@ describe('ApiKey', function() {
         });
     });
 
+    it('should be able to reset an api key', function() {
+      let apiKey, keyId;
+      return ApiKey.please().create({instanceName, description: 'test'})
+        .then(cleaner.mark)
+        .then((apk) => {
+          should(apk).be.an.Object();
+          should(apk).have.property('instanceName').which.is.String().equal(instanceName);
+          should(apk).have.property('description').which.is.String().equal('test');
+
+          apiKey = apk.api_key;
+          keyId = apk.id;
+
+          return ApiKey.please().reset({id: apk.id, instanceName});
+        })
+        .then((apk) => {
+          should(apk.id).be.equal(keyId);
+          should(apk.key_id).not.equal(apiKey);
+        });
+    });
+
     it('should be able to get first api key', function() {
       const descriptions = [
         'description_1',
