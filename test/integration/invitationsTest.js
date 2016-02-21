@@ -6,7 +6,7 @@ import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
 
-describe('Instance Invitation', function() {
+describe.only('Instance Invitation', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();
@@ -73,6 +73,18 @@ describe('Instance Invitation', function() {
         should(inv).have.property('instanceName').which.is.String().equal(data.instanceName);
 
         return inv.delete();
+      });
+  });
+
+  it('should be able to resend via model instance', function() {
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((inv) => {
+        should(inv).be.an.Object();
+        should(inv).have.property('email').which.is.String().equal(data.email);
+        should(inv).have.property('instanceName').which.is.String().equal(data.instanceName);
+
+        return inv.resend();
       });
   });
 
@@ -145,6 +157,23 @@ describe('Instance Invitation', function() {
           return Model
             .please()
             .delete({id: inv.id, instanceName})
+            .request();
+        });
+    });
+
+    it('should be able to resend invitation', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((inv) => {
+          should(inv).be.an.Object();
+          should(inv).have.property('email').which.is.String().equal(data.email);
+          should(inv).have.property('instanceName').which.is.String().equal(data.instanceName);
+          return inv;
+        })
+        .then((inv) => {
+          return Model
+            .please()
+            .resend({id: inv.id, instanceName})
             .request();
         });
     });
