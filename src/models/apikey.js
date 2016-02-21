@@ -22,6 +22,10 @@ const ApiKeyMeta = Meta({
     'list': {
       'methods': ['post', 'get'],
       'path': '/v1/instances/{instanceName}/api_keys/'
+    },
+    'reset': {
+      'methods': ['post'],
+      'path': '/v1/instances/{instanceName}/api_keys/{id}/reset_key/'
     }
   }
 });
@@ -51,6 +55,16 @@ const ApiKeyConstraints = {
 const ApiKey = stampit()
   .compose(Model)
   .setMeta(ApiKeyMeta)
+  .methods({
+
+    reset() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('reset', this);
+
+      return this.makeRequest('POST', path);
+    }
+
+  })
   .setQuerySet(ApiKeyQuerySet)
   .setConstraints(ApiKeyConstraints);
 

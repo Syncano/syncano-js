@@ -95,6 +95,25 @@ describe('ApiKey', function() {
       });
   });
 
+  it('should be able to reset key via model instance', function() {
+    let apiKey, keyId;
+    return ApiKey(data).save()
+      .then(cleaner.mark)
+      .then((apk) => {
+        should(apk).have.property('instanceName').which.is.String().equal(data.instanceName);
+        should(apk).have.property('description').which.is.String().equal(data.description);
+
+        apiKey = apk.api_key;
+        keyId = apk.id;
+
+        return apk.reset();
+      })
+      .then((apk) => {
+        should(apk.id).be.equal(keyId);
+        should(apk.key_id).not.equal(apiKey);
+      });
+  });
+
   describe('#please()', function() {
 
     it('should be able to list api keys', function() {
