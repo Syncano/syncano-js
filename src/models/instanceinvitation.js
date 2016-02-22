@@ -1,5 +1,6 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import _ from 'lodash';
 import {BaseQuerySet, Create, Get, Delete, GetOrCreate, List} from '../querySet';
 
 const InstanceInvitationQuerySet = stampit().compose(
@@ -10,7 +11,16 @@ const InstanceInvitationQuerySet = stampit().compose(
   Delete,
   List,
   Delete
-);
+).methods({
+
+  resend(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.endpoint = 'resend';
+    return this;
+  }
+
+});
 
 const InstanceInvitationMeta = Meta({
   name: 'invitation',
@@ -23,6 +33,10 @@ const InstanceInvitationMeta = Meta({
     'list': {
       'methods': ['post', 'get'],
       'path': '/v1/instances/{instanceName}/invitations/'
+    },
+    'resend': {
+      'methods': ['post'],
+      'path':  '/v1/instances/{instanceName}/invitations/{id}/resend/'
     }
   }
 });
@@ -61,6 +75,16 @@ const InstanceInvitationConstraints = {
 const InstanceInvitation = stampit()
   .compose(Model)
   .setMeta(InstanceInvitationMeta)
+  .methods({
+
+    resend() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('resend', this);
+
+      return this.makeRequest('POST', path);
+    }
+
+  })
   .setQuerySet(InstanceInvitationQuerySet)
   .setConstraints(InstanceInvitationConstraints);
 

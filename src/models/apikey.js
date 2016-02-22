@@ -1,4 +1,5 @@
 import stampit from 'stampit';
+import _ from 'lodash';
 import {Meta, Model} from './base';
 import {BaseQuerySet, Get, Create, Delete, Update, List} from '../querySet';
 
@@ -9,7 +10,16 @@ const ApiKeyQuerySet = stampit().compose(
   Delete,
   Update,
   List
-);
+).methods({
+
+  reset(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.endpoint = 'reset';
+    return this;
+  }
+
+});
 
 const ApiKeyMeta = Meta({
   name: 'apiKey',
@@ -22,6 +32,10 @@ const ApiKeyMeta = Meta({
     'list': {
       'methods': ['post', 'get'],
       'path': '/v1/instances/{instanceName}/api_keys/'
+    },
+    'reset': {
+      'methods': ['post'],
+      'path': '/v1/instances/{instanceName}/api_keys/{id}/reset_key/'
     }
   }
 });
@@ -51,6 +65,16 @@ const ApiKeyConstraints = {
 const ApiKey = stampit()
   .compose(Model)
   .setMeta(ApiKeyMeta)
+  .methods({
+
+    reset() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('reset', this);
+
+      return this.makeRequest('POST', path);
+    }
+
+  })
   .setQuerySet(ApiKeyQuerySet)
   .setConstraints(ApiKeyConstraints);
 
