@@ -168,7 +168,7 @@ describe('DataView', function() {
     it('should be able to bulk create an objects', function() {
       const objects = [
         Model(data),
-        Model(data)
+        Model(_.assign({}, data, {name: `${dataViewName}1`}))
       ];
 
       return Model.please().bulkCreate(objects)
