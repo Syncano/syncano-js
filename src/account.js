@@ -18,7 +18,8 @@ const Account = stampit().compose(Request)
   .props({
     _account: {
       registerPath: '/v1/account/register/',
-      loginPath: '/v1/account/auth/'
+      loginPath: '/v1/account/auth/',
+      userLoginPath: (instanceName) => `/v1/instances/${instanceName}/user/auth/`
     }
   })
   .methods({
@@ -46,9 +47,9 @@ const Account = stampit().compose(Request)
     * @memberOf Account
     * @instance
 
-    * @param {Object} credentials
-    * @param {String} credentials.email
-    * @param {String} credentials.password
+    * @param {Object} payload
+    * @param {String} payload.email
+    * @param {String} payload.password
     * @param {Boolean} [setAccountKey = true]
     * @returns {Promise}
 
@@ -60,6 +61,32 @@ const Account = stampit().compose(Request)
       return this.makeRequest('POST', path, {payload}).then((user) => {
         if (setAccountKey === true) {
           config.setAccountKey(user.account_key);
+        }
+        return user;
+      });
+    },
+
+    /**
+    * A convenience method for authenticating instance user with email and password.
+
+    * @memberOf Account
+    * @instance
+
+    * @param {Object} payload
+    * @param {String} payload.email
+    * @param {String} payload.password
+    * @param {String} payload.instanceName
+    * @param {Boolean} [setUserKey = true]
+    * @returns {Promise}
+
+    */
+    userLogin(payload = {}, setUserKey = true) {
+      const config = this.getConfig();
+      const path = this._account.userLoginPath(payload.instanceName);
+
+      return this.makeRequest('POST', path, {payload}).then((user) => {
+        if (setUserKey === true) {
+          config.setUserKey(user.user_key);
         }
         return user;
       });
