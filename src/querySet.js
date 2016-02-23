@@ -395,18 +395,13 @@ export const First = stampit().methods({
 
   */
   first(properties = {}, query = {}) {
-    return new Promise((resolve, reject) => {
-      this.pageSize(1)
-        .list(properties, query)
-        .then((objects) => {
-          if (objects.length > 0) {
-            resolve(objects[0]);
-          } else {
-            resolve();
-          }
-        })
-        .catch(reject)
-    });
+    return this.pageSize(1)
+      .list(properties, query)
+      .then((objects) => {
+        if (objects.length) {
+          return objects[0];
+        }
+      });
   }
 });
 
@@ -482,6 +477,29 @@ export const Raw = stampit().methods({
   }
 });
 
+export const BulkCreate = stampit().methods({
+
+  /**
+  * Creates many objects based on provied Array.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Array} objects
+  * @returns {Promise}
+
+  * @example {@lang javascript}
+  * const objects = [Instance({name: 'test1'}), Instance({name: 'tes21'})];
+  * Instance.please().bulkCreate(objects).then(function(instances) {
+  *   console.log('instances', instances);
+  * });
+
+  */
+  bulkCreate(objects) {
+    return Promise.mapSeries(objects, (o) => o.save());
+  }
+});
+
 /**
  * Base class responsible for all ORM (``please``) actions.
  * @constructor
@@ -500,6 +518,7 @@ export const Raw = stampit().methods({
 const QuerySet = stampit.compose(
   QuerySetRequest,
   Create,
+  BulkCreate,
   Get,
   GetOrCreate,
   List,
