@@ -4,7 +4,7 @@ import {ValidationError} from '../../src/errors';
 import {suffix, credentials} from './utils';
 
 
-describe.only('ScheduleTrace', function() {
+describe('ScheduleTrace', function() {
   this.timeout(15000);
 
   let Instance = null;
