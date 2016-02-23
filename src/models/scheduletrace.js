@@ -23,6 +23,18 @@ const ScheduleTraceMeta = Meta({
   }
 });
 
+const ScheduleTraceConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  scheduleId: {
+    presence: true
+  }
+};
+
 /**
  * OO wrapper around shedule traces {@link # endpoint}.
  * @constructor
@@ -42,6 +54,7 @@ const ScheduleTraceMeta = Meta({
 const ScheduleTrace = stampit()
   .compose(Model)
   .setQuerySet(ScheduleTraceQuerySet)
-  .setMeta(ScheduleTraceMeta);
+  .setMeta(ScheduleTraceMeta)
+  .setConstraints(ScheduleTraceConstraints);
 
 export default ScheduleTrace;
