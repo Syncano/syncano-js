@@ -35,6 +35,8 @@ describe.only('ScheduleTrace', function() {
         interval_sec: 30,
         description: instanceName,
         timezone: 'UTC'
+      }).then((schedule) => {
+        data.scheduleId = schedule.id;
       });
     });
   });
