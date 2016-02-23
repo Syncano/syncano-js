@@ -15,7 +15,7 @@ describe.only('ScheduleTrace', function() {
     scheduleId: null
   }
 
-  before(function(done) {
+  before(function() {
     const connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
     Model = connection.ScheduleTrace;
