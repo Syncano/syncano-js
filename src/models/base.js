@@ -102,7 +102,7 @@ export const Meta = stampit()
       const diff = _.difference(endpoint.properties, _.keys(properties));
       let path = endpoint.path;
 
-      if (diff.length > 0) {
+      if (diff.length) {
         throw new Error(`Missing path properties "${diff.join()}" for "${endpointName}" endpoint.`)
       }
 

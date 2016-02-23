@@ -1,11 +1,12 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
-import {BaseQuerySet, Create, Delete, Get, Update, UpdateOrCreate, GetOrCreate, List} from '../querySet';
+import {BaseQuerySet, Create, BulkCreate, Delete, Get, Update, UpdateOrCreate, GetOrCreate, List} from '../querySet';
 
 const GCMDeviceQuerySet = stampit().compose(
   BaseQuerySet,
   List,
   Create,
+  BulkCreate,
   Delete,
   Get,
   Update,

@@ -1,11 +1,12 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
-import {BaseQuerySet, Get, Create, List} from '../querySet';
+import {BaseQuerySet, Get, Create, BulkCreate, List} from '../querySet';
 
 const UserQuerySet = stampit().compose(
   BaseQuerySet,
   Get,
   Create,
+  BulkCreate,
   List
 );
 

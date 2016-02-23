@@ -113,6 +113,19 @@ describe('Instance', function() {
         });
     });
 
+    it('should be able to bulk create an objects', function() {
+      const objects = [
+        Instance({name: instanceName}),
+        Instance({name: `${instanceName}1`})
+      ];
+
+      return Instance.please().bulkCreate(objects)
+        .then(cleaner.mark)
+        .then((result) => {
+          should(result).be.an.Array().with.length(2);
+        });
+    });
+
     it('should be able to get an instance', function() {
       return Instance.please().create(data)
         .then(cleaner.mark)
