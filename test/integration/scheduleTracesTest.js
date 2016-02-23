@@ -39,7 +39,7 @@ describe('ScheduleTrace', function() {
       }).then((schedule) => {
         data.scheduleId = schedule.id;
         mlog.pending('Waiting 50 sec for schedule to generate some traces...');
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
           setInterval(() => resolve(), 50000);
         });
       }).then(() => {
