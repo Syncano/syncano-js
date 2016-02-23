@@ -177,6 +177,18 @@ describe('CodeBox', function() {
       });
     });
 
+    it('should be able to bulk create an objects', function() {
+      const objects = [
+        CodeBox({instanceName, label: codeBoxName, runtime_name: runtimeName}),
+        CodeBox({instanceName, label: codeBoxName, runtime_name: runtimeName})
+      ];
+
+      return CodeBox.please().bulkCreate(objects)
+        .then((result) => {
+          should(result).be.an.Array().with.length(2);
+        });
+    });
+
     it('should be able to get a codeBox', function() {
       let codeBoxId = null;
 

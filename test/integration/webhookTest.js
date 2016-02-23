@@ -224,6 +224,18 @@ describe('Webhooks', function() {
       });
     });
 
+    it('should be able to bulk create an objects', function() {
+      const objects = [
+        Webhook(webhookData),
+        Webhook(_.assign({}, webhookData, {name: `${webhookName}1`}))
+      ];
+
+      return Webhook.please().bulkCreate(objects)
+        .then((result) => {
+          should(result).be.an.Array().with.length(2);
+        });
+    });
+
     it('should be able to get a webhook', function() {
       return Webhook.please().create(webhookData)
         .then((webhook) => {

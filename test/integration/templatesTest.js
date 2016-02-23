@@ -186,6 +186,25 @@ describe('Template', function() {
       });
     });
 
+    it('should be able to bulk create an objects', function() {
+      const data = {
+        name: templateName,
+        instanceName: instanceName,
+        content_type: contentType,
+        content: templateContent
+      };
+
+      const objects = [
+        Template(data),
+        Template(_.assign({}, data, {name: `${templateName}1`}))
+      ];
+
+      return Template.please().bulkCreate(objects)
+        .then((result) => {
+          should(result).be.an.Array().with.length(2);
+        });
+    });
+
     it('should be able to get a template', function() {
       return Template.please().create({name: templateName, instanceName, content: templateContent, content_type: contentType}).then((tpl) => {
           should(tpl).be.a.Object();

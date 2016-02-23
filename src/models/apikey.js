@@ -1,12 +1,13 @@
 import stampit from 'stampit';
 import _ from 'lodash';
 import {Meta, Model} from './base';
-import {BaseQuerySet, Get, Create, Delete, Update, List} from '../querySet';
+import {BaseQuerySet, Get, Create, BulkCreate, Delete, Update, List} from '../querySet';
 
 const ApiKeyQuerySet = stampit().compose(
   BaseQuerySet,
   Get,
   Create,
+  BulkCreate,
   Delete,
   Update,
   List

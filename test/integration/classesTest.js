@@ -113,6 +113,19 @@ describe('Class', function() {
         });
     });
 
+    it('should be able to bulk create a classes', function() {
+      const classes = [
+        Class(data),
+        Class(_.assign({}, data, {name: `${className}_1`}))
+      ];
+
+      return Class.please().bulkCreate(classes)
+        .then(cleaner.mark)
+        .then((cls) => {
+          should(cls).be.an.Array().with.length(2);
+        });
+    });
+
     it('should be able to get a class', function() {
       return Class.please().create(data)
         .then(cleaner.mark)

@@ -1,11 +1,12 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
 import _ from 'lodash';
-import {BaseQuerySet, Create, Get, Delete, GetOrCreate, List} from '../querySet';
+import {BaseQuerySet, Create, BulkCreate, Get, Delete, GetOrCreate, List} from '../querySet';
 
 const InstanceInvitationQuerySet = stampit().compose(
   BaseQuerySet,
   Create,
+  BulkCreate,
   Get,
   GetOrCreate,
   Delete,

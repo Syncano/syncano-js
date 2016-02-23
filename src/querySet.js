@@ -480,7 +480,7 @@ export const Raw = stampit().methods({
 export const BulkCreate = stampit().methods({
 
   /**
-  * Creates many objects based on provied Array.
+  * Creates many objects based on provied Array of objects.
 
   * @memberOf QuerySet
   * @instance

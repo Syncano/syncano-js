@@ -137,7 +137,20 @@ describe('ApiKey', function() {
           should(apk).have.property('allow_user_create').which.is.Boolean().equal(false);
           should(apk).have.property('api_key').which.is.String();
         });
-      });
+    });
+
+    it('should be able to bulk create a api keys', function() {
+      const objects = [
+        ApiKey(data),
+        ApiKey(data)
+      ];
+
+      return ApiKey.please().bulkCreate(objects)
+        .then(cleaner.mark)
+        .then((result) => {
+          should(result).be.an.Array().with.length(2);
+        });
+    });
 
     it('should be able to get an api key', function() {
       let keyId = null;

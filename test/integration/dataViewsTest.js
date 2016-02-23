@@ -165,6 +165,19 @@ describe('DataView', function() {
         });
     });
 
+    it('should be able to bulk create an objects', function() {
+      const objects = [
+        Model(data),
+        Model(data)
+      ];
+
+      return Model.please().bulkCreate(objects)
+        .then(cleaner.mark)
+        .then((result) => {
+          should(result).be.an.Array().with.length(2);
+        });
+    });
+
     it('should be able to get a Model', function() {
       return Model.please().create(data)
         .then(cleaner.mark)

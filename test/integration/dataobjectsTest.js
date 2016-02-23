@@ -135,22 +135,35 @@ describe('Dataobject', function() {
     it('should be able to create a Model', function() {
 
       return DataObject.please().create(dataObj)
-      .then(cleaner.mark)
-      .then((dataobject) => {
-        should(dataobject).be.a.Object();
-        should(dataobject).have.property('id').which.is.Number();
-        should(dataobject).have.property('instanceName').which.is.String().equal(data.instanceName);
-        should(dataobject).have.property('created_at').which.is.String();
-        should(dataobject).have.property('updated_at').which.is.String();
-        should(dataobject).have.property('links').which.is.Object();
-        should(dataobject).have.property('channel').which.is.Null();
-        should(dataobject).have.property('owner').which.is.Null();
-        should(dataobject).have.property('group_permissions').which.is.String().equal('none');
-        should(dataobject).have.property('other_permissions').which.is.String().equal('none');
-        should(dataobject).have.property('owner_permissions').which.is.String().equal('full');
-        should(dataobject).have.property('title').which.is.String().equal('Pulp');
-        should(dataobject).have.property('author').which.is.String().equal('Bukowski');
-      });
+        .then(cleaner.mark)
+        .then((dataobject) => {
+          should(dataobject).be.a.Object();
+          should(dataobject).have.property('id').which.is.Number();
+          should(dataobject).have.property('instanceName').which.is.String().equal(data.instanceName);
+          should(dataobject).have.property('created_at').which.is.String();
+          should(dataobject).have.property('updated_at').which.is.String();
+          should(dataobject).have.property('links').which.is.Object();
+          should(dataobject).have.property('channel').which.is.Null();
+          should(dataobject).have.property('owner').which.is.Null();
+          should(dataobject).have.property('group_permissions').which.is.String().equal('none');
+          should(dataobject).have.property('other_permissions').which.is.String().equal('none');
+          should(dataobject).have.property('owner_permissions').which.is.String().equal('full');
+          should(dataobject).have.property('title').which.is.String().equal('Pulp');
+          should(dataobject).have.property('author').which.is.String().equal('Bukowski');
+        });
+    });
+
+    it('should be able to bulk create an objects', function() {
+      const objects = [
+        DataObject(dataObj),
+        DataObject(dataObj)
+      ];
+
+      return DataObject.please().bulkCreate(objects)
+        .then(cleaner.mark)
+        .then((result) => {
+          should(result).be.an.Array().with.length(2);
+        });
     });
 
     it('should be able to get a Model', function() {
