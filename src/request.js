@@ -189,7 +189,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
             this.log(`Response ${err.status}:`, err.errors);
 
             if (err.name !== 'RequestError') {
-              err = new RequestError(err, err.response);
+              throw new RequestError(err, err.response);
             }
           }
           throw err;
