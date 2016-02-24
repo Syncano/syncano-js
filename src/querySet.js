@@ -5,10 +5,43 @@ import Request from './request';
 import PaginationError from './errors';
 
 
+/**
+ * Wrapper around plain JavaScript Array which provides two additional methods for pagination.
+ * @constructor
+ * @type {ResultSet}
+
+ * @param {QuerySet}  querySet
+ * @param {String}  response
+ * @param {Array}  objects
+ * @returns {ResultSet}
+
+ * @property {Function}  next
+ * @property {Function}  prev
+
+ * @example {@lang javascript}
+ * Instance.please().list()
+ *   // get next page
+ *   .then((instances) => instances.next())
+ *
+ *   // get prev page
+ *   .then((instances) => instances.prev())
+ *
+ *   .then((instances) => console.log('instances', instances));
+ */
 const ResultSet = function(querySet, response, objects) {
   let results = [];
   results.push.apply(results, objects);
 
+
+  /**
+  * Helper method which will fetch next page or throws `PaginationError`.
+
+  * @memberOf ResultSet
+  * @instance
+
+  * @throws {PaginationError}
+  * @returns {Promise}
+  */
   results.next = () => {
     if (!response.next) {
       return Promise.reject(new PaginationError('There is no next page'));
@@ -17,6 +50,15 @@ const ResultSet = function(querySet, response, objects) {
     return querySet.request(response.next, {query: {}});
   };
 
+  /**
+  * Helper method which will fetch previous page or throws `PaginationError`.
+
+  * @memberOf ResultSet
+  * @instance
+
+  * @throws {PaginationError}
+  * @returns {Promise}
+  */
   results.prev = () => {
     if (!response.prev) {
       return Promise.reject(new PaginationError('There is no previous page'));
