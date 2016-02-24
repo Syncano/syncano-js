@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="Syncano.html">Syncano</a></li>
+					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="CodeBox.html">CodeBox</a></li><li><a href="CodeBoxTrace.html">CodeBoxTrace</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="DataView.html">DataView</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li><li><a href="Webhook.html">Webhook</a></li><li><a href="WebhookTrace.html">WebhookTrace</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li>
+					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li>
 				</ul>
 			</li>
 			
@@ -81,10 +81,11 @@
 <h3>Creating a Connection</h3><p>In each example I'll be assuming that you have configured connection to <code>syncano</code> and you are using <code>ES6</code> syntax:</p>
 <pre class="prettyprint source"><code>import Syncano from 'syncano';
 
-const connection = Syncano({accountKey: 'YOUR_KEY'})</code></pre><h3>Creating objects</h3><p>A model class represents a single <code>Syncano API</code> endpoint, and an instance of that class represents a particular record in this endpoint.</p>
+const connection = Syncano({accountKey: 'YOUR_KEY'});
+const {Instance, ApiKey} = connection;</code></pre><h3>Creating objects</h3><p>A model class represents a single <code>Syncano API</code> endpoint, and an instance of that class represents a particular record in this endpoint.</p>
 <p>To create an object, instantiate it using <strong>object</strong> argument and then call Model.save to save it to the <code>Syncano API</code>.</p>
 <p>Here’s an example:</p>
-<pre class="prettyprint source"><code>connection.Instance({name: 'test-one', description:''}).save().then((instance) => {
+<pre class="prettyprint source"><code>Instance({name: 'test-one', description:''}).save().then((instance) => {
    // your new instance
 });</code></pre><p>This performs a <strong>POST</strong> request to <code>Syncano API</code> behind the scenes.<br>Syncano doesn’t hit the API until you explicitly call <a href="Model.html#save">Model#save</a>.</p>
 <h5>Note</h5><p>To create and save <strong>an object</strong> in a single step, use the <a href="QuerySet.html#create">QuerySet#create</a> method.</p>
@@ -96,40 +97,49 @@ instance.save().then((updatedInstance) => {
 <h5>Note</h5><p>To change and save <strong>an object</strong> in a single step, use the <a href="QuerySet.html#create">QuerySet#create</a> method.</p>
 <h2>Retrieving objects</h2><p>To retrieve objects from <code>Syncano API</code>, construct a query via a <a href="QuerySet.html">QuerySet</a> on your model class.</p>
 <p>Each model has only one <a href="QuerySet.html#create">QuerySet#create</a>, and it’s called <strong>please</strong> by default.<br>Access it directly via the model class, like so:</p>
-<pre class="prettyprint source"><code>connection.Instance.please()</code></pre><h5>Note</h5><p><a href="QuerySet.html">QuerySet</a> is accessible only via model classes, rather than from model instances,<br>to enforce a separation between “table-level” operations and “record-level” operations.</p>
+<pre class="prettyprint source"><code>Instance.please()</code></pre><h5>Note</h5><p><a href="QuerySet.html">QuerySet</a> is accessible only via model classes, rather than from model instances,<br>to enforce a separation between “table-level” operations and “record-level” operations.</p>
 <h3>Retrieving all objects</h3><p>The simplest way to retrieve objects from a <code>Syncano API</code> is to get all of them.<br>To do this, use the <a href="QuerySet.html#list">QuerySet#list</a> method on a <a href="QuerySet.html">QuerySet</a>:</p>
-<pre class="prettyprint source"><code>connection.Instance.please().list().then((instances) => {
+<pre class="prettyprint source"><code>Instance.please().list().then((instances) => {
     console.log('instances', instances);
 });</code></pre><h5>Note</h5><p>This performs a <strong>GET</strong> request to <code>Syncano API</code> list endpoint behind the scenes.</p>
 <h3>QuerySet is lazy</h3><p><a href="QuerySet.html">QuerySet</a> is lazy – the act of creating a <strong>QuerySet</strong> doesn’t involve any API activity.<br>You can stack QuerySet methods all day long, and Syncano won’t actually run the API call until the <strong>QuerySet</strong> is evaluated.<br>Take a look at this example::</p>
-<pre class="prettyprint source"><code>connection.Instance.please().pageSize(1).ordering('desc').then(() => {
+<pre class="prettyprint source"><code>Instance.please().pageSize(1).ordering('desc').then(() => {
 
 });</code></pre><p>Though this looks like two API calls, in fact it hits API only once, at the last chain (<code>then</code>).<br>In general, the results of a <a href="QuerySet.html">QuerySet</a> aren’t fetched from API until you “ask” for them.</p>
 <h3>Retrieving a single object</h3><p>If you know there is only one object that matches your API call, you can use the <a href="QuerySet.html#get">QuerySet#get</a> method on a <a href="QuerySet.html">QuerySet</a> which returns the object directly:</p>
-<pre class="prettyprint source"><code>connection.Instance.please().get({name: 'test'}).then((instance) => {
+<pre class="prettyprint source"><code>Instance.please().get({name: 'test'}).then((instance) => {
 
 });</code></pre><p>This performs a <strong>GET</strong> request to <code>Syncano API</code> details endpoint behind the scenes. If there are no results that match the API call, <a href="QuerySet.html#get">QuerySet#get</a> will raise a RequestError exception.</p>
 <h3>Removing a single object</h3><p>The delete method, conveniently, is named <a href="QuerySet.html#delete">QuerySet#delete</a>. This method immediately deletes the object and has no return value.</p>
-<pre class="prettyprint source"><code>connection.Instance.please().delete({name: 'test'}).then(() => {
+<pre class="prettyprint source"><code>Instance.please().delete({name: 'test'}).then(() => {
 });</code></pre><p>This performs a <strong>DELETE</strong> request to <code>Syncano API</code> details endpoint behind the scenes.</p>
-<h3>Lookups that span relationships</h3><p><code>Syncano API</code> has nested architecture so in some cases there will be a need to provide a few additional arguments to resolve endpoint URL.<br>For example ApiKey model is related to Instance and its URL patter looks like this:</p>
+<h3>Lookups that span relationships</h3><p><code>Syncano API</code> has nested architecture so in some cases there will be a need to provide a few additional arguments to resolve endpoint URL.<br>For example <a href="ApiKey.html">ApiKey</a> model is related to Instance and its URL patter looks like this:</p>
 <p><code>/v1/instances/{instance_name}/api_keys/{id}</code></p>
 <p>This example will not work:</p>
-<pre class="prettyprint source"><code>connection.ApiKey.please().list().then(() => {}).catch((error) => {
+<pre class="prettyprint source"><code>ApiKey.please().list().then(() => {}).catch((error) => {
    console.log('error', error);
 });</code></pre><p>So how to fix that? We need to provide <code>instanceName</code> as an argument to <a href="QuerySet.html#list">QuerySet#list</a> method:</p>
-<pre class="prettyprint source"><code>connection.ApiKey.please().list({instanceName: 'test'}).then((apiKeys) => {
+<pre class="prettyprint source"><code>ApiKey.please().list({instanceName: 'test'}).then((apiKeys) => {
     console.log('apiKeys', apiKeys);
 });</code></pre><p>This performs a <strong>GET</strong> request to <code>/v1/instances/test/api_keys/</code>.</p>
-<h3>Backward relations</h3><p>For example Instance has related ApiKey model so all Instance objects will have backward relation to list of ApiKey's:</p>
-<pre class="prettyprint source"><code>connection.Instance.please().get({name: 'test'}).then((instance) => {
+<h3>Backward relations</h3><p>For example Instance has related <a href="ApiKey.html">ApiKey</a> model so all <a href="Instance.html">Instance</a> objects will have backward relation to list of <a href="ApiKey.html">ApiKey</a>'s:</p>
+<pre class="prettyprint source"><code>Instance.please().get({name: 'test'}).then((instance) => {
     return instance.apiKeys().list();
 }).then((apiKeys) => {
     console.log('apiKeys', apiKeys);
 });</code></pre><h5>Note</h5><p><strong>Related</strong> objects do not require additional request properties passed to QuerySet#link method.</p>
 <h3>Falling back to raw JSON</h3><p>If you find yourself needing to work on raw JSON data instead of models just use <a href="QuerySet.html#raw">QuerySet#raw</a> method:</p>
-<pre class="prettyprint source"><code>connection.Instance.please().list().raw().then((response) => {
+<pre class="prettyprint source"><code>Instance.please().list().raw().then((response) => {
     console.log('raw response', response);
+});</code></pre><h3>Pagination</h3><p>If you find yourself needing to fetch <code>next</code> or <code>previous</code> page of objects just use <a href="ResultSet.html">next</a> or <a href="ResultSet.html">prev</a> method:</p>
+<pre class="prettyprint source"><code>Instance.please().list().then((instances) => {
+    console.log('first page', instances);
+    return instances.next();
+}).then((instances) => {
+    console.log('second page', instances);
+    return instances.prev();
+}).then((instances) => {
+    console.log('previous / first page', instances);
 });</code></pre>
 </article>
 
@@ -170,7 +180,7 @@ instance.save().then((updatedInstance) => {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Thu Feb 11th 2016
+		on Wed Feb 24th 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

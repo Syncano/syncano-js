@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="Syncano.html">Syncano</a></li>
+					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="CodeBox.html">CodeBox</a></li><li><a href="CodeBoxTrace.html">CodeBoxTrace</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="DataView.html">DataView</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li><li><a href="Webhook.html">Webhook</a></li><li><a href="WebhookTrace.html">WebhookTrace</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li>
+					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li>
 				</ul>
 			</li>
 			
@@ -96,12 +96,40 @@ const WebhookQuerySet = stampit().compose(QuerySet).methods({
 
   */
   run(properties = {}, payload = {}) {
-    const WebhookTrace = this.getConfig().WebhookTrace;
+    const {WebhookTrace} = this.getConfig();
 
     this.properties = _.assign({}, this.properties, properties);
-
     this.method = 'POST';
     this.endpoint = 'run';
+    this.payload = payload;
+    this._serialize = false;
+
+    return this.then((trace) => {
+      return WebhookTrace.fromJSON(trace, {
+        instanceName: this.properties.instanceName,
+        webhookName: this.properties.name
+      });
+    });
+  },
+
+  /**
+  * Runs `public` Webhook matching the given lookup properties.
+  * @memberOf WebhookQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @returns {Promise}
+
+  * @example {@lang javascript}
+  * Webhook.please().runPublic({public_link: '44cfc5552eacc', instanceName: 'test-one'}).then(function(trace) {});
+
+  */
+  runPublic(properties = {}, payload = {}) {
+    const {WebhookTrace} = this.getConfig();
+
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.endpoint = 'public';
     this.payload = payload;
     this._serialize = false;
 
@@ -157,8 +185,8 @@ const WebhookMeta = Meta({
       'path': '/v1/instances/{instanceName}/webhooks/{name}/reset_link/'
     },
     'public': {
-      'methods': ['get'],
-      'path': '/v1/instances/{instanceName}/webhooks/p/{publicLink}/{name}/'
+      'methods': ['post'],
+      'path': '/v1/instances/{instanceName}/webhooks/p/{public_link}/'
     }
   },
   relatedModels: ['WebhookTrace']
@@ -182,6 +210,19 @@ const WebhookConstraints = {
   }
 };
 
+/**
+ * OO wrapper around instance webhooks {@link # endpoint}.
+ * @constructor
+ * @type {Webhook}
+
+ * @property {String} name
+ * @property {String} instanceName
+ * @property {String} public_link
+ * @property {Boolean} public
+ * @property {Number} codebox
+ * @property {String} [description = null]
+ * @property {String} [links = {}]
+ */
 const Webhook = stampit()
   .compose(Model)
   .setMeta(WebhookMeta)
@@ -203,24 +244,44 @@ const Webhook = stampit()
       });
     */
     run(payload = {}) {
-      const WebhookTrace = this.getConfig().WebhookTrace;
+      const {WebhookTrace} = this.getConfig();
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('run', this);
 
-      return new Promise((resolve, reject) => {
-        this.makeRequest('POST', path, {payload}, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-
-          const trace = WebhookTrace.fromJSON(res.body, {
+      return this.makeRequest('POST', path, {payload})
+        .then((body) => {
+          return WebhookTrace.fromJSON(body, {
             instanceName: this.instanceName,
             webhookName: this.name
           });
-
-          resolve(trace, res);
         });
+    },
+
+    /**
+    * Runs current `public` Webhook.
+    * @memberOf Webhook
+    * @instance
+
+    * @param {Object} [payload = {}]
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * Webhook.please().get({instanceName: 'test-one', id: 1}).then(function(codebox) {
+        codebox.runPublic({some: 'variable'}).then(function(trace) {});
       });
+    */
+    runPublic(payload = {}) {
+      const {WebhookTrace} = this.getConfig();
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('public', this);
+
+      return this.makeRequest('POST', path, {payload})
+        .then((body) => {
+          return WebhookTrace.fromJSON(body, {
+            instanceName: this.instanceName,
+            webhookName: this.name
+          });
+        });
     },
 
     /**
@@ -238,14 +299,7 @@ const Webhook = stampit()
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('reset', this);
 
-      return new Promise((resolve, reject) => {
-        this.makeRequest('POST', path, {}, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-          resolve(this.serialize(res.body), res);
-        });
-      });
+      return this.makeRequest('POST', path).then((body) => this.serialize(body));
     }
 
   });
@@ -294,7 +348,7 @@ export default Webhook;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Thu Feb 11th 2016
+		on Wed Feb 24th 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

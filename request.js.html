@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="Syncano.html">Syncano</a></li>
+					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="CodeBox.html">CodeBox</a></li><li><a href="CodeBoxTrace.html">CodeBoxTrace</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="DataView.html">DataView</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li><li><a href="Webhook.html">Webhook</a></li><li><a href="WebhookTrace.html">WebhookTrace</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li>
+					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li>
 				</ul>
 			</li>
 			
@@ -76,10 +76,14 @@
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
+import Promise from 'bluebird';
 import superagent from 'superagent';
 import _ from 'lodash';
 import {ConfigMixin, Logger} from './utils';
 import {RequestError} from './errors';
+import SyncanoFile from './file';
+
+const IS_NODE = typeof module !== 'undefined' &amp;&amp; module.exports &amp;&amp; typeof __webpack_require__ === 'undefined';
 
 /**
  * Base request object **not** meant to be used directly more like mixin in other {@link https://github.com/stampit-org/stampit|stamps}.
@@ -171,12 +175,10 @@ const Request = stampit().compose(ConfigMixin, Logger)
     * @param {Object} [requestOptions.headers = {}] request headers
     * @param {Object} [requestOptions.query = {}] request query
     * @param {Object} [requestOptions.payload = {}] request payload
-    * @param {Object} [requestOptions.attachments = {}] request attachments
-    * @param {Function} callback
-    * @returns {Request}
+    * @returns {Promise}
 
     */
-    makeRequest(methodName, path, requestOptions, callback) {
+    makeRequest(methodName, path, requestOptions) {
       const config = this.getConfig();
       let method = (methodName || '').toUpperCase();
       let options = _.defaults({}, requestOptions, {
@@ -186,23 +188,15 @@ const Request = stampit().compose(ConfigMixin, Logger)
         headers: {},
         query: {},
         payload: {},
-        attachments: {}
+        responseAttr: 'body'
       });
 
-      if (!_.isFunction(callback)) {
-        throw new Error('"callback" needs to be a Function.');
-      }
-
       if (_.isEmpty(methodName) || !_.includes(this._request.allowedMethods, method)) {
-        return callback(new Error(`Invalid request method: "${methodName}".`));
+        return Promise.reject(new Error(`Invalid request method: "${methodName}".`));
       }
 
       if (_.isEmpty(path)) {
-        return callback(new Error('"path" is required.'));
-      }
-
-      if (!_.isEmpty(options.attachments)) {
-        options.type = 'form';
+        return Promise.reject(new Error('"path" is required.'));
       }
 
       // wtf ?
@@ -219,30 +213,64 @@ const Request = stampit().compose(ConfigMixin, Logger)
         }
       }
 
+      // Grab files
+      const files = _.reduce(options.payload, (result, value, key) => {
+        if (value instanceof SyncanoFile) {
+          result[key] = value;
+        }
+        return result;
+      }, {});
+
       let handler = this.getRequestHandler();
       let request = handler(method, this.buildUrl(path))
-        .type(options.type)
         .accept(options.accept)
         .timeout(options.timeout)
         .set(options.headers)
-        .query(options.query)
-        .send(options.payload);
+        .query(options.query);
 
-      _.forEach(options.attachments, (value, key) => {
-        request = request.attach(key, value);
-      });
+      if (_.isEmpty(files)) {
+        request = request
+          .type(options.type)
+          .send(options.payload);
+      } else if (IS_NODE === false &amp;&amp; typeof FormData !== 'undefined' &amp;&amp; typeof File !== 'undefined') {
+        options.type = null;
+        options.payload = _.reduce(options.payload, (formData, value, key) => {
+          formData.append(key, (files[key]) ? value.content: value);
+          return formData;
+        }, new FormData());
 
-      request.end(_.wrap(callback, (_callback, err, res) => {
-        if (!_.isUndefined(res) &amp;&amp; !res.ok) {
-          this.log(`\n${method} ${path}\n${JSON.stringify(options, null, 2)}\n`);
-          this.log(`Response ${res.status}:`, res.body);
+        request = request
+          .type(options.type)
+          .send(options.payload);
 
-          err = new RequestError(err, res);
-        }
-        return _callback(err, res);
-      }));
+      } else if (IS_NODE === true) {
+        request = _.reduce(options.payload, (result, value, key) => {
+          return (files[key]) ? result.attach(key, value.content): result.field(key, value);
+        }, request.type('form'));
+      }
 
-      return request;
+      return Promise.promisify(request.end, {context: request})()
+        .then((response) => {
+          if (!response.ok) {
+            throw new RequestError({
+              response: response,
+              status: response.status,
+              message: 'Bad request'
+            });
+          }
+          return response[options.responseAttr];
+        })
+        .catch((err) => {
+          if (err.status &amp;&amp; err.response) {
+            this.log(`\n${method} ${path}\n${JSON.stringify(options, null, 2)}\n`);
+            this.log(`Response ${err.status}:`, err.errors);
+
+            if (err.name !== 'RequestError') {
+              err = new RequestError(err, err.response);
+            }
+          }
+          throw err;
+        });
     }
 
   }).static({
@@ -314,7 +342,7 @@ export default Request;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Thu Feb 11th 2016
+		on Wed Feb 24th 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="Syncano.html">Syncano</a></li>
+					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="CodeBox.html">CodeBox</a></li><li><a href="CodeBoxTrace.html">CodeBoxTrace</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="DataView.html">DataView</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li><li><a href="Webhook.html">Webhook</a></li><li><a href="WebhookTrace.html">WebhookTrace</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li>
+					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li>
 				</ul>
 			</li>
 			
@@ -82,10 +82,43 @@ import Request from './request';
 import PaginationError from './errors';
 
 
+/**
+ * Wrapper around plain JavaScript Array which provides two additional methods for pagination.
+ * @constructor
+ * @type {ResultSet}
+
+ * @param {QuerySet}  querySet
+ * @param {String}  response
+ * @param {Array}  objects
+ * @returns {ResultSet}
+
+ * @property {Function}  next
+ * @property {Function}  prev
+
+ * @example {@lang javascript}
+ * Instance.please().list()
+ *   // get next page
+ *   .then((instances) => instances.next())
+ *
+ *   // get prev page
+ *   .then((instances) => instances.prev())
+ *
+ *   .then((instances) => console.log('instances', instances));
+ */
 const ResultSet = function(querySet, response, objects) {
   let results = [];
   results.push.apply(results, objects);
 
+
+  /**
+  * Helper method which will fetch next page or throws `PaginationError`.
+
+  * @memberOf ResultSet
+  * @instance
+
+  * @throws {PaginationError}
+  * @returns {Promise}
+  */
   results.next = () => {
     if (!response.next) {
       return Promise.reject(new PaginationError('There is no next page'));
@@ -94,6 +127,15 @@ const ResultSet = function(querySet, response, objects) {
     return querySet.request(response.next, {query: {}});
   };
 
+  /**
+  * Helper method which will fetch previous page or throws `PaginationError`.
+
+  * @memberOf ResultSet
+  * @instance
+
+  * @throws {PaginationError}
+  * @returns {Promise}
+  */
   results.prev = () => {
     if (!response.prev) {
       return Promise.reject(new PaginationError('There is no previous page'));
@@ -172,18 +214,11 @@ const QuerySetRequest = stampit().compose(Request)
         attachments: this.attachments
       });
 
-      return new Promise((resolve, reject) => {
-        if (!_.includes(allowedMethods, method)) {
-          return reject(new Error(`Invalid request method: "${this.method}".`));
-        }
+      if (!_.includes(allowedMethods, method)) {
+        return Promise.reject(new Error(`Invalid request method: "${this.method}".`));
+      }
 
-        this.makeRequest(method, path, options, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-          resolve(this.serialize(res.body), res);
-        });
-      })
+      return this.makeRequest(method, path, options).then((body) => this.serialize(body));
     },
 
     /**
@@ -201,7 +236,7 @@ const QuerySetRequest = stampit().compose(Request)
   });
 
 
-const Create = stampit().methods({
+export const Create = stampit().methods({
 
   /**
   * A convenience method for creating an object and saving it all in one step.
@@ -236,7 +271,7 @@ const Create = stampit().methods({
   }
 });
 
-const Get = stampit().methods({
+export const Get = stampit().methods({
 
   /**
   * Returns the object matching the given lookup properties.
@@ -260,7 +295,7 @@ const Get = stampit().methods({
   }
 });
 
-const GetOrCreate = stampit().methods({
+export const GetOrCreate = stampit().methods({
 
   /**
   * A convenience method for looking up an object with the given lookup properties, creating one if necessary.
@@ -307,7 +342,7 @@ const GetOrCreate = stampit().methods({
   }
 });
 
-const List = stampit().methods({
+export const List = stampit().methods({
 
   /**
   * Returns list of objects that match the given lookup properties.
@@ -334,7 +369,7 @@ const List = stampit().methods({
   }
 });
 
-const Delete = stampit().methods({
+export const Delete = stampit().methods({
 
   /**
   * Removes single object based on provided properties.
@@ -359,7 +394,7 @@ const Delete = stampit().methods({
   }
 });
 
-const Update = stampit().methods({
+export const Update = stampit().methods({
 
   /**
   * Updates single object based on provided arguments
@@ -393,7 +428,7 @@ const Update = stampit().methods({
   }
 });
 
-const UpdateOrCreate = stampit().methods({
+export const UpdateOrCreate = stampit().methods({
 
   /**
   * A convenience method for updating an object with the given properties, creating a new one if necessary.
@@ -461,7 +496,7 @@ const Fields = stampit().methods({
   }
 });
 
-const First = stampit().methods({
+export const First = stampit().methods({
 
   /**
   * Returns the first object matched by the lookup properties or undefined, if there is no matching object.
@@ -479,22 +514,17 @@ const First = stampit().methods({
 
   */
   first(properties = {}, query = {}) {
-    return new Promise((resolve, reject) => {
-      this.pageSize(1)
-        .list(properties, query)
-        .then((objects) => {
-          if (objects.length > 0) {
-            resolve(objects[0]);
-          } else {
-            resolve();
-          }
-        })
-        .catch(reject)
-    });
+    return this.pageSize(1)
+      .list(properties, query)
+      .then((objects) => {
+        if (objects.length) {
+          return objects[0];
+        }
+      });
   }
 });
 
-const PageSize = stampit().methods({
+export const PageSize = stampit().methods({
 
   /**
   * Sets page size.
@@ -516,7 +546,7 @@ const PageSize = stampit().methods({
   }
 });
 
-const Ordering = stampit().methods({
+export const Ordering = stampit().methods({
 
   /**
   * Sets order of returned objects.
@@ -545,7 +575,7 @@ const Ordering = stampit().methods({
   }
 });
 
-const Raw = stampit().methods({
+export const Raw = stampit().methods({
 
   /**
   * Disables serialization. Callback will will recive raw JavaScript objects.
@@ -563,6 +593,29 @@ const Raw = stampit().methods({
   raw() {
     this._serialize = false;
     return this;
+  }
+});
+
+export const BulkCreate = stampit().methods({
+
+  /**
+  * Creates many objects based on provied Array of objects.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Array} objects
+  * @returns {Promise}
+
+  * @example {@lang javascript}
+  * const objects = [Instance({name: 'test1'}), Instance({name: 'tes21'})];
+  * Instance.please().bulkCreate(objects).then(function(instances) {
+  *   console.log('instances', instances);
+  * });
+
+  */
+  bulkCreate(objects) {
+    return Promise.mapSeries(objects, (o) => o.save());
   }
 });
 
@@ -584,6 +637,7 @@ const Raw = stampit().methods({
 const QuerySet = stampit.compose(
   QuerySetRequest,
   Create,
+  BulkCreate,
   Get,
   GetOrCreate,
   List,
@@ -595,6 +649,15 @@ const QuerySet = stampit.compose(
   Ordering,
   Fields,
   Raw
+);
+
+export const BaseQuerySet = stampit.compose(
+  QuerySetRequest,
+  Raw,
+  Fields,
+  Ordering,
+  First,
+  PageSize
 );
 
 export default QuerySet;
@@ -641,7 +704,7 @@ export default QuerySet;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Thu Feb 11th 2016
+		on Wed Feb 24th 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

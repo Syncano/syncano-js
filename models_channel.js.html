@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="Syncano.html">Syncano</a></li>
+					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="CodeBox.html">CodeBox</a></li><li><a href="CodeBoxTrace.html">CodeBoxTrace</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="DataView.html">DataView</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li><li><a href="Webhook.html">Webhook</a></li><li><a href="WebhookTrace.html">WebhookTrace</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li>
+					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li>
 				</ul>
 			</li>
 			
@@ -76,7 +76,6 @@
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
-import Promise from 'bluebird';
 import {Meta, Model} from './base';
 import Request from '../request';
 import {EventEmittable} from '../utils';
@@ -194,15 +193,7 @@ export const ChannelPoll = stampit()
       };
 
       this.emit('request', options);
-
-      return new Promise((resolve, reject) => {
-        this.makeRequest('GET', this.path, options, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-          resolve(res.body, res);
-        });
-      });
+      return this.makeRequest('GET', this.path, options);
     },
 
     start() {
@@ -244,6 +235,59 @@ export const ChannelPoll = stampit()
 
   });
 
+/**
+ * OO wrapper around channels {@link http://docs.syncano.io/v0.1/docs/channels-list endpoint}.
+ * **Channel** has two special methods called ``publish`` and ``poll``. First one will send message to the channel and second one will create {@link http://en.wikipedia.org/wiki/Push_technology#Long_polling long polling} connection which will listen for messages.
+
+ * @constructor
+ * @type {Channel}
+
+ * @property {String} name
+ * @property {String} instanceName
+ * @property {String} type
+ * @property {Number} [group = null]
+ * @property {String} [group_permissions = null]
+ * @property {String} [other_permissions = null]
+ * @property {Boolean} [custom_publish = null]
+
+ * @example {@lang javascript}
+ * Channel.please().get('instance-name', 'channel-name').then((channel) => {
+ *   return channel.publish({x: 1});
+ * });
+ *
+ * Channel.please().get('instance-name', 'channel-name').then((channel) => {
+ *   const poll = channel.poll();
+ *   poll.on('start', function() {
+ *     console.log('poll::start');
+ *   });
+ *
+ *   poll.on('stop', function() {
+ *     console.log('poll::stop');
+ *   });
+ *
+ *   poll.on('message', function(message) {
+ *     console.log('poll::message', message);
+ *   });
+ *
+ *   poll.on('create', function(data) {
+ *     console.log('poll::create', data);
+ *   });
+ *
+ *   poll.on('delete', function(data) {
+ *     console.log('poll::delete', data);
+ *   });
+ *
+ *   poll.on('update', function(data) {
+ *     console.log('poll::update', data);
+ *   });
+ *
+ *   poll.on('error', function(error) {
+ *     console.log('poll::error', error);
+ *   });
+ *
+ *   poll.start();
+ * });
+ */
 const Channel = stampit()
   .compose(Model)
   .setMeta(ChannelMeta)
@@ -278,14 +322,7 @@ const Channel = stampit()
         options.payload.room = room;
       }
 
-      return new Promise((resolve, reject) => {
-        this.makeRequest('POST', path, options, (err, res) => {
-          if (err || !res.ok) {
-            return reject(err, res);
-          }
-          resolve(res.body, res);
-        });
-      });
+      return this.makeRequest('POST', path, options);
     }
 
   })
@@ -335,7 +372,7 @@ export default Channel;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Thu Feb 11th 2016
+		on Wed Feb 24th 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
