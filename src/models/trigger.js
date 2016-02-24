@@ -1,6 +1,15 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
 
+const TriggerConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  }
+};
+
 const TriggerMeta = Meta({
   name: 'trigger',
   pluralName: 'triggers',
@@ -35,6 +44,7 @@ const TriggerMeta = Meta({
  */
 const Trigger = stampit()
   .compose(Model)
+  .setConstraints(TriggerConstraints)
   .setMeta(TriggerMeta);
 
 export default Trigger;
