@@ -23,6 +23,18 @@ const TriggerTraceMeta = Meta({
   }
 });
 
+const TriggerTraceConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  triggerId: {
+    presence: true
+  }
+};
+
 
 /**
  * OO wrapper around trigger trace {@link # endpoint}.
@@ -44,6 +56,7 @@ const TriggerTraceMeta = Meta({
 const TriggerTrace = stampit()
   .compose(Model)
   .setQuerySet(TriggerTraceQuerySet)
+  .setConstraints(TriggerTraceConstraints)
   .setMeta(TriggerTraceMeta);
 
 export default TriggerTrace;
