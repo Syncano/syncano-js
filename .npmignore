@@ -3,7 +3,6 @@ coverage
 docs
 tutorials
 manual
-dist
 test
 .DS_Store
 .idea
