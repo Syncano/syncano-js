@@ -82,13 +82,13 @@ const Account = stampit().compose(Request)
     * @returns {Promise}
 
     */
-    socialLogin(payload = {}, setAccountKey = true) {
+    socialLogin(payload = {}, setUserKey = true) {
       const config = this.getConfig();
       const path = this._account.socialLoginPath(payload.instanceName, payload.backend);
 
       return this.makeRequest('POST', path, {payload}).then((user) => {
-        if (setAccountKey === true) {
-          config.setAccountKey(user.user_key);
+        if (setUserKey === true) {
+          config.setUserKey(user.user_key);
         }
         return user;
       });
