@@ -1,0 +1,273 @@
+import should from 'should/as-function';
+import Syncano from '../../src/syncano';
+import _ from 'lodash';
+import {ValidationError} from '../../src/errors';
+import {suffix, credentials, createCleaner} from './utils';
+
+describe('Trigger', function() {
+  this.timeout(15000);
+
+  const cleaner = createCleaner();
+  let connection = null;
+  let Instance = null;
+  let Model = null;
+  const instanceName = suffix.get('CodeBox');
+  const codeBoxName = suffix.get('codebox');
+  const className = suffix.get('class');
+  const data = {
+    instanceName: instanceName,
+    label: 'my trigger',
+    description: 'my description',
+    signal: 'post_create',
+    class: className
+  };
+  const data2 = {
+    instanceName: instanceName,
+    label: 'my trigger2',
+    description: 'my description2',
+    signal: 'post_create',
+    class: className
+  };
+  const classData = {
+    name: className,
+    instanceName: instanceName,
+    description: 'test'
+  };
+
+  before(function() {
+    connection = Syncano(credentials.getCredentials());
+    Instance = connection.Instance;
+    Model = connection.Trigger;
+
+    return Instance.please().create({name: instanceName}).then(() => {
+      return connection.CodeBox.please().create({
+        instanceName: instanceName,
+        label: codeBoxName,
+        runtime_name: 'python',
+        source: 'print "x"'
+      }).then((codebox) => {
+        data.codebox = codebox.id;
+        data2.codebox = codebox.id;
+        return connection.Class(classData).save();
+      })
+    });
+  });
+
+  after(function() {
+    return Instance.please().delete({name: instanceName});
+  });
+
+  afterEach(function() {
+    return cleaner.clean();
+  });
+
+  it('should be validated', function() {
+    should(Model().save()).be.rejectedWith(ValidationError);
+  });
+
+  it('should require "instanceName"', function() {
+    should(Model({klass: className}).save()).be.rejectedWith(/instanceName/);
+  });
+
+  it('should be able to save via model instance', function() {
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((trigger) => {
+        should(trigger).be.a.Object();
+        should(trigger).have.property('id').which.is.Number();
+        should(trigger).have.property('codebox').which.is.Number().equal(data.codebox);
+        should(trigger).have.property('description').which.is.String().equal(data.description);
+        should(trigger).have.property('label').which.is.String().equal(data.label);
+        should(trigger).have.property('instanceName').which.is.String().equal(data.instanceName);
+        should(trigger).have.property('class').which.is.String().equal(data.class);
+        should(trigger).have.property('signal').which.is.String().equal(data.signal);
+        should(trigger).have.property('created_at').which.is.String();
+        should(trigger).have.property('updated_at').which.is.String();
+        should(trigger).have.property('links').which.is.Object();
+        should(trigger).have.property('triggertraces').which.is.Function();
+      });
+  });
+
+  it('should be able to update via model instance', function() {
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((trigger) => {
+        should(trigger).have.property('id').which.is.Number();
+        should(trigger).have.property('codebox').which.is.Number().equal(data.codebox);
+        should(trigger).have.property('description').which.is.String().equal(data.description);
+
+        trigger.description = 'new description';
+        return trigger.save();
+      })
+      .then((trigger) => {
+        should(trigger).have.property('id').which.is.Number();
+        should(trigger).have.property('codebox').which.is.Number().equal(data.codebox);
+        should(trigger).have.property('description').which.is.String().equal('new description');
+      });
+  });
+
+  it('should be able to delete via model instance', function() {
+    return Model(data).save()
+      .then((trigger) => {
+        should(trigger).have.property('id').which.is.Number();
+        should(trigger).have.property('codebox').which.is.Number().equal(data.codebox);
+        should(trigger).have.property('description').which.is.String().equal(data.description);
+
+        return trigger.delete();
+      });
+  });
+
+  describe('#please()', function() {
+
+    it('should be able to list objects', function() {
+      return Model.please().list({instanceName}).then((objects) => {
+        should(objects).be.an.Array();
+      });
+    });
+
+    it('should be able to create an object', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('id').which.is.Number();
+          should(object).have.property('codebox').which.is.Number().equal(data.codebox);
+          should(object).have.property('description').which.is.String().equal(data.description);
+          should(object).have.property('label').which.is.String().equal(data.label);
+          should(object).have.property('instanceName').which.is.String().equal(data.instanceName);
+          should(object).have.property('class').which.is.String().equal(data.class);
+          should(object).have.property('signal').which.is.String().equal(data.signal);
+          should(object).have.property('created_at').which.is.String();
+          should(object).have.property('updated_at').which.is.String();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('triggertraces').which.is.Function();
+        });
+    });
+
+    it('should be able to bulk create objects', function() {
+      const objects = [
+        Model(data),
+        Model(data2)
+      ];
+
+      return Model.please().bulkCreate(objects)
+        .then(cleaner.mark)
+        .then((result) => {
+          should(result).be.an.Array().with.length(2);
+        });
+    });
+
+    it('should be able to get an object', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('id').which.is.Number();
+          should(object).have.property('codebox').which.is.Number().equal(data.codebox);
+          should(object).have.property('description').which.is.String().equal(data.description);
+          should(object).have.property('label').which.is.String().equal(data.label);
+          should(object).have.property('instanceName').which.is.String().equal(data.instanceName);
+          should(object).have.property('class').which.is.String().equal(data.class);
+          should(object).have.property('signal').which.is.String().equal(data.signal);
+          should(object).have.property('created_at').which.is.String();
+          should(object).have.property('updated_at').which.is.String();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('triggertraces').which.is.Function();
+
+          return object;
+        })
+        .then((object) => {
+          return Model
+            .please()
+            .get({ id: object.id, instanceName })
+            .request();
+        })
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('id').which.is.Number();
+          should(object).have.property('codebox').which.is.Number().equal(data.codebox);
+          should(object).have.property('description').which.is.String().equal(data.description);
+          should(object).have.property('label').which.is.String().equal(data.label);
+          should(object).have.property('instanceName').which.is.String().equal(data.instanceName);
+          should(object).have.property('class').which.is.String().equal(data.class);
+          should(object).have.property('signal').which.is.String().equal(data.signal);
+          should(object).have.property('created_at').which.is.String();
+          should(object).have.property('updated_at').which.is.String();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('triggertraces').which.is.Function();
+        });
+    });
+
+    it('should be able to get first object (SUCCESS)', function() {
+      const objects = [
+        Model(data),
+        Model(data2)
+      ];
+
+      return Model.please().bulkCreate(objects)
+        .then(cleaner.mark)
+        .then(() => {
+          return Model.please().first(data);
+        })
+        .then((object) => {
+          should(object).be.an.Object();
+        });
+    });
+
+    it('should be able to change page size', function() {
+      const objects = [
+        Model(data),
+        Model(data2)
+      ];
+
+      return Model.please().bulkCreate(objects)
+        .then(cleaner.mark)
+        .then((objects) => {
+          should(objects).be.an.Array().with.length(2);
+          return Model.please(data).pageSize(1);
+        })
+        .then((objects) => {
+          should(objects).be.an.Array().with.length(1);
+        });
+    });
+
+    it('should be able to change ordering', function() {
+      const objects = [
+        Model(data),
+        Model(data2)
+      ];
+      let asc = null;
+
+      return Model.please().bulkCreate(objects)
+        .then(cleaner.mark)
+        .then((objects) => {
+          should(objects).be.an.Array().with.length(2);
+          return Model.please(data).ordering('asc');
+        })
+        .then((objects) => {
+          should(objects).be.an.Array().with.length(2);
+          asc = objects;
+          return Model.please(data).ordering('desc');
+        }).then((desc) => {
+          const ascNames = _.map(asc, 'label');
+          const descNames = _.map(desc, 'label');
+          descNames.reverse();
+
+          should(desc).be.an.Array().with.length(2);
+
+          _.forEach(ascNames, (ascName, index) => {
+            should(ascName).be.equal(descNames[index]);
+          });
+        });
+    });
+
+    it('should be able to get raw data', function() {
+      return Model.please().list(data).raw().then((response) => {
+        should(response).be.a.Object();
+        should(response).have.property('objects').which.is.Array();
+        should(response).have.property('next').which.is.null();
+        should(response).have.property('prev').which.is.null();
+      });
+    });
+  });
+});

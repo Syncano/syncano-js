@@ -19,6 +19,7 @@ const Account = stampit().compose(Request)
     _account: {
       registerPath: '/v1/account/register/',
       loginPath: '/v1/account/auth/',
+      updatePath: '/v1/account/',
       userLoginPath: (instanceName) => `/v1/instances/${instanceName}/user/auth/`
     }
   })
@@ -105,8 +106,8 @@ const Account = stampit().compose(Request)
 
     */
     update(payload = {}) {
-      const path = this._account.loginPath;
-      return this.makeRequest('POST', path, {payload});
+      const path = this._account.updatePath;
+      return this.makeRequest('PUT', path, {payload});
     }
 
   });

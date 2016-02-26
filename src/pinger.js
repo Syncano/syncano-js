@@ -2,6 +2,23 @@ import stampit from 'stampit';
 import {EventEmittable} from './utils';
 import Request from './request';
 
+/**
+* Utility for pinging the api. Allows checking for connection to the platofrm. Meant to be used directly form the {@link Syncano} instance.
+*
+* @constructor
+* @type {Pinger}
+*
+* @example {@lang javascript}
+* const connection = Syncano();
+* connection.Monitor.startMonitoring();
+* connection.Monitor.on('connected', () => {
+*    // connected to the api
+* });
+* connection.Monitor.on('disconnected', (error) => {
+*    // disconnected from the api
+* });
+*/
+
 const Pinger = stampit()
   .compose(Request, EventEmittable)
   .props({
