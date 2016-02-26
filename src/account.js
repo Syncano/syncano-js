@@ -77,7 +77,7 @@ const Account = stampit().compose(Request)
     * @param {Object} payload
     * @param {String} payload.instanceName
     * @param {String} payload.backend
-    * @param {String} payload.accessToken
+    * @param {String} payload.access_token
     * @param {Boolean} [setUserKey = true]
     * @returns {Promise}
 
