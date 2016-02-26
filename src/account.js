@@ -88,7 +88,7 @@ const Account = stampit().compose(Request)
 
       return this.makeRequest('POST', path, {payload}).then((user) => {
         if (setAccountKey === true) {
-          config.setAccountKey(user.account_key);
+          config.setAccountKey(user.user_key);
         }
         return user;
       });
