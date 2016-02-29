@@ -70,8 +70,8 @@ describe('Channel', function() {
         should(chn).have.property('instanceName').which.is.String().equal(data.instanceName);
         should(chn).have.property('description').which.is.String().equal(data.description);
         should(chn).have.property('type').which.is.String().equal('default');
-        should(chn).have.property('created_at').which.is.String();
-        should(chn).have.property('updated_at').which.is.String();
+        should(chn).have.property('created_at').which.is.Date();
+        should(chn).have.property('updated_at').which.is.Date();
         should(chn).have.property('links').which.is.Object();
         should(chn).have.property('group').which.is.Null()
         should(chn).have.property('group_permissions').which.is.String().equal('none');
@@ -137,7 +137,7 @@ describe('Channel', function() {
 
         poll.on('message', function(message) {
           should(message).have.property('author').which.is.Object();
-          should(message).have.property('created_at').which.is.String();
+          should(message).have.property('created_at').which.is.Date();
           should(message).have.property('id').which.is.Number().equal(1);
           should(message).have.property('action').which.is.String().equal('custom');
           should(message).have.property('payload').which.is.Object();
@@ -212,8 +212,8 @@ describe('Channel', function() {
           should(chn).have.property('name').which.is.String().equal(channelName);
           should(chn).have.property('instanceName').which.is.String().equal(instanceName);
           should(chn).have.property('type').which.is.String().equal('default');
-          should(chn).have.property('created_at').which.is.String();
-          should(chn).have.property('updated_at').which.is.String();
+          should(chn).have.property('created_at').which.is.Date();
+          should(chn).have.property('updated_at').which.is.Date();
           should(chn).have.property('links').which.is.Object();
           should(chn).have.property('group').which.is.Null()
           should(chn).have.property('group_permissions').which.is.String().equal('none');
@@ -255,8 +255,8 @@ describe('Channel', function() {
           should(chn).have.property('name').which.is.String().equal(channelName);
           should(chn).have.property('instanceName').which.is.String().equal(instanceName);
           should(chn).have.property('type').which.is.String().equal('default');
-          should(chn).have.property('created_at').which.is.String();
-          should(chn).have.property('updated_at').which.is.String();
+          should(chn).have.property('created_at').which.is.Date();
+          should(chn).have.property('updated_at').which.is.Date();
           should(chn).have.property('links').which.is.Object();
           should(chn).have.property('group').which.is.Null()
           should(chn).have.property('group_permissions').which.is.String().equal('none');
@@ -290,8 +290,8 @@ describe('Channel', function() {
           should(chn).have.property('instanceName').which.is.String().equal(instanceName);
           should(chn).have.property('description').which.is.String().equal('test');
           should(chn).have.property('type').which.is.String().equal('default');
-          should(chn).have.property('created_at').which.is.String();
-          should(chn).have.property('updated_at').which.is.String();
+          should(chn).have.property('created_at').which.is.Date();
+          should(chn).have.property('updated_at').which.is.Date();
           should(chn).have.property('links').which.is.Object();
           should(chn).have.property('group').which.is.Null()
           should(chn).have.property('group_permissions').which.is.String().equal('none');
@@ -372,8 +372,8 @@ describe('Channel', function() {
           should(chn).have.property('instanceName').which.is.String().equal(instanceName);
           should(chn).have.property('description').which.is.String().equal('createTest');
           should(chn).have.property('type').which.is.String().equal('default');
-          should(chn).have.property('created_at').which.is.String();
-          should(chn).have.property('updated_at').which.is.String();
+          should(chn).have.property('created_at').which.is.Date();
+          should(chn).have.property('updated_at').which.is.Date();
           should(chn).have.property('links').which.is.Object();
           should(chn).have.property('group').which.is.Null()
           should(chn).have.property('group_permissions').which.is.String().equal('none');

@@ -81,7 +81,7 @@ describe('ScheduleTrace', function() {
         should(object).have.property('status').which.is.String();
         should(object).have.property('instanceName').which.is.String().equal(data.instanceName);
         should(object).have.property('scheduleId').which.is.Number().equal(data.scheduleId);
-        should(object).have.property('executed_at').which.is.String();
+        should(object).have.property('executed_at').which.is.Date();
         should(object).have.property('duration').which.is.Number();
         should(object).have.property('links').which.is.Object();
         should(object).have.property('result').which.is.Object();

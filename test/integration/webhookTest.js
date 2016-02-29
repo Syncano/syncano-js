@@ -143,7 +143,7 @@ describe('Webhooks', function() {
         should(trace).have.property('status').which.is.String();
         should(trace).have.property('duration').which.is.Number();
         should(trace).have.property('result').which.is.Object();
-        should(trace).have.property('executed_at').which.is.String();
+        should(trace).have.property('executed_at').which.is.Date();
       });
   });
 
@@ -165,7 +165,7 @@ describe('Webhooks', function() {
         should(trace).have.property('status').which.is.String();
         should(trace).have.property('duration').which.is.Number();
         should(trace).have.property('result').which.is.Object();
-        should(trace).have.property('executed_at').which.is.String();
+        should(trace).have.property('executed_at').which.is.Date();
       });
   });
 
@@ -449,7 +449,7 @@ describe('Webhooks', function() {
         should(trace).have.property('status').which.is.String();
         should(trace).have.property('duration').which.is.Number();
         should(trace).have.property('result').which.is.Object();
-        should(trace).have.property('executed_at').which.is.String();
+        should(trace).have.property('executed_at').which.is.Date();
       });
   });
 
@@ -471,7 +471,7 @@ describe('Webhooks', function() {
         should(trace).have.property('status').which.is.String();
         should(trace).have.property('duration').which.is.Number();
         should(trace).have.property('result').which.is.Object();
-        should(trace).have.property('executed_at').which.is.String();
+        should(trace).have.property('executed_at').which.is.Date();
       });
   });
 

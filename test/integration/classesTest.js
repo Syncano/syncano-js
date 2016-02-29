@@ -53,8 +53,8 @@ describe('Class', function() {
         should(cls).have.property('name').which.is.String().equal(data.name);
         should(cls).have.property('instanceName').which.is.String().equal(data.instanceName);
         should(cls).have.property('description').which.is.String().equal(data.description);
-        should(cls).have.property('created_at').which.is.String();
-        should(cls).have.property('updated_at').which.is.String();
+        should(cls).have.property('created_at').which.is.Date();
+        should(cls).have.property('updated_at').which.is.Date();
         should(cls).have.property('links').which.is.Object();
         should(cls).have.property('metadata').which.is.Object();
       });
@@ -105,8 +105,8 @@ describe('Class', function() {
           should(cls).have.property('name').which.is.String().equal(className);
           should(cls).have.property('instanceName').which.is.String().equal(instanceName);
           should(cls).have.property('description').which.is.String();
-          should(cls).have.property('created_at').which.is.String();
-          should(cls).have.property('updated_at').which.is.String();
+          should(cls).have.property('created_at').which.is.Date();
+          should(cls).have.property('updated_at').which.is.Date();
           should(cls).have.property('links').which.is.Object();
           should(cls).have.property('metadata').which.is.Object();
           should(cls).have.property('schema').which.is.Array();
@@ -147,8 +147,8 @@ describe('Class', function() {
           should(cls).have.property('name').which.is.String().equal(className);
           should(cls).have.property('instanceName').which.is.String().equal(instanceName);
           should(cls).have.property('description').which.is.String();
-          should(cls).have.property('created_at').which.is.String();
-          should(cls).have.property('updated_at').which.is.String();
+          should(cls).have.property('created_at').which.is.Date();
+          should(cls).have.property('updated_at').which.is.Date();
           should(cls).have.property('links').which.is.Object();
           should(cls).have.property('metadata').which.is.Object();
           should(cls).have.property('schema').which.is.Array();
@@ -179,8 +179,8 @@ describe('Class', function() {
           should(cls).have.property('name').which.is.String().equal(className);
           should(cls).have.property('instanceName').which.is.String().equal(instanceName);
           should(cls).have.property('description').which.is.String().equal('test');
-          should(cls).have.property('created_at').which.is.String();
-          should(cls).have.property('updated_at').which.is.String();
+          should(cls).have.property('created_at').which.is.Date();
+          should(cls).have.property('updated_at').which.is.Date();
           should(cls).have.property('links').which.is.Object();
           should(cls).have.property('metadata').which.is.Object();
         });
@@ -258,8 +258,8 @@ describe('Class', function() {
           should(cls).have.property('name').which.is.String().equal(className);
           should(cls).have.property('instanceName').which.is.String().equal(instanceName);
           should(cls).have.property('description').which.is.String().equal('createTest');
-          should(cls).have.property('created_at').which.is.String();
-          should(cls).have.property('updated_at').which.is.String();
+          should(cls).have.property('created_at').which.is.Date();
+          should(cls).have.property('updated_at').which.is.Date();
           should(cls).have.property('links').which.is.Object();
           should(cls).have.property('metadata').which.is.Object();
         });

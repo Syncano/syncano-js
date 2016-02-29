@@ -56,8 +56,8 @@ describe('CodeBox', function() {
         should(codebox).be.an.Object();
         should(codebox).have.property('instanceName').which.is.String().equal(instanceName);
         should(codebox).have.property('description').which.is.String();
-        should(codebox).have.property('created_at').which.is.String();
-        should(codebox).have.property('updated_at').which.is.String();
+        should(codebox).have.property('created_at').which.is.Date();
+        should(codebox).have.property('updated_at').which.is.Date();
         should(codebox).have.property('links').which.is.Object();
         should(codebox).have.property('id').which.is.Number();
         should(codebox).have.property('label').which.is.String();
@@ -80,8 +80,8 @@ describe('CodeBox', function() {
         should(codebox).be.an.Object();
         should(codebox).have.property('instanceName').which.is.String().equal(instanceName);
         should(codebox).have.property('description').which.is.String();
-        should(codebox).have.property('created_at').which.is.String();
-        should(codebox).have.property('updated_at').which.is.String();
+        should(codebox).have.property('created_at').which.is.Date();
+        should(codebox).have.property('updated_at').which.is.Date();
         should(codebox).have.property('links').which.is.Object();
         should(codebox).have.property('id').which.is.Number();
         should(codebox).have.property('label').which.is.String();
@@ -166,8 +166,8 @@ describe('CodeBox', function() {
       return CodeBox.please().create({instanceName, label: codeBoxName, runtime_name: runtimeName}).then((codebox) => {
         should(codebox).have.property('instanceName').which.is.String().equal(instanceName);
         should(codebox).have.property('description').which.is.String();
-        should(codebox).have.property('created_at').which.is.String();
-        should(codebox).have.property('updated_at').which.is.String();
+        should(codebox).have.property('created_at').which.is.Date();
+        should(codebox).have.property('updated_at').which.is.Date();
         should(codebox).have.property('links').which.is.Object();
         should(codebox).have.property('id').which.is.Number();
         should(codebox).have.property('label').which.is.String();
@@ -208,8 +208,8 @@ describe('CodeBox', function() {
         should(codebox).be.an.Object();
         should(codebox).have.property('instanceName').which.is.String().equal(instanceName);
         should(codebox).have.property('description').which.is.String();
-        should(codebox).have.property('created_at').which.is.String();
-        should(codebox).have.property('updated_at').which.is.String();
+        should(codebox).have.property('created_at').which.is.Date();
+        should(codebox).have.property('updated_at').which.is.Date();
         should(codebox).have.property('links').which.is.Object();
         should(codebox).have.property('id').which.is.Number();
         should(codebox).have.property('label').which.is.String();
