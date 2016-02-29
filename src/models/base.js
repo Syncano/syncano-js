@@ -67,8 +67,7 @@ export const Meta = stampit()
     * @returns {Object}
     */
     assignProperties(source, target) {
-      let dateFields = _.pick(target, ['created_at', 'updated_at', 'executed_at']);
-      dateFields = _.mapValues(dateFields, (o) =>  new Date(o));
+      let dateFields = _.mapValues(_.pick(target, ['created_at', 'updated_at', 'executed_at']), (o) =>  new Date(o));
       return _.assign({}, this.getObjectProperties(source), target, dateFields);
     },
 
