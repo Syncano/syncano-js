@@ -5,7 +5,7 @@ import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
-describe('Dataobject', function() {
+describe.only('Dataobject', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();
@@ -71,8 +71,8 @@ describe('Dataobject', function() {
         should(dataobj).be.a.Object();
         should(dataobj).have.property('id').which.is.Number();
         should(dataobj).have.property('instanceName').which.is.String().equal(data.instanceName);
-        should(dataobj).have.property('created_at').which.is.String();
-        should(dataobj).have.property('updated_at').which.is.String();
+        should(dataobj).have.property('created_at').which.is.Date();
+        should(dataobj).have.property('updated_at').which.is.Date();
         should(dataobj).have.property('links').which.is.Object();
         should(dataobj).have.property('channel').which.is.Null();
         should(dataobj).have.property('owner').which.is.Null();
@@ -140,8 +140,8 @@ describe('Dataobject', function() {
           should(dataobject).be.a.Object();
           should(dataobject).have.property('id').which.is.Number();
           should(dataobject).have.property('instanceName').which.is.String().equal(data.instanceName);
-          should(dataobject).have.property('created_at').which.is.String();
-          should(dataobject).have.property('updated_at').which.is.String();
+          should(dataobject).have.property('created_at').which.is.Date();
+          should(dataobject).have.property('updated_at').which.is.Date();
           should(dataobject).have.property('links').which.is.Object();
           should(dataobject).have.property('channel').which.is.Null();
           should(dataobject).have.property('owner').which.is.Null();
@@ -187,8 +187,8 @@ describe('Dataobject', function() {
         should(dataobject).be.a.Object();
         should(dataobject).have.property('id').which.is.Number();
         should(dataobject).have.property('instanceName').which.is.String().equal(data.instanceName);
-        should(dataobject).have.property('created_at').which.is.String();
-        should(dataobject).have.property('updated_at').which.is.String();
+        should(dataobject).have.property('created_at').which.is.Date();
+        should(dataobject).have.property('updated_at').which.is.Date();
         should(dataobject).have.property('links').which.is.Object();
         should(dataobject).have.property('channel').which.is.Null();
         should(dataobject).have.property('owner').which.is.Null();

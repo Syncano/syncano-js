@@ -59,8 +59,8 @@ describe('GCMDevice', function() {
         should(object).have.property('registration_id').which.is.String().equal(data.registration_id);
         should(object).have.property('links').which.is.Object();
         should(object).have.property('metadata').which.is.Object();
-        should(object).have.property('created_at').which.is.String();
-        should(object).have.property('updated_at').which.is.String();
+        should(object).have.property('created_at').which.is.Date();
+        should(object).have.property('updated_at').which.is.Date();
       });
   });
 
@@ -73,8 +73,8 @@ describe('GCMDevice', function() {
         should(object).have.property('registration_id').which.is.String().equal(data.registration_id);
         should(object).have.property('links').which.is.Object();
         should(object).have.property('metadata').which.is.Object();
-        should(object).have.property('created_at').which.is.String();
-        should(object).have.property('updated_at').which.is.String();
+        should(object).have.property('created_at').which.is.Date();
+        should(object).have.property('updated_at').which.is.Date();
 
         return object.delete();
       });
@@ -97,8 +97,8 @@ describe('GCMDevice', function() {
         should(object).have.property('registration_id').which.is.String().equal(data.registration_id);
         should(object).have.property('links').which.is.Object();
         should(object).have.property('metadata').which.is.Object();
-        should(object).have.property('created_at').which.is.String();
-        should(object).have.property('updated_at').which.is.String();
+        should(object).have.property('created_at').which.is.Date();
+        should(object).have.property('updated_at').which.is.Date();
       });
     });
 
@@ -125,8 +125,8 @@ describe('GCMDevice', function() {
           should(object).have.property('registration_id').which.is.String().equal(data.registration_id);
           should(object).have.property('links').which.is.Object();
           should(object).have.property('metadata').which.is.Object();
-          should(object).have.property('created_at').which.is.String();
-          should(object).have.property('updated_at').which.is.String();
+          should(object).have.property('created_at').which.is.Date();
+          should(object).have.property('updated_at').which.is.Date();
 
           return object;
         })
@@ -143,8 +143,8 @@ describe('GCMDevice', function() {
           should(object).have.property('registration_id').which.is.String().equal(data.registration_id);
           should(object).have.property('links').which.is.Object();
           should(object).have.property('metadata').which.is.Object();
-          should(object).have.property('created_at').which.is.String();
-          should(object).have.property('updated_at').which.is.String();
+          should(object).have.property('created_at').which.is.Date();
+          should(object).have.property('updated_at').which.is.Date();
         });
     });
 
@@ -158,8 +158,8 @@ describe('GCMDevice', function() {
         should(object).have.property('registration_id').which.is.String().equal(data.registration_id);
         should(object).have.property('links').which.is.Object();
         should(object).have.property('metadata').which.is.Object();
-        should(object).have.property('created_at').which.is.String();
-        should(object).have.property('updated_at').which.is.String();
+        should(object).have.property('created_at').which.is.Date();
+        should(object).have.property('updated_at').which.is.Date();
       });
     });
 

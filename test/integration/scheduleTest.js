@@ -75,7 +75,7 @@ describe('Schedule', function() {
         should(object).have.property('timezone').which.is.String().equal(data.timezone);
         should(object).have.property('scheduled_next').which.is.String();
         should(object).have.property('crontab').which.is.null();
-        should(object).have.property('created_at').which.is.String();
+        should(object).have.property('created_at').which.is.Date();
         should(object).have.property('links').which.is.Object();
       });
   });

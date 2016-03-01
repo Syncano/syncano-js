@@ -48,8 +48,8 @@ const GCMMessageConstraints = {
  * @property {Object} [content = {}]
  * @property {Object} [result = {}]
  * @property {String} [links = {}]
- * @property {String} [created_at = null]
- * @property {String} [updated_at = null]
+ * @property {Date} [created_at = null]
+ * @property {Date} [updated_at = null]
  */
 const GCMMessage = stampit()
   .compose(Model)

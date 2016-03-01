@@ -81,8 +81,8 @@ describe('Trigger', function() {
         should(trigger).have.property('instanceName').which.is.String().equal(data.instanceName);
         should(trigger).have.property('class').which.is.String().equal(data.class);
         should(trigger).have.property('signal').which.is.String().equal(data.signal);
-        should(trigger).have.property('created_at').which.is.String();
-        should(trigger).have.property('updated_at').which.is.String();
+        should(trigger).have.property('created_at').which.is.Date();
+        should(trigger).have.property('updated_at').which.is.Date();
         should(trigger).have.property('links').which.is.Object();
         should(trigger).have.property('triggertraces').which.is.Function();
       });
@@ -137,8 +137,8 @@ describe('Trigger', function() {
           should(object).have.property('instanceName').which.is.String().equal(data.instanceName);
           should(object).have.property('class').which.is.String().equal(data.class);
           should(object).have.property('signal').which.is.String().equal(data.signal);
-          should(object).have.property('created_at').which.is.String();
-          should(object).have.property('updated_at').which.is.String();
+          should(object).have.property('created_at').which.is.Date();
+          should(object).have.property('updated_at').which.is.Date();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('triggertraces').which.is.Function();
         });
@@ -169,8 +169,8 @@ describe('Trigger', function() {
           should(object).have.property('instanceName').which.is.String().equal(data.instanceName);
           should(object).have.property('class').which.is.String().equal(data.class);
           should(object).have.property('signal').which.is.String().equal(data.signal);
-          should(object).have.property('created_at').which.is.String();
-          should(object).have.property('updated_at').which.is.String();
+          should(object).have.property('created_at').which.is.Date();
+          should(object).have.property('updated_at').which.is.Date();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('triggertraces').which.is.Function();
 
@@ -191,8 +191,8 @@ describe('Trigger', function() {
           should(object).have.property('instanceName').which.is.String().equal(data.instanceName);
           should(object).have.property('class').which.is.String().equal(data.class);
           should(object).have.property('signal').which.is.String().equal(data.signal);
-          should(object).have.property('created_at').which.is.String();
-          should(object).have.property('updated_at').which.is.String();
+          should(object).have.property('created_at').which.is.Date();
+          should(object).have.property('updated_at').which.is.Date();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('triggertraces').which.is.Function();
         });

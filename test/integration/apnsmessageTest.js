@@ -63,8 +63,8 @@ describe('APNSMessage', function() {
         should(object).have.property('id').which.is.Number();
         should(object).have.property('instanceName').which.is.String().equal(instanceName);
         should(object).have.property('status').which.is.String();
-        should(object).have.property('created_at').which.is.String();
-        should(object).have.property('updated_at').which.is.String();
+        should(object).have.property('created_at').which.is.Date();
+        should(object).have.property('updated_at').which.is.Date();
         should(object).have.property('links').which.is.Object();
         should(object).have.property('result').which.is.Object();
         should(object).have.property('content').which.is.Object();

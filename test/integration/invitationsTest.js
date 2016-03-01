@@ -57,8 +57,8 @@ describe('Instance Invitation', function() {
         should(inv).have.property('role').which.is.String().equal('read');
         should(inv).have.property('key').which.is.String();
         should(inv).have.property('inviter').which.is.String();
-        should(inv).have.property('created_at').which.is.String();
-        should(inv).have.property('updated_at').which.is.String();
+        should(inv).have.property('created_at').which.is.Date();
+        should(inv).have.property('updated_at').which.is.Date();
         should(inv).have.property('state').which.is.String().equal('new');
         should(inv).have.property('links').which.is.Object();
         should(inv).have.property('instanceName').which.is.String().equal(data.instanceName);
@@ -106,8 +106,8 @@ describe('Instance Invitation', function() {
           should(inv).have.property('role').which.is.String().equal('read');
           should(inv).have.property('key').which.is.String();
           should(inv).have.property('inviter').which.is.String();
-          should(inv).have.property('created_at').which.is.String();
-          should(inv).have.property('updated_at').which.is.String();
+          should(inv).have.property('created_at').which.is.Date();
+          should(inv).have.property('updated_at').which.is.Date();
           should(inv).have.property('state').which.is.String().equal('new');
           should(inv).have.property('links').which.is.Object();
           should(inv).have.property('instanceName').which.is.String().equal(data.instanceName);
@@ -150,8 +150,8 @@ describe('Instance Invitation', function() {
           should(inv).have.property('role').which.is.String().equal('read');
           should(inv).have.property('key').which.is.String();
           should(inv).have.property('inviter').which.is.String();
-          should(inv).have.property('created_at').which.is.String();
-          should(inv).have.property('updated_at').which.is.String();
+          should(inv).have.property('created_at').which.is.Date();
+          should(inv).have.property('updated_at').which.is.Date();
           should(inv).have.property('state').which.is.String().equal('new');
           should(inv).have.property('links').which.is.Object();
           should(inv).have.property('instanceName').which.is.String().equal(data.instanceName);
@@ -201,8 +201,8 @@ describe('Instance Invitation', function() {
           should(inv).have.property('role').which.is.String().equal('read');
           should(inv).have.property('key').which.is.String();
           should(inv).have.property('inviter').which.is.String();
-          should(inv).have.property('created_at').which.is.String();
-          should(inv).have.property('updated_at').which.is.String();
+          should(inv).have.property('created_at').which.is.Date();
+          should(inv).have.property('updated_at').which.is.Date();
           should(inv).have.property('state').which.is.String().equal('new');
           should(inv).have.property('links').which.is.Object();
           should(inv).have.property('instanceName').which.is.String().equal(data.instanceName);

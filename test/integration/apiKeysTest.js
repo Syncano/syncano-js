@@ -51,7 +51,7 @@ describe('ApiKey', function() {
         should(apk).be.an.Object();
         should(apk).have.property('instanceName').which.is.String().equal(data.instanceName);
         should(apk).have.property('description').which.is.String().equal(data.description);
-        should(apk).have.property('created_at').which.is.String();
+        should(apk).have.property('created_at').which.is.Date();
         should(apk).have.property('links').which.is.Object();
         should(apk).have.property('id').which.is.Number();
         should(apk).have.property('ignore_acl').which.is.Boolean().equal(false);
@@ -129,7 +129,7 @@ describe('ApiKey', function() {
           should(apk).be.an.Object();
           should(apk).have.property('instanceName').which.is.String().equal(instanceName);
           should(apk).have.property('description').which.is.String();
-          should(apk).have.property('created_at').which.is.String();
+          should(apk).have.property('created_at').which.is.Date();
           should(apk).have.property('links').which.is.Object();
           should(apk).have.property('id').which.is.Number();
           should(apk).have.property('ignore_acl').which.is.Boolean().equal(false);
@@ -173,7 +173,7 @@ describe('ApiKey', function() {
           should(apk).be.an.Object();
           should(apk).have.property('instanceName').which.is.String().equal(instanceName);
           should(apk).have.property('description').which.is.String();
-          should(apk).have.property('created_at').which.is.String();
+          should(apk).have.property('created_at').which.is.Date();
           should(apk).have.property('links').which.is.Object();
           should(apk).have.property('id').which.is.Number();
           should(apk).have.property('ignore_acl').which.is.Boolean().equal(false);

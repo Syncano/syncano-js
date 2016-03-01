@@ -45,7 +45,7 @@ const CodeBoxConstraints = {
  * @property {String} instanceName
  * @property {Number} codeboxId
  * @property {String} status
- * @property {String} executed_at
+ * @property {Date} executed_at
  * @property {Number} duration
  * @property {Object} [result = {}]
  * @property {String} result.stderr

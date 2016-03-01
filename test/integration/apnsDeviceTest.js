@@ -71,8 +71,8 @@ describe('APNS Device', function() {
         should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
         should(apns).have.property('user_id').which.is.Number().equal(data.user_id);
         should(apns).have.property('is_active').which.is.Boolean().equal(true);
-        should(apns).have.property('created_at').which.is.String();
-        should(apns).have.property('updated_at').which.is.String();
+        should(apns).have.property('created_at').which.is.Date();
+        should(apns).have.property('updated_at').which.is.Date();
         should(apns).have.property('links').which.is.Object();
         should(apns).have.property('metadata').which.is.String();
       });
@@ -127,8 +127,8 @@ describe('APNS Device', function() {
           should(apns).have.property('registration_id').which.is.String().equal(registrationId);
           should(apns).have.property('user_id').which.is.Number().equal(userId);
           should(apns).have.property('is_active').which.is.Boolean().equal(true);
-          should(apns).have.property('created_at').which.is.String();
-          should(apns).have.property('updated_at').which.is.String();
+          should(apns).have.property('created_at').which.is.Date();
+          should(apns).have.property('updated_at').which.is.Date();
           should(apns).have.property('links').which.is.Object();
           should(apns).have.property('metadata').which.is.String();
       });
@@ -171,8 +171,8 @@ describe('APNS Device', function() {
           should(apns).have.property('registration_id').which.is.String().equal(registrationId);
           should(apns).have.property('user_id').which.is.Number().equal(userId);
           should(apns).have.property('is_active').which.is.Boolean().equal(true);
-          should(apns).have.property('created_at').which.is.String();
-          should(apns).have.property('updated_at').which.is.String();
+          should(apns).have.property('created_at').which.is.Date();
+          should(apns).have.property('updated_at').which.is.Date();
           should(apns).have.property('links').which.is.Object();
           should(apns).have.property('metadata').which.is.String();
         });
@@ -206,8 +206,8 @@ describe('APNS Device', function() {
           should(apns).have.property('registration_id').which.is.String().equal(registrationId);
           should(apns).have.property('user_id').which.is.Number().equal(userId);
           should(apns).have.property('is_active').which.is.Boolean().equal(true);
-          should(apns).have.property('created_at').which.is.String();
-          should(apns).have.property('updated_at').which.is.String();
+          should(apns).have.property('created_at').which.is.Date();
+          should(apns).have.property('updated_at').which.is.Date();
           should(apns).have.property('links').which.is.Object();
           should(apns).have.property('metadata').which.is.String();
       });
@@ -289,8 +289,8 @@ describe('APNS Device', function() {
           should(apns).have.property('registration_id').which.is.String().equal(registrationId);
           should(apns).have.property('user_id').which.is.Number().equal(userId);
           should(apns).have.property('is_active').which.is.Boolean().equal(true);
-          should(apns).have.property('created_at').which.is.String();
-          should(apns).have.property('updated_at').which.is.String();
+          should(apns).have.property('created_at').which.is.Date();
+          should(apns).have.property('updated_at').which.is.Date();
           should(apns).have.property('links').which.is.Object();
           should(apns).have.property('metadata').which.is.String();
         });

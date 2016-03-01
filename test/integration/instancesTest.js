@@ -37,8 +37,8 @@ describe('Instance', function() {
         should(instance).be.a.Object();
         should(instance).have.property('name').which.is.String().equal(data.name);
         should(instance).have.property('description').which.is.String().equal(data.description);
-        should(instance).have.property('created_at').which.is.String();
-        should(instance).have.property('updated_at').which.is.String();
+        should(instance).have.property('created_at').which.is.Date();
+        should(instance).have.property('updated_at').which.is.Date();
         should(instance).have.property('links').which.is.Object();
         should(instance).have.property('owner').which.is.Object();
         should(instance).have.property('metadata').which.is.Object();
@@ -105,8 +105,8 @@ describe('Instance', function() {
           should(instance).be.a.Object();
           should(instance).have.property('name').which.is.String().equal(instanceName);
           should(instance).have.property('description').which.is.String();
-          should(instance).have.property('created_at').which.is.String();
-          should(instance).have.property('updated_at').which.is.String();
+          should(instance).have.property('created_at').which.is.Date();
+          should(instance).have.property('updated_at').which.is.Date();
           should(instance).have.property('links').which.is.Object();
           should(instance).have.property('owner').which.is.Object();
           should(instance).have.property('metadata').which.is.Object();
@@ -144,8 +144,8 @@ describe('Instance', function() {
           should(instance).be.an.Object();
           should(instance).have.property('name').which.is.String().equal(instanceName);
           should(instance).have.property('description').which.is.String();
-          should(instance).have.property('created_at').which.is.String();
-          should(instance).have.property('updated_at').which.is.String();
+          should(instance).have.property('created_at').which.is.Date();
+          should(instance).have.property('updated_at').which.is.Date();
           should(instance).have.property('links').which.is.Object();
           should(instance).have.property('owner').which.is.Object();
           should(instance).have.property('metadata').which.is.Object();
@@ -175,8 +175,8 @@ describe('Instance', function() {
           should(instance).be.an.Object();
           should(instance).have.property('name').which.is.String().equal(instanceName);
           should(instance).have.property('description').which.is.String().equal('test');
-          should(instance).have.property('created_at').which.is.String();
-          should(instance).have.property('updated_at').which.is.String();
+          should(instance).have.property('created_at').which.is.Date();
+          should(instance).have.property('updated_at').which.is.Date();
           should(instance).have.property('links').which.is.Object();
           should(instance).have.property('owner').which.is.Object();
           should(instance).have.property('metadata').which.is.Object();
@@ -260,8 +260,8 @@ describe('Instance', function() {
           should(instance).be.an.Object();
           should(instance).have.property('name').which.is.String().equal(data.name);
           should(instance).have.property('description').which.is.String().equal('createTest');
-          should(instance).have.property('created_at').which.is.String();
-          should(instance).have.property('updated_at').which.is.String();
+          should(instance).have.property('created_at').which.is.Date();
+          should(instance).have.property('updated_at').which.is.Date();
           should(instance).have.property('links').which.is.Object();
           should(instance).have.property('owner').which.is.Object();
           should(instance).have.property('metadata').which.is.Object();
