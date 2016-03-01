@@ -76,6 +76,10 @@ const channelConstraints = {
   *   console.log('poll::message', message);
   * });
   *
+  * poll.on('custom', function(message) {
+  *   console.log('poll::custom', message);
+  * });
+  *
   * poll.on('create', function(data) {
   *   console.log('poll::create', data);
   * });
