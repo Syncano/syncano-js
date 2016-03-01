@@ -66,8 +66,8 @@ const InstanceConstraints = {
  * @property {Object} [metadata = {}]
  * @property {String} [description = null]
  * @property {String} [links = {}]
- * @property {String} [created_at = null]
- * @property {String} [updated_at = null]
+ * @property {Date} [created_at = null]
+ * @property {Date} [updated_at = null]
  */
 const Instance = stampit()
   .compose(Model)

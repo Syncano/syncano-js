@@ -39,8 +39,8 @@ const TriggerMeta = Meta({
  * @property {String} class
  * @property {String} [description = null]
  * @property {String} [links = {}]
- * @property {String} [created_at = null]
- * @property {String} [updated_at = null]
+ * @property {Date} [created_at = null]
+ * @property {Date} [updated_at = null]
  */
 const Trigger = stampit()
   .compose(Model)

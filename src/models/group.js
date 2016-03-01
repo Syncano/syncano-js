@@ -43,8 +43,8 @@ const GroupConstraints = {
  * @property {String} label
  * @property {String} [description = null]
  * @property {String} [links = {}]
- * @property {String} [created_at = null]
- * @property {String} [updated_at = null]
+ * @property {Date} [created_at = null]
+ * @property {Date} [updated_at = null]
  */
 const Group = stampit()
   .compose(Model)

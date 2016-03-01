@@ -46,8 +46,8 @@ const ScheduleConstraints = {
  * @property {Object} payload
  * @property {String} scheduled_next
  * @property {String} [links = {}]
- * @property {String} [created_at = null]
- * @property {String} [updated_at = null]
+ * @property {Date} [created_at = null]
+ * @property {Date} [updated_at = null]
  */
 const Schedule = stampit()
   .compose(Model)
