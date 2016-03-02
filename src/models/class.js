@@ -7,11 +7,11 @@ const ClassMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instanceName}/classes/{name}/'
+      'path': '/v1.1/instances/{instanceName}/classes/{name}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instanceName}/classes/'
+      'path': '/v1.1/instances/{instanceName}/classes/'
     }
   },
   relatedModels: [ 'DataObject' ]

@@ -38,15 +38,15 @@ const CodeBoxMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instanceName}/codeboxes/{id}/'
+      'path': '/v1.1/instances/{instanceName}/codeboxes/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instanceName}/codeboxes/'
+      'path': '/v1.1/instances/{instanceName}/codeboxes/'
     },
     'run': {
       'methods': ['post'],
-      'path': '/v1/instances/{instanceName}/codeboxes/{id}/run/'
+      'path': '/v1.1/instances/{instanceName}/codeboxes/{id}/run/'
     }
   },
   relatedModels: [ 'CodeBoxTrace' ]

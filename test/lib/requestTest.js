@@ -81,7 +81,7 @@ describe('Request', function() {
     });
 
     it('should change request type if attachment is present', function() {
-      request.makeRequest('GET', '/v1/', {payload: {
+      request.makeRequest('GET', '/v1.1/', {payload: {
         a: Syncano.file(1),
         b: Syncano.file(2),
         c: 2,
@@ -102,7 +102,7 @@ describe('Request', function() {
 
     it('should set proper headers if user key is present', function() {
       request.getConfig().setUserKey('321');
-      request.makeRequest('GET', '/v1/', {}, () => {});
+      request.makeRequest('GET', '/v1.1/', {}, () => {});
 
       should(stubs._init.calledOnce).be.true();
       should(stubs._type.calledOnce).be.true();
@@ -123,7 +123,7 @@ describe('Request', function() {
 
     it('should set proper headers if social token is present', function() {
       request.getConfig().setSocialToken('456').setAccountKey('123');
-      request.makeRequest('GET', '/v1/', {}, () => {});
+      request.makeRequest('GET', '/v1.1/', {}, () => {});
 
       should(stubs._init.calledOnce).be.true();
       should(stubs._type.calledOnce).be.true();
@@ -142,7 +142,7 @@ describe('Request', function() {
 
     it('should set proper headers if accunt key is present', function() {
       request.getConfig().setAccountKey('111');
-      request.makeRequest('GET', '/v1/', {}, () => {});
+      request.makeRequest('GET', '/v1.1/', {}, () => {});
 
       should(stubs._init.calledOnce).be.true();
       should(stubs._type.calledOnce).be.true();
@@ -160,9 +160,9 @@ describe('Request', function() {
     });
 
     it('should set defaults', function() {
-      request.makeRequest('GET', '/v1/', {}, () => {});
+      request.makeRequest('GET', '/v1.1/', {}, () => {});
 
-      should(stubs._init.withArgs('GET', 'https://api.syncano.io/v1/').calledOnce).be.true();
+      should(stubs._init.withArgs('GET', 'https://api.syncano.io/v1.1/').calledOnce).be.true();
       should(stubs._type.withArgs('json').calledOnce).be.true();
       should(stubs._accept.withArgs('json').calledOnce).be.true();
       should(stubs._timeout.withArgs(15000).calledOnce).be.true();

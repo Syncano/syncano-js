@@ -14,11 +14,11 @@ const WebhookTraceMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['get'],
-      'path': '/v1/instances/{instanceName}/webhooks/{webhookName}/traces/{id}/'
+      'path': '/v1.1/instances/{instanceName}/webhooks/{webhookName}/traces/{id}/'
     },
     'list': {
       'methods': ['get'],
-      'path': '/v1/instances/{instanceName}/webhooks/{webhookName}/traces/'
+      'path': '/v1.1/instances/{instanceName}/webhooks/{webhookName}/traces/'
     }
   }
 });

@@ -14,11 +14,11 @@ const CodeBoxTraceMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instanceName}/codeboxes/{codeboxId}/traces/{id}/'
+      'path': '/v1.1/instances/{instanceName}/codeboxes/{codeboxId}/traces/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instanceName}/codeboxes/{codeboxId}/traces/'
+      'path': '/v1.1/instances/{instanceName}/codeboxes/{codeboxId}/traces/'
     }
   }
 });

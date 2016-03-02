@@ -65,7 +65,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
     * @memberOf Request
     * @instance
 
-    * @param {String} path path part of URL e.g: /v1/instances/
+    * @param {String} path path part of URL e.g: /v1.1/instances/
     * @returns {String}
 
     */
@@ -90,7 +90,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
     * @instance
 
     * @param {String} methodName e.g GET, POST
-    * @param {String} path e.g /v1/instances/
+    * @param {String} path e.g /v1.1/instances/
     * @param {Object} requestOptions All options required to build request
     * @param {String} [requestOptions.type = 'json'] request type e.g form, json, png
     * @param {String} [requestOptions.accept = 'json'] request accept e.g form, json, png
