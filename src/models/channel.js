@@ -76,6 +76,10 @@ const channelConstraints = {
   *   console.log('poll::message', message);
   * });
   *
+  * poll.on('custom', function(message) {
+  *   console.log('poll::custom', message);
+  * });
+  *
   * poll.on('create', function(data) {
   *   console.log('poll::create', data);
   * });
@@ -180,6 +184,7 @@ export const ChannelPoll = stampit()
  *
  * Channel.please().get('instance-name', 'channel-name').then((channel) => {
  *   const poll = channel.poll();
+ *
  *   poll.on('start', function() {
  *     console.log('poll::start');
  *   });
@@ -190,6 +195,10 @@ export const ChannelPoll = stampit()
  *
  *   poll.on('message', function(message) {
  *     console.log('poll::message', message);
+ *   });
+ *
+ *   poll.on('custom', function(message) {
+ *     console.log('poll::custom', message);
  *   });
  *
  *   poll.on('create', function(data) {
