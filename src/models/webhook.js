@@ -93,23 +93,23 @@ const WebhookMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1.1/instances/{instanceName}/webhooks/{name}/'
+      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{name}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/webhooks/'
+      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/'
     },
     'run': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/webhooks/{name}/run/'
+      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{name}/run/'
     },
     'reset': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/webhooks/{name}/reset_link/'
+      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{name}/reset_link/'
     },
     'public': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/webhooks/p/{public_link}/'
+      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/p/{public_link}/{name}/'
     }
   },
   relatedModels: ['WebhookTrace']
@@ -128,7 +128,7 @@ const WebhookConstraints = {
       minimum: 5
     }
   },
-  codebox: {
+  script: {
     presence: true
   }
 };
