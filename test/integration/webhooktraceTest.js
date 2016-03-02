@@ -34,7 +34,7 @@ describe('WebhookTrace', function() {
       return connection.Webhook.please().create({
         instanceName,
         name: webhookName,
-        codebox: codebox.id
+        script: codebox.id
       });
     }).then((webhook) => {
       return webhook.run();

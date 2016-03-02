@@ -43,7 +43,7 @@ describe('TriggerTrace', function() {
         runtime_name: 'python',
         source: 'print "x"'
       }).then((codebox) => {
-        triggerData.codebox = codebox.id;
+        triggerData.script = codebox.id;
         return connection.Class(classData).save();
       }).then(() => {
         return connection.Trigger(triggerData).save();

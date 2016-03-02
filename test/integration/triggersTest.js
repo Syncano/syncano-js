@@ -46,8 +46,8 @@ describe('Trigger', function() {
         runtime_name: 'python',
         source: 'print "x"'
       }).then((codebox) => {
-        data.codebox = codebox.id;
-        data2.codebox = codebox.id;
+        data.script = codebox.id;
+        data2.script = codebox.id;
         return connection.Class(classData).save();
       })
     });
@@ -75,7 +75,7 @@ describe('Trigger', function() {
       .then((trigger) => {
         should(trigger).be.a.Object();
         should(trigger).have.property('id').which.is.Number();
-        should(trigger).have.property('codebox').which.is.Number().equal(data.codebox);
+        should(trigger).have.property('script').which.is.Number().equal(data.script);
         should(trigger).have.property('description').which.is.String().equal(data.description);
         should(trigger).have.property('label').which.is.String().equal(data.label);
         should(trigger).have.property('instanceName').which.is.String().equal(data.instanceName);
@@ -93,7 +93,7 @@ describe('Trigger', function() {
       .then(cleaner.mark)
       .then((trigger) => {
         should(trigger).have.property('id').which.is.Number();
-        should(trigger).have.property('codebox').which.is.Number().equal(data.codebox);
+        should(trigger).have.property('script').which.is.Number().equal(data.script);
         should(trigger).have.property('description').which.is.String().equal(data.description);
 
         trigger.description = 'new description';
@@ -101,7 +101,7 @@ describe('Trigger', function() {
       })
       .then((trigger) => {
         should(trigger).have.property('id').which.is.Number();
-        should(trigger).have.property('codebox').which.is.Number().equal(data.codebox);
+        should(trigger).have.property('script').which.is.Number().equal(data.script);
         should(trigger).have.property('description').which.is.String().equal('new description');
       });
   });
@@ -110,7 +110,7 @@ describe('Trigger', function() {
     return Model(data).save()
       .then((trigger) => {
         should(trigger).have.property('id').which.is.Number();
-        should(trigger).have.property('codebox').which.is.Number().equal(data.codebox);
+        should(trigger).have.property('script').which.is.Number().equal(data.script);
         should(trigger).have.property('description').which.is.String().equal(data.description);
 
         return trigger.delete();
@@ -131,7 +131,7 @@ describe('Trigger', function() {
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('id').which.is.Number();
-          should(object).have.property('codebox').which.is.Number().equal(data.codebox);
+          should(object).have.property('script').which.is.Number().equal(data.script);
           should(object).have.property('description').which.is.String().equal(data.description);
           should(object).have.property('label').which.is.String().equal(data.label);
           should(object).have.property('instanceName').which.is.String().equal(data.instanceName);
@@ -163,7 +163,7 @@ describe('Trigger', function() {
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('id').which.is.Number();
-          should(object).have.property('codebox').which.is.Number().equal(data.codebox);
+          should(object).have.property('script').which.is.Number().equal(data.script);
           should(object).have.property('description').which.is.String().equal(data.description);
           should(object).have.property('label').which.is.String().equal(data.label);
           should(object).have.property('instanceName').which.is.String().equal(data.instanceName);
@@ -185,7 +185,7 @@ describe('Trigger', function() {
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('id').which.is.Number();
-          should(object).have.property('codebox').which.is.Number().equal(data.codebox);
+          should(object).have.property('script').which.is.Number().equal(data.script);
           should(object).have.property('description').which.is.String().equal(data.description);
           should(object).have.property('label').which.is.String().equal(data.label);
           should(object).have.property('instanceName').which.is.String().equal(data.instanceName);

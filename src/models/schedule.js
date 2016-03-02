@@ -28,7 +28,7 @@ const ScheduleConstraints = {
   label: {
     presence: true
   },
-  codebox: {
+  script: {
     presence: true
   }
 };

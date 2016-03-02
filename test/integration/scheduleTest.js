@@ -15,7 +15,7 @@ describe('Schedule', function() {
   let data = {
     instanceName,
     label: instanceName,
-    codebox: null,
+    script: null,
     interval_sec: 600,
     description: instanceName,
     timezone: 'UTC'
@@ -34,7 +34,7 @@ describe('Schedule', function() {
         source: 'print "x"'
       });
     }).then((codeBox) => {
-      data.codebox = codeBox.id;
+      data.script = codeBox.id;
     });
   });
 
@@ -58,8 +58,8 @@ describe('Schedule', function() {
     should(Model({instanceName}).save()).be.rejectedWith(/label/);
   });
 
-  it('should require "codebox"', function() {
-    should(Model({instanceName, label: instanceName}).save()).be.rejectedWith(/codebox/);
+  it('should require "script"', function() {
+    should(Model({instanceName, label: instanceName}).save()).be.rejectedWith(/script/);
   });
 
   it('should be able to save via model instance', function() {

@@ -32,7 +32,7 @@ describe('ScheduleTrace', function() {
       return connection.Schedule.please().create({
         instanceName,
         label: instanceName,
-        codebox: codeBox.id,
+        script: codeBox.id,
         interval_sec: 30,
         description: instanceName,
         timezone: 'UTC'
