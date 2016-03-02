@@ -129,13 +129,13 @@ describe('Channel', function() {
       });
   });
 
-  it('should be able to poll for messages', function(done) {
+  it('should be able to poll for messages', function() {
     return Model(Object.assign({}, data, { custom_publish: true })).save()
       .then(cleaner.mark)
       .then((chn) => {
         let poll = chn.poll();
 
-        poll.on('message', function(message) {
+        poll.on('custom', function(message) {
           should(message).have.property('author').which.is.Object();
           should(message).have.property('created_at').which.is.Date();
           should(message).have.property('id').which.is.Number().equal(1);
@@ -144,13 +144,9 @@ describe('Channel', function() {
           should(message.payload).have.property('content').which.is.String().equal('message content');
           should(message).have.property('metadata').which.is.Object();
           should(message.metadata).have.property('type').which.is.String().equal('message');
-          poll.stop();
-          done();
         });
 
-        setTimeout(() => {
-          chn.publish({ content: 'message content' });
-        }, 100);
+        chn.publish({ content: 'message content' });
 
       });
   });
