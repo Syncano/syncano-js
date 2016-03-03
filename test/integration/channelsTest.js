@@ -109,7 +109,7 @@ describe('Channel', function() {
       });
   });
 
-  it('should be able to start and stop polling a channel', function(done) {
+  it('should be able to start and stop polling a channel', function() {
     return Model(data).save()
       .then(cleaner.mark)
       .then((chn) => {
@@ -121,7 +121,6 @@ describe('Channel', function() {
 
         poll.on('stop', function() {
           should(true).ok;
-          done();
         });
 
         poll.start();
