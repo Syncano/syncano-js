@@ -4,18 +4,18 @@ import {Meta, Model} from './base';
 import QuerySet from '../querySet';
 
 
-const CodeBoxQuerySet = stampit().compose(QuerySet).methods({
+const ScriptQuerySet = stampit().compose(QuerySet).methods({
 
   /**
-  * Runs CodeBox matching the given lookup properties.
-  * @memberOf CodeBoxQuerySet
+  * Runs Script matching the given lookup properties.
+  * @memberOf ScriptQuerySet
   * @instance
 
   * @param {Object} properties lookup properties used for path resolving
-  * @returns {CodeBoxQuerySet}
+  * @returns {ScriptQuerySet}
 
   * @example {@lang javascript}
-  * CodeBox.please().run({id: 1, instanceName: 'test-one'}).then(function(trace) {});
+  * Script.please().run({id: 1, instanceName: 'test-one'}).then(function(trace) {});
 
   */
   run(properties = {}, payload = {}) {
@@ -32,9 +32,9 @@ const CodeBoxQuerySet = stampit().compose(QuerySet).methods({
 });
 
 
-const CodeBoxMeta = Meta({
-  name: 'codebox',
-  pluralName: 'codeboxes',
+const ScriptMeta = Meta({
+  name: 'script',
+  pluralName: 'scripts',
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
@@ -53,10 +53,10 @@ const CodeBoxMeta = Meta({
 });
 
 /**
- * OO wrapper around codeboxes {@link http://docs.syncano.com/v4.0/docs/codebox-list-codeboxes endpoint}.
- * **CodeBox** has special method called ``run`` which will execute attached source code.
+ * OO wrapper around scripts {@link http://docs.syncano.com/v4.0/docs/codebox-list-codeboxes endpoint}.
+ * **Script** has special method called ``run`` which will execute attached source code.
  * @constructor
- * @type {CodeBox}
+ * @type {Script}
 
  * @property {Number} id
  * @property {String} instanceName
@@ -68,22 +68,22 @@ const CodeBoxMeta = Meta({
  * @property {Date} [created_at = null]
  * @property {Date} [updated_at = null]
  */
-const CodeBox = stampit()
+const Script = stampit()
   .compose(Model)
-  .setMeta(CodeBoxMeta)
-  .setQuerySet(CodeBoxQuerySet)
+  .setMeta(ScriptMeta)
+  .setQuerySet(ScriptQuerySet)
   .methods({
 
     /**
-    * Runs current CodeBox.
-    * @memberOf CodeBox
+    * Runs current Script.
+    * @memberOf Script
     * @instance
 
     * @param {Object} [payload = {}]
     * @returns {Promise}
 
     * @example {@lang javascript}
-    * CodeBox.please().get({instanceName: 'test-one', id: 1}).then(function(codebox) {
+    * Script.please().get({instanceName: 'test-one', id: 1}).then(function(codebox) {
     *   codebox.run({some: 'variable'}).then(function(trace) {});
     * });
     */
@@ -96,4 +96,4 @@ const CodeBox = stampit()
 
   });
 
-export default CodeBox;
+export default Script;

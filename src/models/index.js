@@ -7,7 +7,7 @@ import Group from './group';
 import Admin from './admin';
 import ApiKey from './apikey';
 import InstanceInvitation from './instanceinvitation';
-import CodeBox from './codebox';
+import Script from './script';
 import Schedule from './schedule';
 import Trigger from './trigger';
 import Webhook from './webhook';
@@ -34,7 +34,7 @@ export default {
   Admin,
   ApiKey,
   InstanceInvitation,
-  CodeBox,
+  Script,
   Schedule,
   Trigger,
   Webhook,
