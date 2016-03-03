@@ -17,11 +17,11 @@ import Request from './request';
 const Account = stampit().compose(Request)
   .props({
     _account: {
-      registerPath: '/v1/account/register/',
-      loginPath: '/v1/account/auth/',
-      updatePath: '/v1/account/',
-      userLoginPath: (instanceName) => `/v1/instances/${instanceName}/user/auth/`,
-      socialLoginPath: (instanceName, backend) => `/v1/instances/${instanceName}/user/auth/${backend}/`
+      registerPath: '/v1.1/account/register/',
+      loginPath: '/v1.1/account/auth/',
+      updatePath: '/v1.1/account/',
+      userLoginPath: (instanceName) => `/v1.1/instances/${instanceName}/user/auth/`,
+      socialLoginPath: (instanceName, backend) => `/v1.1/instances/${instanceName}/user/auth/${backend}/`
     }
   })
   .methods({

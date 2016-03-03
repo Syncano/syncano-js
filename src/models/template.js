@@ -7,19 +7,19 @@ const TemplateMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instanceName}/snippets/templates/{name}/'
+      'path': '/v1.1/instances/{instanceName}/snippets/templates/{name}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instanceName}/snippets/templates/'
+      'path': '/v1.1/instances/{instanceName}/snippets/templates/'
     },
     'rename': {
       'methods': ['post'],
-      'path': '/v1/instances/{instanceName}/snippets/templates/{name}/rename/'
+      'path': '/v1.1/instances/{instanceName}/snippets/templates/{name}/rename/'
     },
     'render': {
       'methods': ['post'],
-      'path': '/v1/instances/{instanceName}/snippets/templates/{name}/render/'
+      'path': '/v1.1/instances/{instanceName}/snippets/templates/{name}/render/'
     }
   }
 });

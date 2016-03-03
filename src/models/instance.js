@@ -22,15 +22,15 @@ const InstanceMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{name}/'
+      'path': '/v1.1/instances/{name}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/'
+      'path': '/v1.1/instances/'
     },
     'rename': {
       'methods': ['post'],
-      'path': '/v1/instances/{name}/rename/'
+      'path': '/v1.1/instances/{name}/rename/'
     }
   },
   relatedModels: [

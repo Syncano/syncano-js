@@ -14,7 +14,7 @@ const APNSConfigMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['post', 'get', 'patch', 'put'],
-      'path': '/v1/instances/{instanceName}/push_notifications/apns/config/'
+      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/config/'
     }
   }
 });

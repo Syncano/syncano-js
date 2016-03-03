@@ -46,7 +46,7 @@ describe('Webhooks', function() {
     webhookData = {
       name: webhookName,
       instanceName: instanceName,
-      codebox: codeBoxId,
+      script: codeBoxId,
       description: 'test',
       public: true
     };
@@ -73,8 +73,8 @@ describe('Webhooks', function() {
     should(Webhook({name: webhookName}).save()).be.rejectedWith(/instanceName/);
   });
 
-  it('should require "codebox"', function() {
-    should(Webhook({name: webhookName, instanceName}).save()).be.rejectedWith(/codebox/);
+  it('should require "script"', function() {
+    should(Webhook({name: webhookName, instanceName}).save()).be.rejectedWith(/script/);
   });
 
   it('should be able to save via model instance', function() {
@@ -84,7 +84,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
         should(webhook).have.property('links').which.is.Object();
       });
   });
@@ -96,7 +96,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
         should(webhook).have.property('links').which.is.Object();
 
         webhook.description = 'new description';
@@ -107,7 +107,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal('new description');
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
       });
   });
 
@@ -118,7 +118,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
         should(webhook).have.property('links').which.is.Object();
 
         return webhook.delete();
@@ -132,7 +132,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
         should(webhook).have.property('links').which.is.Object();
 
         return webhook.run();
@@ -154,7 +154,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
         should(webhook).have.property('links').which.is.Object();
 
         return webhook.runPublic();
@@ -178,7 +178,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
         should(webhook).have.property('links').which.is.Object();
         should(webhook).have.property('public_link').which.is.String();
 
@@ -189,7 +189,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.script);
         should(webhook).have.property('links').which.is.Object();
         should(webhook).have.property('public_link').which.is.String().not.equal(publicLink);
       });
@@ -218,7 +218,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
         should(webhook).have.property('links').which.is.Object();
         should(webhook).have.property('public_link').which.is.String();
       });
@@ -243,7 +243,7 @@ describe('Webhooks', function() {
           should(webhook).have.property('name').which.is.String().equal(webhookData.name);
           should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
           should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-          should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+          should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
 
           return webhook;
         })
@@ -258,7 +258,7 @@ describe('Webhooks', function() {
           should(webhook).have.property('name').which.is.String().equal(webhookData.name);
           should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
           should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-          should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+          should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
         });
     });
 
@@ -269,7 +269,7 @@ describe('Webhooks', function() {
           should(webhook).have.property('name').which.is.String().equal(webhookData.name);
           should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
           should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-          should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+          should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
           return webhook;
         })
         .then(() => {
@@ -286,7 +286,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal('aa test');
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
       });
     });
 
@@ -296,7 +296,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
 
         return Webhook.please().getOrCreate(webhookData, {description: 'newTest'});
       })
@@ -305,7 +305,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
       });
     });
 
@@ -315,7 +315,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
 
         return Webhook.please().update(webhookData, {description: 'newTest'});
       })
@@ -324,7 +324,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal('newTest');
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
       });
     });
 
@@ -334,7 +334,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
 
         return Webhook.please().updateOrCreate(webhookData, {description: 'newTest'});
       })
@@ -343,7 +343,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal('newTest');
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
       });
     });
 
@@ -355,7 +355,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(defaults.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
       });
     });
 
@@ -366,7 +366,7 @@ describe('Webhooks', function() {
       ];
 
       return Promise
-        .mapSeries(names, (name) => Webhook.please().create({name, instanceName, codebox: codeBoxId}))
+        .mapSeries(names, (name) => Webhook.please().create({name, instanceName, script: codeBoxId}))
         .then(() => {
           return Webhook.please().first(webhookData);
         })
@@ -382,7 +382,7 @@ describe('Webhooks', function() {
       ];
 
       return Promise
-        .mapSeries(names, (name) => Webhook.please().create({name, instanceName, codebox: codeBoxId}))
+        .mapSeries(names, (name) => Webhook.please().create({name, instanceName, script: codeBoxId}))
         .then((webhooks) => {
           should(webhooks).be.an.Array().with.length(2);
           return Webhook.please(webhookData).pageSize(1);
@@ -400,7 +400,7 @@ describe('Webhooks', function() {
       let asc = null;
 
       return Promise
-        .mapSeries(names, (name) => Webhook.please().create({name, instanceName, codebox: codeBoxId}))
+        .mapSeries(names, (name) => Webhook.please().create({name, instanceName, script: codeBoxId}))
         .then((webhooks) => {
           should(webhooks).be.an.Array().with.length(2);
           return Webhook.please(webhookData).ordering('asc');
@@ -438,7 +438,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
         should(webhook).have.property('links').which.is.Object();
 
         return Webhook.please().run(webhook);
@@ -460,7 +460,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
         should(webhook).have.property('links').which.is.Object();
 
         return Webhook.please().runPublic(webhook);
@@ -484,7 +484,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('script').which.is.Number().equal(webhookData.script);
         should(webhook).have.property('links').which.is.Object();
         should(webhook).have.property('public_link').which.is.String();
 
@@ -495,7 +495,7 @@ describe('Webhooks', function() {
         should(webhook).have.property('name').which.is.String().equal(webhookData.name);
         should(webhook).have.property('instanceName').which.is.String().equal(webhookData.instanceName);
         should(webhook).have.property('description').which.is.String().equal(webhookData.description);
-        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.codebox);
+        should(webhook).have.property('codebox').which.is.Number().equal(webhookData.script);
         should(webhook).have.property('links').which.is.Object();
         should(webhook).have.property('public_link').which.is.String().not.equal(publicLink);
       });
