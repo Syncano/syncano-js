@@ -36,7 +36,7 @@ const APNSDeviceConstraints = {
       minimum: 5
     }
   },
-  user_id: {
+  user: {
     presence: true
   },
   registration_id: {
