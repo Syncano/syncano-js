@@ -24,17 +24,17 @@ describe('WebhookTrace', function() {
     Model = connection.WebhookTrace;
 
     return Instance.please().create({name: instanceName}).then(() => {
-      return connection.CodeBox.please().create({
+      return connection.Script.please().create({
         instanceName: instanceName,
         label: webhookName,
         runtime_name: 'python',
         source: 'print "x"'
       });
-    }).then((codebox) => {
+    }).then((script) => {
       return connection.Webhook.please().create({
         instanceName,
         name: webhookName,
-        script: codebox.id
+        script: script.id
       });
     }).then((webhook) => {
       return webhook.run();

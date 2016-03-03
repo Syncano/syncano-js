@@ -10,8 +10,8 @@ describe('TriggerTrace', function() {
   let connection = null;
   let Instance = null;
   let Model = null;
-  const instanceName = suffix.get('CodeBox');
-  const codeBoxName = suffix.get('codebox');
+  const instanceName = suffix.get('script');
+  const scriptName = suffix.get('script');
   const className = suffix.get('class');
   const triggerData = {
     instanceName: instanceName,
@@ -37,13 +37,13 @@ describe('TriggerTrace', function() {
     Model = connection.TriggerTrace;
 
     return Instance.please().create({name: instanceName}).then(() => {
-      return connection.CodeBox.please().create({
+      return connection.Script.please().create({
         instanceName: instanceName,
-        label: codeBoxName,
+        label: scriptName,
         runtime_name: 'python',
         source: 'print "x"'
-      }).then((codebox) => {
-        triggerData.script = codebox.id;
+      }).then((script) => {
+        triggerData.script = script.id;
         return connection.Class(classData).save();
       }).then(() => {
         return connection.Trigger(triggerData).save();

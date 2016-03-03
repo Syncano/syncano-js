@@ -11,29 +11,29 @@ describe('Webhooks', function() {
 
   let connection = null;
   let Webhook = null;
-  let CodeBox = null;
+  let Script = null;
   let Instance = null;
 
   const instanceName = suffix.get('Webhooks');
   const webhookName = suffix.get('webhook');
   const runtimeName = 'python';
-  const codeBoxLabel = suffix.get('codeBox');
+  const scriptLabel = suffix.get('script');
   let codeBoxId = null;
   let webhookData = null;
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
-    CodeBox = connection.CodeBox;
+    Script = connection.Script;
     Webhook = connection.Webhook;
 
     return Instance
       .please()
       .create({name: instanceName})
       .then((instance) => {
-        return CodeBox.please().create({
+        return Script.please().create({
           instanceName: instance.name,
-          label: codeBoxLabel,
+          label: scriptLabel,
           runtime_name: runtimeName,
           source: 'print "test"'
         });
