@@ -26,7 +26,7 @@ describe('Base Object', function() {
       should(baseObject).have.property('Schedule').which.is.Function();
       should(baseObject).have.property('Trigger').which.is.Function();
       should(baseObject).have.property('Webhook').which.is.Function();
-      should(baseObject).have.property('DataView').which.is.Function();
+      should(baseObject).have.property('DataEndpoint').which.is.Function();
       should(baseObject).have.property('CodeBoxTrace').which.is.Function();
       should(baseObject).have.property('ScheduleTrace').which.is.Function();
       should(baseObject).have.property('TriggerTrace').which.is.Function();

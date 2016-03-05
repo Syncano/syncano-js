@@ -11,7 +11,7 @@ import Script from './script';
 import Schedule from './schedule';
 import Trigger from './trigger';
 import Webhook from './webhook';
-import DataView from './dataview';
+import DataEndpoint from './dataendpoint';
 import CodeBoxTrace from './codeboxtrace';
 import ScheduleTrace from './scheduletrace';
 import TriggerTrace from './triggertrace';
@@ -38,7 +38,7 @@ export default {
   Schedule,
   Trigger,
   Webhook,
-  DataView,
+  DataEndpoint,
   CodeBoxTrace,
   ScheduleTrace,
   TriggerTrace,
