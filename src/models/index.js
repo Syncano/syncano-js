@@ -12,7 +12,7 @@ import Schedule from './schedule';
 import Trigger from './trigger';
 import ScriptEndpoint from './scriptendpoint';
 import DataEndpoint from './dataendpoint';
-import CodeBoxTrace from './codeboxtrace';
+import ScriptTrace from './scripttrace';
 import ScheduleTrace from './scheduletrace';
 import TriggerTrace from './triggertrace';
 import ScriptEndpointTrace from './scriptendpointtrace';
@@ -39,7 +39,7 @@ export default {
   Trigger,
   ScriptEndpoint,
   DataEndpoint,
-  CodeBoxTrace,
+  ScriptTrace,
   ScheduleTrace,
   TriggerTrace,
   ScriptEndpointTrace,
