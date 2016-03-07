@@ -2,35 +2,35 @@ import stampit from 'stampit';
 import {Meta, Model} from './base';
 import {BaseQuerySet, Get, List} from '../querySet';
 
-const WebhookTraceQuerySet = stampit().compose(
+const ScriptEndpointTraceQuerySet = stampit().compose(
   BaseQuerySet,
   Get,
   List
 );
 
-const WebhookTraceMeta = Meta({
+const ScriptEndpointTraceMeta = Meta({
   name: 'triggertrace',
   pluralName: 'triggertraces',
   endpoints: {
     'detail': {
       'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{webhookName}/traces/{id}/'
+      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{scriptEndpointName}/traces/{id}/'
     },
     'list': {
       'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{webhookName}/traces/'
+      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{scriptEndpointName}/traces/'
     }
   }
 });
 
-const WebhookTraceConstraints = {
+const ScriptEndpointTraceConstraints = {
   instanceName: {
     presence: true,
     length: {
       minimum: 5
     }
   },
-  webhookName: {
+  scriptEndpointName: {
     presence: true
   }
 };
@@ -39,11 +39,11 @@ const WebhookTraceConstraints = {
  * OO wrapper around webhook traces {@link # endpoint}.
  * This model is *read only*.
  * @constructor
- * @type {WebhookTrace}
+ * @type {ScriptEndpointTrace}
 
  * @property {Number} id
  * @property {String} instanceName
- * @property {String} webhookName
+ * @property {String} scriptEndpointName
  * @property {String} status
  * @property {Date} executed_at
  * @property {Number} duration
@@ -52,10 +52,10 @@ const WebhookTraceConstraints = {
  * @property {String} result.stdout
  * @property {String} [links = {}]
  */
-const WebhookTrace = stampit()
+const ScriptEndpointTrace = stampit()
   .compose(Model)
-  .setMeta(WebhookTraceMeta)
-  .setQuerySet(WebhookTraceQuerySet)
-  .setConstraints(WebhookTraceConstraints);
+  .setMeta(ScriptEndpointTraceMeta)
+  .setQuerySet(ScriptEndpointTraceQuerySet)
+  .setConstraints(ScriptEndpointTraceConstraints);
 
-export default WebhookTrace;
+export default ScriptEndpointTrace;

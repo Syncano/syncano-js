@@ -4,22 +4,22 @@ import {Meta, Model} from './base';
 import QuerySet from '../querySet';
 
 
-const WebhookQuerySet = stampit().compose(QuerySet).methods({
+const ScriptEndpointQuerySet = stampit().compose(QuerySet).methods({
 
   /**
-  * Runs Webhook matching the given lookup properties.
-  * @memberOf WebhookQuerySet
+  * Runs ScriptEndpoint matching the given lookup properties.
+  * @memberOf ScriptEndpointQuerySet
   * @instance
 
   * @param {Object} properties lookup properties used for path resolving
   * @returns {Promise}
 
   * @example {@lang javascript}
-  * Webhook.please().run({name: 'test', instanceName: 'test-one'}).then(function(trace) {});
+  * ScriptEndpoint.please().run({name: 'test', instanceName: 'test-one'}).then(function(trace) {});
 
   */
   run(properties = {}, payload = {}) {
-    const {WebhookTrace} = this.getConfig();
+    const {ScriptEndpointTrace} = this.getConfig();
 
     this.properties = _.assign({}, this.properties, properties);
     this.method = 'POST';
@@ -28,7 +28,7 @@ const WebhookQuerySet = stampit().compose(QuerySet).methods({
     this._serialize = false;
 
     return this.then((trace) => {
-      return WebhookTrace.fromJSON(trace, {
+      return ScriptEndpointTrace.fromJSON(trace, {
         instanceName: this.properties.instanceName,
         webhookName: this.properties.name
       });
@@ -36,19 +36,19 @@ const WebhookQuerySet = stampit().compose(QuerySet).methods({
   },
 
   /**
-  * Runs `public` Webhook matching the given lookup properties.
-  * @memberOf WebhookQuerySet
+  * Runs `public` ScriptEndpoint matching the given lookup properties.
+  * @memberOf ScriptEndpointQuerySet
   * @instance
 
   * @param {Object} properties lookup properties used for path resolving
   * @returns {Promise}
 
   * @example {@lang javascript}
-  * Webhook.please().runPublic({public_link: '44cfc5552eacc', instanceName: 'test-one'}).then(function(trace) {});
+  * ScriptEndpoint.please().runPublic({public_link: '44cfc5552eacc', instanceName: 'test-one'}).then(function(trace) {});
 
   */
   runPublic(properties = {}, payload = {}) {
-    const {WebhookTrace} = this.getConfig();
+    const {ScriptEndpointTrace} = this.getConfig();
 
     this.properties = _.assign({}, this.properties, properties);
     this.method = 'POST';
@@ -57,7 +57,7 @@ const WebhookQuerySet = stampit().compose(QuerySet).methods({
     this._serialize = false;
 
     return this.then((trace) => {
-      return WebhookTrace.fromJSON(trace, {
+      return ScriptEndpointTrace.fromJSON(trace, {
         instanceName: this.properties.instanceName,
         webhookName: this.properties.name
       });
@@ -65,15 +65,15 @@ const WebhookQuerySet = stampit().compose(QuerySet).methods({
   },
 
   /**
-  * Resets Webhook matching the given lookup properties.
-  * @memberOf WebhookQuerySet
+  * Resets ScriptEndpoint matching the given lookup properties.
+  * @memberOf ScriptEndpointQuerySet
   * @instance
 
   * @param {Object} properties lookup properties used for path resolving
-  * @returns {WebhookQuerySet}
+  * @returns {ScriptEndpointQuerySet}
 
   * @example {@lang javascript}
-  * Webhook.please().reset({name: 'test', instanceName: 'test-one'}).then(function(trace) {});
+  * ScriptEndpoint.please().reset({name: 'test', instanceName: 'test-one'}).then(function(trace) {});
 
   */
   reset(properties = {}) {
@@ -87,9 +87,9 @@ const WebhookQuerySet = stampit().compose(QuerySet).methods({
 
 });
 
-const WebhookMeta = Meta({
-  name: 'webhook',
-  pluralName: 'webhooks',
+const ScriptEndpointMeta = Meta({
+  name: 'scriptendpoint',
+  pluralName: 'scriptendpoints',
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
@@ -112,10 +112,10 @@ const WebhookMeta = Meta({
       'path': '/v1.1/instances/{instanceName}/endpoints/scripts/p/{public_link}/{name}/'
     }
   },
-  relatedModels: ['WebhookTrace']
+  relatedModels: ['ScriptEndpointTrace']
 });
 
-const WebhookConstraints = {
+const ScriptEndpointConstraints = {
   instanceName: {
     presence: true,
     length: {
@@ -136,7 +136,7 @@ const WebhookConstraints = {
 /**
  * OO wrapper around instance webhooks {@link # endpoint}.
  * @constructor
- * @type {Webhook}
+ * @type {ScriptEndpoint}
 
  * @property {String} name
  * @property {String} instanceName
@@ -146,34 +146,34 @@ const WebhookConstraints = {
  * @property {String} [description = null]
  * @property {String} [links = {}]
  */
-const Webhook = stampit()
+const ScriptEndpoint = stampit()
   .compose(Model)
-  .setMeta(WebhookMeta)
-  .setQuerySet(WebhookQuerySet)
-  .setConstraints(WebhookConstraints)
+  .setMeta(ScriptEndpointMeta)
+  .setQuerySet(ScriptEndpointQuerySet)
+  .setConstraints(ScriptEndpointConstraints)
   .methods({
 
     /**
-    * Runs current Webhook.
-    * @memberOf Webhook
+    * Runs current ScriptEndpoint.
+    * @memberOf ScriptEndpoint
     * @instance
 
     * @param {Object} [payload = {}]
     * @returns {Promise}
 
     * @example {@lang javascript}
-    * Webhook.please().get({instanceName: 'test-one', id: 1}).then(function(codebox) {
+    * ScriptEndpoint.please().get({instanceName: 'test-one', id: 1}).then(function(codebox) {
         codebox.run({some: 'variable'}).then(function(trace) {});
       });
     */
     run(payload = {}) {
-      const {WebhookTrace} = this.getConfig();
+      const {ScriptEndpointTrace} = this.getConfig();
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('run', this);
 
       return this.makeRequest('POST', path, {payload})
         .then((body) => {
-          return WebhookTrace.fromJSON(body, {
+          return ScriptEndpointTrace.fromJSON(body, {
             instanceName: this.instanceName,
             webhookName: this.name
           });
@@ -181,26 +181,26 @@ const Webhook = stampit()
     },
 
     /**
-    * Runs current `public` Webhook.
-    * @memberOf Webhook
+    * Runs current `public` ScriptEndpoint.
+    * @memberOf ScriptEndpoint
     * @instance
 
     * @param {Object} [payload = {}]
     * @returns {Promise}
 
     * @example {@lang javascript}
-    * Webhook.please().get({instanceName: 'test-one', id: 1}).then(function(codebox) {
+    * ScriptEndpoint.please().get({instanceName: 'test-one', id: 1}).then(function(codebox) {
         codebox.runPublic({some: 'variable'}).then(function(trace) {});
       });
     */
     runPublic(payload = {}) {
-      const {WebhookTrace} = this.getConfig();
+      const {ScriptEndpointTrace} = this.getConfig();
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('public', this);
 
       return this.makeRequest('POST', path, {payload})
         .then((body) => {
-          return WebhookTrace.fromJSON(body, {
+          return ScriptEndpointTrace.fromJSON(body, {
             instanceName: this.instanceName,
             webhookName: this.name
           });
@@ -208,13 +208,13 @@ const Webhook = stampit()
     },
 
     /**
-    * Resets current Webhook.
-    * @memberOf Webhook
+    * Resets current ScriptEndpoint.
+    * @memberOf ScriptEndpoint
     * @instance
     * @returns {Promise}
 
     * @example {@lang javascript}
-    * Webhook.please().get({instanceName: 'test-one', name: 'test'}).then(function(webhook) {
+    * ScriptEndpoint.please().get({instanceName: 'test-one', name: 'test'}).then(function(webhook) {
         webhook.reset().then(function() {});
       });
     */
@@ -227,4 +227,4 @@ const Webhook = stampit()
 
   });
 
-export default Webhook;
+export default ScriptEndpoint;

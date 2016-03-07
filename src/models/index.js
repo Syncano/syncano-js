@@ -10,12 +10,12 @@ import InstanceInvitation from './instanceinvitation';
 import Script from './script';
 import Schedule from './schedule';
 import Trigger from './trigger';
-import Webhook from './webhook';
+import ScriptEndpoint from './scriptendpoint';
 import DataEndpoint from './dataendpoint';
 import CodeBoxTrace from './codeboxtrace';
 import ScheduleTrace from './scheduletrace';
 import TriggerTrace from './triggertrace';
-import WebhookTrace from './webhooktrace';
+import ScriptEndpointTrace from './scriptendpointtrace';
 import GCMDevice from './gcmdevice';
 import GCMConfig from './gcmconfig';
 import APNSDevice from './apnsdevice';
@@ -37,12 +37,12 @@ export default {
   Script,
   Schedule,
   Trigger,
-  Webhook,
+  ScriptEndpoint,
   DataEndpoint,
   CodeBoxTrace,
   ScheduleTrace,
   TriggerTrace,
-  WebhookTrace,
+  ScriptEndpointTrace,
   GCMDevice,
   APNSDevice,
   APNSConfig,

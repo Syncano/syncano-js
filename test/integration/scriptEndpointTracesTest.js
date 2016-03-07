@@ -1,43 +1,43 @@
 import should from 'should/as-function';
 import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
-import {suffix, credentials} from './utils';
+import {suffix, credentials, createCleaner} from './utils';
 
-
-describe('WebhookTrace', function() {
+describe('ScriptEndpointTrace', function() {
   this.timeout(15000);
 
+  const cleaner = createCleaner();
   let connection = null;
   let Model = null;
   let Instance = null;
 
-  const instanceName = suffix.get('webhookTrace');
-  const webhookName = suffix.get('webhookTrace');
+  const instanceName = suffix.get('ScriptEndpointTrace');
+  const scriptEndpointName = suffix.get('scriptendpointtrace');
   const data = {
     instanceName,
-    webhookName
+    scriptEndpointName
   };
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
-    Model = connection.WebhookTrace;
+    Model = connection.ScriptEndpointTrace;
 
     return Instance.please().create({name: instanceName}).then(() => {
       return connection.Script.please().create({
         instanceName: instanceName,
-        label: webhookName,
+        label: scriptEndpointName,
         runtime_name: 'python',
         source: 'print "x"'
       });
     }).then((script) => {
-      return connection.Webhook.please().create({
+      return connection.ScriptEndpoint.please().create({
         instanceName,
-        name: webhookName,
+        name: scriptEndpointName,
         script: script.id
       });
-    }).then((webhook) => {
-      return webhook.run();
+    }).then((ScriptEndpoint) => {
+      return ScriptEndpoint.run();
     }).then((trace) => {
       data.id = trace.id;
     });
@@ -47,16 +47,20 @@ describe('WebhookTrace', function() {
     return Instance.please().delete({name: instanceName});
   });
 
+  afterEach(function() {
+    return cleaner.clean();
+  });
+
   it('should be validated', function() {
     should(Model().save()).be.rejectedWith(ValidationError);
   });
 
   it('should require "instanceName"', function() {
-    should(Model({webhookName}).save()).be.rejectedWith(/instanceName/);
+    should(Model({scriptEndpointName}).save()).be.rejectedWith(/instanceName/);
   });
 
-  it('should require "webhookName"', function() {
-    should(Model({instanceName}).save()).be.rejectedWith(/webhookName/);
+  it('should require "scriptEndpointName"', function() {
+    should(Model({instanceName}).save()).be.rejectedWith(/scriptEndpointName/);
   });
 
   describe('#please()', function() {
@@ -73,7 +77,7 @@ describe('WebhookTrace', function() {
         should(object).have.property('id').which.is.Number();
         should(object).have.property('status').which.is.String();
         should(object).have.property('instanceName').which.is.String().equal(instanceName);
-        should(object).have.property('webhookName').which.is.String().equal(webhookName);
+        should(object).have.property('scriptEndpointName').which.is.String().equal(scriptEndpointName);
         should(object).have.property('executed_at').which.is.Date();
         should(object).have.property('duration').which.is.Number();
         should(object).have.property('links').which.is.Object();
