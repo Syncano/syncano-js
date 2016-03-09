@@ -36,7 +36,7 @@ const APNSDeviceConstraints = {
       minimum: 5
     }
   },
-  user_id: {
+  user: {
     presence: true
   },
   registration_id: {
@@ -56,7 +56,7 @@ const APNSDeviceConstraints = {
  * @property {String} device_id
  * @property {String} instanceName
  * @property {String} [label = null]
- * @property {Number} [user_id = null]
+ * @property {Number} [user = null]
  * @property {Boolean} [is_active = true]
  * @property {String} [links = {}]
  * @property {Date} [created_at = null]

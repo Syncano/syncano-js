@@ -27,14 +27,14 @@ describe('Schedule', function() {
     Model = connection.Schedule;
 
     return Instance.please().create({name: instanceName}).then(() => {
-      return connection.CodeBox.please().create({
+      return connection.Script.please().create({
         instanceName: instanceName,
         label: instanceName,
         runtime_name: 'python',
         source: 'print "x"'
       });
-    }).then((codeBox) => {
-      data.script = codeBox.id;
+    }).then((script) => {
+      data.script = script.id;
     });
   });
 

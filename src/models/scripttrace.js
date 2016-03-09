@@ -2,23 +2,23 @@ import stampit from 'stampit';
 import {Meta, Model} from './base';
 import {BaseQuerySet, Get, List} from '../querySet';
 
-const CodeBoxTraceQuerySet = stampit().compose(
+const ScriptTraceQuerySet = stampit().compose(
   BaseQuerySet,
   Get,
   List
 );
 
-const CodeBoxTraceMeta = Meta({
-  name: 'codeboxtrace',
-  pluralName: 'codeboxtraces',
+const ScriptTraceMeta = Meta({
+  name: 'scripttrace',
+  pluralName: 'scripttrace',
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1.1/instances/{instanceName}/codeboxes/{codeboxId}/traces/{id}/'
+      'path': '/v1.1/instances/{instanceName}/scripts/{scriptId}/traces/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/codeboxes/{codeboxId}/traces/'
+      'path': '/v1.1/instances/{instanceName}/scripts/{scriptId}/traces/'
     }
   }
 });
@@ -30,7 +30,7 @@ const CodeBoxConstraints = {
       minimum: 5
     }
   },
-  codeboxId: {
+  scriptId: {
     presence: true
   }
 };
@@ -39,11 +39,11 @@ const CodeBoxConstraints = {
  * OO wrapper around codebox trace {@link # endpoint}.
  * This model is *read only*.
  * @constructor
- * @type {CodeBoxTrace}
+ * @type {ScriptTrace}
 
  * @property {Number} id
  * @property {String} instanceName
- * @property {Number} codeboxId
+ * @property {Number} scriptId
  * @property {String} status
  * @property {Date} executed_at
  * @property {Number} duration
@@ -52,10 +52,10 @@ const CodeBoxConstraints = {
  * @property {String} result.stdout
  * @property {String} [links = {}]
  */
-const CodeBoxTrace = stampit()
+const ScriptTrace = stampit()
   .compose(Model)
-  .setQuerySet(CodeBoxTraceQuerySet)
+  .setQuerySet(ScriptTraceQuerySet)
   .setConstraints(CodeBoxConstraints)
-  .setMeta(CodeBoxTraceMeta);
+  .setMeta(ScriptTraceMeta);
 
-export default CodeBoxTrace;
+export default ScriptTrace;

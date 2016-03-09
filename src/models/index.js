@@ -7,15 +7,15 @@ import Group from './group';
 import Admin from './admin';
 import ApiKey from './apikey';
 import InstanceInvitation from './instanceinvitation';
-import CodeBox from './codebox';
+import Script from './script';
 import Schedule from './schedule';
 import Trigger from './trigger';
-import Webhook from './webhook';
-import DataView from './dataview';
-import CodeBoxTrace from './codeboxtrace';
+import ScriptEndpoint from './scriptendpoint';
+import DataEndpoint from './dataendpoint';
+import ScriptTrace from './scripttrace';
 import ScheduleTrace from './scheduletrace';
 import TriggerTrace from './triggertrace';
-import WebhookTrace from './webhooktrace';
+import ScriptEndpointTrace from './scriptendpointtrace';
 import GCMDevice from './gcmdevice';
 import GCMConfig from './gcmconfig';
 import APNSDevice from './apnsdevice';
@@ -34,15 +34,15 @@ export default {
   Admin,
   ApiKey,
   InstanceInvitation,
-  CodeBox,
+  Script,
   Schedule,
   Trigger,
-  Webhook,
-  DataView,
-  CodeBoxTrace,
+  ScriptEndpoint,
+  DataEndpoint,
+  ScriptTrace,
   ScheduleTrace,
   TriggerTrace,
-  WebhookTrace,
+  ScriptEndpointTrace,
   GCMDevice,
   APNSDevice,
   APNSConfig,

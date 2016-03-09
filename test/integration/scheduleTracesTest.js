@@ -22,17 +22,17 @@ describe('ScheduleTrace', function() {
     Model = connection.ScheduleTrace;
 
     return Instance.please().create({name: instanceName}).then(() => {
-      return connection.CodeBox.please().create({
+      return connection.Script.please().create({
         instanceName: instanceName,
         label: instanceName,
         runtime_name: 'python',
         source: 'print "x"'
       });
-    }).then((codeBox) => {
+    }).then((script) => {
       return connection.Schedule.please().create({
         instanceName,
         label: instanceName,
-        script: codeBox.id,
+        script: script.id,
         interval_sec: 30,
         description: instanceName,
         timezone: 'UTC'

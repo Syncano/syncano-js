@@ -6,7 +6,7 @@ import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
 
-describe('DataView', function() {
+describe('DataEndpoint', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();
@@ -15,11 +15,11 @@ describe('DataView', function() {
   let Instance = null;
   let Class = null;
   let dataObject = null;
-  const instanceName = suffix.get('DataView');
-  const dataViewName = suffix.get('dataview');
+  const instanceName = suffix.get('DataEndpoint');
+  const dataEndpointName = suffix.get('dataendpoint');
   const className = suffix.get('class');
   const data = {
-    name: dataViewName,
+    name: dataEndpointName,
     instanceName: instanceName,
     description: 'description',
     query: {},
@@ -41,7 +41,7 @@ describe('DataView', function() {
   before(function(done) {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
-    Model = connection.DataView;
+    Model = connection.DataEndpoint;
     Class = connection.Class;
     dataObject = connection.DataObject;
 
@@ -63,7 +63,7 @@ describe('DataView', function() {
   });
 
   it('should require "instanceName"', function() {
-    should(Model({name: dataViewName}).save()).be.rejectedWith(/instanceName/);
+    should(Model({name: dataEndpointName}).save()).be.rejectedWith(/instanceName/);
   });
 
   it('should be able to fetch Data Objects', function() {
@@ -81,7 +81,7 @@ describe('DataView', function() {
       .then(() => {
           return Model
             .please()
-            .fetchData({name: dataViewName, instanceName})
+            .fetchData({name: dataEndpointName, instanceName})
             .request();
         })
       .then((data) => {
@@ -168,7 +168,7 @@ describe('DataView', function() {
     it('should be able to bulk create an objects', function() {
       const objects = [
         Model(data),
-        Model(_.assign({}, data, {name: `${dataViewName}1`}))
+        Model(_.assign({}, data, {name: `${dataEndpointName}1`}))
       ];
 
       return Model.please().bulkCreate(objects)
@@ -183,7 +183,7 @@ describe('DataView', function() {
         .then(cleaner.mark)
         .then((dta) => {
           should(dta).be.a.Object();
-          should(dta).have.property('name').which.is.String().equal(dataViewName);
+          should(dta).have.property('name').which.is.String().equal(dataEndpointName);
           should(dta).have.property('instanceName').which.is.String().equal(instanceName);
 
           return dta;
@@ -191,7 +191,7 @@ describe('DataView', function() {
         .then(() => {
           return Model
             .please()
-            .get({name: dataViewName, instanceName})
+            .get({name: dataEndpointName, instanceName})
             .request();
         })
         .then((dta) => {
@@ -213,14 +213,14 @@ describe('DataView', function() {
       return Model.please().create(data)
         .then((dta) => {
           should(dta).be.an.Object();
-          should(dta).have.property('name').which.is.String().equal(dataViewName);
+          should(dta).have.property('name').which.is.String().equal(dataEndpointName);
           should(dta).have.property('instanceName').which.is.String().equal(instanceName);
           return dta;
         })
         .then(() => {
           return Model
             .please()
-            .delete({name: dataViewName, instanceName})
+            .delete({name: dataEndpointName, instanceName})
             .request();
         });
     });
@@ -248,7 +248,7 @@ describe('DataView', function() {
         .then(cleaner.mark)
         .then((dta) => {
           should(dta).be.an.Object();
-          should(dta).have.property('name').which.is.String().equal(dataViewName);
+          should(dta).have.property('name').which.is.String().equal(dataEndpointName);
           should(dta).have.property('instanceName').which.is.String().equal(instanceName);
           should(dta).have.property('description').which.is.String().equal(data.description);
 
@@ -256,7 +256,7 @@ describe('DataView', function() {
         })
         .then((dta) => {
           should(dta).be.an.Object();
-          should(dta).have.property('name').which.is.String().equal(dataViewName);
+          should(dta).have.property('name').which.is.String().equal(dataEndpointName);
           should(dta).have.property('instanceName').which.is.String().equal(instanceName);
           should(dta.description).which.is.String().equal(data.description);
         });
@@ -267,15 +267,15 @@ describe('DataView', function() {
         .then(cleaner.mark)
         .then((dta) => {
           should(dta).be.an.Object();
-          should(dta).have.property('name').which.is.String().equal(dataViewName);
+          should(dta).have.property('name').which.is.String().equal(dataEndpointName);
           should(dta).have.property('instanceName').which.is.String().equal(instanceName);
           should(dta).have.property('description').which.is.String().equal(data.description);
 
-          return Model.please().update({name: dataViewName, instanceName, class: className}, {description: 'newTest'});
+          return Model.please().update({name: dataEndpointName, instanceName, class: className}, {description: 'newTest'});
         })
         .then((dta) => {
           should(dta).be.an.Object();
-          should(dta).have.property('name').which.is.String().equal(dataViewName);
+          should(dta).have.property('name').which.is.String().equal(dataEndpointName);
           should(dta).have.property('instanceName').which.is.String().equal(instanceName);
           should(dta.description).which.is.String().equal('newTest');
         });
@@ -286,22 +286,22 @@ describe('DataView', function() {
         .then(cleaner.mark)
         .then((dta) => {
           should(dta).be.an.Object();
-          should(dta).have.property('name').which.is.String().equal(dataViewName);
+          should(dta).have.property('name').which.is.String().equal(dataEndpointName);
           should(dta).have.property('instanceName').which.is.String().equal(instanceName);
           should(dta).have.property('description').which.is.String().equal(data.description);
 
-          return Model.please().updateOrCreate({name: dataViewName, instanceName, class: className}, {description: 'newTest'});
+          return Model.please().updateOrCreate({name: dataEndpointName, instanceName, class: className}, {description: 'newTest'});
         })
         .then((dta) => {
           should(dta).be.an.Object();
-          should(dta).have.property('name').which.is.String().equal(dataViewName);
+          should(dta).have.property('name').which.is.String().equal(dataEndpointName);
           should(dta).have.property('instanceName').which.is.String().equal(instanceName);
           should(dta).have.property('description').which.is.String().equal('newTest');
         });
     });
 
     it('should be able to update or create Model (CREATE)', function() {
-      let properties = {name: dataViewName, instanceName, class: className};
+      let properties = {name: dataEndpointName, instanceName, class: className};
       let object = {description: 'updateTest'};
       let defaults = {
           description: 'createTest',
@@ -328,8 +328,8 @@ describe('DataView', function() {
 
     it('should be able to get first Model (SUCCESS)', function() {
       const names = [
-        `${dataViewName}_1`,
-        `${dataViewName}_2`
+        `${dataEndpointName}_1`,
+        `${dataEndpointName}_2`
       ];
 
       return Promise
@@ -345,8 +345,8 @@ describe('DataView', function() {
 
     it('should be able to change page size', function() {
       const names = [
-        `${dataViewName}_1`,
-        `${dataViewName}_2`
+        `${dataEndpointName}_1`,
+        `${dataEndpointName}_2`
       ];
 
       return Promise
@@ -363,8 +363,8 @@ describe('DataView', function() {
 
     it('should be able to change ordering', function() {
       const names = [
-        `${dataViewName}_1`,
-        `${dataViewName}_2`
+        `${dataEndpointName}_1`,
+        `${dataEndpointName}_2`
       ];
       let asc = null;
 

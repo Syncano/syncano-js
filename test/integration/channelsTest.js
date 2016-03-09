@@ -119,12 +119,11 @@ describe('Channel', function() {
           should(true).ok;
         });
 
-        poll.start();
-
         poll.on('stop', function() {
           should(true).ok;
         });
 
+        poll.start();
         poll.stop();
       });
   });

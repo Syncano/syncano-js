@@ -11,8 +11,8 @@ describe('Trigger', function() {
   let connection = null;
   let Instance = null;
   let Model = null;
-  const instanceName = suffix.get('CodeBox');
-  const codeBoxName = suffix.get('codebox');
+  const instanceName = suffix.get('Script');
+  const scriptName = suffix.get('script');
   const className = suffix.get('class');
   const data = {
     instanceName: instanceName,
@@ -40,14 +40,14 @@ describe('Trigger', function() {
     Model = connection.Trigger;
 
     return Instance.please().create({name: instanceName}).then(() => {
-      return connection.CodeBox.please().create({
+      return connection.Script.please().create({
         instanceName: instanceName,
-        label: codeBoxName,
+        label: scriptName,
         runtime_name: 'python',
         source: 'print "x"'
-      }).then((codebox) => {
-        data.script = codebox.id;
-        data2.script = codebox.id;
+      }).then((script) => {
+        data.script = script.id;
+        data2.script = script.id;
         return connection.Class(classData).save();
       })
     });

@@ -4,18 +4,18 @@ import {Meta, Model} from './base';
 import QuerySet from '../querySet';
 
 
-const DataViewQerySet = stampit().compose(QuerySet).methods({
+const DataEndpointQerySet = stampit().compose(QuerySet).methods({
 
   /**
   * Fetches Data Objects matching the Data View properties.
-  * @memberOf DataViewQerySet
+  * @memberOf DataEndpointQerySet
   * @instance
 
   * @param {Object} properties lookup properties used for path resolving
-  * @returns {DataViewQerySet}
+  * @returns {DataEndpointQerySet}
 
   * @example {@lang javascript}
-  * DataView.please().fetchData({name: 'dataViewName', instanceName: 'test-one'}).then(function(dataObjects) {});
+  * DataEndpoint.please().fetchData({name: 'dataViewName', instanceName: 'test-one'}).then(function(dataObjects) {});
 
   */
   fetchData(properties = {}) {
@@ -30,7 +30,7 @@ const DataViewQerySet = stampit().compose(QuerySet).methods({
 
 });
 
-const DataViewMeta = Meta({
+const DataEndpointMeta = Meta({
   name: 'dataview',
   pluralName: 'dataviews',
   endpoints: {
@@ -57,7 +57,7 @@ const DataViewMeta = Meta({
   }
 });
 
-const DataViewConstraints = {
+const DataEndpointConstraints = {
   name: {
     presence: true,
     length: {
@@ -78,7 +78,7 @@ const DataViewConstraints = {
 /**
  * OO wrapper around data views {@link # endpoint}.
  * @constructor
- * @type {DataView}
+ * @type {DataEndpoint}
 
  * @property {String} name
  * @property {String} instanceName
@@ -91,23 +91,23 @@ const DataViewConstraints = {
  * @property {String} [description = null]
  * @property {String} [links = {}]
  */
-const DataView = stampit()
+const DataEndpoint = stampit()
   .compose(Model)
-  .setMeta(DataViewMeta)
-  .setQuerySet(DataViewQerySet)
-  .setConstraints(DataViewConstraints)
+  .setMeta(DataEndpointMeta)
+  .setQuerySet(DataEndpointQerySet)
+  .setConstraints(DataEndpointConstraints)
   .methods({
 
     /**
     * Fetches Data Objects matching the Data View properties.
-    * @memberOf DataView
+    * @memberOf DataEndpoint
     * @instance
 
     * @param {Object}
     * @returns {Promise}
 
     * @example {@lang javascript}
-    * DataView.please().fetchData({name: 'dataViewName', instanceName: 'test-one'}).then(function(dataObjects) {});
+    * DataEndpoint.please().fetchData({name: 'dataViewName', instanceName: 'test-one'}).then(function(dataObjects) {});
     */
     fetchData() {
       const meta = this.getMeta();
@@ -118,4 +118,4 @@ const DataView = stampit()
 
   });
 
-export default DataView;
+export default DataEndpoint;
