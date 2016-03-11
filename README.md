@@ -137,6 +137,8 @@ my_class.dataobject(ID).detail(); // also my_class.dataobject().detail(ID) - ret
 * Daniel Kopka - [twitter](https://twitter.com/danielkopka), [github](https://github.com/dancio)
 
 ### Change Log
+* **0.4.8** - 2016-03-11
+    * Fixed `prev` and `next` methods in query results
 * **0.4.7** - 2016-01-19
     * Added the ability to listen to connection status change
 * **0.4.6** - 2016-01-12
