@@ -10,6 +10,7 @@ var request  = require('./request.js');
 var Promise  = require('bluebird');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
+var Url = require('url');
 
 var defaultOptions = {
   headers: {
@@ -239,7 +240,8 @@ var apiRequest = function apiRequest(config, cb) {
             var resNext = response.next; // set to next URL so it's not overwritten
             response.next = function(cb) { // NEXT function call
               var nextConfig = helpers.merge({}, config); // create config obj
-              nextConfig.url = resNext;
+              nextConfig.url = Url.parse(resNext, true).pathname;
+              nextConfig.qs = helpers.merge(nextConfig.qs,  Url.parse(resNext, true).query);
               return apiRequest(nextConfig, cb);
             };
           }
@@ -247,7 +249,8 @@ var apiRequest = function apiRequest(config, cb) {
             var resPrev = response.prev; // set to prev URL so it's not overwritten
             response.prev = function(cb) { // PREV function call
               var prevConfig = helpers.merge({}, config); // create config obj
-              prevConfig.url = resPrev;
+              prevConfig.url = Url.parse(resPrev, true).pathname;
+              prevConfig.qs = helpers.merge(prevConfig.qs,  Url.parse(resPrev, true).query);
               return apiRequest(prevConfig, cb);
             };
           } else if (response.prev && response.objects.length < 1) {
