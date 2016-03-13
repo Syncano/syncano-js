@@ -314,6 +314,87 @@ describe('Channel', function() {
         });
     });
 
+    it('should be able to start and stop polling a channel', function() {
+      return Model(data).save()
+        .then(cleaner.mark)
+        .then((chn) => {
+          const poll = Model.please().poll(chn);
+
+          poll.on('start', function() {
+            should(true).ok;
+          });
+
+          poll.on('stop', function() {
+            should(true).ok;
+          });
+
+          poll.start();
+          poll.stop();
+        });
+    });
+
+    it('should be able to poll for messages', function() {
+      return Model(Object.assign({}, data, { custom_publish: true })).save()
+        .then(cleaner.mark)
+        .then((chn) => {
+          const poll = Model.please().poll(chn);
+
+          poll.on('custom', function(message) {
+            should(message).have.property('author').which.is.Object();
+            should(message).have.property('created_at').which.is.Date();
+            should(message).have.property('id').which.is.Number().equal(1);
+            should(message).have.property('action').which.is.String().equal('custom');
+            should(message).have.property('payload').which.is.Object();
+            should(message.payload).have.property('content').which.is.String().equal('message content');
+            should(message).have.property('metadata').which.is.Object();
+            should(message.metadata).have.property('type').which.is.String().equal('message');
+          });
+
+          Model.please().poll(chn, { content: 'message content' });
+
+        });
+    });
+
+    it('should be able to poll for dataobject events', function() {
+
+      return Model(data).save()
+        .then(cleaner.mark)
+        .then((chn) => {
+            const poll = Model.please().poll(chn);
+
+            poll.on('create', function(data) {
+              should(data).have.property('author').which.is.Object();
+              should(data).have.property('id').which.is.Number();
+              should(data).have.property('action').which.is.String().equal('create');
+              should(data).have.property('payload').which.is.Object();
+              should(data).have.property('metadata').which.is.Object();
+            });
+            poll.on('update', function(data) {
+              should(data).have.property('author').which.is.Object();
+              should(data).have.property('id').which.is.Number();
+              should(data).have.property('action').which.is.String().equal('update');
+              should(data).have.property('payload').which.is.Object();
+              should(data).have.property('metadata').which.is.Object();
+            });
+            poll.on('delete', function(data) {
+              should(data).have.property('author').which.is.Object();
+              should(data).have.property('id').which.is.Number();
+              should(data).have.property('action').which.is.String().equal('delete');
+              should(data).have.property('payload').which.is.Object();
+              should(data).have.property('metadata').which.is.Object();
+            });
+
+            return dataObject(objectData).save()
+          })
+          .then((obj) => {
+            obj.group_permissions = 'full';
+            return obj.save();
+          })
+          .then((obj) => {
+            return obj.delete();
+          });
+    });
+
     it('should be able to update a Model', function() {
       return Model.please().create(data)
         .then(cleaner.mark)

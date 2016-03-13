@@ -2,7 +2,28 @@ import stampit from 'stampit';
 import {Meta, Model} from './base';
 import Request from '../request';
 import {EventEmittable} from '../utils';
+import _ from 'lodash';
+import QuerySet from '../querySet';
 
+const ChannelQuerySet = stampit().compose(QuerySet).methods({
+
+  publish(channel, message) {
+    this.properties = _.assign({}, this.properties, channel);
+    this.payload = { payload: message };
+
+    this.method = 'POST';
+    this.endpoint = 'publish';
+
+    return this;
+  },
+
+  poll(channel) {
+    const meta = this.model.getMeta();
+    channel.path = meta.resolveEndpointPath('poll', channel);
+    return ChannelPoll.setConfig(channel)();
+  }
+
+});
 
 const ChannelMeta = Meta({
   name: 'channel',
@@ -223,6 +244,7 @@ export const ChannelPoll = stampit()
 const Channel = stampit()
   .compose(Model)
   .setMeta(ChannelMeta)
+  .setQuerySet(ChannelQuerySet)
   .methods({
 
     poll(options = {}, start = true) {
