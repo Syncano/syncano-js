@@ -7,6 +7,21 @@ import QuerySet from '../querySet';
 
 const ChannelQuerySet = stampit().compose(QuerySet).methods({
 
+  /**
+    * Puslishes to a channel.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {Object} channel
+    * @param {Object} message
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * Channel.please().publish({ instanceName: 'test-instace', name: 'test-class' }, { content: 'my message'});
+
+    */
+
   publish(channel, message) {
     this.properties = _.assign({}, this.properties, channel);
     this.payload = { payload: message };
@@ -16,6 +31,54 @@ const ChannelQuerySet = stampit().compose(QuerySet).methods({
 
     return this;
   },
+
+  /**
+    * Allows polling of a channel.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {Object} channel
+    * @returns {ChannelPoll}
+
+    * @example {@lang javascript}
+    * var poll = Channel.please().poll({ instanceName: 'test-instace', name: 'test-class' });
+    *
+    * poll.on('start', function() {
+    *   console.log('poll::start');
+    * });
+    *
+    * poll.on('stop', function() {
+    *   console.log('poll::stop');
+    * });
+    *
+    * poll.on('message', function(message) {
+    *   console.log('poll::message', message);
+    * });
+    *
+    * poll.on('custom', function(message) {
+    *   console.log('poll::custom', message);
+    * });
+    *
+    * poll.on('create', function(data) {
+    *   console.log('poll::create', data);
+    * });
+    *
+    * poll.on('delete', function(data) {
+    *   console.log('poll::delete', data);
+    * });
+    *
+    * poll.on('update', function(data) {
+    *   console.log('poll::update', data);
+    * });
+    *
+    * poll.on('error', function(error) {
+    *   console.log('poll::error', error);
+    * });
+    *
+    * poll.start();
+    *
+    */
 
   poll(channel) {
     const meta = this.model.getMeta();

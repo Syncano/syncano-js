@@ -350,7 +350,7 @@ describe('Channel', function() {
             should(message.metadata).have.property('type').which.is.String().equal('message');
           });
 
-          Model.please().poll(chn, { content: 'message content' });
+          Model.please().publish(chn, { content: 'message content' });
 
         });
     });
