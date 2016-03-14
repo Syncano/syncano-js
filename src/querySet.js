@@ -351,6 +351,15 @@ export const Update = stampit().methods({
   }
 });
 
+const RenderTemplate = stampit().methods({
+
+  renderTemplate(template_name) {
+    this.query['template_response'] = template_name;
+    return this;
+  }
+
+});
+
 export const UpdateOrCreate = stampit().methods({
 
   /**
@@ -571,7 +580,8 @@ const QuerySet = stampit.compose(
   PageSize,
   Ordering,
   Fields,
-  Raw
+  Raw,
+  RenderTemplate
 );
 
 export const BaseQuerySet = stampit.compose(
@@ -580,7 +590,8 @@ export const BaseQuerySet = stampit.compose(
   Fields,
   Ordering,
   First,
-  PageSize
+  PageSize,
+  RenderTemplate
 );
 
 export default QuerySet;

@@ -9,10 +9,6 @@ general:
   artifacts:
     - "coverage/"
 
-dependencies:
-  pre:
-    - npm cache clean
-
 deployment:
   production:
     branch: master
