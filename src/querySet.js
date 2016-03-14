@@ -134,7 +134,8 @@ const QuerySetRequest = stampit().compose(Request)
         headers: this.headers,
         query: this.query,
         payload: this.payload,
-        attachments: this.attachments
+        attachments: this.attachments,
+        responseAttr: this.responseAttr
       });
 
       if (!_.includes(allowedMethods, method)) {
@@ -354,6 +355,8 @@ export const Update = stampit().methods({
 const TemplateResponse = stampit().methods({
 
   templateResponse(template_name) {
+    this._serialize = false;
+    this.responseAttr = 'text';
     this.query['template_response'] = template_name;
     return this;
   }
