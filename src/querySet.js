@@ -354,6 +354,22 @@ export const Update = stampit().methods({
 
 const TemplateResponse = stampit().methods({
 
+  /**
+  * Renders the api response as a template.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {template_name} name of template to be rendered
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DataObject
+    .please()
+    .list({instanceName: 'my-instance', className: 'my-class'})
+    .templateResponse('objects_html_table')
+    .then(function(objects) {});
+  */
   templateResponse(template_name) {
     this._serialize = false;
     this.responseAttr = 'text';

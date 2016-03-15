@@ -389,10 +389,6 @@ describe.only('Dataobject', function() {
       })
       .then((response) => {
         should(response).be.html;
-        should(response).match(/<table>/);
-        should(response).match(/<tr>/);
-        should(response).match(/<th>/);
-        should(response).match(/<td>/);
       });
     });
   });
