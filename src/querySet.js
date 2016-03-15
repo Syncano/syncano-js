@@ -134,7 +134,8 @@ const QuerySetRequest = stampit().compose(Request)
         headers: this.headers,
         query: this.query,
         payload: this.payload,
-        attachments: this.attachments
+        attachments: this.attachments,
+        responseAttr: this.responseAttr
       });
 
       if (!_.includes(allowedMethods, method)) {
@@ -349,6 +350,33 @@ export const Update = stampit().methods({
     this.endpoint = 'detail';
     return this;
   }
+});
+
+const TemplateResponse = stampit().methods({
+
+  /**
+  * Renders the api response as a template.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {template_name} name of template to be rendered
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DataObject
+    .please()
+    .list({instanceName: 'my-instance', className: 'my-class'})
+    .templateResponse('objects_html_table')
+    .then(function(objects) {});
+  */
+  templateResponse(template_name) {
+    this._serialize = false;
+    this.responseAttr = 'text';
+    this.query['template_response'] = template_name;
+    return this;
+  }
+
 });
 
 export const UpdateOrCreate = stampit().methods({
@@ -571,7 +599,8 @@ const QuerySet = stampit.compose(
   PageSize,
   Ordering,
   Fields,
-  Raw
+  Raw,
+  TemplateResponse
 );
 
 export const BaseQuerySet = stampit.compose(
@@ -580,7 +609,8 @@ export const BaseQuerySet = stampit.compose(
   Fields,
   Ordering,
   First,
-  PageSize
+  PageSize,
+  TemplateResponse
 );
 
 export default QuerySet;
