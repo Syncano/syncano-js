@@ -16,30 +16,28 @@ describe('APNS Device', function() {
   let deviceLabel = suffix.get('apns');
   const devId = 'd8a46770-c20b-11e5-a837-0800200c9a66';
   const registrationId = hex.getRandom(64);
-  const userData = {
-    instanceName,
-    username: 'testuser',
-    password: 'y5k8Y4&-'
-  };
   const data = {
     label: deviceLabel,
     instanceName: instanceName,
     registration_id: registrationId,
     device_id: devId
   };
+  const userData = {
+    instanceName,
+    username: 'testuser',
+    password: 'y5k8Y4&-'
+  }
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
     Model = connection.APNSDevice;
 
-    return Instance.please().create({name: instanceName})
-      .then(() => {
-        return connection.User(userData).save();
-      })
-      .then((user) => {
+    return Instance.please().create({name: instanceName}).then(() => {
+      return connection.User.please().create(userData).then((user) => {
         data.user = user.id;
       });
+    })
   });
 
   after(function() {
@@ -58,16 +56,28 @@ describe('APNS Device', function() {
     should(Model({label: deviceLabel}).save()).be.rejectedWith(/instanceName/);
   });
 
-  it('should require "user"', function() {
-    should(Model({label: deviceLabel, instanceName}).save()).be.rejectedWith(/user/);
-  });
-
   it('should require "registration_id"', function() {
     should(Model({label: deviceLabel, instanceName, user: data.user}).save()).be.rejectedWith(/registration_id/);
   });
 
-  it('should require "device_id"', function() {
-    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: hex.getRandom(64)}).save()).be.rejectedWith(/device_id/);
+  it('should validate "registration_id"', function() {
+    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: '123'}).save()).be.rejectedWith(/registration_id/);
+  });
+
+  it('should validate "device_id"', function() {
+    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: registrationId, device_id: '123'}).save()).be.rejectedWith(/device_id/);
+  });
+
+  it('should validate "user"', function() {
+    should(Model({label: deviceLabel, instanceName, user: 'user', registration_id: registrationId, device_id: devId}).save()).be.rejectedWith(/user/);
+  });
+
+  it('should validate "metadata"', function() {
+    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: registrationId, device_id: devId, metadata: 'metadata'}).save()).be.rejectedWith(/metadata/);
+  });
+
+  it('should validate "is_active"', function() {
+    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: registrationId, device_id: devId, metadata: {}, is_active: 'no'}).save()).be.rejectedWith(/is_active/);
   });
 
   it('should be able to save via model instance', function() {
@@ -143,7 +153,7 @@ describe('APNS Device', function() {
       });
     });
 
-    it('should be able to bulk create a devices', function() {
+    it('should be able to bulk create ', function() {
       const objects = [
         Model(data),
         Model(_.assign({}, data, {registration_id: hex.getRandom(64)}))

@@ -9,6 +9,41 @@ import {ConfigMixin, MetaMixin, ConstraintsMixin} from '../utils';
 
 validate.Promise = Promise;
 
+validate.validators.object = function(value) {
+  if(value) {
+    if(!validate.isObject(value)) {
+      return "is not an object";
+    }
+  }
+  return null;
+}
+
+validate.validators.array = function(value) {
+  if(value) {
+    if(!validate.isArray(value)) {
+      return "is not an array";
+    }
+  }
+  return null;
+}
+
+validate.validators.boolean = function(value) {
+  if(value) {
+    if(typeof value !== 'boolean') {
+      return "is not a boolean";
+    }
+  }
+  return null;
+}
+
+validate.validators.string = function(value) {
+  if(value) {
+    if(!validate.isString(value)) {
+      return "is not a string";
+    }
+  }
+  return null;
+}
 
 /**
  * Object which holds whole configuration for {@link Model}.

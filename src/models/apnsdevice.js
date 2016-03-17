@@ -37,13 +37,26 @@ const APNSDeviceConstraints = {
     }
   },
   user: {
-    presence: true
+    numericality: {
+      noStrings: true
+    }
   },
   registration_id: {
-    presence: true
+    presence: true,
+    length: {
+      is: 64
+    }
   },
   device_id: {
-    presence: true
+    length: {
+      minimum: 36
+    }
+  },
+  metadata: {
+    object: true
+  },
+  is_active: {
+    boolean: true
   }
 };
 
@@ -56,7 +69,7 @@ const APNSDeviceConstraints = {
  * @property {String} device_id
  * @property {String} instanceName
  * @property {String} [label = null]
- * @property {Number} [user = null]
+ * @property {Number} [user_id = null]
  * @property {Boolean} [is_active = true]
  * @property {String} [links = {}]
  * @property {Date} [created_at = null]

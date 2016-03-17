@@ -41,7 +41,23 @@ describe('ApiKey', function() {
   });
 
   it('should require "instanceName"', function() {
-    should(ApiKey({name: apiKeyName}).save()).be.rejectedWith(/instanceName/);
+    should(ApiKey({}).save()).be.rejectedWith(/instanceName/);
+  });
+
+  it('should validate "description"', function() {
+    should(ApiKey({instanceName, description: 123}).save()).be.rejectedWith(/description/);
+  });
+
+  it('should validate "ignore_acl"', function() {
+    should(ApiKey({instanceName, ignore_acl: 123}).save()).be.rejectedWith(/ignore_acl/);
+  });
+
+  it('should validate "allow_user_create"', function() {
+    should(ApiKey({instanceName, allow_user_create: 123}).save()).be.rejectedWith(/allow_user_create/);
+  });
+
+  it('should validate "allow_anonymous_read"', function() {
+    should(ApiKey({instanceName, allow_anonymous_read: 123}).save()).be.rejectedWith(/allow_anonymous_read/);
   });
 
   it('should be able to save via model instance', function() {

@@ -47,9 +47,20 @@ const ApiKeyConstraints = {
     length: {
       minimum: 5
     }
+  },
+  description: {
+    string: true
+  },
+  ignore_acl: {
+    boolean: true
+  },
+  allow_user_create: {
+    boolean: true
+  },
+  allow_anonymous_read: {
+    boolean: true
   }
 };
-
 
 /**
  * OO wrapper around instance api keys {@link http://docs.syncano.io/docs/authentication endpoint}.
