@@ -13,7 +13,6 @@ describe('ApiKey', function() {
   let Instance = null;
   let ApiKey = null;
   const instanceName = suffix.get('ApiKey');
-  const apiKeyName = suffix.get('api_key');
   const description = suffix.get('description');
   const data = {
     instanceName: instanceName,
