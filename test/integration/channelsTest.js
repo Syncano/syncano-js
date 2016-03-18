@@ -61,6 +61,34 @@ describe('Channel', function() {
     should(Model({name: channelName}).save()).be.rejectedWith(/instanceName/);
   });
 
+  it('should validate "name"', function() {
+    should(Model({name: {}, instanceName}).save()).be.rejectedWith(/name/);
+  });
+
+  it('should validate "description"', function() {
+    should(Model({name: {}, instanceName, description: 3}).save()).be.rejectedWith(/description/);
+  });
+
+  it('should validate "type"', function() {
+    should(Model({name: {}, instanceName, type: 'some_type'}).save()).be.rejectedWith(/type/);
+  });
+
+  it('should validate "group"', function() {
+    should(Model({name: {}, instanceName, group: 'some_group'}).save()).be.rejectedWith(/group/);
+  });
+
+  it('should validate "group_permissions"', function() {
+    should(Model({name: {}, instanceName, group_permissions: 'dunno'}).save()).be.rejectedWith(/group_permissions/);
+  });
+
+  it('should validate "other_permissions"', function() {
+    should(Model({name: {}, instanceName, other_permissions: 'dunno'}).save()).be.rejectedWith(/other_permissions/);
+  });
+
+  it('should validate "custom_publish"', function() {
+    should(Model({name: {}, instanceName, custom_publish: 'maybe'}).save()).be.rejectedWith(/custom_publish/);
+  });
+
   it('should be able to save via model instance', function() {
     return Model(data).save()
       .then(cleaner.mark)
