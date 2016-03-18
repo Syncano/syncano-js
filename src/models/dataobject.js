@@ -89,7 +89,38 @@ const DataobjectConstraints = {
     }
   },
   className: {
-    presence: true
+    presence: true,
+    string: true,
+    length: {
+      minimum: 5
+    }
+  },
+  owner: {
+    numericality: {
+      noStrings: true
+    }
+  },
+  owner_permissions: {
+    inclusion: ['none', 'read', 'write', 'full']
+  },
+  group: {
+    numericality: {
+      noStrings: true
+    }
+  },
+  group_permissions: {
+    inclusion: ['none', 'read', 'write', 'full']
+  },
+  other_permissions: {
+    inclusion: ['none', 'read', 'write', 'full']
+  },
+  channel: {
+    numericality: {
+      noStrings: true
+    }
+  },
+  channel_room: {
+    string: true
   }
 };
 

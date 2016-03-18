@@ -57,11 +57,39 @@ describe('Dataobject', function() {
   });
 
   it('should require "instanceName"', function() {
-    should(Model({className: className}).save()).be.rejectedWith(/instanceName/);
+    should(Model({className}).save()).be.rejectedWith(/instanceName/);
   });
 
   it('should require "className"', function() {
-    should(Model({instanceName: instanceName}).save()).be.rejectedWith(/className/);
+    should(Model({instanceName}).save()).be.rejectedWith(/className/);
+  });
+
+  it('should validate "owner"', function() {
+    should(Model({instanceName, className, owner: 'me'}).save()).be.rejectedWith(/owner/);
+  });
+
+  it('should validate "owner_permissions"', function() {
+    should(Model({instanceName, className, owner_permissions: 'maybe'}).save()).be.rejectedWith(/owner_permissions/);
+  });
+
+  it('should validate "group"', function() {
+    should(Model({instanceName, className, group: 'some_group'}).save()).be.rejectedWith(/group/);
+  });
+
+  it('should validate "group_permissions"', function() {
+    should(Model({instanceName, className, group_permissions: 'meh'}).save()).be.rejectedWith(/group_permissions/);
+  });
+
+  it('should validate "other_permissions"', function() {
+    should(Model({instanceName, className, other_permissions: 'meh'}).save()).be.rejectedWith(/other_permissions/);
+  });
+
+  it('should validate "channel"', function() {
+    should(Model({instanceName, className, channel: 'some_channel'}).save()).be.rejectedWith(/channel/);
+  });
+
+  it('should validate "channel_room"', function() {
+    should(Model({instanceName, className, channel_room: 2}).save()).be.rejectedWith(/channel_room/);
   });
 
   it('should be able to save via model instance', function() {
