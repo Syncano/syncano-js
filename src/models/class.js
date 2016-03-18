@@ -18,17 +18,38 @@ const ClassMeta = Meta({
 });
 
 const ClassConstraints = {
-  name: {
-    presence: true,
-    length: {
-      minimum: 5
-    }
-  },
   instanceName: {
     presence: true,
     length: {
       minimum: 5
     }
+  },
+  name: {
+    presence: true,
+    string: true,
+    length: {
+      minimum: 5
+    }
+  },
+  description: {
+    string: true
+  },
+  schema: {
+    object: true
+  },
+  group: {
+    numericality: {
+      noStrings: true
+    }
+  },
+  group_permissions: {
+    inclusion: ['none', 'read', 'create_objects']
+  },
+  other_permissions: {
+    inclusion: ['none', 'read', 'create_objects']
+  },
+  metadata: {
+    object: true
   }
 };
 
