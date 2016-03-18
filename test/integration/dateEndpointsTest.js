@@ -66,6 +66,38 @@ describe('DataEndpoint', function() {
     should(Model({name: dataEndpointName}).save()).be.rejectedWith(/instanceName/);
   });
 
+  it('should validate "name"', function() {
+    should(Model({name: {}, instanceName}).save()).be.rejectedWith(/name/);
+  });
+
+  it('should require "class"', function() {
+    should(Model({name: dataEndpointName, instanceName}).save()).be.rejectedWith(/class/);
+  });
+
+  it('should validate "description"', function() {
+    should(Model({name: dataEndpointName, instanceName, description: 1337}).save()).be.rejectedWith(/description/);
+  });
+
+  it('should validate "query"', function() {
+    should(Model({name: dataEndpointName, instanceName, query: 1337}).save()).be.rejectedWith(/query/);
+  });
+
+  it('should validate "excluded_fields"', function() {
+    should(Model({name: dataEndpointName, instanceName, excluded_fields: 1337}).save()).be.rejectedWith(/excluded_fields/);
+  });
+
+  it('should validate "order_by"', function() {
+    should(Model({name: dataEndpointName, instanceName, order_by: 1337}).save()).be.rejectedWith(/order_by/);
+  });
+
+  it('should validate "page_size"', function() {
+    should(Model({name: dataEndpointName, instanceName, page_size: 'first'}).save()).be.rejectedWith(/page_size/);
+  });
+
+  it('should validate "expand"', function() {
+    should(Model({name: dataEndpointName, instanceName, expand: 1337}).save()).be.rejectedWith(/expand/);
+  });
+
   it('should be able to fetch Data Objects', function() {
 
     return Promise
