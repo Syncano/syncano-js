@@ -43,9 +43,16 @@ const InstanceMeta = Meta({
 const InstanceConstraints = {
   name: {
     presence: true,
+    string: true,
     length: {
       minimum: 5
     }
+  },
+  description: {
+    string: true
+  },
+  metadata: {
+    object: true
   }
 };
 

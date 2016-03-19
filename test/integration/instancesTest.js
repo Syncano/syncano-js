@@ -30,6 +30,18 @@ describe('Instance', function() {
     should(Instance().save()).be.rejectedWith(ValidationError);
   });
 
+  it('should validate "name"', function() {
+    should(Instance({name: {}}).save()).be.rejectedWith(/name/);
+  });
+
+  it('should validate "description"', function() {
+    should(Instance({name: instanceName, description: 123}).save()).be.rejectedWith(/description/);
+  });
+
+  it('should validate "metadata"', function() {
+    should(Instance({name: instanceName, metadata: 123}).save()).be.rejectedWith(/metadata/);
+  });
+
   it('should be able to save via model instance', function() {
     return Instance(data).save()
       .then(cleaner.mark)
