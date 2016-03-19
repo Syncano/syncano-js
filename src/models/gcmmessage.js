@@ -34,7 +34,8 @@ const GCMMessageConstraints = {
     }
   },
   content: {
-    presence: true
+    presence: true,
+    object: true
   }
 };
 

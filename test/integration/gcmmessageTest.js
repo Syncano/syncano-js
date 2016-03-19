@@ -52,6 +52,10 @@ describe('GCMMessage', function() {
     should(Model({instanceName}).save()).be.rejectedWith(/content/);
   });
 
+  it('should validate "content"', function() {
+    should(Model({instanceName, content: 'meh'}).save()).be.rejectedWith(/content/);
+  });
+
   it('should be able to save via model instance', function() {
     return Model(data).save()
       .then((object) => {
