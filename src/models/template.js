@@ -27,6 +27,7 @@ const TemplateMeta = Meta({
 const TemplateConstraints = {
   name: {
     presence: true,
+    string: true,
     length: {
       minimum: 5
     }
@@ -38,10 +39,15 @@ const TemplateConstraints = {
     }
   },
   content: {
-    presence: true
+    presence: true,
+    string: true
   },
   content_type: {
-    presence: true
+    presence: true,
+    string: true
+  },
+  context: {
+    object: true
   }
 };
 

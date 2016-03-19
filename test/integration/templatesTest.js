@@ -49,11 +49,21 @@ describe('Template', function() {
     should(Template({name: templateName, instanceName}).save()).be.rejectedWith(/content/);
   });
 
+  it('should validate "content"', function() {
+    should(Template({name: templateName, instanceName, content: {}}).save()).be.rejectedWith(/content/);
+  });
+
   it('should require "content_type"', function() {
     should(Template({name: templateName, instanceName, content: templateContent}).save()).be.rejectedWith(/content_type/);
   });
 
+  it('should validate "content_type"', function() {
+    should(Template({name: templateName, instanceName, content: templateContent, content_type: 1337}).save()).be.rejectedWith(/content_type/);
+  });
 
+  it('should validate "context"', function() {
+    should(Template({name: templateName, instanceName, content: templateContent, content_type: contentType, context: 'my_context'}).save()).be.rejectedWith(/context/);
+  });
 
   it('should be able to save via model instance', function() {
     const data = {
