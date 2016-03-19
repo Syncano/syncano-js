@@ -218,7 +218,7 @@ describe('GCMDevice', function() {
           should(gcm).have.property('label').which.is.String().equal(data.label);
           should(gcm).have.property('registration_id').which.is.String().equal(data.registration_id);
 
-        return Model.please().update({registration_id: registrationId, instanceName}, {label: 'new label'});
+        return Model.please().update({registration_id: data.registration_id, instanceName}, {label: 'new label'});
       })
       .then((gcm) => {
         should(gcm).be.an.Object();
@@ -235,14 +235,14 @@ describe('GCMDevice', function() {
           should(gcm).be.an.Object();
           should(gcm).have.property('instanceName').which.is.String().equal(instanceName);
           should(gcm).have.property('label').which.is.String().equal(data.label);
-          should(gcm).have.property('registration_id').which.is.String().equal(registrationId);
+          should(gcm).have.property('registration_id').which.is.String().equal(data.registration_id);
 
         return Model.please().updateOrCreate(data, {label: 'new label'});
       })
       .then((gcm) => {
         should(gcm).be.an.Object();
         should(gcm).have.property('instanceName').which.is.String().equal(instanceName);
-        should(gcm).have.property('registration_id').which.is.String().equal(registrationId);
+        should(gcm).have.property('registration_id').which.is.String().equal(data.registration_id);
         should(gcm.label).which.is.String().equal('new label');
       });
     });
@@ -260,7 +260,7 @@ describe('GCMDevice', function() {
         .then((gcm) => {
           should(gcm).be.an.Object();
           should(gcm).have.property('instanceName').which.is.String().equal(instanceName);
-          should(gcm).have.property('registration_id').which.is.String().equal(registrationId);
+          should(gcm).have.property('registration_id').which.is.String().equal(defaults.registration_id);
           should(gcm.label).which.is.String().equal(defaults.label);
         });
       });
