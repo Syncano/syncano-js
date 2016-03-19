@@ -147,7 +147,7 @@ describe('APNS Device', function() {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
           should(apns).have.property('label').which.is.String().equal(deviceLabel);
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
           should(apns).have.property('user').which.is.Number().equal(data.user);
           should(apns).have.property('is_active').which.is.Boolean().equal(true);
           should(apns).have.property('created_at').which.is.Date();
@@ -177,7 +177,7 @@ describe('APNS Device', function() {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
           should(apns).have.property('label').which.is.String().equal(deviceLabel);
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
 
           return apns;
         })
@@ -191,7 +191,7 @@ describe('APNS Device', function() {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
           should(apns).have.property('label').which.is.String().equal(deviceLabel);
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
           should(apns).have.property('user').which.is.Number().equal(data.user);
           should(apns).have.property('is_active').which.is.Boolean().equal(true);
           should(apns).have.property('created_at').which.is.Date();
@@ -207,7 +207,7 @@ describe('APNS Device', function() {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
           should(apns).have.property('label').which.is.String().equal(deviceLabel);
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
 
           return apns;
         })
@@ -226,7 +226,7 @@ describe('APNS Device', function() {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
           should(apns).have.property('label').which.is.String().equal(deviceLabel);
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
           should(apns).have.property('user').which.is.Number().equal(data.user);
           should(apns).have.property('is_active').which.is.Boolean().equal(true);
           should(apns).have.property('created_at').which.is.Date();
@@ -243,14 +243,14 @@ describe('APNS Device', function() {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
           should(apns).have.property('label').which.is.String().equal('test');
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
 
           return Model.please().getOrCreate(data, {label: 'new label'});
       })
       .then((apns) => {
         should(apns).be.an.Object();
         should(apns).have.property('instanceName').which.is.String().equal(instanceName);
-        should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+        should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
         should(apns.label).which.is.String().equal('test');
       });
     });
@@ -262,14 +262,14 @@ describe('APNS Device', function() {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
           should(apns).have.property('label').which.is.String().equal(deviceLabel);
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
 
         return Model.please().update({registration_id: registrationId, instanceName}, {label: 'new label'});
       })
       .then((apns) => {
         should(apns).be.an.Object();
         should(apns).have.property('instanceName').which.is.String().equal(instanceName);
-        should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+        should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
         should(apns.label).which.is.String().equal('new label');
       });
     });
@@ -281,14 +281,14 @@ describe('APNS Device', function() {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
           should(apns).have.property('label').which.is.String().equal(deviceLabel);
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
 
         return Model.please().updateOrCreate(data, {label: 'new label'});
       })
       .then((apns) => {
         should(apns).be.an.Object();
         should(apns).have.property('instanceName').which.is.String().equal(instanceName);
-        should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+        should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
         should(apns.label).which.is.String().equal('new label');
       });
     });
@@ -309,7 +309,7 @@ describe('APNS Device', function() {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
           should(apns).have.property('label').which.is.String().equal(deviceLabel);
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
           should(apns).have.property('user').which.is.Number().equal(data.user);
           should(apns).have.property('is_active').which.is.Boolean().equal(true);
           should(apns).have.property('created_at').which.is.Date();
