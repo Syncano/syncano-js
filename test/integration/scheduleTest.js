@@ -58,8 +58,32 @@ describe('Schedule', function() {
     should(Model({instanceName}).save()).be.rejectedWith(/label/);
   });
 
+  it('should validate "label"', function() {
+    should(Model({instanceName, label: {}}).save()).be.rejectedWith(/label/);
+  });
+
   it('should require "script"', function() {
     should(Model({instanceName, label: instanceName}).save()).be.rejectedWith(/script/);
+  });
+
+  it('should validate "script"', function() {
+    should(Model({instanceName, label: instanceName, script: 'script'}).save()).be.rejectedWith(/script/);
+  });
+
+  it('should validate "description"', function() {
+    should(Model({instanceName, label: instanceName, script: 'script', description: 1337}).save()).be.rejectedWith(/description/);
+  });
+
+  it('should validate "interval_sec"', function() {
+    should(Model({instanceName, label: instanceName, script: data.script, interval_sec: 'this many'}).save()).be.rejectedWith(/interval_sec/);
+  });
+
+  it('should validate "crontab"', function() {
+    should(Model({instanceName, label: instanceName, script: data.script, crontab: 'all the time'}).save()).be.rejectedWith(/crontab/);
+  });
+
+  it('should validate "timezone"', function() {
+    should(Model({instanceName, label: instanceName, script: data.script, timezone: 'dunno'}).save()).be.rejectedWith(/timezone/);
   });
 
   it('should be able to save via model instance', function() {
