@@ -115,9 +115,7 @@ const DataobjectConstraints = {
     inclusion: ['none', 'read', 'write', 'full']
   },
   channel: {
-    numericality: {
-      noStrings: true
-    }
+    string: true
   },
   channel_room: {
     string: true

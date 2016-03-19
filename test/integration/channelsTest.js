@@ -6,7 +6,7 @@ import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
 
-describe('Channel', function() {
+describe.only('Channel', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();

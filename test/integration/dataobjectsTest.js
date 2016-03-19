@@ -85,7 +85,7 @@ describe('Dataobject', function() {
   });
 
   it('should validate "channel"', function() {
-    should(Model({instanceName, className, channel: 'some_channel'}).save()).be.rejectedWith(/channel/);
+    should(Model({instanceName, className, channel: 1}).save()).be.rejectedWith(/channel/);
   });
 
   it('should validate "channel_room"', function() {
