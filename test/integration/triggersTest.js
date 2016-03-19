@@ -66,7 +66,39 @@ describe('Trigger', function() {
   });
 
   it('should require "instanceName"', function() {
-    should(Model({klass: className}).save()).be.rejectedWith(/instanceName/);
+    should(Model({class: className}).save()).be.rejectedWith(/instanceName/);
+  });
+
+  it('should require "label"', function() {
+    should(Model({class: className, instanceName}).save()).be.rejectedWith(/label/);
+  });
+
+  it('should validate "label"', function() {
+    should(Model({class: className, instanceName, label: {}}).save()).be.rejectedWith(/label/);
+  });
+
+  it('should require "class"', function() {
+    should(Model({instanceName}).save()).be.rejectedWith(/class/);
+  });
+
+  it('should validate "class"', function() {
+    should(Model({instanceName, class: 1337}).save()).be.rejectedWith(/class/);
+  });
+
+  it('should require "signal"', function() {
+    should(Model({class: className, instanceName, label: 'my trigger'}).save()).be.rejectedWith(/signal/);
+  });
+
+  it('should validate "signal"', function() {
+    should(Model({class: className, instanceName, label: 'my trigger', signal: 'dunno'}).save()).be.rejectedWith(/signal/);
+  });
+
+  it('should require "script"', function() {
+    should(Model({class: className, instanceName, label: 'my trigger', signal: 'post_create'}).save()).be.rejectedWith(/script/);
+  });
+
+  it('should validate "script"', function() {
+    should(Model({class: className, instanceName, label: 'my trigger', signal: 'post_create', script: 'first'}).save()).be.rejectedWith(/script/);
   });
 
   it('should be able to save via model instance', function() {
