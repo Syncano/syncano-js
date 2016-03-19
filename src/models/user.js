@@ -41,13 +41,37 @@ const UserConstraints = {
     }
   },
   username: {
-    presence: true
+    presence: true,
+    string: true
   },
   password: {
-    presence: true
+    presence: true,
+    string: true
+  },
+  profile: {
+    object: true
+  },
+  'profile.owner_permissions': {
+    inclusion: ['none', 'read', 'write', 'full']
+  },
+  'profile.group': {
+    numericality: {
+      noStrings: true
+    }
+  },
+  'profile.group_permissions': {
+    inclusion: ['none', 'read', 'write', 'full']
+  },
+  'profile.other_permissions': {
+    inclusion: ['none', 'read', 'write', 'full']
+  },
+  'profile.channel': {
+    string: true
+  },
+  'profile.channel_room': {
+    string: true
   }
 };
-
 
 /**
  * OO wrapper around instance users {@link http://docs.syncano.com/v4.0/docs/user-management endpoint}.

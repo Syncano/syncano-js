@@ -49,12 +49,48 @@ describe('User', function() {
     should(Model({username: data.username, password: data.password}).save()).be.rejectedWith(/instanceName/);
   });
 
+  it('should require "username"', function() {
+    should(Model({instanceName, password: data.password}).save()).be.rejectedWith(/username/);
+  });
+
+  it('should validate "username"', function() {
+    should(Model({username: 1337, instanceName}).save()).be.rejectedWith(/username/);
+  });
+
   it('should require "password"', function() {
     should(Model({username: data.username, instanceName}).save()).be.rejectedWith(/password/);
   });
 
-  it('should require "username"', function() {
-    should(Model({instanceName, password: data.password}).save()).be.rejectedWith(/username/);
+  it('should validate "password"', function() {
+    should(Model({username: data.username, instanceName, password: 1337}).save()).be.rejectedWith(/password/);
+  });
+
+  it('should validate "profile"', function() {
+    should(Model({username: data.username, instanceName, password: data.password, profile: 'my_profile'}).save()).be.rejectedWith(/profile/);
+  });
+
+  it('should validate "profile.owner_permissions"', function() {
+    should(Model({username: data.username, instanceName, password: data.password, profile: { owner_permissions: 'some'}}).save()).be.rejectedWith(/owner_permissions/);
+  });
+
+  it('should validate "profile.group"', function() {
+    should(Model({username: data.username, instanceName, password: data.password, profile: { group: 'some'}}).save()).be.rejectedWith(/group/);
+  });
+
+  it('should validate "profile.group_permissions"', function() {
+    should(Model({username: data.username, instanceName, password: data.password, profile: { group_permissions: 'some'}}).save()).be.rejectedWith(/group_permissions/);
+  });
+
+  it('should validate "profile.other_permissions"', function() {
+    should(Model({username: data.username, instanceName, password: data.password, profile: { other_permissions: 'some'}}).save()).be.rejectedWith(/other_permissions/);
+  });
+
+  it('should validate "profile.channel"', function() {
+    should(Model({username: data.username, instanceName, password: data.password, profile: { channel: 1}}).save()).be.rejectedWith(/channel/);
+  });
+
+  it('should validate "profile.channel_room"', function() {
+    should(Model({username: data.username, instanceName, password: data.password, profile: { channel_room: 1}}).save()).be.rejectedWith(/channel_room/);
   });
 
 it('should be able to save via model instance', function() {
