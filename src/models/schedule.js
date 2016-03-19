@@ -43,7 +43,7 @@ const ScheduleConstraints = {
     }
   },
   timezone: {
-    inclusion: ['UTC', 'GMT', 'CET']
+    string: true
   },
   script: {
     presence: true,

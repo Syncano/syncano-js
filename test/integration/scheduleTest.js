@@ -83,7 +83,7 @@ describe('Schedule', function() {
   });
 
   it('should validate "timezone"', function() {
-    should(Model({instanceName, label: instanceName, script: data.script, timezone: 'dunno'}).save()).be.rejectedWith(/timezone/);
+    should(Model({instanceName, label: instanceName, script: data.script, timezone: 1337}).save()).be.rejectedWith(/timezone/);
   });
 
   it('should be able to save via model instance', function() {
