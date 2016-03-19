@@ -43,14 +43,10 @@ const APNSDeviceConstraints = {
   },
   registration_id: {
     presence: true,
-    length: {
-      is: 64
-    }
+    string: true
   },
   device_id: {
-    length: {
-      minimum: 36
-    }
+    string: true
   },
   metadata: {
     object: true

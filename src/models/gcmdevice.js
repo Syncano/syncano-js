@@ -36,8 +36,23 @@ const GCMDevicConstraints = {
       minimum: 5
     }
   },
+  user: {
+    numericality: {
+      noStrings: true
+    }
+  },
   registration_id: {
-    presence: true
+    presence: true,
+    string: true
+  },
+  device_id: {
+    string: true
+  },
+  metadata: {
+    object: true
+  },
+  is_active: {
+    boolean: true
   }
 };
 

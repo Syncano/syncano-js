@@ -13,7 +13,7 @@ describe('APNS Device', function() {
   let Model = null;
   let Instance = null;
   const instanceName = suffix.get('APNSDevice');
-  let deviceLabel = suffix.get('apns');
+  const deviceLabel = suffix.get('apns');
   const devId = 'd8a46770-c20b-11e5-a837-0800200c9a66';
   const registrationId = hex.getRandom(64);
   const data = {
@@ -40,6 +40,10 @@ describe('APNS Device', function() {
     })
   });
 
+  beforeEach(function() {
+    data.registration_id = hex.getRandom(64);
+  });
+
   after(function() {
     return Instance.please().delete({name: instanceName});
   });
@@ -61,11 +65,11 @@ describe('APNS Device', function() {
   });
 
   it('should validate "registration_id"', function() {
-    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: '123'}).save()).be.rejectedWith(/registration_id/);
+    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: 123}).save()).be.rejectedWith(/registration_id/);
   });
 
   it('should validate "device_id"', function() {
-    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: registrationId, device_id: '123'}).save()).be.rejectedWith(/device_id/);
+    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: registrationId, device_id: []}).save()).be.rejectedWith(/device_id/);
   });
 
   it('should validate "user"', function() {

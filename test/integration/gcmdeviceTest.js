@@ -3,7 +3,7 @@ import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
-import {suffix, credentials, createCleaner} from './utils';
+import {suffix, credentials, createCleaner, hex} from './utils';
 
 
 describe('GCMDevice', function() {
@@ -14,11 +14,14 @@ describe('GCMDevice', function() {
   let Model = null;
   let Instance = null;
   const instanceName = suffix.get('GCMDevice');
-  const registrationId = suffix.get('gcm');
+  const registrationId = hex.getRandom(64);
+  const deviceLabel = suffix.get('gcm');
+  const devId = '10000000001';
   const data = {
     instanceName,
     registration_id: registrationId,
-    label: 'test'
+    label: deviceLabel,
+    device_id: devId
   }
 
   before(function() {
@@ -28,6 +31,10 @@ describe('GCMDevice', function() {
 
     return Instance.please().create({name: instanceName});
   });
+
+  beforeEach(function() {
+    data.registration_id = hex.getRandom(64);
+  })
 
   after(function() {
     return Instance.please().delete({name: instanceName});
@@ -47,6 +54,26 @@ describe('GCMDevice', function() {
 
   it('should require "registration_id"', function() {
     should(Model({instanceName}).save()).be.rejectedWith(/registration_id/);
+  });
+
+  it('should validate "registration_id"', function() {
+    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: 1337}).save()).be.rejectedWith(/registration_id/);
+  });
+
+  it('should validate "device_id"', function() {
+    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: registrationId, device_id: 1337}).save()).be.rejectedWith(/device_id/);
+  });
+
+  it('should validate "user"', function() {
+    should(Model({label: deviceLabel, instanceName, user: 'user', registration_id: registrationId, device_id: devId}).save()).be.rejectedWith(/user/);
+  });
+
+  it('should validate "metadata"', function() {
+    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: registrationId, device_id: devId, metadata: 'metadata'}).save()).be.rejectedWith(/metadata/);
+  });
+
+  it('should validate "is_active"', function() {
+    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: registrationId, device_id: devId , is_active: 'no'}).save()).be.rejectedWith(/is_active/);
   });
 
   it('should be able to save via model instance', function() {
