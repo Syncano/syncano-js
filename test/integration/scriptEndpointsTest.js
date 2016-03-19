@@ -61,8 +61,24 @@ describe('ScriptEndpoint', function() {
     should(Model({name: ModelName}).save()).be.rejectedWith(/instanceName/);
   });
 
+  it('should validate "name"', function() {
+    should(Model({name: {}}).save()).be.rejectedWith(/instanceName/);
+  });
+
+  it('should validate "description"', function() {
+    should(Model({name: ModelName, instanceName, description: 1337 }).save()).be.rejectedWith(/description/);
+  });
+
+  it('should validate "public"', function() {
+    should(Model({name: ModelName, instanceName, public: 'yes' }).save()).be.rejectedWith(/public/);
+  });
+
   it('should require "script"', function() {
     should(Model({name: ModelName, instanceName}).save()).be.rejectedWith(/script/);
+  });
+
+  it('should validate "script"', function() {
+    should(Model({name: ModelName, instanceName, script: 'first'}).save()).be.rejectedWith(/script/);
   });
 
   it('should be able to save via model instance', function() {

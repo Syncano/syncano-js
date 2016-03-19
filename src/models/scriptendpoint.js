@@ -124,12 +124,22 @@ const ScriptEndpointConstraints = {
   },
   name: {
     presence: true,
+    string: true,
     length: {
       minimum: 5
     }
   },
+  description: {
+    string: true
+  },
+  public: {
+    boolean: true
+  },
   script: {
-    presence: true
+    presence: true,
+    numericality: {
+      noStrings: true
+    }
   }
 };
 
