@@ -36,6 +36,14 @@ const GCMMessageConstraints = {
   content: {
     presence: true,
     object: true
+  },
+  'content.registration_ids': {
+    presence: true,
+    array: true
+  },
+  'content.environment': {
+    presence: true,
+    inclusion: ['development', 'production']
   }
 };
 
