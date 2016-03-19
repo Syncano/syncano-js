@@ -13,6 +13,12 @@ describe('Script', function() {
   const instanceName = suffix.get('Script');
   const scriptName = suffix.get('script');
   const runtimeName = 'python';
+  const data = {
+    instanceName: instanceName,
+    label: scriptName,
+    runtime_name: runtimeName,
+    source: 'print "test"'
+  };
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
@@ -35,16 +41,34 @@ describe('Script', function() {
   });
 
   it('should require "instanceName"', function() {
-    should(Model({name: scriptName}).save()).be.rejectedWith(/instanceName/);
+    should(Model({label: scriptName}).save()).be.rejectedWith(/instanceName/);
+  });
+
+  it('should require "runtime_name"', function() {
+    should(Model({label: scriptName, instanceName}).save()).be.rejectedWith(/runtime_name/);
+  });
+
+  it('should validate "runtime_name"', function() {
+    should(Model({label: scriptName, instanceName, runtime_name: 'turbopascal'}).save()).be.rejectedWith(/runtime_name/);
+  });
+
+  it('should valiate "label"', function() {
+    should(Model({label: {}, instanceName}).save()).be.rejectedWith(/label/);
+  });
+
+  it('should valiate "source"', function() {
+    should(Model({label: scriptName, instanceName, source: 1337}).save()).be.rejectedWith(/source/);
+  });
+
+  it('should valiate "config"', function() {
+    should(Model({label: scriptName, instanceName, config: 1337}).save()).be.rejectedWith(/config/);
+  });
+
+  it('should valiate "description"', function() {
+    should(Model({label: scriptName, instanceName, description: 1337}).save()).be.rejectedWith(/description/);
   });
 
   it('should be able to save via model instance', function() {
-    const data = {
-      instanceName: instanceName,
-      label: scriptName,
-      runtime_name: runtimeName
-    };
-
     return Model(data).save()
       .then(cleaner.mark)
       .then((script) => {
@@ -63,12 +87,6 @@ describe('Script', function() {
   });
 
   it('should be able to update via model instance', function() {
-    const data = {
-      instanceName: instanceName,
-      label: scriptName,
-      runtime_name: runtimeName
-    };
-
     return Model(data).save()
       .then(cleaner.mark)
       .then((script) => {
@@ -95,12 +113,6 @@ describe('Script', function() {
   });
 
   it('should be able to delete via model instance', function() {
-    const data = {
-      instanceName: instanceName,
-      label: scriptName,
-      runtime_name: runtimeName
-    };
-
     return Model(data).save()
       .then((script) => {
         should(script).have.property('instanceName').which.is.String().equal(data.instanceName);
@@ -111,13 +123,6 @@ describe('Script', function() {
   });
 
   it('should be able to run via model instance', function() {
-    const data = {
-      instanceName: instanceName,
-      label: scriptName,
-      runtime_name: runtimeName,
-      source: 'print "test"'
-    };
-
     return Model(data).save()
       .then(cleaner.mark)
       .then((script) => {
@@ -144,7 +149,7 @@ describe('Script', function() {
     });
 
     it('should be able to create a script', function() {
-      return Model.please().create({instanceName, label: scriptName, runtime_name: runtimeName})
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((script) => {
           should(script).have.property('instanceName').which.is.String().equal(instanceName);
@@ -176,7 +181,7 @@ describe('Script', function() {
     it('should be able to get a script', function() {
       let scriptId = null;
 
-      return Model.please().create({instanceName, label: scriptName, runtime_name: runtimeName})
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((script) => {
           should(script).have.property('instanceName').which.is.String().equal(instanceName);
@@ -208,7 +213,7 @@ describe('Script', function() {
     it('should be able to delete a script', function() {
       let scriptId = null;
 
-      return Model.please().create({instanceName, label: scriptName, runtime_name: runtimeName})
+      return Model.please().create(data)
         .then((script) => {
           should(script).be.an.Object();
           should(script).have.property('instanceName').which.is.String().equal(instanceName);
@@ -224,7 +229,7 @@ describe('Script', function() {
     });
 
     it('should be able to update a script', function() {
-      return Model.please().create({instanceName, label: scriptName, runtime_name: runtimeName})
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((script) => {
           should(script).be.an.Object();
@@ -315,12 +320,6 @@ describe('Script', function() {
 
     it('should be able to run a script', function() {
       let scriptId = null;
-      const data = {
-        instanceName,
-        label: scriptName,
-        runtime_name: runtimeName,
-        source: 'print "test"'
-      };
 
       return Model.please().create(data)
         .then((script) => {
