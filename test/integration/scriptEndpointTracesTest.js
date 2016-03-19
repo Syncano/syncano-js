@@ -63,6 +63,10 @@ describe('ScriptEndpointTrace', function() {
     should(Model({instanceName}).save()).be.rejectedWith(/scriptEndpointName/);
   });
 
+  it('should validate "scriptEndpointName"', function() {
+    should(Model({instanceName, scriptEndpointName: 1}).save()).be.rejectedWith(/scriptEndpointName/);
+  });
+
   describe('#please()', function() {
 
     it('should be able to list objects', function() {

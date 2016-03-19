@@ -31,7 +31,8 @@ const ScriptEndpointTraceConstraints = {
     }
   },
   scriptEndpointName: {
-    presence: true
+    presence: true,
+    string: true
   }
 };
 
