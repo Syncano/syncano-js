@@ -48,6 +48,7 @@
     "url": "https://github.com/Syncano/syncano-js.git"
   },
   "dependencies": {
+    "babel-plugin-lodash": "^2.2.1",
     "bluebird": "^3.2.2",
     "lodash": "^4.6.1",
     "stampit": "^2.1.1",
@@ -92,7 +93,8 @@
     "plugins": [
       "transform-inline-environment-variables",
       "transform-strict-mode",
-      "add-module-exports"
+      "add-module-exports",
+      "lodash"
     ],
     "presets": [
       "es2015"
