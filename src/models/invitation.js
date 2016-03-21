@@ -1,6 +1,5 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
-import _ from 'lodash';
 import {BaseQuerySet, Create, BulkCreate, Get, Delete, GetOrCreate, List} from '../querySet';
 
 const InvitationQuerySet = stampit().compose(
@@ -73,6 +72,6 @@ const Invitation = stampit()
       return this.makeRequest('POST', path, {invitationKey});
     }
 
-  );
+  });
 
 export default Invitation;
