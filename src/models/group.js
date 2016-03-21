@@ -28,7 +28,11 @@ const GroupConstraints = {
     }
   },
   label: {
-    presence: true
+    presence: true,
+    string: true
+  },
+  description: {
+    string: true
   }
 };
 

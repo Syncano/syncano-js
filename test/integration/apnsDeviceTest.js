@@ -13,33 +13,35 @@ describe('APNS Device', function() {
   let Model = null;
   let Instance = null;
   const instanceName = suffix.get('APNSDevice');
-  let deviceLabel = suffix.get('apns');
+  const deviceLabel = suffix.get('apns');
   const devId = 'd8a46770-c20b-11e5-a837-0800200c9a66';
   const registrationId = hex.getRandom(64);
-  const userData = {
-    instanceName,
-    username: 'testuser',
-    password: 'y5k8Y4&-'
-  };
   const data = {
     label: deviceLabel,
     instanceName: instanceName,
     registration_id: registrationId,
     device_id: devId
   };
+  const userData = {
+    instanceName,
+    username: 'testuser',
+    password: 'y5k8Y4&-'
+  }
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
     Model = connection.APNSDevice;
 
-    return Instance.please().create({name: instanceName})
-      .then(() => {
-        return connection.User(userData).save();
-      })
-      .then((user) => {
+    return Instance.please().create({name: instanceName}).then(() => {
+      return connection.User.please().create(userData).then((user) => {
         data.user = user.id;
       });
+    })
+  });
+
+  beforeEach(function() {
+    data.registration_id = hex.getRandom(64);
   });
 
   after(function() {
@@ -58,16 +60,28 @@ describe('APNS Device', function() {
     should(Model({label: deviceLabel}).save()).be.rejectedWith(/instanceName/);
   });
 
-  it('should require "user"', function() {
-    should(Model({label: deviceLabel, instanceName}).save()).be.rejectedWith(/user/);
-  });
-
   it('should require "registration_id"', function() {
     should(Model({label: deviceLabel, instanceName, user: data.user}).save()).be.rejectedWith(/registration_id/);
   });
 
-  it('should require "device_id"', function() {
-    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: hex.getRandom(64)}).save()).be.rejectedWith(/device_id/);
+  it('should validate "registration_id"', function() {
+    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: 123}).save()).be.rejectedWith(/registration_id/);
+  });
+
+  it('should validate "device_id"', function() {
+    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: registrationId, device_id: []}).save()).be.rejectedWith(/device_id/);
+  });
+
+  it('should validate "user"', function() {
+    should(Model({label: deviceLabel, instanceName, user: 'user', registration_id: registrationId, device_id: devId}).save()).be.rejectedWith(/user/);
+  });
+
+  it('should validate "metadata"', function() {
+    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: registrationId, device_id: devId, metadata: 'metadata'}).save()).be.rejectedWith(/metadata/);
+  });
+
+  it('should validate "is_active"', function() {
+    should(Model({label: deviceLabel, instanceName, user: data.user, registration_id: registrationId, device_id: devId, metadata: {}, is_active: 'no'}).save()).be.rejectedWith(/is_active/);
   });
 
   it('should be able to save via model instance', function() {
@@ -133,7 +147,7 @@ describe('APNS Device', function() {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
           should(apns).have.property('label').which.is.String().equal(deviceLabel);
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
           should(apns).have.property('user').which.is.Number().equal(data.user);
           should(apns).have.property('is_active').which.is.Boolean().equal(true);
           should(apns).have.property('created_at').which.is.Date();
@@ -143,7 +157,7 @@ describe('APNS Device', function() {
       });
     });
 
-    it('should be able to bulk create a devices', function() {
+    it('should be able to bulk create objects', function() {
       const objects = [
         Model(data),
         Model(_.assign({}, data, {registration_id: hex.getRandom(64)}))
@@ -163,21 +177,21 @@ describe('APNS Device', function() {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
           should(apns).have.property('label').which.is.String().equal(deviceLabel);
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
 
           return apns;
         })
         .then(() => {
           return Model
             .please()
-            .get({registration_id: registrationId, instanceName})
+            .get({registration_id: data.registration_id, instanceName})
             .request();
         })
         .then((apns) => {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
           should(apns).have.property('label').which.is.String().equal(deviceLabel);
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
           should(apns).have.property('user').which.is.Number().equal(data.user);
           should(apns).have.property('is_active').which.is.Boolean().equal(true);
           should(apns).have.property('created_at').which.is.Date();
@@ -193,14 +207,14 @@ describe('APNS Device', function() {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
           should(apns).have.property('label').which.is.String().equal(deviceLabel);
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
 
           return apns;
         })
         .then(() => {
           return Model
             .please()
-            .delete({registration_id: registrationId, instanceName})
+            .delete({registration_id: data.registration_id, instanceName})
             .request();
         });
     });
@@ -211,8 +225,8 @@ describe('APNS Device', function() {
         .then((apns) => {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
-          should(apns).have.property('label').which.is.String().equal(deviceLabel);
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('label').which.is.String().equal(data.label);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
           should(apns).have.property('user').which.is.Number().equal(data.user);
           should(apns).have.property('is_active').which.is.Boolean().equal(true);
           should(apns).have.property('created_at').which.is.Date();
@@ -223,21 +237,21 @@ describe('APNS Device', function() {
     });
 
     it('should be able to get or create a Model (GET)', function() {
-      return Model.please().create({label: 'test', instanceName, user: data.user, registration_id: registrationId, device_id: devId})
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((apns) => {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
-          should(apns).have.property('label').which.is.String().equal('test');
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('label').which.is.String().equal(data.label);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
 
           return Model.please().getOrCreate(data, {label: 'new label'});
       })
       .then((apns) => {
         should(apns).be.an.Object();
         should(apns).have.property('instanceName').which.is.String().equal(instanceName);
-        should(apns).have.property('registration_id').which.is.String().equal(registrationId);
-        should(apns.label).which.is.String().equal('test');
+        should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
+        should(apns.label).which.is.String().equal(data.label);
       });
     });
 
@@ -248,14 +262,14 @@ describe('APNS Device', function() {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
           should(apns).have.property('label').which.is.String().equal(deviceLabel);
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
 
-        return Model.please().update({registration_id: registrationId, instanceName}, {label: 'new label'});
+        return Model.please().update({registration_id: data.registration_id, instanceName}, {label: 'new label'});
       })
       .then((apns) => {
         should(apns).be.an.Object();
         should(apns).have.property('instanceName').which.is.String().equal(instanceName);
-        should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+        should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
         should(apns.label).which.is.String().equal('new label');
       });
     });
@@ -266,15 +280,15 @@ describe('APNS Device', function() {
         .then((apns) => {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
-          should(apns).have.property('label').which.is.String().equal(deviceLabel);
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('label').which.is.String().equal(data.label);
+          should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
 
         return Model.please().updateOrCreate(data, {label: 'new label'});
       })
       .then((apns) => {
         should(apns).be.an.Object();
         should(apns).have.property('instanceName').which.is.String().equal(instanceName);
-        should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+        should(apns).have.property('registration_id').which.is.String().equal(data.registration_id);
         should(apns.label).which.is.String().equal('new label');
       });
     });
@@ -294,8 +308,8 @@ describe('APNS Device', function() {
         .then((apns) => {
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
-          should(apns).have.property('label').which.is.String().equal(deviceLabel);
-          should(apns).have.property('registration_id').which.is.String().equal(registrationId);
+          should(apns).have.property('label').which.is.String().equal(defaults.label);
+          should(apns).have.property('registration_id').which.is.String().equal(properties.registration_id);
           should(apns).have.property('user').which.is.Number().equal(data.user);
           should(apns).have.property('is_active').which.is.Boolean().equal(true);
           should(apns).have.property('created_at').which.is.Date();
@@ -322,54 +336,54 @@ describe('APNS Device', function() {
         });
     });
 
-    it('should be able to change page size', function() {
-      const regIds = [
-        hex.getRandom(64),
-        hex.getRandom(64)
-      ];
-
-      return Promise
-        .mapSeries(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user: data.user, device_id: devId}))
-        .then(cleaner.mark)
-        .then((apns) => {
-          should(apns).be.an.Array().with.length(2);
-          return Model.please({instanceName}).pageSize(1);
-        })
-        .then((apns) => {
-          should(apns).be.an.Array().with.length(1);
-        });
-    });
-
-    it('should be able to change ordering', function() {
-      const regIds = [
-        hex.getRandom(64),
-        hex.getRandom(64)
-      ];
-      let asc = null;
-
-      return Promise
-      .mapSeries(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user: data.user, device_id: devId}))
-      .then(cleaner.mark)
-      .then((apns) => {
-          should(apns).be.an.Array().with.length(2);
-          return Model.please({instanceName}).ordering('asc');
-        })
-        .then((apns) => {
-          should(apns).be.an.Array().with.length(2);
-          asc = apns;
-          return Model.please({instanceName}).ordering('desc');
-        }).then((desc) => {
-          const ascLabels = _.map(asc, 'label');
-          const descLabels = _.map(desc, 'label');
-          descLabels.reverse();
-
-          should(desc).be.an.Array().with.length(2);
-
-          _.forEach(ascLabels, (ascLabel, index) => {
-            should(ascLabel).be.equal(descLabels[index]);
-          });
-        });
-    });
+    // it('should be able to change page size', function() {
+    //   const regIds = [
+    //     hex.getRandom(64),
+    //     hex.getRandom(64)
+    //   ];
+    //
+    //   return Promise
+    //     .mapSeries(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user: data.user, device_id: devId}))
+    //     .then(cleaner.mark)
+    //     .then((apns) => {
+    //       should(apns).be.an.Array().with.length(2);
+    //       return Model.please({instanceName}).pageSize(1);
+    //     })
+    //     .then((apns) => {
+    //       should(apns).be.an.Array().with.length(1);
+    //     });
+    // });
+    //
+    // it('should be able to change ordering', function() {
+    //   const regIds = [
+    //     hex.getRandom(64),
+    //     hex.getRandom(64)
+    //   ];
+    //   let asc = null;
+    //
+    //   return Promise
+    //   .mapSeries(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user: data.user, device_id: devId}))
+    //   .then(cleaner.mark)
+    //   .then((apns) => {
+    //       should(apns).be.an.Array().with.length(2);
+    //       return Model.please({instanceName}).ordering('asc');
+    //     })
+    //     .then((apns) => {
+    //       should(apns).be.an.Array().with.length(2);
+    //       asc = apns;
+    //       return Model.please({instanceName}).ordering('desc');
+    //     }).then((desc) => {
+    //       const ascLabels = _.map(asc, 'label');
+    //       const descLabels = _.map(desc, 'label');
+    //       descLabels.reverse();
+    //
+    //       should(desc).be.an.Array().with.length(2);
+    //
+    //       _.forEach(ascLabels, (ascLabel, index) => {
+    //         should(ascLabel).be.equal(descLabels[index]);
+    //       });
+    //     });
+    // });
 
     it('should be able to get raw data', function() {
       return Model.please().list({instanceName}).raw().then((response) => {

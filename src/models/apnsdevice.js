@@ -37,13 +37,22 @@ const APNSDeviceConstraints = {
     }
   },
   user: {
-    presence: true
+    numericality: {
+      noStrings: true
+    }
   },
   registration_id: {
-    presence: true
+    presence: true,
+    string: true
   },
   device_id: {
-    presence: true
+    string: true
+  },
+  metadata: {
+    object: true
+  },
+  is_active: {
+    boolean: true
   }
 };
 

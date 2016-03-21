@@ -45,6 +45,34 @@ describe('Class', function() {
     should(Class({name: className}).save()).be.rejectedWith(/instanceName/);
   });
 
+  it('should validate "name"', function() {
+    should(Class({name: {}, instanceName}).save()).be.rejectedWith(/name/);
+  });
+
+  it('should validate "description"', function() {
+    should(Class({name: {}, instanceName, description: 1337}).save()).be.rejectedWith(/description/);
+  });
+
+  it('should validate "schema"', function() {
+    should(Class({name: {}, instanceName, schema: 1337}).save()).be.rejectedWith(/schema/);
+  });
+
+  it('should validate "group"', function() {
+    should(Class({name: {}, instanceName, group: 'some_group'}).save()).be.rejectedWith(/group/);
+  });
+
+  it('should validate "group_permissions"', function() {
+    should(Class({name: {}, instanceName, group_permissions: 'dunno'}).save()).be.rejectedWith(/group_permissions/);
+  });
+
+  it('should validate "other_permissions"', function() {
+    should(Class({name: {}, instanceName, other_permissions: 'dunno'}).save()).be.rejectedWith(/other_permissions/);
+  });
+
+  it('should validate "metadata"', function() {
+    should(Class({name: {}, instanceName, metadata: 'dunno'}).save()).be.rejectedWith(/metadata/);
+  });
+
   it('should be able to save via model instance', function() {
     return Class(data).save()
       .then(cleaner.mark)

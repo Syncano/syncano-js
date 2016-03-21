@@ -58,20 +58,45 @@ const DataEndpointMeta = Meta({
 });
 
 const DataEndpointConstraints = {
-  name: {
-    presence: true,
-    length: {
-      maximum: 64
-    }
-  },
-  class: {
-    presence: true
-  },
   instanceName: {
     presence: true,
     length: {
       minimum: 5
     }
+  },
+  name: {
+    presence: true,
+    string: true,
+    length: {
+      maximum: 64
+    }
+  },
+  description: {
+    string: true
+  },
+  class: {
+    presence: true,
+    string: true,
+    length: {
+      minimum: 5
+    }
+  },
+  query: {
+    object: true
+  },
+  excluded_fields: {
+    string: true
+  },
+  order_by: {
+    string: true
+  },
+  page_size: {
+    numericality: {
+      noStrings: true
+    }
+  },
+  expand: {
+    string: true
   }
 };
 

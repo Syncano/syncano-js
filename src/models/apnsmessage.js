@@ -32,6 +32,24 @@ const APNSMessageConstraints = {
     length: {
       minimum: 5
     }
+  },
+  content: {
+    presence: true,
+    object: true
+  },
+  'content.registration_ids': {
+    presence: true,
+    array: true
+  },
+  'content.environment': {
+    presence: true,
+    inclusion: ['development', 'production']
+  },
+  'content.aps': {
+    presence: true
+  },
+  'content.aps.alert': {
+    presence: true
   }
 };
 

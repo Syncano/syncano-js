@@ -50,6 +50,14 @@ describe('Group', function() {
     should(Model({instanceName}).save()).be.rejectedWith(/label/);
   });
 
+  it('should valideate "label"', function() {
+    should(Model({instanceName, label: {}}).save()).be.rejectedWith(/label/);
+  });
+
+  it('should valideate "description"', function() {
+    should(Model({instanceName, groupLabel, description: 1337}).save()).be.rejectedWith(/description/);
+  });
+
   it('should be able to save via model instance', function() {
     return Model(data).save()
       .then(cleaner.mark)

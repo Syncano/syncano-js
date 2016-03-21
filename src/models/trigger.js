@@ -1,14 +1,7 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
 
-const TriggerConstraints = {
-  instanceName: {
-    presence: true,
-    length: {
-      minimum: 5
-    }
-  }
-};
+
 
 const TriggerMeta = Meta({
   name: 'trigger',
@@ -25,6 +18,36 @@ const TriggerMeta = Meta({
   },
   relatedModels: [ 'TriggerTrace' ]
 });
+
+const TriggerConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  label: {
+    presence: true,
+    string: true
+  },
+  description: {
+    string: true
+  },
+  signal: {
+    presence: true,
+    inclusion: ['post_update', 'post_create', 'post_delete']
+  },
+  script: {
+    presence: true,
+    numericality: {
+      noStrings: true
+    }
+  },
+  class: {
+    presence: true,
+    string: true
+  }
+};
 
 /**
  * OO wrapper around instance triggers {@link # endpoint}.

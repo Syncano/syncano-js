@@ -44,7 +44,15 @@ describe('Instance Invitation', function() {
   });
 
   it('should require "instanceName"', function() {
-    should(Model({name: email}).save()).be.rejectedWith(/instanceName/);
+    should(Model({email: email}).save()).be.rejectedWith(/instanceName/);
+  });
+
+  it('should validate "email"', function() {
+    should(Model({instanceName, email: 'meh'}).save()).be.rejectedWith(/email/);
+  });
+
+  it('should validate "role"', function() {
+    should(Model({instanceName, email, role: 'president'}).save()).be.rejectedWith(/role/);
   });
 
   it('should be able to save via model instance', function() {

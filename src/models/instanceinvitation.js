@@ -44,10 +44,12 @@ const InstanceInvitationMeta = Meta({
 
 const InstanceInvitationConstraints = {
   email: {
-    presence: true
+    presence: true,
+    email: true
   },
   role: {
-    presence: true
+    presence: true,
+    inclusion: ['full', 'write', 'read']
   },
   instanceName: {
     presence: true,

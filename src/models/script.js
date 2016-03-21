@@ -52,6 +52,32 @@ const ScriptMeta = Meta({
   relatedModels: [ 'CodeBoxTrace' ]
 });
 
+const ScriptConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  runtime_name: {
+    presence: true,
+    inclusion: ['nodejs', 'python', 'ruby', 'golang', 'php', 'swift']
+  },
+  source: {
+    string: true
+  },
+  config: {
+    object: true
+  },
+  label: {
+    presence: true,
+    string: true
+  },
+  description: {
+    string: true
+  }
+}
+
 /**
  * OO wrapper around scripts {@link http://docs.syncano.com/v4.0/docs/codebox-list-codeboxes endpoint}.
  * **Script** has special method called ``run`` which will execute attached source code.
@@ -71,6 +97,7 @@ const ScriptMeta = Meta({
 const Script = stampit()
   .compose(Model)
   .setMeta(ScriptMeta)
+  .setConstraints(ScriptConstraints)
   .setQuerySet(ScriptQuerySet)
   .methods({
 

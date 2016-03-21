@@ -66,6 +66,10 @@ describe('ScheduleTrace', function() {
     should(Model({instanceName}).save()).be.rejectedWith(/scheduleId/);
   });
 
+  it('should validate "scheduleId"', function() {
+    should(Model({instanceName, scheduleId: 'some_schedule'}).save()).be.rejectedWith(/scheduleId/);
+  });
+
   describe('#please()', function() {
 
     it('should be able to list objects', function() {

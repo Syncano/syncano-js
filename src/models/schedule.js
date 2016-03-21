@@ -26,10 +26,30 @@ const ScheduleConstraints = {
     }
   },
   label: {
-    presence: true
+    presence: true,
+    string: true
+  },
+  description: {
+    string: true
+  },
+  interval_sec: {
+    numericality: {
+      noStrings: true
+    }
+  },
+  crontab: {
+    format: {
+      pattern: /([0-59]|\*)\s([0-23]|\*)\s([1-31]|\*)\s([1-12]|\*)\s([0-7]|\*)/
+    }
+  },
+  timezone: {
+    string: true
   },
   script: {
-    presence: true
+    presence: true,
+    numericality: {
+      noStrings: true
+    }
   }
 };
 

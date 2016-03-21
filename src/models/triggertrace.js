@@ -31,7 +31,10 @@ const TriggerTraceConstraints = {
     }
   },
   triggerId: {
-    presence: true
+    presence: true,
+    numericality: {
+      noStrings: true
+    }
   }
 };
 

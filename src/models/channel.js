@@ -116,17 +116,38 @@ const ChannelMeta = Meta({
 });
 
 const channelConstraints = {
-  name: {
-    presence: true,
-    length: {
-      minimum: 5
-    }
-  },
   instanceName: {
     presence: true,
     length: {
       minimum: 5
     }
+  },
+  name: {
+    presence: true,
+    string: true,
+    length: {
+      minimum: 5
+    }
+  },
+  description: {
+    string: true
+  },
+  type: {
+    inclusion: ['default', 'seperate_rooms']
+  },
+  group: {
+    numericality: {
+      noStrings: true
+    }
+  },
+  group_permissions: {
+    inclusion: ['none', 'subscribe', 'publish']
+  },
+  other_permissions: {
+    inclusion: ['none', 'subscribe', 'publish']
+  },
+  custom_publish: {
+    boolean: true
   }
 };
 

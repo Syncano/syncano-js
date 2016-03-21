@@ -56,6 +56,34 @@ describe('APNSMessage', function() {
     should(Model({instanceName}).save()).be.rejectedWith(/content/);
   });
 
+  it('should validate "content"', function() {
+    should(Model({instanceName, content: 'content'}).save()).be.rejectedWith(/content/);
+  });
+
+  it('should require "content.reqistration_ids"', function() {
+    should(Model({instanceName, content: {}}).save()).be.rejectedWith(/registration_ids/);
+  });
+
+  it('should validate "content.reqistration_ids"', function() {
+    should(Model({instanceName, content: {registration_ids: 'ids'}}).save()).be.rejectedWith(/registration_ids/);
+  });
+
+  it('should require "content.environment"', function() {
+    should(Model({instanceName, content: {registration_ids: [1]}}).save()).be.rejectedWith(/environment/);
+  });
+
+  it('should validate "content.environment"', function() {
+    should(Model({instanceName, content: {registration_ids: [1], environment: 'test'}}).save()).be.rejectedWith(/environment/);
+  });
+
+  it('should require "content.aps"', function() {
+    should(Model({instanceName, content: {registration_ids: [1], environment: 'production'}}).save()).be.rejectedWith(/aps/);
+  });
+
+  it('should require "content.aps.alert"', function() {
+    should(Model({instanceName, content: {registration_ids: [1], environment: 'production', aps: {}}}).save()).be.rejectedWith(/aps/);
+  });
+
   it('should be able to save via model instance', function() {
     return Model(data).save()
       .then((object) => {
