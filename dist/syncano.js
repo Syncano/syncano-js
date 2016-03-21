@@ -449,7 +449,7 @@ var sortArgs = function (o, f) {
 };
 
 var addAuth = function (options) {
-  var response = { headers: {}, json: {} };
+  var response = { headers: {} };
 
   if (options.accountKey || options.apiKey) {
     response.headers['X-API-KEY'] = options.accountKey || options.apiKey;
@@ -460,7 +460,7 @@ var addAuth = function (options) {
   }
 
   if (options.json && options.json.socialToken) {
-    response.json.access_token = options.json.socialToken;
+    response.json = { access_token: options.json.socialToken };
   }
 
   return response;
