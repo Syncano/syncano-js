@@ -1,7 +1,7 @@
 import should from 'should/as-function';
 import Syncano from '../../src/syncano';
 
-describe('Base Object', function() {
+describe('Syncano', function() {
   let baseObject = null;
   let testKey = '123';
   let testUrl = 'http://api.syncano.rocks'
@@ -128,6 +128,35 @@ describe('Base Object', function() {
       baseObject.setUserKey(testKey);
 
       should(baseObject.getUserKey()).is.equal(testKey);
+
+    });
+
+  });
+
+  describe('#setApiKey()', function() {
+
+    it('should allow to set apiKey', function() {
+      should(baseObject).have.property('setApiKey').which.is.Function();
+
+      should(function() {
+        baseObject.setApiKey();
+      }).throw(Error('Api key is required.'))
+
+      baseObject.setApiKey(testKey);
+
+      should(baseObject.apiKey).is.equal(testKey);
+    });
+
+  });
+
+  describe('#getApiKey()', function() {
+
+    it('should allow to get user key', function() {
+      should(baseObject).have.property('getApiKey').which.is.Function();
+
+      baseObject.setApiKey(testKey);
+
+      should(baseObject.getApiKey()).is.equal(testKey);
 
     });
 

@@ -67,6 +67,21 @@ const User = stampit()
   .compose(Model)
   .setMeta(UserMeta)
   .setQuerySet(UserQuerySet)
-  .setConstraints(UserConstraints);
+  .setConstraints(UserConstraints)
+  .methods({
+
+    groups() {
+
+    },
+
+    resetKey() {
+
+    },
+
+    login() {
+
+    }
+
+  });
 
 export default User;

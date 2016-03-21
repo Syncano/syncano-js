@@ -124,11 +124,11 @@ const Request = stampit().compose(ConfigMixin, Logger)
 
       // wtf ?
       if (!_.isUndefined(config)) {
-        if (!_.isEmpty(config.getAccountKey()) && !_.isEmpty(config.getUserKey())) {
-          options.headers['X-API-KEY'] = config.getAccountKey();
+        if ((!_.isEmpty(config.getAccountKey()) || !_.isEmpty(config.getApiKey())) && !_.isEmpty(config.getUserKey())) {
+          options.headers['X-API-KEY'] = config.getApiKey() || config.getAccountKey();
           options.headers['X-USER-KEY'] = config.getUserKey();
         } else if (_.isEmpty(options.headers['Authorization'])) {
-          const token = config.getSocialToken() || config.getAccountKey();
+          const token = config.getSocialToken() || config.getApiKey() || config.getAccountKey();
 
           if (!_.isUndefined(token) && !_.isEmpty(token)) {
             options.headers['Authorization'] = `Token ${token}`;

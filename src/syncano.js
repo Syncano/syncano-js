@@ -36,6 +36,7 @@ const Syncano = stampit()
     baseUrl: 'https://api.syncano.io',
     accountKey: null,
     userKey: null,
+    apiKey: null,
     socialToken: null
   })
   .methods({
@@ -149,6 +150,43 @@ const Syncano = stampit()
     */
     getUserKey() {
       return this.userKey;
+    },
+
+    /**
+    * Sets *apiKey*.
+
+    * @memberOf Syncano
+    * @instance
+
+    * @param {String} apiKey Instance user api key
+    * @returns {Syncano}
+    * @throws {Error} API key is required.
+
+    * @example {@lang javascript}
+    * var connection = Syncano({apiKey: '123'});
+    * connection.setApiKey('abcd');
+
+    */
+    setApiKey(apiKey) {
+      if(_.isEmpty(apiKey)) throw new Error('Api key is required.');
+      this.apiKey = apiKey;
+      return this;
+    },
+
+    /**
+    * Gets *apiKey*.
+
+    * @memberOf Syncano
+    * @instance
+    * @returns {String}
+
+    * @example {@lang javascript}
+    * var connection = Syncano({apiKey: '123'});
+    * var apiKey = connection.getApiKey();
+
+    */
+    getApiKey() {
+      return this.apiKey;
     },
 
     /**

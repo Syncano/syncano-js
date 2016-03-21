@@ -23,7 +23,7 @@ const ScriptTraceMeta = Meta({
   }
 });
 
-const CodeBoxConstraints = {
+const ScriptConstraints = {
   instanceName: {
     presence: true,
     length: {
@@ -36,7 +36,7 @@ const CodeBoxConstraints = {
 };
 
 /**
- * OO wrapper around codebox trace {@link # endpoint}.
+ * OO wrapper around script trace {@link # endpoint}.
  * This model is *read only*.
  * @constructor
  * @type {ScriptTrace}
@@ -55,7 +55,7 @@ const CodeBoxConstraints = {
 const ScriptTrace = stampit()
   .compose(Model)
   .setQuerySet(ScriptTraceQuerySet)
-  .setConstraints(CodeBoxConstraints)
+  .setConstraints(ScriptConstraints)
   .setMeta(ScriptTraceMeta);
 
 export default ScriptTrace;

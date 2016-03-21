@@ -15,6 +15,7 @@ const ChannelQuerySet = stampit().compose(QuerySet).methods({
 
     * @param {Object} channel
     * @param {Object} message
+    * @param {String} [room = null]
     * @returns {QuerySet}
 
     * @example {@lang javascript}
@@ -22,9 +23,13 @@ const ChannelQuerySet = stampit().compose(QuerySet).methods({
 
     */
 
-  publish(channel, message) {
-    this.properties = _.assign({}, this.properties, channel);
+  publish(properties, payload, room = null) {
+    this.properties = _.assign({}, this.properties, properties);
     this.payload = { payload: message };
+
+    if (room) {
+      this.payload.room = room;
+    }
 
     this.method = 'POST';
     this.endpoint = 'publish';
@@ -38,7 +43,8 @@ const ChannelQuerySet = stampit().compose(QuerySet).methods({
     * @memberOf QuerySet
     * @instance
 
-    * @param {Object} channel
+    * @param {Object} options
+    * @param {Boolean} [start = true]
     * @returns {ChannelPoll}
 
     * @example {@lang javascript}
@@ -80,10 +86,20 @@ const ChannelQuerySet = stampit().compose(QuerySet).methods({
     *
     */
 
-  poll(channel) {
+  poll(options, start = true) {
+    const config = this.getConfig();
     const meta = this.model.getMeta();
-    channel.path = meta.resolveEndpointPath('poll', channel);
-    return ChannelPoll.setConfig(channel)();
+    const path = meta.resolveEndpointPath('poll', this);
+
+    options.path = path;
+
+    const channelPoll = ChannelPoll.setConfig(config)(options);
+
+    if (start === true) {
+      channelPoll.start();
+    }
+
+    return channelPoll;
   }
 
 });

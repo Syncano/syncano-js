@@ -7,6 +7,7 @@ import Group from './group';
 import Admin from './admin';
 import ApiKey from './apikey';
 import InstanceInvitation from './instanceinvitation';
+import Invitation from './invitation';
 import Script from './script';
 import Schedule from './schedule';
 import Trigger from './trigger';
@@ -34,6 +35,7 @@ export default {
   Admin,
   ApiKey,
   InstanceInvitation,
+  Invitation,
   Script,
   Schedule,
   Trigger,

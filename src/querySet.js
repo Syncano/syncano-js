@@ -427,6 +427,26 @@ export const UpdateOrCreate = stampit().methods({
   }
 });
 
+const ExcludedFields = stampit().methods({
+  /**
+    * Removes specified fields from object response.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {Object} fields
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * DataObject.please().list({ instanceName: 'test-instace', className: 'test-class' }).excludedFields(['title', 'author']).then(function(dataobjects) {});
+
+    */
+  excludedFields(fields = []) {
+    this.query['excluded_fields'] = fields.join();
+    return this;
+  }
+});
+
 const Fields = stampit().methods({
   /**
     * Selects specified fields from object.
@@ -599,6 +619,7 @@ const QuerySet = stampit.compose(
   PageSize,
   Ordering,
   Fields,
+  ExcludedFields,
   Raw,
   TemplateResponse
 );
@@ -607,6 +628,7 @@ export const BaseQuerySet = stampit.compose(
   QuerySetRequest,
   Raw,
   Fields,
+  ExcludedFields,
   Ordering,
   First,
   PageSize,

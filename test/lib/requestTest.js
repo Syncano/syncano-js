@@ -121,6 +121,28 @@ describe('Request', function() {
       should(spyCall).have.property('X-USER-KEY').which.is.String().equal('321');
     });
 
+
+    it('should set proper headers if api key is present', function() {
+      request.getConfig().setApiKey('321');
+      request.makeRequest('GET', '/v1.1/', {}, () => {});
+
+      should(stubs._init.calledOnce).be.true();
+      should(stubs._type.calledOnce).be.true();
+      should(stubs._accept.calledOnce).be.true();
+      should(stubs._timeout.calledOnce).be.true();
+      should(stubs._set.calledOnce).be.true();
+      should(stubs._query.calledOnce).be.true();
+      should(stubs._send.calledOnce).be.true();
+      should(stubs._end.calledOnce).be.true();
+      should(stubs._attach.callCount).be.equal(0);
+
+      let spyCall = stubs._set.getCall(0).args[0];
+
+      should(spyCall).be.an.Object();
+      should(spyCall).have.property('X-API-KEY').which.is.String().equal('321');
+      should(spyCall).have.property('X-USER-KEY').which.is.String().equal('321');
+    });
+
     it('should set proper headers if social token is present', function() {
       request.getConfig().setSocialToken('456').setAccountKey('123');
       request.makeRequest('GET', '/v1.1/', {}, () => {});
