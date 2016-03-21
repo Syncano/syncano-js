@@ -48,7 +48,6 @@
     "url": "https://github.com/Syncano/syncano-js.git"
   },
   "dependencies": {
-    "babel-plugin-lodash": "^2.2.1",
     "bluebird": "^3.2.2",
     "lodash": "^4.6.1",
     "stampit": "^2.1.1",
@@ -87,7 +86,8 @@
     "rimraf": "^2.5.1",
     "should": "^8.2.2",
     "sinon": "^1.17.3",
-    "webpack": "^1.12.13"
+    "webpack": "^1.12.13",
+    "babel-plugin-lodash": "^2.2.1"
   },
   "babel": {
     "plugins": [
