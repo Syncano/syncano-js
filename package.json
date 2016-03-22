@@ -86,13 +86,15 @@
     "rimraf": "^2.5.1",
     "should": "^8.2.2",
     "sinon": "^1.17.3",
-    "webpack": "^1.12.13"
+    "webpack": "^1.12.13",
+    "babel-plugin-lodash": "^2.2.1"
   },
   "babel": {
     "plugins": [
       "transform-inline-environment-variables",
       "transform-strict-mode",
-      "add-module-exports"
+      "add-module-exports",
+      "lodash"
     ],
     "presets": [
       "es2015"
