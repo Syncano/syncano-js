@@ -6,7 +6,7 @@ import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
 
-describe('Channel', function() {
+describe.only('Channel', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();
@@ -145,8 +145,7 @@ describe('Channel', function() {
           should(message.metadata).have.property('type').which.is.String().equal('message');
         });
 
-        chn.publish({ content: 'message content' });
-
+        return chn.publish({ content: 'message content' });
       });
   });
 
@@ -337,7 +336,7 @@ describe('Channel', function() {
       return Model(Object.assign({}, data, { custom_publish: true })).save()
         .then(cleaner.mark)
         .then((chn) => {
-          const poll = Model.please().poll(chn);
+          const poll = Model.please().poll({instanceName, name: chn.name});
 
           poll.on('custom', function(message) {
             should(message).have.property('author').which.is.Object();

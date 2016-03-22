@@ -140,7 +140,6 @@ describe('Request', function() {
 
       should(spyCall).be.an.Object();
       should(spyCall).have.property('X-API-KEY').which.is.String().equal('321');
-      should(spyCall).have.property('X-USER-KEY').which.is.String().equal('321');
     });
 
     it('should set proper headers if social token is present', function() {
@@ -178,7 +177,7 @@ describe('Request', function() {
 
       let spyCall = stubs._set.getCall(0).args[0];
       should(spyCall).be.an.Object();
-      should(spyCall).have.property('Authorization').which.is.String().equal('Token 111');
+      should(spyCall).have.property('X-API-KEY').which.is.String().equal('111');
     });
 
     it('should set defaults', function() {

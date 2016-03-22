@@ -23,9 +23,9 @@ const ChannelQuerySet = stampit().compose(QuerySet).methods({
 
     */
 
-  publish(properties, payload, room = null) {
+  publish(properties, message, room = null) {
     this.properties = _.assign({}, this.properties, properties);
-    this.payload = { payload: message };
+    this.payload = {payload: JSON.stringify(message)};
 
     if (room) {
       this.payload.room = room;
@@ -86,10 +86,12 @@ const ChannelQuerySet = stampit().compose(QuerySet).methods({
     *
     */
 
-  poll(options, start = true) {
+  poll(properties = {}, options = {}, start = true) {
+    this.properties = _.assign({}, this.properties, properties);
+
     const config = this.getConfig();
     const meta = this.model.getMeta();
-    const path = meta.resolveEndpointPath('poll', this);
+    const path = meta.resolveEndpointPath('poll', this.properties);
 
     options.path = path;
 

@@ -8,7 +8,17 @@ const UserQuerySet = stampit().compose(
   Create,
   BulkCreate,
   List
-);
+).methods({
+
+  groups() {
+
+  },
+
+  resetKey() {
+
+  }
+
+});
 
 const UserMeta = Meta({
   name: 'user',
@@ -75,10 +85,6 @@ const User = stampit()
     },
 
     resetKey() {
-
-    },
-
-    login() {
 
     }
 
