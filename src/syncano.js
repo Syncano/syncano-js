@@ -36,6 +36,7 @@ const Syncano = stampit()
     baseUrl: 'https://api.syncano.io',
     accountKey: null,
     userKey: null,
+    apiKey: null,
     socialToken: null
   })
   .methods({
@@ -85,7 +86,6 @@ const Syncano = stampit()
 
     * @param {String} accountKey Your {@link https://syncano.io|Syncano} account key
     * @returns {Syncano}
-    * @throws {Error} Account key is required.
 
     * @example {@lang javascript}
     * var connection = Syncano({accountKey: '123'});
@@ -93,7 +93,6 @@ const Syncano = stampit()
 
     */
     setAccountKey(accountKey) {
-      if(_.isEmpty(accountKey)) throw new Error('Account key is required.');
       this.accountKey = accountKey;
       return this;
     },
@@ -122,7 +121,6 @@ const Syncano = stampit()
 
     * @param {String} userKey Instance user api key
     * @returns {Syncano}
-    * @throws {Error} User key is required.
 
     * @example {@lang javascript}
     * var connection = Syncano({userKey: '123'});
@@ -130,7 +128,6 @@ const Syncano = stampit()
 
     */
     setUserKey(userKey) {
-      if(_.isEmpty(userKey)) throw new Error('User key is required.');
       this.userKey = userKey;
       return this;
     },
@@ -152,6 +149,41 @@ const Syncano = stampit()
     },
 
     /**
+    * Sets *apiKey*.
+
+    * @memberOf Syncano
+    * @instance
+
+    * @param {String} apiKey Instance user api key
+    * @returns {Syncano}
+
+    * @example {@lang javascript}
+    * var connection = Syncano({apiKey: '123'});
+    * connection.setApiKey('abcd');
+
+    */
+    setApiKey(apiKey) {
+      this.apiKey = apiKey;
+      return this;
+    },
+
+    /**
+    * Gets *apiKey*.
+
+    * @memberOf Syncano
+    * @instance
+    * @returns {String}
+
+    * @example {@lang javascript}
+    * var connection = Syncano({apiKey: '123'});
+    * var apiKey = connection.getApiKey();
+
+    */
+    getApiKey() {
+      return this.apiKey;
+    },
+
+    /**
     * Sets *socialToken*.
 
     * @memberOf Syncano
@@ -159,7 +191,6 @@ const Syncano = stampit()
 
     * @param {String} socialToken Instance social authentication token
     * @returns {Syncano}
-    * @throws {Error} Social token is required.
 
     * @example {@lang javascript}
     * var connection = Syncano({socialToken: '123'});
@@ -167,7 +198,6 @@ const Syncano = stampit()
 
     */
     setSocialToken(socialToken) {
-      if(_.isEmpty(socialToken)) throw new Error('Social token is required.');
       this.socialToken = socialToken;
       return this;
     },

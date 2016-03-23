@@ -173,8 +173,7 @@ describe('Channel', function() {
           should(message.metadata).have.property('type').which.is.String().equal('message');
         });
 
-        chn.publish({ content: 'message content' });
-
+        return chn.publish({ content: 'message content' });
       });
   });
 
@@ -365,7 +364,7 @@ describe('Channel', function() {
       return Model(Object.assign({}, data, { custom_publish: true })).save()
         .then(cleaner.mark)
         .then((chn) => {
-          const poll = Model.please().poll(chn);
+          const poll = Model.please().poll({instanceName, name: chn.name});
 
           poll.on('custom', function(message) {
             should(message).have.property('author').which.is.Object();

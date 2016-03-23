@@ -34,8 +34,8 @@ const InstanceMeta = Meta({
     }
   },
   relatedModels: [
-    'Admin', 'Class', 'CodeBox', 'Schedule', 'InstanceInvitation', 'ApiKey'
-    , 'Trigger', 'Webhook', 'User', 'Group', 'GCMDevice', 'Channel'
+    'Admin', 'Class', 'Script', 'Schedule', 'InstanceInvitation', 'ApiKey'
+    , 'Trigger', 'ScriptEndpoint', 'User', 'Group', 'GCMDevice', 'Channel'
     , 'APNSDevice', 'Template'
   ]
 });

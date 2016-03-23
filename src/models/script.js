@@ -27,6 +27,29 @@ const ScriptQuerySet = stampit().compose(QuerySet).methods({
     this._serialize = false;
 
     return this;
+  },
+
+  /**
+  * Gets allowed runtimes.
+  * @memberOf ScriptQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @returns {ScriptQuerySet}
+
+  * @example {@lang javascript}
+  * Script.please().runtimes({instanceName: 'test-one'}).then(function(trace) {});
+
+  */
+  getRuntimes(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'GET';
+    this.endpoint = 'runtimes';
+    this.payload = payload;
+    this._serialize = false;
+
+    return this;
   }
 
 });
@@ -42,14 +65,18 @@ const ScriptMeta = Meta({
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/snippets/scripts//'
+      'path': '/v1.1/instances/{instanceName}/snippets/scripts/'
+    },
+    'runtimes': {
+      'methods': ['post', 'get'],
+      'path': '/v1.1/instances/{instanceName}/snippets/scripts/runtimes/'
     },
     'run': {
       'methods': ['post'],
       'path': '/v1.1/instances/{instanceName}/snippets/scripts/{id}/run/'
     }
   },
-  relatedModels: [ 'CodeBoxTrace' ]
+  relatedModels: [ 'ScriptTrace' ]
 });
 
 const ScriptConstraints = {
@@ -110,8 +137,8 @@ const Script = stampit()
     * @returns {Promise}
 
     * @example {@lang javascript}
-    * Script.please().get({instanceName: 'test-one', id: 1}).then(function(codebox) {
-    *   codebox.run({some: 'variable'}).then(function(trace) {});
+    * Script.please().get({instanceName: 'test-one', id: 1}).then(function(script) {
+    *   script.run({some: 'variable'}).then(function(trace) {});
     * });
     */
     run(payload = {}) {
@@ -119,6 +146,25 @@ const Script = stampit()
       const path = meta.resolveEndpointPath('run', this);
 
       return this.makeRequest('POST', path, {payload});
+    },
+
+    /**
+    * Gets allowed runtimes.
+    * @memberOf Script
+    * @instance
+
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * Script.please().runtimes({instanceName: 'test-one', id: 1}).then(function(script) {
+    *   script.runtimes().then(function(runtimes) {});
+    * });
+    */
+    getRuntimes() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('runtimes', this);
+
+      return this.makeRequest('GET', path, {payload});
     }
 
   });

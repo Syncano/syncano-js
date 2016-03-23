@@ -93,7 +93,7 @@ describe('User', function() {
     should(Model({username: data.username, instanceName, password: data.password, profile: { channel_room: 1}}).save()).be.rejectedWith(/channel_room/);
   });
 
-it('should be able to save via model instance', function() {
+  it('should be able to save via model instance', function() {
     return Model(data).save()
       .then(cleaner.mark)
       .then((object) => {
@@ -122,6 +122,28 @@ it('should be able to save via model instance', function() {
       });
   });
 
+  it('should be able to reset key via model instance', function() {
+    let userKey = null;
+
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((object) => {
+        should(object).be.a.Object();
+        should(object).have.property('instanceName').which.is.String().equal(instanceName);
+        should(object).have.property('profile').which.is.Object();
+        should(object).have.property('links').which.is.Object();
+        should(object).have.property('groups').which.is.Array();
+        should(object).have.property('username').which.is.String().equal(data.username);
+        should(object).have.property('user_key').which.is.String();
+
+        userKey = object.user_key;
+
+        return object.resetKey();
+      }).then((object) => {
+        should(object).have.property('user_key').which.is.String().not.equal(userKey);
+      });
+  });
+
   describe('#please()', function() {
 
     it('should be able to list objects', function() {
@@ -143,6 +165,116 @@ it('should be able to save via model instance', function() {
           should(object).have.property('user_key').which.is.String();
         });
     });
+
+    it('should be able to update an object', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('profile').which.is.Object();
+          should(object).have.property('links').which.is.Object();
+
+          return Model.please().update({id: object.id, instanceName}, {username: 'dummyTest'});
+        })
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('profile').which.is.Object();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('username').which.is.String().equal('dummyTest');
+        })
+    });
+
+    it('should be able to update an object (userKey & apiKey)', function() {
+      let accountKey = null;
+      let apiKey = null;
+
+      return connection.ApiKey.please().create({instanceName})
+        .then((key) => {
+          apiKey = key.api_key;
+          return Model.please().create(data);
+        })
+        .then(cleaner.mark)
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('profile').which.is.Object();
+          should(object).have.property('links').which.is.Object();
+
+          accountKey = connection.getAccountKey();
+          connection.setUserKey(object.user_key);
+          connection.setApiKey(apiKey);
+          connection.setAccountKey(null);
+
+          return Model.please().update({id: object.id, instanceName}, {username: 'dummyTest'});
+        })
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('profile').which.is.Object();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('username').which.is.String().equal('dummyTest');
+
+          connection.setUserKey(null);
+          connection.setApiKey(null);
+          connection.setAccountKey(accountKey);
+        });
+    });
+
+    it('should be able to reset key in object', function() {
+      let userKey = null;
+
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('profile').which.is.Object();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('groups').which.is.Array();
+          should(object).have.property('username').which.is.String().equal(data.username);
+          should(object).have.property('user_key').which.is.String();
+
+          userKey = object.user_key;
+
+          return Model.please().resetKey(_.assign({id: object.id}, data));
+        }).then((object) => {
+          should(object).have.property('user_key').which.is.String().not.equal(userKey);
+        });
+    });
+
+    it('should be able to login', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('profile').which.is.Object();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('groups').which.is.Array();
+          should(object).have.property('username').which.is.String().equal(data.username);
+          should(object).have.property('user_key').which.is.String();
+
+          return Model.please().login(data, data);
+        });
+    });
+
+    // it('should be able to do a social login', function() {
+    //   return Model.please().create(data)
+    //     .then(cleaner.mark)
+    //     .then((object) => {
+    //       should(object).be.a.Object();
+    //       should(object).have.property('instanceName').which.is.String().equal(instanceName);
+    //       should(object).have.property('profile').which.is.Object();
+    //       should(object).have.property('links').which.is.Object();
+    //       should(object).have.property('groups').which.is.Array();
+    //       should(object).have.property('username').which.is.String().equal(data.username);
+    //       should(object).have.property('user_key').which.is.String();
+
+    //       return Model.please().socialLogin({instanceName, backend: 'facebbok'}, {access_token: '123'});
+    //     });
+    // });
 
     it('should be able to bulk create an objects', function() {
       const objects = [
@@ -185,6 +317,54 @@ it('should be able to save via model instance', function() {
           should(object).have.property('groups').which.is.Array();
           should(object).have.property('username').which.is.String().equal(data.username);
           should(object).have.property('user_key').which.is.String();
+        });
+    });
+
+    it('should be able to get an object (userKey & apiKey)', function() {
+      let accountKey = null;
+      let apiKey = null;
+
+      return connection.ApiKey.please().create({instanceName})
+        .then(cleaner.mark)
+        .then((key) => {
+          apiKey = key.api_key;
+          return Model.please().create(data);
+        })
+        .then(cleaner.mark)
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('profile').which.is.Object();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('groups').which.is.Array();
+          should(object).have.property('username').which.is.String().equal(data.username);
+          should(object).have.property('user_key').which.is.String();
+
+          accountKey = connection.getAccountKey();
+          connection.setUserKey(object.user_key);
+          connection.setApiKey(apiKey);
+          connection.setAccountKey(null);
+
+          return object;
+        })
+        .then((object) => {
+          return Model
+            .please()
+            .get({ id: object.id, instanceName })
+            .request();
+        })
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('profile').which.is.Object();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('groups').which.is.Array();
+          should(object).have.property('username').which.is.String().equal(data.username);
+          should(object).have.property('user_key').which.is.String();
+
+          connection.setUserKey(null);
+          connection.setApiKey(null);
+          connection.setAccountKey(accountKey);
         });
     });
 

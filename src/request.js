@@ -122,17 +122,22 @@ const Request = stampit().compose(ConfigMixin, Logger)
         return Promise.reject(new Error('"path" is required.'));
       }
 
-      // wtf ?
       if (!_.isUndefined(config)) {
-        if (!_.isEmpty(config.getAccountKey()) && !_.isEmpty(config.getUserKey())) {
+        if (!_.isEmpty(config.getAccountKey())) {
           options.headers['X-API-KEY'] = config.getAccountKey();
-          options.headers['X-USER-KEY'] = config.getUserKey();
-        } else if (_.isEmpty(options.headers['Authorization'])) {
-          const token = config.getSocialToken() || config.getAccountKey();
+        }
 
-          if (!_.isUndefined(token) && !_.isEmpty(token)) {
-            options.headers['Authorization'] = `Token ${token}`;
-          }
+        // Yes, we will replace account key
+        if (!_.isEmpty(config.getApiKey())) {
+          options.headers['X-API-KEY'] = config.getApiKey();
+        }
+
+        if (!_.isEmpty(config.getUserKey())) {
+          options.headers['X-USER-KEY'] = config.getUserKey();
+        }
+
+        if (!_.isEmpty(config.getSocialToken())) {
+          options.headers['Authorization'] = `Token ${config.getSocialToken()}`;
         }
       }
 

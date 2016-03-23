@@ -53,6 +53,20 @@ const GroupConstraints = {
 const Group = stampit()
   .compose(Model)
   .setMeta(GroupMeta)
-  .setConstraints(GroupConstraints);
+  .setConstraints(GroupConstraints)
+  .methods({
+
+    users() {
+
+    },
+
+    addUser() {
+
+    },
+
+    deleteUser() {
+
+    }
+  });
 
 export default Group;

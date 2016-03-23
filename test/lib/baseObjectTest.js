@@ -1,7 +1,7 @@
 import should from 'should/as-function';
 import Syncano from '../../src/syncano';
 
-describe('Base Object', function() {
+describe('Syncano', function() {
   let baseObject = null;
   let testKey = '123';
   let testUrl = 'http://api.syncano.rocks'
@@ -22,6 +22,7 @@ describe('Base Object', function() {
       should(baseObject).have.property('Admin').which.is.Function();
       should(baseObject).have.property('ApiKey').which.is.Function();
       should(baseObject).have.property('InstanceInvitation').which.is.Function();
+      should(baseObject).have.property('Invitation').which.is.Function();
       should(baseObject).have.property('Script').which.is.Function();
       should(baseObject).have.property('Schedule').which.is.Function();
       should(baseObject).have.property('Trigger').which.is.Function();
@@ -51,10 +52,6 @@ describe('Base Object', function() {
     it('should allow to set accountKey', function() {
       should(baseObject).have.property('setAccountKey').which.is.Function();
 
-      should(function() {
-        baseObject.setAccountKey();
-      }).throw(Error('Account key is required.'))
-
       baseObject.setAccountKey(testKey);
 
       should(baseObject.accountKey).is.equal(testKey);
@@ -79,10 +76,6 @@ describe('Base Object', function() {
 
     it('should allow to set base url', function() {
       should(baseObject).have.property('setBaseUrl').which.is.Function();
-
-      should(function() {
-        baseObject.setBaseUrl();
-      }).throw(Error('Base Url is required.'))
 
       baseObject.setBaseUrl(testUrl);
 
@@ -109,10 +102,6 @@ describe('Base Object', function() {
     it('should allow to set userKey', function() {
       should(baseObject).have.property('setUserKey').which.is.Function();
 
-      should(function() {
-        baseObject.setUserKey();
-      }).throw(Error('Account key is required.'))
-
       baseObject.setUserKey(testKey);
 
       should(baseObject.userKey).is.equal(testKey);
@@ -133,14 +122,35 @@ describe('Base Object', function() {
 
   });
 
+  describe('#setApiKey()', function() {
+
+    it('should allow to set apiKey', function() {
+      should(baseObject).have.property('setApiKey').which.is.Function();
+
+      baseObject.setApiKey(testKey);
+
+      should(baseObject.apiKey).is.equal(testKey);
+    });
+
+  });
+
+  describe('#getApiKey()', function() {
+
+    it('should allow to get user key', function() {
+      should(baseObject).have.property('getApiKey').which.is.Function();
+
+      baseObject.setApiKey(testKey);
+
+      should(baseObject.getApiKey()).is.equal(testKey);
+
+    });
+
+  });
+
   describe('#setSocialToken()', function() {
 
     it('should allow to set socialToken', function() {
       should(baseObject).have.property('setSocialToken').which.is.Function();
-
-      should(function() {
-        baseObject.setSocialToken();
-      }).throw(Error('Account key is required.'))
 
       baseObject.setSocialToken(testKey);
 

@@ -15,6 +15,7 @@ const ChannelQuerySet = stampit().compose(QuerySet).methods({
 
     * @param {Object} channel
     * @param {Object} message
+    * @param {String} [room = null]
     * @returns {QuerySet}
 
     * @example {@lang javascript}
@@ -22,9 +23,13 @@ const ChannelQuerySet = stampit().compose(QuerySet).methods({
 
     */
 
-  publish(channel, message) {
-    this.properties = _.assign({}, this.properties, channel);
-    this.payload = { payload: message };
+  publish(properties, message, room = null) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = {payload: JSON.stringify(message)};
+
+    if (room) {
+      this.payload.room = room;
+    }
 
     this.method = 'POST';
     this.endpoint = 'publish';
@@ -38,7 +43,8 @@ const ChannelQuerySet = stampit().compose(QuerySet).methods({
     * @memberOf QuerySet
     * @instance
 
-    * @param {Object} channel
+    * @param {Object} options
+    * @param {Boolean} [start = true]
     * @returns {ChannelPoll}
 
     * @example {@lang javascript}
@@ -80,10 +86,33 @@ const ChannelQuerySet = stampit().compose(QuerySet).methods({
     *
     */
 
-  poll(channel) {
+  poll(properties = {}, options = {}, start = true) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    const config = this.getConfig();
     const meta = this.model.getMeta();
-    channel.path = meta.resolveEndpointPath('poll', channel);
-    return ChannelPoll.setConfig(channel)();
+    const path = meta.resolveEndpointPath('poll', this.properties);
+
+    options.path = path;
+
+    const channelPoll = ChannelPoll.setConfig(config)(options);
+
+    if (start === true) {
+      channelPoll.start();
+    }
+
+    return channelPoll;
+  },
+
+  history(properties = {}, query = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'GET';
+    this.endpoint = 'history';
+    this.query = query;
+    this._serialize = false;
+
+    return this;
   }
 
 });
@@ -361,6 +390,13 @@ const Channel = stampit()
       }
 
       return this.makeRequest('POST', path, options);
+    },
+
+    history(query = {}) {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('history', this);
+
+      return this.makeRequest('GET', path, {query});
     }
 
   })

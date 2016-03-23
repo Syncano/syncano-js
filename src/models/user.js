@@ -1,4 +1,5 @@
 import stampit from 'stampit';
+import _ from 'lodash';
 import {Meta, Model} from './base';
 import {BaseQuerySet, Get, Create, BulkCreate, List} from '../querySet';
 
@@ -8,7 +9,104 @@ const UserQuerySet = stampit().compose(
   Create,
   BulkCreate,
   List
-);
+).methods({
+
+  get(properties = {}) {
+    const config = this.getConfig();
+
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'GET';
+    this.endpoint = 'detail';
+
+    if (_.isEmpty(config.getAccountKey()) && !_.isEmpty(config.getUserKey()) && !_.isEmpty(config.getApiKey())) {
+      this.endpoint = 'user';
+    }
+
+    return this;
+  },
+
+  update(properties = {}, object = {}) {
+    const config = this.getConfig();
+
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = object;
+    this.method = 'PATCH';
+    this.endpoint = 'detail';
+
+    if (_.isEmpty(config.getAccountKey()) && !_.isEmpty(config.getUserKey()) && !_.isEmpty(config.getApiKey())) {
+      this.endpoint = 'user';
+    }
+
+    return this;
+  },
+
+  /**
+  * Restes user key.
+  * @memberOf UserQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @returns {Promise}
+
+  * @example {@lang javascript}
+  * User.please().resetKey({id: 1, instanceName: 'test-one'}).then(function(user) {});
+
+  */
+  resetKey(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.endpoint = 'reset_key';
+
+    return this;
+  },
+
+  /**
+  * A convenience method for authenticating instance user with email and password.
+
+  * @memberOf UserQuerySet
+  * @instance
+
+  * @param {Object} properties
+  * @param {String} properties.instanceName
+  * @param {Object} credentials
+  * @param {String} credentials.email
+  * @param {String} credentials.password
+  * @returns {Promise}
+
+  */
+  login(properties = {}, credentials = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.endpoint = 'login';
+    this.payload = credentials;
+
+    return this;
+  },
+
+  /**
+  * A convenience method for authenticating instance user with email and password.
+
+  * @memberOf UserQuerySet
+  * @instance
+
+  * @param {Object} properties
+  * @param {String} properties.instanceName
+  * @param {String} properties.backend
+  * @param {Object} credentials
+  * @param {String} credentials.access_token
+  * @returns {Promise}
+
+  */
+  socialLogin(properties = {}, credentials = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.endpoint = 'socialLogin';
+    this.payload = credentials;
+
+    return this;
+  }
+
+});
 
 const UserMeta = Meta({
   name: 'user',
@@ -29,6 +127,18 @@ const UserMeta = Meta({
     'groups': {
       'methods': ['get', 'post'],
       'path': '/v1.1/instances/{instanceName}/users/{id}/groups/'
+    },
+    'login': {
+      'methods': ['post'],
+      'path': '/v1.1/instances/{instanceName}/user/auth/'
+    },
+    'socialLogin': {
+      'methods': ['post'],
+      'path': '/v1.1/instances/{instanceName}/user/auth/{backend}/'
+    },
+    'user': {
+      'methods': ['get', 'post', 'patch'],
+      'path': '/v1.1/instances/{instanceName}/user/'
     }
   }
 });
@@ -91,6 +201,27 @@ const User = stampit()
   .compose(Model)
   .setMeta(UserMeta)
   .setQuerySet(UserQuerySet)
-  .setConstraints(UserConstraints);
+  .setConstraints(UserConstraints)
+  .methods({
+
+    /**
+    * Restes user key.
+    * @memberOf User
+    * @instance
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * User.please().get({instanceName: 'test-one', id: 1}).then(function(user) {
+    *   user.resetKey().then(function(user) {});
+    * });
+    */
+    resetKey() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('reset_key', this);
+
+      return this.makeRequest('POST', path, {}).then((body) => this.serialize(body));
+    }
+
+  });
 
 export default User;

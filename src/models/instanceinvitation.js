@@ -24,8 +24,8 @@ const InstanceInvitationQuerySet = stampit().compose(
 });
 
 const InstanceInvitationMeta = Meta({
-  name: 'invitation',
-  pluralName: 'invitations',
+  name: 'instanceInvitation',
+  pluralName: 'instanceInvitations',
   endpoints: {
     'detail': {
       'methods': ['delete', 'get'],
