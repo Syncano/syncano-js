@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Source: models/dataview.js</title>
+	<title>Syncano Source: models/invitation.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="CodeBox.html">CodeBox</a></li><li><a href="CodeBoxTrace.html">CodeBoxTrace</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="DataView.html">DataView</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li><li><a href="Webhook.html">Webhook</a></li><li><a href="WebhookTrace.html">WebhookTrace</a></li>
+					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataEndpoint.html">DataEndpoint</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Invitation.html">Invitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="Pinger.html">Pinger</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Script.html">Script</a></li><li><a href="ScriptEndpoint.html">ScriptEndpoint</a></li><li><a href="ScriptEndpointTrace.html">ScriptEndpointTrace</a></li><li><a href="ScriptTrace.html">ScriptTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li>
+					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li><li><a href="tutorial-04. Connection monitoring.html">04. Connection monitoring</a></li>
 				</ul>
 			</li>
 			
@@ -70,36 +70,30 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: models/dataview.js</h1>
+		<h1 class="page-title">Source: models/invitation.js</h1>
     
 <section>
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
-import _ from 'lodash';
 import {Meta, Model} from './base';
-import QuerySet from '../querySet';
+import {BaseQuerySet, Create, BulkCreate, Get, Delete, GetOrCreate, List} from '../querySet';
 
+const InvitationQuerySet = stampit().compose(
+  BaseQuerySet,
+  Create,
+  BulkCreate,
+  Get,
+  GetOrCreate,
+  Delete,
+  List,
+  Delete
+).methods({
 
-const DataViewQerySet = stampit().compose(QuerySet).methods({
-
-  /**
-  * Fetches Data Objects matching the Data View properties.
-  * @memberOf DataViewQerySet
-  * @instance
-
-  * @param {Object} properties lookup properties used for path resolving
-  * @returns {DataViewQerySet}
-
-  * @example {@lang javascript}
-  * DataView.please().fetchData({name: 'dataViewName', instanceName: 'test-one'}).then(function(dataObjects) {});
-
-  */
-  fetchData(properties = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-
-    this.method = 'GET';
-    this.endpoint = 'get';
+  accept(invitationKey) {
+    this.method = 'POST';
+    this.endpoint = 'accept';
+    this.payload = {invitationKey};
     this._serialize = false;
 
     return this;
@@ -107,95 +101,57 @@ const DataViewQerySet = stampit().compose(QuerySet).methods({
 
 });
 
-const DataViewMeta = Meta({
-  name: 'dataview',
-  pluralName: 'dataviews',
+const InvitationMeta = Meta({
+  name: 'invitation',
+  pluralName: 'invitations',
   endpoints: {
     'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instanceName}/api/objects/{name}/'
+      'methods': ['delete', 'get'],
+      'path': '/v1.1/account/invitations/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instanceName}/api/objects/'
+      'path': '/v1.1/account/invitations/'
     },
-    'get': {
-      'methods': ['get'],
-      'path': '/v1/instances/{instanceName}/api/objects/{name}/get/'
-    },
-    'rename': {
+    'accept': {
       'methods': ['post'],
-      'path': '/v1/instances/{instanceName}/api/objects/{name}/rename/'
-    },
-    'clear_cache': {
-      'methods': ['post'],
-      'path': '/v1/instances/{instanceName}/api/objects/{name}/clear_cache/'
+      'path': '/v1.1/account/invitations/accept/'
     }
   }
 });
 
-const DataViewConstraints = {
-  name: {
-    presence: true,
-    length: {
-      maximum: 64
-    }
-  },
-  class: {
-    presence: true
-  },
-  instanceName: {
-    presence: true,
-    length: {
-      minimum: 5
-    }
-  }
-};
-
 /**
- * OO wrapper around data views {@link # endpoint}.
+ * OO wrapper around invitations {@link # endpoint}.
  * @constructor
- * @type {DataView}
+ * @type {Invitation}
 
- * @property {String} name
- * @property {String} instanceName
- * @property {Object} query
- * @property {String} excluded_fields
- * @property {String} order_by
- * @property {Number} page_size
- * @property {String} expand
- * @property {String} class
+ * @property {String} email
+ * @property {String} role
+ * @property {String} [key = null]
+ * @property {String} [inviter = null]
+ * @property {String} [status = null]
+ * @property {Number} [id = null]
  * @property {String} [description = null]
  * @property {String} [links = {}]
+ * @property {Date} [created_at = null]
+ * @property {Date} [updated_at = null]
  */
-const DataView = stampit()
+const Invitation = stampit()
   .compose(Model)
-  .setMeta(DataViewMeta)
-  .setQuerySet(DataViewQerySet)
-  .setConstraints(DataViewConstraints)
+  .setMeta(InvitationMeta)
+  .setQuerySet(InvitationQuerySet)
   .methods({
 
-    /**
-    * Fetches Data Objects matching the Data View properties.
-    * @memberOf DataView
-    * @instance
-
-    * @param {Object}
-    * @returns {Promise}
-
-    * @example {@lang javascript}
-    * DataView.please().fetchData({name: 'dataViewName', instanceName: 'test-one'}).then(function(dataObjects) {});
-    */
-    fetchData() {
+    accept(invitationKey) {
       const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('get', this);
+      const path = meta.resolveEndpointPath('accept', this);
 
-      return this.makeRequest('GET', path);
+      return this.makeRequest('POST', path, {invitationKey});
     }
 
   });
 
-export default DataView;
+export default Invitation;
 </pre>
     </article>
 </section>
@@ -239,7 +195,7 @@ export default DataView;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Wed Feb 24th 2016
+		on Wed Mar 23rd 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Source: models/apnsmessage.js</title>
+	<title>Syncano Tutorial: 04. Connection monitoring</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -68,95 +68,31 @@
 	<div class="col-md-12">
 	
 		<div id="main">
-			
+			<section class="tutorial-section">
 
-		<h1 class="page-title">Source: models/apnsmessage.js</h1>
+<header>
     
-<section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Create, BulkCreate, Get, GetOrCreate, List} from '../querySet';
 
-const APNSMessageQuerySet = stampit().compose(
-  BaseQuerySet,
-  Create,
-  BulkCreate,
-  Get,
-  List,
-  GetOrCreate
-);
+    <h2>04. Connection monitoring</h2>
+</header>
 
-const APNSMessageMeta = Meta({
-  name: 'apnsmessage',
-  pluralName: 'apnsmessages',
-  endpoints: {
-    'detail': {
-      'methods': ['delete', 'get'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/messages/{id}/'
-    },
-    'list': {
-      'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/messages/'
-    }
-  }
+<article>
+    <p>This tutorial will show you how to monitor the connection to the platform.</p>
+<h3>Setting up monitoring</h3><p>The main <code>Syncano</code> object has a <code>Monitor</code> property that exposes methods for monitoring the network connection. To set up the monitor, use the <code>startMonitoring</code> method:</p>
+<pre class="prettyprint source"><code>let connection = Syncano();
+
+connection.Monitor.startMonitoring();</code></pre><h3>Listening for events</h3><p>The monitor exposes an <code>EventEmitter</code> so you can listen for the <code>connected</code> and <code>disconnected</code> events:</p>
+<pre class="prettyprint source"><code>connection.Monitor.on('connected', () => {
+  // connected to the api
 });
 
-const APNSMessageConstraints = {
-  instanceName: {
-    presence: true,
-    length: {
-      minimum: 5
-    }
-  },
-  content: {
-    presence: true,
-    object: true
-  },
-  'content.registration_ids': {
-    presence: true,
-    array: true
-  },
-  'content.environment': {
-    presence: true,
-    inclusion: ['development', 'production']
-  },
-  'content.aps': {
-    presence: true
-  },
-  'content.aps.alert': {
-    presence: true
-  }
-};
+connection.Monitor.on('disconnected', (error) => {
+  // connection to the api lost
+});</code></pre><h3>Stopping monitoring</h3><p>To stop monitoring the connection, use the <code>stopMonitoring</code> method:</p>
+<pre class="prettyprint source"><code>connection.Monitor.stopMonitoring();</code></pre>
+</article>
 
-/**
- * OO wrapper around instance APNS messages {@link # endpoint}.
- * @constructor
- * @type {APNSMessage}
-
- * @property {Number} id
- * @property {String} [status = null]
- * @property {Object} [content = {}]
- * @property {Object} [result = {}]
- * @property {String} [links = {}]
- * @property {Date} [created_at = null]
- * @property {Date} [updated_at = null]
- */
-const APNSMessage = stampit()
-  .compose(Model)
-  .setQuerySet(APNSMessageQuerySet)
-  .setConstraints(APNSMessageConstraints)
-  .setMeta(APNSMessageMeta);
-
-export default APNSMessage;
-</pre>
-    </article>
 </section>
-
-
-
-
 
 		</div>
 	</div>

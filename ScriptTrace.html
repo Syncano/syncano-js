@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Class: CodeBox</title>
+	<title>Syncano Class: ScriptTrace</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="CodeBox.html">CodeBox</a></li><li><a href="CodeBoxTrace.html">CodeBoxTrace</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="DataView.html">DataView</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li><li><a href="Webhook.html">Webhook</a></li><li><a href="WebhookTrace.html">WebhookTrace</a></li>
+					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataEndpoint.html">DataEndpoint</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Invitation.html">Invitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="Pinger.html">Pinger</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Script.html">Script</a></li><li><a href="ScriptEndpoint.html">ScriptEndpoint</a></li><li><a href="ScriptEndpointTrace.html">ScriptEndpointTrace</a></li><li><a href="ScriptTrace.html">ScriptTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li>
+					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li><li><a href="tutorial-04. Connection monitoring.html">04. Connection monitoring</a></li>
 				</ul>
 			</li>
 			
@@ -70,13 +70,13 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: CodeBox</h1>
+	<h1 class="page-title">Class: ScriptTrace</h1>
 <section>
 
 <header>
     
         <h2>
-        CodeBox
+        ScriptTrace
         </h2>
         
     
@@ -89,7 +89,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="CodeBox"><span class="type-signature"></span>new CodeBox()</h4>
+    <h4 class="name" id="ScriptTrace"><span class="type-signature"></span>new ScriptTrace()</h4>
     
     
 </dt>
@@ -97,7 +97,7 @@
 
     
     <div class="description">
-        <p>OO wrapper around codeboxes <a href="http://docs.syncano.com/v4.0/docs/codebox-list-codeboxes">endpoint</a>.<br><strong>CodeBox</strong> has special method called <code>run</code> which will execute attached source code.</p>
+        <p>OO wrapper around script trace endpoint.<br>This model is <em>read only</em>.</p>
     </div>
     
 
@@ -210,7 +210,41 @@
 
         <tr>
             
-                <td class="name"><code>label</code></td>
+                <td class="name"><code>scriptId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>status</code></td>
             
 
             <td class="type">
@@ -244,13 +278,13 @@
 
         <tr>
             
-                <td class="name"><code>source</code></td>
+                <td class="name"><code>executed_at</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Date</span>
 
 
 
@@ -278,13 +312,13 @@
 
         <tr>
             
-                <td class="name"><code>runtime_name</code></td>
+                <td class="name"><code>duration</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Number</span>
 
 
 
@@ -312,13 +346,13 @@
 
         <tr>
             
-                <td class="name"><code>description</code></td>
+                <td class="name"><code>result</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Object</span>
 
 
 
@@ -338,12 +372,85 @@
             
                 <td class="default">
                 
-                    null
+                    {}
                 
                 </td>
             
 
+            <td class="description last">
+                <h6>Properties</h6>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>stderr</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
             <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>stdout</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -385,82 +492,6 @@
         </tr>
 
     
-
-        <tr>
-            
-                <td class="name"><code>created_at</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    null
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>updated_at</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    null
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
     </tbody>
 </table>
 </dl>
@@ -498,8 +529,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="models_codebox.js.html">models/codebox.js</a>,
-				 <a href="models_codebox.js.html#sunlight-1-line-71">line 71</a>
+				<a href="models_scripttrace.js.html">models/scripttrace.js</a>,
+				 <a href="models_scripttrace.js.html#sunlight-1-line-55">line 55</a>
 			</li>
 		</ul>
 	</dd>
@@ -543,197 +574,6 @@
 
     
 
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<hr>
-<dt>
-    <h4 class="name" id="run"><span class="type-signature"></span>run(<span class="optional">payload</span>)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Runs current CodeBox.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Argument</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>payload</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    {}
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="models_codebox.js.html">models/codebox.js</a>,
-				 <a href="models_codebox.js.html#sunlight-1-line-90">line 90</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">
-CodeBox.please().get({instanceName: &#x27;test-one&#x27;, id: 1}).then(function(codebox) {
-  codebox.run({some: &#x27;variable&#x27;}).then(function(trace) {});
-});</pre>
-
-
-    
-</dd>
-
-        </dl>
     
 
     
@@ -785,7 +625,7 @@ CodeBox.please().get({instanceName: &#x27;test-one&#x27;, id: 1}).then(function(
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Wed Feb 24th 2016
+		on Wed Mar 23rd 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

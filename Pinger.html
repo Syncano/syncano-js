@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Source: models/codeboxtrace.js</title>
+	<title>Syncano Class: Pinger</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="CodeBox.html">CodeBox</a></li><li><a href="CodeBoxTrace.html">CodeBoxTrace</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="DataView.html">DataView</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li><li><a href="Webhook.html">Webhook</a></li><li><a href="WebhookTrace.html">WebhookTrace</a></li>
+					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataEndpoint.html">DataEndpoint</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Invitation.html">Invitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="Pinger.html">Pinger</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Script.html">Script</a></li><li><a href="ScriptEndpoint.html">ScriptEndpoint</a></li><li><a href="ScriptEndpointTrace.html">ScriptEndpointTrace</a></li><li><a href="ScriptTrace.html">ScriptTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li>
+					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li><li><a href="tutorial-04. Connection monitoring.html">04. Connection monitoring</a></li>
 				</ul>
 			</li>
 			
@@ -65,81 +65,151 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: models/codeboxtrace.js</h1>
-    
+	<h1 class="page-title">Class: Pinger</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Get, List} from '../querySet';
 
-const CodeBoxTraceQuerySet = stampit().compose(
-  BaseQuerySet,
-  Get,
-  List
-);
+<header>
+    
+        <h2>
+        Pinger
+        </h2>
+        
+    
+</header>
 
-const CodeBoxTraceMeta = Meta({
-  name: 'codeboxtrace',
-  pluralName: 'codeboxtraces',
-  endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instanceName}/codeboxes/{codeboxId}/traces/{id}/'
-    },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v1/instances/{instanceName}/codeboxes/{codeboxId}/traces/'
-    }
-  }
+
+<article>
+    <div class="container-overview">
+    
+        
+<hr>
+<dt>
+    <h4 class="name" id="Pinger"><span class="type-signature"></span>new Pinger()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Utility for pinging the api. Allows checking for connection to the platofrm. Meant to be used directly form the <a href="Syncano.html">Syncano</a> instance.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="pinger.js.html">pinger.js</a>,
+				 <a href="pinger.js.html#sunlight-1-line-22">line 22</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">
+const connection = Syncano();
+connection.Monitor.startMonitoring();
+connection.Monitor.on(&#x27;connected&#x27;, () =&gt; {
+   // connected to the api
 });
+connection.Monitor.on(&#x27;disconnected&#x27;, (error) =&gt; {
+   // disconnected from the api
+});</pre>
 
-const CodeBoxConstraints = {
-  instanceName: {
-    presence: true,
-    length: {
-      minimum: 5
-    }
-  },
-  codeboxId: {
-    presence: true
-  }
-};
 
-/**
- * OO wrapper around codebox trace {@link # endpoint}.
- * This model is *read only*.
- * @constructor
- * @type {CodeBoxTrace}
+    
+</dd>
 
- * @property {Number} id
- * @property {String} instanceName
- * @property {Number} codeboxId
- * @property {String} status
- * @property {String} executed_at
- * @property {Number} duration
- * @property {Object} [result = {}]
- * @property {String} result.stderr
- * @property {String} result.stdout
- * @property {String} [links = {}]
- */
-const CodeBoxTrace = stampit()
-  .compose(Model)
-  .setQuerySet(CodeBoxTraceQuerySet)
-  .setConstraints(CodeBoxConstraints)
-  .setMeta(CodeBoxTraceMeta);
+    
+    </div>
 
-export default CodeBoxTrace;
-</pre>
-    </article>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -149,6 +219,10 @@ export default CodeBoxTrace;
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>
@@ -179,7 +253,7 @@ export default CodeBoxTrace;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Wed Feb 24th 2016
+		on Wed Mar 23rd 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

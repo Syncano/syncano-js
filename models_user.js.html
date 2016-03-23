@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="CodeBox.html">CodeBox</a></li><li><a href="CodeBoxTrace.html">CodeBoxTrace</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="DataView.html">DataView</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li><li><a href="Webhook.html">Webhook</a></li><li><a href="WebhookTrace.html">WebhookTrace</a></li>
+					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataEndpoint.html">DataEndpoint</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Invitation.html">Invitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="Pinger.html">Pinger</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Script.html">Script</a></li><li><a href="ScriptEndpoint.html">ScriptEndpoint</a></li><li><a href="ScriptEndpointTrace.html">ScriptEndpointTrace</a></li><li><a href="ScriptTrace.html">ScriptTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li>
+					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li><li><a href="tutorial-04. Connection monitoring.html">04. Connection monitoring</a></li>
 				</ul>
 			</li>
 			
@@ -76,6 +76,7 @@
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
+import _ from 'lodash';
 import {Meta, Model} from './base';
 import {BaseQuerySet, Get, Create, BulkCreate, List} from '../querySet';
 
@@ -85,7 +86,104 @@ const UserQuerySet = stampit().compose(
   Create,
   BulkCreate,
   List
-);
+).methods({
+
+  get(properties = {}) {
+    const config = this.getConfig();
+
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'GET';
+    this.endpoint = 'detail';
+
+    if (_.isEmpty(config.getAccountKey()) &amp;&amp; !_.isEmpty(config.getUserKey()) &amp;&amp; !_.isEmpty(config.getApiKey())) {
+      this.endpoint = 'user';
+    }
+
+    return this;
+  },
+
+  update(properties = {}, object = {}) {
+    const config = this.getConfig();
+
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = object;
+    this.method = 'PATCH';
+    this.endpoint = 'detail';
+
+    if (_.isEmpty(config.getAccountKey()) &amp;&amp; !_.isEmpty(config.getUserKey()) &amp;&amp; !_.isEmpty(config.getApiKey())) {
+      this.endpoint = 'user';
+    }
+
+    return this;
+  },
+
+  /**
+  * Restes user key.
+  * @memberOf UserQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @returns {Promise}
+
+  * @example {@lang javascript}
+  * User.please().resetKey({id: 1, instanceName: 'test-one'}).then(function(user) {});
+
+  */
+  resetKey(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.endpoint = 'reset_key';
+
+    return this;
+  },
+
+  /**
+  * A convenience method for authenticating instance user with email and password.
+
+  * @memberOf UserQuerySet
+  * @instance
+
+  * @param {Object} properties
+  * @param {String} properties.instanceName
+  * @param {Object} credentials
+  * @param {String} credentials.email
+  * @param {String} credentials.password
+  * @returns {Promise}
+
+  */
+  login(properties = {}, credentials = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.endpoint = 'login';
+    this.payload = credentials;
+
+    return this;
+  },
+
+  /**
+  * A convenience method for authenticating instance user with email and password.
+
+  * @memberOf UserQuerySet
+  * @instance
+
+  * @param {Object} properties
+  * @param {String} properties.instanceName
+  * @param {String} properties.backend
+  * @param {Object} credentials
+  * @param {String} credentials.access_token
+  * @returns {Promise}
+
+  */
+  socialLogin(properties = {}, credentials = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.endpoint = 'socialLogin';
+    this.payload = credentials;
+
+    return this;
+  }
+
+});
 
 const UserMeta = Meta({
   name: 'user',
@@ -93,19 +191,31 @@ const UserMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instanceName}/users/{id}/'
+      'path': '/v1.1/instances/{instanceName}/users/{id}/'
     },
     'reset_key': {
       'methods': ['post'],
-      'path': '/v1/instances/{instanceName}/users/{id}/reset_key/'
+      'path': '/v1.1/instances/{instanceName}/users/{id}/reset_key/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instanceName}/users/'
+      'path': '/v1.1/instances/{instanceName}/users/'
     },
     'groups': {
       'methods': ['get', 'post'],
-      'path': '/v1/instances/{instanceName}/users/{id}/groups/'
+      'path': '/v1.1/instances/{instanceName}/users/{id}/groups/'
+    },
+    'login': {
+      'methods': ['post'],
+      'path': '/v1.1/instances/{instanceName}/user/auth/'
+    },
+    'socialLogin': {
+      'methods': ['post'],
+      'path': '/v1.1/instances/{instanceName}/user/auth/{backend}/'
+    },
+    'user': {
+      'methods': ['get', 'post', 'patch'],
+      'path': '/v1.1/instances/{instanceName}/user/'
     }
   }
 });
@@ -118,13 +228,37 @@ const UserConstraints = {
     }
   },
   username: {
-    presence: true
+    presence: true,
+    string: true
   },
   password: {
-    presence: true
+    presence: true,
+    string: true
+  },
+  profile: {
+    object: true
+  },
+  'profile.owner_permissions': {
+    inclusion: ['none', 'read', 'write', 'full']
+  },
+  'profile.group': {
+    numericality: {
+      noStrings: true
+    }
+  },
+  'profile.group_permissions': {
+    inclusion: ['none', 'read', 'write', 'full']
+  },
+  'profile.other_permissions': {
+    inclusion: ['none', 'read', 'write', 'full']
+  },
+  'profile.channel': {
+    string: true
+  },
+  'profile.channel_room': {
+    string: true
   }
 };
-
 
 /**
  * OO wrapper around instance users {@link http://docs.syncano.com/v4.0/docs/user-management endpoint}.
@@ -137,14 +271,35 @@ const UserConstraints = {
  * @property {String} password
  * @property {String} user_key
  * @property {String} [links = {}]
- * @property {String} [created_at = null]
- * @property {String} [updated_at = null]
+ * @property {Date} [created_at = null]
+ * @property {Date} [updated_at = null]
  */
 const User = stampit()
   .compose(Model)
   .setMeta(UserMeta)
   .setQuerySet(UserQuerySet)
-  .setConstraints(UserConstraints);
+  .setConstraints(UserConstraints)
+  .methods({
+
+    /**
+    * Restes user key.
+    * @memberOf User
+    * @instance
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * User.please().get({instanceName: 'test-one', id: 1}).then(function(user) {
+    *   user.resetKey().then(function(user) {});
+    * });
+    */
+    resetKey() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('reset_key', this);
+
+      return this.makeRequest('POST', path, {}).then((body) => this.serialize(body));
+    }
+
+  });
 
 export default User;
 </pre>
@@ -190,7 +345,7 @@ export default User;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Wed Feb 24th 2016
+		on Wed Mar 23rd 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

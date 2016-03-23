@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Source: models/apnsmessage.js</title>
+	<title>Syncano Source: models/dataendpoint.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -70,86 +70,157 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: models/apnsmessage.js</h1>
+		<h1 class="page-title">Source: models/dataendpoint.js</h1>
     
 <section>
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
+import _ from 'lodash';
 import {Meta, Model} from './base';
-import {BaseQuerySet, Create, BulkCreate, Get, GetOrCreate, List} from '../querySet';
+import QuerySet from '../querySet';
 
-const APNSMessageQuerySet = stampit().compose(
-  BaseQuerySet,
-  Create,
-  BulkCreate,
-  Get,
-  List,
-  GetOrCreate
-);
 
-const APNSMessageMeta = Meta({
-  name: 'apnsmessage',
-  pluralName: 'apnsmessages',
+const DataEndpointQerySet = stampit().compose(QuerySet).methods({
+
+  /**
+  * Fetches Data Objects matching the Data View properties.
+  * @memberOf DataEndpointQerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @returns {DataEndpointQerySet}
+
+  * @example {@lang javascript}
+  * DataEndpoint.please().fetchData({name: 'dataViewName', instanceName: 'test-one'}).then(function(dataObjects) {});
+
+  */
+  fetchData(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'GET';
+    this.endpoint = 'get';
+    this._serialize = false;
+
+    return this;
+  }
+
+});
+
+const DataEndpointMeta = Meta({
+  name: 'dataview',
+  pluralName: 'dataviews',
   endpoints: {
     'detail': {
-      'methods': ['delete', 'get'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/messages/{id}/'
+      'methods': ['delete', 'patch', 'put', 'get'],
+      'path': '/v1.1/instances/{instanceName}/endpoints/data/{name}/'
     },
     'list': {
+      'methods': ['post', 'get'],
+      'path': '/v1.1/instances/{instanceName}/endpoints/data/'
+    },
+    'get': {
       'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/messages/'
+      'path': '/v1.1/instances/{instanceName}/endpoints/data/{name}/get/'
+    },
+    'rename': {
+      'methods': ['post'],
+      'path': '/v1.1/instances/{instanceName}/endpoints/data/{name}/rename/'
+    },
+    'clear_cache': {
+      'methods': ['post'],
+      'path': '/v1.1/instances/{instanceName}/endpoints/data/{name}/clear_cache/'
     }
   }
 });
 
-const APNSMessageConstraints = {
+const DataEndpointConstraints = {
   instanceName: {
     presence: true,
     length: {
       minimum: 5
     }
   },
-  content: {
+  name: {
     presence: true,
+    string: true,
+    length: {
+      maximum: 64
+    }
+  },
+  description: {
+    string: true
+  },
+  class: {
+    presence: true,
+    string: true,
+    length: {
+      minimum: 5
+    }
+  },
+  query: {
     object: true
   },
-  'content.registration_ids': {
-    presence: true,
-    array: true
+  excluded_fields: {
+    string: true
   },
-  'content.environment': {
-    presence: true,
-    inclusion: ['development', 'production']
+  order_by: {
+    string: true
   },
-  'content.aps': {
-    presence: true
+  page_size: {
+    numericality: {
+      noStrings: true
+    }
   },
-  'content.aps.alert': {
-    presence: true
+  expand: {
+    string: true
   }
 };
 
 /**
- * OO wrapper around instance APNS messages {@link # endpoint}.
+ * OO wrapper around data views {@link # endpoint}.
  * @constructor
- * @type {APNSMessage}
+ * @type {DataEndpoint}
 
- * @property {Number} id
- * @property {String} [status = null]
- * @property {Object} [content = {}]
- * @property {Object} [result = {}]
+ * @property {String} name
+ * @property {String} instanceName
+ * @property {Object} query
+ * @property {String} excluded_fields
+ * @property {String} order_by
+ * @property {Number} page_size
+ * @property {String} expand
+ * @property {String} class
+ * @property {String} [description = null]
  * @property {String} [links = {}]
- * @property {Date} [created_at = null]
- * @property {Date} [updated_at = null]
  */
-const APNSMessage = stampit()
+const DataEndpoint = stampit()
   .compose(Model)
-  .setQuerySet(APNSMessageQuerySet)
-  .setConstraints(APNSMessageConstraints)
-  .setMeta(APNSMessageMeta);
+  .setMeta(DataEndpointMeta)
+  .setQuerySet(DataEndpointQerySet)
+  .setConstraints(DataEndpointConstraints)
+  .methods({
 
-export default APNSMessage;
+    /**
+    * Fetches Data Objects matching the Data View properties.
+    * @memberOf DataEndpoint
+    * @instance
+
+    * @param {Object}
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * DataEndpoint.please().fetchData({name: 'dataViewName', instanceName: 'test-one'}).then(function(dataObjects) {});
+    */
+    fetchData() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('get', this);
+
+      return this.makeRequest('GET', path);
+    }
+
+  });
+
+export default DataEndpoint;
 </pre>
     </article>
 </section>

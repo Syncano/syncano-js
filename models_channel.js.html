@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="CodeBox.html">CodeBox</a></li><li><a href="CodeBoxTrace.html">CodeBoxTrace</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="DataView.html">DataView</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li><li><a href="Webhook.html">Webhook</a></li><li><a href="WebhookTrace.html">WebhookTrace</a></li>
+					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataEndpoint.html">DataEndpoint</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Invitation.html">Invitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="Pinger.html">Pinger</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Script.html">Script</a></li><li><a href="ScriptEndpoint.html">ScriptEndpoint</a></li><li><a href="ScriptEndpointTrace.html">ScriptEndpointTrace</a></li><li><a href="ScriptTrace.html">ScriptTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li>
+					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li><li><a href="tutorial-04. Connection monitoring.html">04. Connection monitoring</a></li>
 				</ul>
 			</li>
 			
@@ -79,7 +79,120 @@
 import {Meta, Model} from './base';
 import Request from '../request';
 import {EventEmittable} from '../utils';
+import _ from 'lodash';
+import QuerySet from '../querySet';
 
+const ChannelQuerySet = stampit().compose(QuerySet).methods({
+
+  /**
+    * Puslishes to a channel.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {Object} channel
+    * @param {Object} message
+    * @param {String} [room = null]
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * Channel.please().publish({ instanceName: 'test-instace', name: 'test-class' }, { content: 'my message'});
+
+    */
+
+  publish(properties, message, room = null) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = {payload: JSON.stringify(message)};
+
+    if (room) {
+      this.payload.room = room;
+    }
+
+    this.method = 'POST';
+    this.endpoint = 'publish';
+
+    return this;
+  },
+
+  /**
+    * Allows polling of a channel.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {Object} options
+    * @param {Boolean} [start = true]
+    * @returns {ChannelPoll}
+
+    * @example {@lang javascript}
+    * var poll = Channel.please().poll({ instanceName: 'test-instace', name: 'test-class' });
+    *
+    * poll.on('start', function() {
+    *   console.log('poll::start');
+    * });
+    *
+    * poll.on('stop', function() {
+    *   console.log('poll::stop');
+    * });
+    *
+    * poll.on('message', function(message) {
+    *   console.log('poll::message', message);
+    * });
+    *
+    * poll.on('custom', function(message) {
+    *   console.log('poll::custom', message);
+    * });
+    *
+    * poll.on('create', function(data) {
+    *   console.log('poll::create', data);
+    * });
+    *
+    * poll.on('delete', function(data) {
+    *   console.log('poll::delete', data);
+    * });
+    *
+    * poll.on('update', function(data) {
+    *   console.log('poll::update', data);
+    * });
+    *
+    * poll.on('error', function(error) {
+    *   console.log('poll::error', error);
+    * });
+    *
+    * poll.start();
+    *
+    */
+
+  poll(properties = {}, options = {}, start = true) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    const config = this.getConfig();
+    const meta = this.model.getMeta();
+    const path = meta.resolveEndpointPath('poll', this.properties);
+
+    options.path = path;
+
+    const channelPoll = ChannelPoll.setConfig(config)(options);
+
+    if (start === true) {
+      channelPoll.start();
+    }
+
+    return channelPoll;
+  },
+
+  history(properties = {}, query = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'GET';
+    this.endpoint = 'history';
+    this.query = query;
+    this._serialize = false;
+
+    return this;
+  }
+
+});
 
 const ChannelMeta = Meta({
   name: 'channel',
@@ -87,39 +200,60 @@ const ChannelMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instanceName}/channels/{name}/'
+      'path': '/v1.1/instances/{instanceName}/channels/{name}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instanceName}/channels/'
+      'path': '/v1.1/instances/{instanceName}/channels/'
     },
     'poll': {
       'methods': ['get'],
-      'path': '/v1/instances/{instanceName}/channels/{name}/poll/'
+      'path': '/v1.1/instances/{instanceName}/channels/{name}/poll/'
     },
     'publish': {
       'methods': ['post'],
-      'path': '/v1/instances/{instanceName}/channels/{name}/publish/'
+      'path': '/v1.1/instances/{instanceName}/channels/{name}/publish/'
     },
     'history': {
       'methods': ['get'],
-      'path': '/v1/instances/{instanceName}/channels/{name}/history/'
+      'path': '/v1.1/instances/{instanceName}/channels/{name}/history/'
     }
   }
 });
 
 const channelConstraints = {
-  name: {
-    presence: true,
-    length: {
-      minimum: 5
-    }
-  },
   instanceName: {
     presence: true,
     length: {
       minimum: 5
     }
+  },
+  name: {
+    presence: true,
+    string: true,
+    length: {
+      minimum: 5
+    }
+  },
+  description: {
+    string: true
+  },
+  type: {
+    inclusion: ['default', 'seperate_rooms']
+  },
+  group: {
+    numericality: {
+      noStrings: true
+    }
+  },
+  group_permissions: {
+    inclusion: ['none', 'subscribe', 'publish']
+  },
+  other_permissions: {
+    inclusion: ['none', 'subscribe', 'publish']
+  },
+  custom_publish: {
+    boolean: true
   }
 };
 
@@ -138,7 +272,7 @@ const channelConstraints = {
 
   * @example {@lang javascript}
   * var poll = ChannelPoll.setConfig(config)({
-  *   path: '/v1/instances/some-instance/channels/some-channel/poll/'
+  *   path: '/v1.1/instances/some-instance/channels/some-channel/poll/'
   * });
   *
   * poll.on('start', function() {
@@ -151,6 +285,10 @@ const channelConstraints = {
   *
   * poll.on('message', function(message) {
   *   console.log('poll::message', message);
+  * });
+  *
+  * poll.on('custom', function(message) {
+  *   console.log('poll::custom', message);
   * });
   *
   * poll.on('create', function(data) {
@@ -257,6 +395,7 @@ export const ChannelPoll = stampit()
  *
  * Channel.please().get('instance-name', 'channel-name').then((channel) => {
  *   const poll = channel.poll();
+ *
  *   poll.on('start', function() {
  *     console.log('poll::start');
  *   });
@@ -267,6 +406,10 @@ export const ChannelPoll = stampit()
  *
  *   poll.on('message', function(message) {
  *     console.log('poll::message', message);
+ *   });
+ *
+ *   poll.on('custom', function(message) {
+ *     console.log('poll::custom', message);
  *   });
  *
  *   poll.on('create', function(data) {
@@ -291,6 +434,7 @@ export const ChannelPoll = stampit()
 const Channel = stampit()
   .compose(Model)
   .setMeta(ChannelMeta)
+  .setQuerySet(ChannelQuerySet)
   .methods({
 
     poll(options = {}, start = true) {
@@ -323,6 +467,13 @@ const Channel = stampit()
       }
 
       return this.makeRequest('POST', path, options);
+    },
+
+    history(query = {}) {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('history', this);
+
+      return this.makeRequest('GET', path, {query});
     }
 
   })
@@ -372,7 +523,7 @@ export default Channel;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Wed Feb 24th 2016
+		on Wed Mar 23rd 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

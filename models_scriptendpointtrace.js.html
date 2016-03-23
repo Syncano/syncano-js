@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Source: models/webhooktrace.js</title>
+	<title>Syncano Source: models/scriptendpointtrace.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="CodeBox.html">CodeBox</a></li><li><a href="CodeBoxTrace.html">CodeBoxTrace</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="DataView.html">DataView</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li><li><a href="Webhook.html">Webhook</a></li><li><a href="WebhookTrace.html">WebhookTrace</a></li>
+					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataEndpoint.html">DataEndpoint</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Invitation.html">Invitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="Pinger.html">Pinger</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Script.html">Script</a></li><li><a href="ScriptEndpoint.html">ScriptEndpoint</a></li><li><a href="ScriptEndpointTrace.html">ScriptEndpointTrace</a></li><li><a href="ScriptTrace.html">ScriptTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li>
+					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li><li><a href="tutorial-04. Connection monitoring.html">04. Connection monitoring</a></li>
 				</ul>
 			</li>
 			
@@ -70,7 +70,7 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: models/webhooktrace.js</h1>
+		<h1 class="page-title">Source: models/scriptendpointtrace.js</h1>
     
 <section>
     <article>
@@ -79,36 +79,37 @@
 import {Meta, Model} from './base';
 import {BaseQuerySet, Get, List} from '../querySet';
 
-const WebhookTraceQuerySet = stampit().compose(
+const ScriptEndpointTraceQuerySet = stampit().compose(
   BaseQuerySet,
   Get,
   List
 );
 
-const WebhookTraceMeta = Meta({
+const ScriptEndpointTraceMeta = Meta({
   name: 'triggertrace',
   pluralName: 'triggertraces',
   endpoints: {
     'detail': {
       'methods': ['get'],
-      'path': '/v1/instances/{instanceName}/webhooks/{webhookName}/traces/{id}/'
+      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{scriptEndpointName}/traces/{id}/'
     },
     'list': {
       'methods': ['get'],
-      'path': '/v1/instances/{instanceName}/webhooks/{webhookName}/traces/'
+      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{scriptEndpointName}/traces/'
     }
   }
 });
 
-const WebhookTraceConstraints = {
+const ScriptEndpointTraceConstraints = {
   instanceName: {
     presence: true,
     length: {
       minimum: 5
     }
   },
-  webhookName: {
-    presence: true
+  scriptEndpointName: {
+    presence: true,
+    string: true
   }
 };
 
@@ -116,26 +117,26 @@ const WebhookTraceConstraints = {
  * OO wrapper around webhook traces {@link # endpoint}.
  * This model is *read only*.
  * @constructor
- * @type {WebhookTrace}
+ * @type {ScriptEndpointTrace}
 
  * @property {Number} id
  * @property {String} instanceName
- * @property {String} webhookName
+ * @property {String} scriptEndpointName
  * @property {String} status
- * @property {String} executed_at
+ * @property {Date} executed_at
  * @property {Number} duration
  * @property {Object} [result = {}]
  * @property {String} result.stderr
  * @property {String} result.stdout
  * @property {String} [links = {}]
  */
-const WebhookTrace = stampit()
+const ScriptEndpointTrace = stampit()
   .compose(Model)
-  .setMeta(WebhookTraceMeta)
-  .setQuerySet(WebhookTraceQuerySet)
-  .setConstraints(WebhookTraceConstraints);
+  .setMeta(ScriptEndpointTraceMeta)
+  .setQuerySet(ScriptEndpointTraceQuerySet)
+  .setConstraints(ScriptEndpointTraceConstraints);
 
-export default WebhookTrace;
+export default ScriptEndpointTrace;
 </pre>
     </article>
 </section>
@@ -179,7 +180,7 @@ export default WebhookTrace;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Wed Feb 24th 2016
+		on Wed Mar 23rd 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

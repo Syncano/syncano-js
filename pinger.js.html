@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Source: models/apnsmessage.js</title>
+	<title>Syncano Source: pinger.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -70,86 +70,72 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: models/apnsmessage.js</h1>
+		<h1 class="page-title">Source: pinger.js</h1>
     
 <section>
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Create, BulkCreate, Get, GetOrCreate, List} from '../querySet';
-
-const APNSMessageQuerySet = stampit().compose(
-  BaseQuerySet,
-  Create,
-  BulkCreate,
-  Get,
-  List,
-  GetOrCreate
-);
-
-const APNSMessageMeta = Meta({
-  name: 'apnsmessage',
-  pluralName: 'apnsmessages',
-  endpoints: {
-    'detail': {
-      'methods': ['delete', 'get'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/messages/{id}/'
-    },
-    'list': {
-      'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/messages/'
-    }
-  }
-});
-
-const APNSMessageConstraints = {
-  instanceName: {
-    presence: true,
-    length: {
-      minimum: 5
-    }
-  },
-  content: {
-    presence: true,
-    object: true
-  },
-  'content.registration_ids': {
-    presence: true,
-    array: true
-  },
-  'content.environment': {
-    presence: true,
-    inclusion: ['development', 'production']
-  },
-  'content.aps': {
-    presence: true
-  },
-  'content.aps.alert': {
-    presence: true
-  }
-};
+import {EventEmittable} from './utils';
+import Request from './request';
 
 /**
- * OO wrapper around instance APNS messages {@link # endpoint}.
- * @constructor
- * @type {APNSMessage}
+* Utility for pinging the api. Allows checking for connection to the platofrm. Meant to be used directly form the {@link Syncano} instance.
+*
+* @constructor
+* @type {Pinger}
+*
+* @example {@lang javascript}
+* const connection = Syncano();
+* connection.Monitor.startMonitoring();
+* connection.Monitor.on('connected', () => {
+*    // connected to the api
+* });
+* connection.Monitor.on('disconnected', (error) => {
+*    // disconnected from the api
+* });
+*/
 
- * @property {Number} id
- * @property {String} [status = null]
- * @property {Object} [content = {}]
- * @property {Object} [result = {}]
- * @property {String} [links = {}]
- * @property {Date} [created_at = null]
- * @property {Date} [updated_at = null]
- */
-const APNSMessage = stampit()
-  .compose(Model)
-  .setQuerySet(APNSMessageQuerySet)
-  .setConstraints(APNSMessageConstraints)
-  .setMeta(APNSMessageMeta);
+const Pinger = stampit()
+  .compose(Request, EventEmittable)
+  .props({
+    timeout: 5000,
+    interval: null,
+    connected: null
+  })
+  .methods({
 
-export default APNSMessage;
+    request() {
+      const path = this.getConfig().getBaseUrl();
+      return this.makeRequest('GET', path);
+    },
+
+    startMonitoring() {
+      this.interval = setInterval(() => this.ping(), this.timeout);
+    },
+
+    ping() {
+      this.request()
+        .then(() => {
+          if(!this.connected) {
+            this.connected = true;
+            this.emit('connected')
+          }
+        })
+        .catch((error) => {
+          if(this.connected) {
+            this.connected = false;
+            this.emit('disconnected', error)
+          }
+        });
+    },
+
+    stopMonitoring() {
+      clearInterval(this.interval);
+    }
+  });
+
+export default Pinger;
 </pre>
     </article>
 </section>

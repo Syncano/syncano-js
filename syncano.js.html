@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="CodeBox.html">CodeBox</a></li><li><a href="CodeBoxTrace.html">CodeBoxTrace</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="DataView.html">DataView</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li><li><a href="Webhook.html">Webhook</a></li><li><a href="WebhookTrace.html">WebhookTrace</a></li>
+					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataEndpoint.html">DataEndpoint</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Invitation.html">Invitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="Pinger.html">Pinger</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Script.html">Script</a></li><li><a href="ScriptEndpoint.html">ScriptEndpoint</a></li><li><a href="ScriptEndpointTrace.html">ScriptEndpointTrace</a></li><li><a href="ScriptTrace.html">ScriptTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li>
+					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li><li><a href="tutorial-04. Connection monitoring.html">04. Connection monitoring</a></li>
 				</ul>
 			</li>
 			
@@ -113,6 +113,7 @@ const Syncano = stampit()
     baseUrl: 'https://api.syncano.io',
     accountKey: null,
     userKey: null,
+    apiKey: null,
     socialToken: null
   })
   .methods({
@@ -162,7 +163,6 @@ const Syncano = stampit()
 
     * @param {String} accountKey Your {@link https://syncano.io|Syncano} account key
     * @returns {Syncano}
-    * @throws {Error} Account key is required.
 
     * @example {@lang javascript}
     * var connection = Syncano({accountKey: '123'});
@@ -170,7 +170,6 @@ const Syncano = stampit()
 
     */
     setAccountKey(accountKey) {
-      if(_.isEmpty(accountKey)) throw new Error('Account key is required.');
       this.accountKey = accountKey;
       return this;
     },
@@ -199,7 +198,6 @@ const Syncano = stampit()
 
     * @param {String} userKey Instance user api key
     * @returns {Syncano}
-    * @throws {Error} User key is required.
 
     * @example {@lang javascript}
     * var connection = Syncano({userKey: '123'});
@@ -207,7 +205,6 @@ const Syncano = stampit()
 
     */
     setUserKey(userKey) {
-      if(_.isEmpty(userKey)) throw new Error('User key is required.');
       this.userKey = userKey;
       return this;
     },
@@ -229,6 +226,41 @@ const Syncano = stampit()
     },
 
     /**
+    * Sets *apiKey*.
+
+    * @memberOf Syncano
+    * @instance
+
+    * @param {String} apiKey Instance user api key
+    * @returns {Syncano}
+
+    * @example {@lang javascript}
+    * var connection = Syncano({apiKey: '123'});
+    * connection.setApiKey('abcd');
+
+    */
+    setApiKey(apiKey) {
+      this.apiKey = apiKey;
+      return this;
+    },
+
+    /**
+    * Gets *apiKey*.
+
+    * @memberOf Syncano
+    * @instance
+    * @returns {String}
+
+    * @example {@lang javascript}
+    * var connection = Syncano({apiKey: '123'});
+    * var apiKey = connection.getApiKey();
+
+    */
+    getApiKey() {
+      return this.apiKey;
+    },
+
+    /**
     * Sets *socialToken*.
 
     * @memberOf Syncano
@@ -236,7 +268,6 @@ const Syncano = stampit()
 
     * @param {String} socialToken Instance social authentication token
     * @returns {Syncano}
-    * @throws {Error} Social token is required.
 
     * @example {@lang javascript}
     * var connection = Syncano({socialToken: '123'});
@@ -244,7 +275,6 @@ const Syncano = stampit()
 
     */
     setSocialToken(socialToken) {
-      if(_.isEmpty(socialToken)) throw new Error('Social token is required.');
       this.socialToken = socialToken;
       return this;
     },
@@ -320,7 +350,7 @@ export default Syncano;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Wed Feb 24th 2016
+		on Wed Mar 23rd 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

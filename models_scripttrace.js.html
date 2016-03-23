@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Source: models/codebox.js</title>
+	<title>Syncano Source: models/scripttrace.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="CodeBox.html">CodeBox</a></li><li><a href="CodeBoxTrace.html">CodeBoxTrace</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="DataView.html">DataView</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li><li><a href="Webhook.html">Webhook</a></li><li><a href="WebhookTrace.html">WebhookTrace</a></li>
+					<li><a href="Account.html">Account</a></li><li><a href="Admin.html">Admin</a></li><li><a href="ApiKey.html">ApiKey</a></li><li><a href="APNSConfig.html">APNSConfig</a></li><li><a href="APNSDevice.html">APNSDevice</a></li><li><a href="APNSMessage.html">APNSMessage</a></li><li><a href="Channel.html">Channel</a></li><li><a href="ChannelPoll.html">ChannelPoll</a></li><li><a href="Class.html">Class</a></li><li><a href="ConfigMixin.html">ConfigMixin</a></li><li><a href="ConstraintsMixin.html">ConstraintsMixin</a></li><li><a href="DataEndpoint.html">DataEndpoint</a></li><li><a href="DataObject.html">DataObject</a></li><li><a href="EventEmittable.html">EventEmittable</a></li><li><a href="GCMConfig.html">GCMConfig</a></li><li><a href="GCMDevice.html">GCMDevice</a></li><li><a href="GCMMessage.html">GCMMessage</a></li><li><a href="Group.html">Group</a></li><li><a href="Instance.html">Instance</a></li><li><a href="InstanceInvitation.html">InstanceInvitation</a></li><li><a href="Invitation.html">Invitation</a></li><li><a href="Logger.html">Logger</a></li><li><a href="Meta.html">Meta</a></li><li><a href="MetaMixin.html">MetaMixin</a></li><li><a href="Model.html">Model</a></li><li><a href="Pinger.html">Pinger</a></li><li><a href="QuerySet.html">QuerySet</a></li><li><a href="Request.html">Request</a></li><li><a href="ResultSet.html">ResultSet</a></li><li><a href="Schedule.html">Schedule</a></li><li><a href="ScheduleTrace.html">ScheduleTrace</a></li><li><a href="Script.html">Script</a></li><li><a href="ScriptEndpoint.html">ScriptEndpoint</a></li><li><a href="ScriptEndpointTrace.html">ScriptEndpointTrace</a></li><li><a href="ScriptTrace.html">ScriptTrace</a></li><li><a href="Syncano.html">Syncano</a></li><li><a href="Template.html">Template</a></li><li><a href="Trigger.html">Trigger</a></li><li><a href="TriggerTrace.html">TriggerTrace</a></li><li><a href="User.html">User</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li>
+					<li><a href="tutorial-01. Quick start.html">01. Quick start</a></li><li><a href="tutorial-02. Interacting.html">02. Interacting</a></li><li><a href="tutorial-03. Models.html">03. Models</a></li><li><a href="tutorial-04. Connection monitoring.html">04. Connection monitoring</a></li>
 				</ul>
 			</li>
 			
@@ -70,110 +70,72 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: models/codebox.js</h1>
+		<h1 class="page-title">Source: models/scripttrace.js</h1>
     
 <section>
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
-import _ from 'lodash';
 import {Meta, Model} from './base';
-import QuerySet from '../querySet';
+import {BaseQuerySet, Get, List} from '../querySet';
 
+const ScriptTraceQuerySet = stampit().compose(
+  BaseQuerySet,
+  Get,
+  List
+);
 
-const CodeBoxQuerySet = stampit().compose(QuerySet).methods({
-
-  /**
-  * Runs CodeBox matching the given lookup properties.
-  * @memberOf CodeBoxQuerySet
-  * @instance
-
-  * @param {Object} properties lookup properties used for path resolving
-  * @returns {CodeBoxQuerySet}
-
-  * @example {@lang javascript}
-  * CodeBox.please().run({id: 1, instanceName: 'test-one'}).then(function(trace) {});
-
-  */
-  run(properties = {}, payload = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-
-    this.method = 'POST';
-    this.endpoint = 'run';
-    this.payload = payload;
-    this._serialize = false;
-
-    return this;
-  }
-
-});
-
-
-const CodeBoxMeta = Meta({
-  name: 'codebox',
-  pluralName: 'codeboxes',
+const ScriptTraceMeta = Meta({
+  name: 'scripttrace',
+  pluralName: 'scripttrace',
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1/instances/{instanceName}/codeboxes/{id}/'
+      'path': '/v1.1/instances/{instanceName}/scripts/{scriptId}/traces/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1/instances/{instanceName}/codeboxes/'
-    },
-    'run': {
-      'methods': ['post'],
-      'path': '/v1/instances/{instanceName}/codeboxes/{id}/run/'
+      'path': '/v1.1/instances/{instanceName}/scripts/{scriptId}/traces/'
     }
-  },
-  relatedModels: [ 'CodeBoxTrace' ]
+  }
 });
 
+const ScriptConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  scriptId: {
+    presence: true
+  }
+};
+
 /**
- * OO wrapper around codeboxes {@link http://docs.syncano.com/v4.0/docs/codebox-list-codeboxes endpoint}.
- * **CodeBox** has special method called ``run`` which will execute attached source code.
+ * OO wrapper around script trace {@link # endpoint}.
+ * This model is *read only*.
  * @constructor
- * @type {CodeBox}
+ * @type {ScriptTrace}
 
  * @property {Number} id
  * @property {String} instanceName
- * @property {String} label
- * @property {String} source
- * @property {String} runtime_name
- * @property {String} [description = null]
+ * @property {Number} scriptId
+ * @property {String} status
+ * @property {Date} executed_at
+ * @property {Number} duration
+ * @property {Object} [result = {}]
+ * @property {String} result.stderr
+ * @property {String} result.stdout
  * @property {String} [links = {}]
- * @property {String} [created_at = null]
- * @property {String} [updated_at = null]
  */
-const CodeBox = stampit()
+const ScriptTrace = stampit()
   .compose(Model)
-  .setMeta(CodeBoxMeta)
-  .setQuerySet(CodeBoxQuerySet)
-  .methods({
+  .setQuerySet(ScriptTraceQuerySet)
+  .setConstraints(ScriptConstraints)
+  .setMeta(ScriptTraceMeta);
 
-    /**
-    * Runs current CodeBox.
-    * @memberOf CodeBox
-    * @instance
-
-    * @param {Object} [payload = {}]
-    * @returns {Promise}
-
-    * @example {@lang javascript}
-    * CodeBox.please().get({instanceName: 'test-one', id: 1}).then(function(codebox) {
-    *   codebox.run({some: 'variable'}).then(function(trace) {});
-    * });
-    */
-    run(payload = {}) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('run', this);
-
-      return this.makeRequest('POST', path, {payload});
-    }
-
-  });
-
-export default CodeBox;
+export default ScriptTrace;
 </pre>
     </article>
 </section>
@@ -217,7 +179,7 @@ export default CodeBox;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Wed Feb 24th 2016
+		on Wed Mar 23rd 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
