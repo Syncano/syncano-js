@@ -55,8 +55,10 @@ var connection = Syncano({ accountKey: 'MY_ACCOUNT_KEY'});
 var connection = Syncano({ userKey: 'USER_KEY'});
 
 // create a connection with a social token
-var connection = Syncano({ userKey: 'SOCIAL_TOKEN'});
+var connection = Syncano({ socialToken: 'SOCIAL_TOKEN'});
 
+// create a connection with a api key
+var connection = Syncano({ apiKey: 'API_KEY'});
 ```
 
 From now on, you can access all of the objects on the platform via the `connection` object.

@@ -52,10 +52,6 @@ describe('Syncano', function() {
     it('should allow to set accountKey', function() {
       should(baseObject).have.property('setAccountKey').which.is.Function();
 
-      should(function() {
-        baseObject.setAccountKey();
-      }).throw(Error('Account key is required.'))
-
       baseObject.setAccountKey(testKey);
 
       should(baseObject.accountKey).is.equal(testKey);
@@ -80,10 +76,6 @@ describe('Syncano', function() {
 
     it('should allow to set base url', function() {
       should(baseObject).have.property('setBaseUrl').which.is.Function();
-
-      should(function() {
-        baseObject.setBaseUrl();
-      }).throw(Error('Base Url is required.'))
 
       baseObject.setBaseUrl(testUrl);
 
@@ -110,10 +102,6 @@ describe('Syncano', function() {
     it('should allow to set userKey', function() {
       should(baseObject).have.property('setUserKey').which.is.Function();
 
-      should(function() {
-        baseObject.setUserKey();
-      }).throw(Error('Account key is required.'))
-
       baseObject.setUserKey(testKey);
 
       should(baseObject.userKey).is.equal(testKey);
@@ -139,10 +127,6 @@ describe('Syncano', function() {
     it('should allow to set apiKey', function() {
       should(baseObject).have.property('setApiKey').which.is.Function();
 
-      should(function() {
-        baseObject.setApiKey();
-      }).throw(Error('Api key is required.'))
-
       baseObject.setApiKey(testKey);
 
       should(baseObject.apiKey).is.equal(testKey);
@@ -167,10 +151,6 @@ describe('Syncano', function() {
 
     it('should allow to set socialToken', function() {
       should(baseObject).have.property('setSocialToken').which.is.Function();
-
-      should(function() {
-        baseObject.setSocialToken();
-      }).throw(Error('Account key is required.'))
 
       baseObject.setSocialToken(testKey);
 
