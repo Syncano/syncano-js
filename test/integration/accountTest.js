@@ -41,10 +41,6 @@ describe('Account', function() {
     should(Account).have.property('login').which.is.Function();
   });
 
-  it('has "userLogin" method', function() {
-    should(Account).have.property('userLogin').which.is.Function();
-  });
-
   it('has "update" method', function() {
     should(Account).have.property('update').which.is.Function();
   });
@@ -78,25 +74,6 @@ describe('Account', function() {
         should(user).have.property('email').which.is.String().equal(data.email);
         should(user).have.property('is_active').which.is.false();
         should(user).have.property('has_password').which.is.true();
-      });
-    });
-
-  });
-
-  describe('#userLogin()', function() {
-
-    before(function() {
-      return connection.User.please().create(data);
-    });
-
-    it('should login instance user', function() {
-      return Account.userLogin(data, false).then((user) => {
-        should(user).be.an.Object();
-        should(user).have.property('id').which.is.Number();
-        should(user).have.property('profile').which.is.Object();
-        should(user).have.property('username').which.is.String().equal(username);
-        should(user).have.property('user_key').which.is.String();
-        should(user).have.property('groups').which.is.Array();
       });
     });
 
