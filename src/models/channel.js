@@ -376,7 +376,7 @@ const Channel = stampit()
       const path = meta.resolveEndpointPath('history', this);
 
       return this.makeRequest('GET', path, {query});
-    },
+    }
 
   })
   .setConstraints(channelConstraints);

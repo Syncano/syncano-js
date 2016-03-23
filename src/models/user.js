@@ -196,8 +196,7 @@ const User = stampit()
       const path = meta.resolveEndpointPath('reset_key', this);
 
       return this.makeRequest('POST', path, {}).then((body) => this.serialize(body));
-    },
-
+    }
 
   });
 
