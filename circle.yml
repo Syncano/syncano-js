@@ -1,6 +1,6 @@
 machine:
   node:
-    version: 4.3.1
+    version: 4.4.1
 
 general:
   branches:
@@ -14,4 +14,3 @@ deployment:
     branch: master
     commands:
       - npm run release
-      - npm run codeclimate

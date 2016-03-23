@@ -1,5 +1,5 @@
 # Syncano Javascript Library
-[![npm version](https://badge.fury.io/js/syncano.svg)](https://badge.fury.io/js/syncano) [![Circle CI](https://circleci.com/gh/Syncano/syncano-js/tree/release%2F1.0.0.svg?style=svg)](https://circleci.com/gh/Syncano/syncano-js/tree/release%2F1.0.0)
+[![npm version](https://badge.fury.io/js/syncano.svg)](https://badge.fury.io/js/syncano) [![Circle CI](https://circleci.com/gh/Syncano/syncano-js/tree/master.svg?style=svg)](https://circleci.com/gh/Syncano/syncano-js/tree/master)
 
 This library enables you to interact with the [Syncano](http://syncano.io) platform via Javascript. For more information on the platform, please refer to the [docs](http://docs.syncano.io/docs/getting-started-with-syncano/) and the [FAQ](https://www.syncano.io/support/).
 
@@ -9,7 +9,7 @@ Also check out our libraries for [iOS](https://github.com/Syncano/syncano-ios), 
 
 In order to use the plaftorm, you need an account - you can sign up [here](https://dashboard.syncano.io/?utm_source=github&utm_medium=readme&utm_campaign=syncano-js).
 
-The library can be used server-side and client-side. You can install the library using `npm`, `bower` or by downloading a [release](https://github.com/Syncano/syncano-js/releases) from the Github repository. We also have out own [CDN](http://cdn.syncano.com/syncano.js).
+The library can be used server-side and client-side. You can install the library using `npm`, `bower` or by downloading a [release](https://github.com/Syncano/syncano-js/releases) from the Github repository.
 
 ### Installing from Bower
 
