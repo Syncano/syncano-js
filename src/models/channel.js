@@ -102,6 +102,17 @@ const ChannelQuerySet = stampit().compose(QuerySet).methods({
     }
 
     return channelPoll;
+  },
+
+  history(properties = {}, query = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'GET';
+    this.endpoint = 'history';
+    this.query = query;
+    this._serialize = false;
+
+    return this;
   }
 
 });
@@ -358,7 +369,14 @@ const Channel = stampit()
       }
 
       return this.makeRequest('POST', path, options);
-    }
+    },
+
+    history(query = {}) {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('history', this);
+
+      return this.makeRequest('GET', path, {query});
+    },
 
   })
   .setConstraints(channelConstraints);

@@ -22,6 +22,7 @@ describe('Syncano', function() {
       should(baseObject).have.property('Admin').which.is.Function();
       should(baseObject).have.property('ApiKey').which.is.Function();
       should(baseObject).have.property('InstanceInvitation').which.is.Function();
+      should(baseObject).have.property('Invitation').which.is.Function();
       should(baseObject).have.property('Script').which.is.Function();
       should(baseObject).have.property('Schedule').which.is.Function();
       should(baseObject).have.property('Trigger').which.is.Function();

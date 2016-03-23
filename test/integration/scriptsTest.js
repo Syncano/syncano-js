@@ -238,7 +238,7 @@ describe('Script', function() {
           should(script).have.property('instanceName').which.is.String().equal(instanceName);
           should(script).have.property('label').which.is.String().equal('newLabel');
         })
-      });
+    });
 
     it('should be able to get first script', function() {
       const objects = [

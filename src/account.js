@@ -19,9 +19,7 @@ const Account = stampit().compose(Request)
     _account: {
       registerPath: '/v1.1/account/register/',
       loginPath: '/v1.1/account/auth/',
-      updatePath: '/v1.1/account/',
-      userLoginPath: (instanceName) => `/v1.1/instances/${instanceName}/user/auth/`,
-      socialLoginPath: (instanceName, backend) => `/v1.1/instances/${instanceName}/user/auth/${backend}/`
+      updatePath: '/v1.1/account/'
     }
   })
   .methods({
@@ -63,58 +61,6 @@ const Account = stampit().compose(Request)
       return this.makeRequest('POST', path, {payload}).then((user) => {
         if (setAccountKey === true) {
           config.setAccountKey(user.account_key);
-        }
-        return user;
-      });
-    },
-
-    /**
-    * A convenience method for authenticating instance user with a social media token.
-
-    * @memberOf Account
-    * @instance
-
-    * @param {Object} payload
-    * @param {String} payload.instanceName
-    * @param {String} payload.backend
-    * @param {String} payload.access_token
-    * @param {Boolean} [setUserKey = true]
-    * @returns {Promise}
-
-    */
-    socialLogin(payload = {}, setUserKey = true) {
-      const config = this.getConfig();
-      const path = this._account.socialLoginPath(payload.instanceName, payload.backend);
-
-      return this.makeRequest('POST', path, {payload}).then((user) => {
-        if (setUserKey === true) {
-          config.setUserKey(user.user_key);
-        }
-        return user;
-      });
-    },
-
-    /**
-    * A convenience method for authenticating instance user with email and password.
-
-    * @memberOf Account
-    * @instance
-
-    * @param {Object} payload
-    * @param {String} payload.email
-    * @param {String} payload.password
-    * @param {String} payload.instanceName
-    * @param {Boolean} [setUserKey = true]
-    * @returns {Promise}
-
-    */
-    userLogin(payload = {}, setUserKey = true) {
-      const config = this.getConfig();
-      const path = this._account.userLoginPath(payload.instanceName);
-
-      return this.makeRequest('POST', path, {payload}).then((user) => {
-        if (setUserKey === true) {
-          config.setUserKey(user.user_key);
         }
         return user;
       });
