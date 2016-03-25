@@ -1,5 +1,9 @@
 import _ from 'lodash';
 
+/**
+* A simple implementation of an EventEmitter. Created for compatibility with environments that don't have access to native node modules (like React Native). Not meant to be used on it's own.
+*/
+
 export default function EventEmitter() {
     this.events = {};
 }
