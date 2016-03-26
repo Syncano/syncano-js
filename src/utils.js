@@ -1,5 +1,5 @@
 import stampit from 'stampit';
-import EventEmitter from './eventemitter';
+import {EventEmitter} from 'events';
 
 /**
  * Simple wrapper around `EventEmitter`
