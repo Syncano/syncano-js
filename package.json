@@ -40,7 +40,6 @@
     "watch:lint": "esw src/** test/** --watch --format simple-detail",
     "watch:lib": "npm run build:lib -- --watch",
     "watch:dist": "npm run build:dist -- --watch",
-    "postversion": "git push origin master && git push origin --tags",
     "release": "npm-run-all release:*",
     "release:git-config": "git config --global user.email $GITHUB_EMAIL && git config --global user.name $GITHUB_NAME",
     "release:version": "mversion patch",
