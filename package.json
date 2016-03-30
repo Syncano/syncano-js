@@ -1,6 +1,6 @@
 {
   "name": "syncano",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A library to intereact with the Syncano API.",
   "main": "lib/syncano.js",
   "author": "Kelly Andrews",
@@ -42,11 +42,12 @@
     "watch:dist": "npm run build:dist -- --watch",
     "release": "npm-run-all release:*",
     "release:git-config": "git config --global user.email $GITHUB_EMAIL && git config --global user.name $GITHUB_NAME",
-    "release:version": "mversion patch",
-    "release:commit": "git commit -am 'Release v${npm_package_version} [ci skip]' && git push origin master",
     "release:npm-token": "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\nprogress=false\" > ~/.npmrc",
     "release:npm": "npm publish",
-    "release:bower": "git add -f ./dist && git commit -am 'Bower release v${npm_package_version} [ci skip]' && git tag -a v$npm_package_version -m 'Release v${npm_package_version}' && git push origin v$npm_package_version",
+    "release:bower": "git add -f ./dist && git commit -am 'Release v${npm_package_version} [ci skip]' && git tag -a v$npm_package_version -m 'Release v${npm_package_version}' && git push origin v$npm_package_version",
+    "release:reset": "git-reset --hard $CIRCLE_SHA1",
+    "release:version": "mversion patch",
+    "release:commit": "git commit -am 'Bump to v${npm_package_version} [ci skip]' && git push origin master",
     "release:docs": "gh-pages -d docs -m 'Docs v${npm_package_version} [ci skip]'"
   },
   "repository": {
