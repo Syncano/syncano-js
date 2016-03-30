@@ -21,6 +21,11 @@ const DataObjectQuerySet = stampit().compose(QuerySet).methods({
     this.query['query'] = JSON.stringify(filters);
     return this;
   },
+
+  query(filters = {}) {
+    return this.filter(filters);
+  },
+
   /**
     * Orders DataObject by field.
 
