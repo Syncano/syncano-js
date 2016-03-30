@@ -1,5 +1,7 @@
 ### Change Log
-
+* **1.0.3** - 2016-03-30
+    * React native support
+    * Build pipeline
 * **1.0.2** - 2016-03-22
     * New version which supports v1.1 API and new naming
 * **0.4.8** - 2016-03-11
