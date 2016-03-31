@@ -13,4 +13,6 @@ deployment:
   production:
     branch: master
     commands:
+      - npm run coverage
+      - npm run codeclimate
       - npm run release
