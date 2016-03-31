@@ -50,7 +50,7 @@ const DataObjectQuerySet = stampit().compose(QuerySet).methods({
   * @returns {QuerySet}
 
   * @example {@lang javascript}
-  * DataObject.please().increment({instanceName: 'my-instance', className: 'my-class'', id: 1}, {views: 1})
+  * DataObject.please().increment({instanceName: 'my-instance', className: 'my-class', id: 1}, {views: 1})
 
   */
   increment(properties = {}, object = {}) {
@@ -61,6 +61,23 @@ const DataObjectQuerySet = stampit().compose(QuerySet).methods({
 
     this.method = 'PATCH';
     this.endpoint = 'detail';
+    return this;
+  },
+  /**
+    * Returns DataObject count.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * DataObject.please().list({ instanceName: 'test-instace', className: 'test-class' }).count().then(function(response) {});
+
+    */
+  count() {
+    this.query['include_count'] = true;
+    this.raw();
     return this;
   }
 

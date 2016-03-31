@@ -390,6 +390,24 @@ describe('Dataobject', function() {
 
     });
 
+    it('should be able to get count', function() {
+      const objects = [
+        Model(_.merge({}, dataObj, { title: "Pulp", author: "Bukowski"})),
+        Model(_.merge({}, dataObj, { title: "Blade Runner", author: "Dick" }))
+      ];
+
+      return Model.please().bulkCreate(objects)
+        .then(cleaner.mark)
+        .then((dataobjects) => {
+          should(dataobjects).be.an.Array().with.length(2);
+          return Model.please({instanceName, className}).count();
+        })
+        .then((response) => {
+          should(response).have.property('objects_count').which.is.Number().equal(2);
+        });
+
+    });
+
     it('should be able to get raw data', function() {
       return Model.please().list({instanceName, className}).raw().then((response) => {
         should(response).be.a.Object();
