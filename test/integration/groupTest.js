@@ -71,6 +71,17 @@ describe('Group', function() {
       });
   });
 
+  it('should be able to fetch users via model instance', function() {
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((object) => {
+        return object.users();
+      })
+      .then((users) => {
+        should(users).be.an.Array();
+      })
+  });
+
   it('should be able to update via model instance', function() {
     return Model(data).save()
       .then(cleaner.mark)

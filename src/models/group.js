@@ -55,9 +55,21 @@ const Group = stampit()
   .setMeta(GroupMeta)
   .setConstraints(GroupConstraints)
   .methods({
+    /**
+    * Fetches Users belonging to a group.
+    * @memberOf Group
+    * @instance
 
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * Grop.users().then(function(users) {});
+    */
     users() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('users', this);
 
+      return this.makeRequest('GET', path);
     },
 
     addUser() {
