@@ -1,5 +1,30 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import _ from 'lodash';
+import QuerySet from '../querySet';
+
+const GroupQuerySet = stampit().compose(QuerySet).methods({
+  /**
+  * Fetches Users belonging to a group.
+  * @memberOf GroupQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @returns {GroupQuerySet}
+
+  * @example {@lang javascript}
+  * Grop.please().users({ id: 1, instanceName: 'test-one'}).then(function(users) {});
+  */
+  users(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'GET';
+    this.endpoint = 'users';
+
+    return this;
+  }
+
+});
 
 const GroupMeta = Meta({
   name: 'group',
@@ -54,6 +79,7 @@ const Group = stampit()
   .compose(Model)
   .setMeta(GroupMeta)
   .setConstraints(GroupConstraints)
+  .setQuerySet(GroupQuerySet)
   .methods({
     /**
     * Fetches Users belonging to a group.
