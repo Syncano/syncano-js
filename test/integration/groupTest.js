@@ -71,14 +71,14 @@ describe.only('Group', function() {
       });
   });
 
-  it('should be able to fetch users via model instance', function() {
+  it('should be able to list users via model instance', function() {
     return Model(data).save()
       .then(cleaner.mark)
       .then((object) => {
         return object.users();
       })
       .then((users) => {
-        should(users).have.property('objects').which.is.Array()
+        should(users).be.an.Array()
       })
   });
 
@@ -146,7 +146,7 @@ describe.only('Group', function() {
           return Model.please().users({ id: group.id, instanceName})
         })
         .then((users) => {
-          should(users).have.property('objects').which.is.Array();
+          should(users).be.an.Array();
         });
     });
 
