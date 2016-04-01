@@ -92,10 +92,7 @@ const Group = stampit()
     * Grop.users().then(function(users) {});
     */
     users() {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('users', this);
-
-      return this.makeRequest('GET', path);
+      return this.getStamp().please().users({ id: this.id, instanceName: this.instanceName});
     },
 
     addUser() {
