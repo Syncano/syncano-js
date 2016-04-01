@@ -4,7 +4,6 @@ import _ from 'lodash';
 import Request from './request';
 import PaginationError from './errors';
 
-
 /**
  * Wrapper around plain JavaScript Array which provides two additional methods for pagination.
  * @constructor
@@ -104,6 +103,11 @@ const QuerySetRequest = stampit().compose(Request)
 
       if (this.endpoint === 'list') {
         const objects = _.map(response.objects, (object) => this.model.fromJSON(object, this.properties));
+        return ResultSet(this, response, objects);
+      }
+
+      if(this.endpoint === 'users') {
+        const objects = _.map(response.objects, (object) => this._config.User.fromJSON(object.user, this.properties));
         return ResultSet(this, response, objects);
       }
 
