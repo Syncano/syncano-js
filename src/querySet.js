@@ -102,16 +102,29 @@ const QuerySetRequest = stampit().compose(Request)
       }
 
       if (this.endpoint === 'list') {
-        const objects = _.map(response.objects, (object) => this.model.fromJSON(object, this.properties));
-        return ResultSet(this, response, objects);
-      }
-
-      if(this.endpoint === 'users') {
-        const objects = _.map(response.objects, (object) => this._config.User.fromJSON(object.user, this.properties));
-        return ResultSet(this, response, objects);
+        return this.asResultSet(response);
       }
 
       return this.model.fromJSON(response, this.properties);
+    },
+
+    /**
+    * Converts API response into {ResultSet}
+
+    * @memberOf QuerySet
+    * @instance
+    * @private
+
+    * @param {Object} response raw JavaScript objects
+    * @param {String} lookupField additional field to search for data
+    * @returns {ResultSet}
+    */
+    asResultSet(response, lookupField) {
+      const objects = _.map(response.objects, (object) => {
+        const obj = lookupField ? object[lookupField] : object;
+        return this.model.fromJSON(obj, this.properties)
+      });
+      return ResultSet(this, response, objects);
     },
 
     /**

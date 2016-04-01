@@ -16,12 +16,9 @@ const GroupQuerySet = stampit().compose(QuerySet).methods({
   * Grop.please().users({ id: 1, instanceName: 'test-one'}).then(function(users) {});
   */
   users(properties = {}) {
+    const {User} = this.getConfig();
     this.properties = _.assign({}, this.properties, properties);
-
-    this.method = 'GET';
-    this.endpoint = 'users';
-
-    return this;
+    return User.please().groupUsers(this.properties);
   }
 
 });
@@ -37,10 +34,6 @@ const GroupMeta = Meta({
     'list': {
       'methods': ['get'],
       'path': '/v1.1/instances/{instanceName}/groups/'
-    },
-    'users': {
-      'methods': ['get', 'post', 'delete'],
-      'path': '/v1.1/instances/{instanceName}/groups/{id}/users/'
     }
   }
 });
@@ -89,10 +82,11 @@ const Group = stampit()
     * @returns {Promise}
 
     * @example {@lang javascript}
-    * Grop.users().then(function(users) {});
+    * Group.users().then(function(users) {});
     */
     users() {
-      return this.getStamp().please().users({ id: this.id, instanceName: this.instanceName});
+      const {User} = this.getConfig();
+      return User.please().groupUsers({ id: this.id, instanceName: this.instanceName})
     },
 
     addUser() {

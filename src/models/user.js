@@ -11,6 +11,16 @@ const UserQuerySet = stampit().compose(
   List
 ).methods({
 
+  groupUsers(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'GET';
+    this.endpoint = 'groupUsers';
+
+    return this.then((response) => {
+      return this.model.please().asResultSet(response, 'user');
+    })
+  },
+
   get(properties = {}) {
     const config = this.getConfig();
 
@@ -139,6 +149,10 @@ const UserMeta = Meta({
     'user': {
       'methods': ['get', 'post', 'patch'],
       'path': '/v1.1/instances/{instanceName}/user/'
+    },
+    'groupUsers': {
+      'methods': ['get', 'post', 'delete'],
+      'path': '/v1.1/instances/{instanceName}/groups/{id}/users/'
     }
   }
 });
@@ -203,7 +217,6 @@ const User = stampit()
   .setQuerySet(UserQuerySet)
   .setConstraints(UserConstraints)
   .methods({
-
     /**
     * Restes user key.
     * @memberOf User
