@@ -21,6 +21,11 @@ describe('Group', function() {
     description: 'test',
     id: null
   };
+  const userData = {
+    instanceName,
+    username: 'testuser',
+    password: 'y5k8Y4&-'
+  }
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
@@ -78,8 +83,29 @@ describe('Group', function() {
         return object.users();
       })
       .then((users) => {
-        should(users).be.an.Array()
+        should(users).be.an.Array();
       })
+  });
+
+  it('should be able to add user via model instance', function() {
+    let group = null;
+
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((object) => {
+        group = object;
+        return connection.User(userData).save()
+      })
+      .then(cleaner.mark)
+      .then((user) => {
+        return group.addUser({user: user.id})
+      })
+      .then(() => {
+        return group.users()
+      })
+      .then((users) => {
+        should(users).be.an.Array().with.length(1);
+      });
   });
 
   it('should be able to update via model instance', function() {
@@ -139,7 +165,7 @@ describe('Group', function() {
         });
     });
 
-    it('should be able list users', function() {
+    it('should be able to list users', function() {
       return Model.please().create(data)
         .then(cleaner.mark)
         .then((group) => {
@@ -147,6 +173,26 @@ describe('Group', function() {
         })
         .then((users) => {
           should(users).be.an.Array();
+        });
+    });
+
+    it('should be able to add user', function() {
+      let group_id = null;
+
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((object) => {
+          group_id = object.id;
+          return connection.User(userData).save()
+        })
+        .then((user) => {
+          return Model.please().addUser({ id: group_id, instanceName}, {user: user.id})
+        })
+        .then(() => {
+          return Model.please().users({ id: group_id, instanceName})
+        })
+        .then((users) => {
+          should(users).be.an.Array().with.length(1);
         });
     });
 
