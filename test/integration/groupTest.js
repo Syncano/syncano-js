@@ -71,6 +71,17 @@ describe('Group', function() {
       });
   });
 
+  it('should be able to list users via model instance', function() {
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((object) => {
+        return object.users();
+      })
+      .then((users) => {
+        should(users).be.an.Array()
+      })
+  });
+
   it('should be able to update via model instance', function() {
     return Model(data).save()
       .then(cleaner.mark)
@@ -125,6 +136,17 @@ describe('Group', function() {
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
           should(object).have.property('description').which.is.String().equal(data.description);
           should(object).have.property('links').which.is.Object();
+        });
+    });
+
+    it('should be able list users', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((group) => {
+          return Model.please().users({ id: group.id, instanceName})
+        })
+        .then((users) => {
+          should(users).be.an.Array();
         });
     });
 
