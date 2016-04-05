@@ -21,6 +21,15 @@ const UserQuerySet = stampit().compose(
     })
   },
 
+  addUserToGroup(properties = {}, user = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = user;
+    this.method = 'POST';
+    this.endpoint = 'groupUsers';
+
+    return this;
+  },
+
   get(properties = {}) {
     const config = this.getConfig();
 

@@ -19,6 +19,23 @@ const GroupQuerySet = stampit().compose(QuerySet).methods({
     const {User} = this.getConfig();
     this.properties = _.assign({}, this.properties, properties);
     return User.please().groupUsers(this.properties);
+  },
+  /**
+  * Adds user to group.
+  * @memberOf GroupQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} user object with user to be added
+  * @returns {GroupQuerySet}
+
+  * @example {@lang javascript}
+  * Grop.please().addUser({ id: 1, instanceName: 'test-one'}, { user: 1 }).then(function(response) {});
+  */
+  addUser(properties = {}, user = {}) {
+    const {User} = this.getConfig();
+    this.properties = _.assign({}, this.properties, properties);
+    return User.please().addUserToGroup(this.properties, user);
   }
 
 });
@@ -86,11 +103,21 @@ const Group = stampit()
     */
     users() {
       const {User} = this.getConfig();
-      return User.please().groupUsers({ id: this.id, instanceName: this.instanceName})
+      return User.please().groupUsers({ id: this.id, instanceName: this.instanceName});
     },
+    /**
+    * Add user ti group.
+    * @memberOf Group
+    * @instance
 
-    addUser() {
+    * @returns {Promise}
 
+    * @example {@lang javascript}
+    * Group.addUser({ user: 1}).then(function(response) {});
+    */
+    addUser(user = {}) {
+      const {User} = this.getConfig();
+      return User.please().addUserToGroup({ id: this.id, instanceName: this.instanceName}, user);
     },
 
     deleteUser() {
