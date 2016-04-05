@@ -30,6 +30,15 @@ const UserQuerySet = stampit().compose(
     return this;
   },
 
+  deleteUserFromGroup(properties = {}, user = {}) {
+    this.properties = _.assign({}, this.properties, properties, user);
+    this.payload = user;
+    this.method = 'DELETE';
+    this.endpoint = 'groupUser';
+
+    return this;
+  },
+
   get(properties = {}) {
     const config = this.getConfig();
 
@@ -160,8 +169,12 @@ const UserMeta = Meta({
       'path': '/v1.1/instances/{instanceName}/user/'
     },
     'groupUsers': {
-      'methods': ['get', 'post', 'delete'],
+      'methods': ['get', 'post'],
       'path': '/v1.1/instances/{instanceName}/groups/{id}/users/'
+    },
+    'groupUser': {
+      'methods': ['get', 'delete'],
+      'path': '/v1.1/instances/{instanceName}/groups/{id}/users/{user}/'
     }
   }
 });
