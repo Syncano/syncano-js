@@ -36,6 +36,12 @@ const GroupQuerySet = stampit().compose(QuerySet).methods({
     const {User} = this.getConfig();
     this.properties = _.assign({}, this.properties, properties);
     return User.please().addUserToGroup(this.properties, user);
+  },
+
+  deleteUser(properties = {}, user = {}) {
+    const {User} = this.getConfig();
+    this.properties = _.assign({}, this.properties, properties, user);
+    return User.please().deleteUserFromGroup(this.properties, user);
   }
 
 });
@@ -120,8 +126,9 @@ const Group = stampit()
       return User.please().addUserToGroup({ id: this.id, instanceName: this.instanceName}, user);
     },
 
-    deleteUser() {
-
+    deleteUser(user = {}) {
+      const {User} = this.getConfig();
+      return User.please().deleteUserFromGroup({ id: this.id, instanceName: this.instanceName}, user);
     }
   });
 

@@ -108,6 +108,36 @@ describe('Group', function() {
       });
   });
 
+  it('should be able to delete user via model instance', function() {
+    let group = null;
+    let user_id = null;
+
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((object) => {
+        group = object;
+        return connection.User(userData).save()
+      })
+      .then(cleaner.mark)
+      .then((user) => {
+        user_id = user.id;
+        return group.addUser({user: user_id})
+      })
+      .then(() => {
+        return group.users()
+      })
+      .then((users) => {
+        should(users).be.an.Array().with.length(1);
+        return group.deleteUser({ user: user_id })
+      })
+      .then(() => {
+        return group.users();
+      })
+      .then((users) => {
+        should(users).be.an.Array().with.length(0);
+      })
+  });
+
   it('should be able to update via model instance', function() {
     return Model(data).save()
       .then(cleaner.mark)
@@ -185,6 +215,7 @@ describe('Group', function() {
           group_id = object.id;
           return connection.User(userData).save()
         })
+        .then(cleaner.mark)
         .then((user) => {
           return Model.please().addUser({ id: group_id, instanceName}, {user: user.id})
         })
@@ -194,6 +225,36 @@ describe('Group', function() {
         .then((users) => {
           should(users).be.an.Array().with.length(1);
         });
+    });
+
+    it('should be able to delete user', function() {
+      let group_id = null;
+      let user_id = null;
+
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((object) => {
+          group_id = object.id;
+          return connection.User(userData).save()
+        })
+        .then(cleaner.mark)
+        .then((user) => {
+          user_id = user.id;
+          return Model.please().addUser({ id: group_id, instanceName}, { user: user_id });
+        })
+        .then(() => {
+          return Model.please().users({ id: group_id, instanceName});
+        })
+        .then((users) => {
+          should(users).be.an.Array().with.length(1);
+          return Model.please().deleteUser({id: group_id, instanceName}, { user: user_id });
+        })
+        .then(() => {
+          return Model.please().users({ id: group_id, instanceName});
+        })
+        .then((users) => {
+          should(users).be.an.Array().with.length(0);
+        })
     });
 
     it('should be able to bulk create an objects', function() {
