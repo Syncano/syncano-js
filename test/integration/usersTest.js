@@ -18,7 +18,7 @@ describe('User', function() {
     instanceName,
     username: 'testuser',
     password: 'y5k8Y4&-'
-  }
+  };
   const data2 = {
     instanceName,
     username: 'testuser2',

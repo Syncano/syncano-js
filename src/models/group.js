@@ -1,5 +1,50 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import _ from 'lodash';
+import QuerySet from '../querySet';
+
+const GroupQuerySet = stampit().compose(QuerySet).methods({
+  /**
+  * Fetches Users belonging to a group.
+  * @memberOf GroupQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @returns {GroupQuerySet}
+
+  * @example {@lang javascript}
+  * Grop.please().users({ id: 1, instanceName: 'test-one'}).then(function(users) {});
+  */
+  users(properties = {}) {
+    const {User} = this.getConfig();
+    this.properties = _.assign({}, this.properties, properties);
+    return User.please().groupUsers(this.properties);
+  },
+  /**
+  * Adds user to group.
+  * @memberOf GroupQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} user object with user to be added
+  * @returns {GroupQuerySet}
+
+  * @example {@lang javascript}
+  * Grop.please().addUser({ id: 1, instanceName: 'test-one'}, { user: 1 }).then(function(response) {});
+  */
+  addUser(properties = {}, user = {}) {
+    const {User} = this.getConfig();
+    this.properties = _.assign({}, this.properties, properties);
+    return User.please().addUserToGroup(this.properties, user);
+  },
+
+  deleteUser(properties = {}, user = {}) {
+    const {User} = this.getConfig();
+    this.properties = _.assign({}, this.properties, properties, user);
+    return User.please().deleteUserFromGroup(this.properties, user);
+  }
+
+});
 
 const GroupMeta = Meta({
   name: 'group',
@@ -12,10 +57,6 @@ const GroupMeta = Meta({
     'list': {
       'methods': ['get'],
       'path': '/v1.1/instances/{instanceName}/groups/'
-    },
-    'users': {
-      'methods': ['get', 'post', 'delete'],
-      'path': '/v1.1/instances/{instanceName}/groups/{id}/users/'
     }
   }
 });
@@ -54,18 +95,40 @@ const Group = stampit()
   .compose(Model)
   .setMeta(GroupMeta)
   .setConstraints(GroupConstraints)
+  .setQuerySet(GroupQuerySet)
   .methods({
+    /**
+    * Fetches Users belonging to a group.
+    * @memberOf Group
+    * @instance
 
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * Group.users().then(function(users) {});
+    */
     users() {
+      const {User} = this.getConfig();
+      return User.please().groupUsers({ id: this.id, instanceName: this.instanceName});
+    },
+    /**
+    * Add user ti group.
+    * @memberOf Group
+    * @instance
 
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * Group.addUser({ user: 1}).then(function(response) {});
+    */
+    addUser(user = {}) {
+      const {User} = this.getConfig();
+      return User.please().addUserToGroup({ id: this.id, instanceName: this.instanceName}, user);
     },
 
-    addUser() {
-
-    },
-
-    deleteUser() {
-
+    deleteUser(user = {}) {
+      const {User} = this.getConfig();
+      return User.please().deleteUserFromGroup({ id: this.id, instanceName: this.instanceName}, user);
     }
   });
 

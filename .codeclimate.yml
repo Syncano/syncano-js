@@ -1,10 +1,16 @@
 languages:
    JavaScript: true
+engines:
+  duplication:
+    enabled: false
 exclude_paths:
- - "test/**/*"
- - "Gulpfile.js"
- - "README.md"
- - "package.json"
- - "dist/*.*"
- - "lib/*.*"
- - "bower.json"
+  - "test/**/*"
+  - "docs/**/*"
+  - "README.md"
+  - "CHANGELOG.md"
+  - "package.json"
+  - "dist/*.*"
+  - "lib/*.*"
+  - "bower.json"
+  - "webpack.config.js"
+  - "karma.config.js"

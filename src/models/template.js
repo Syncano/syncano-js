@@ -1,5 +1,43 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import _ from 'lodash';
+import QuerySet from '../querySet';
+
+const TemplateQuerySet = stampit().compose(QuerySet).methods({
+  /**
+  * Renames a template.
+  * @memberOf TemplateQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} payload object with request payload
+  * @returns {Promise}
+
+  * @example {@lang javascript}
+  * Template.please().rename({name: 'my-template', instanceName: 'test-one'}, { new_name: 'new-name'}).then(function(template) {});
+
+  */
+  rename(properties = {}, payload = { new_name: this.name }) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.endpoint = 'rename'
+    this.payload = payload;
+
+    return this;
+  },
+
+  render(properties = {}, context = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.endpoint = 'render';
+    this.payload = {context};
+    this.responseAttr = 'text';
+    this.raw();
+
+    return this;
+  }
+
+});
 
 const TemplateMeta = Meta({
   name: 'template',
@@ -66,6 +104,7 @@ const TemplateConstraints = {
 const Template = stampit()
   .compose(Model)
   .setMeta(TemplateMeta)
+  .setQuerySet(TemplateQuerySet)
   .methods({
 
     rename(payload = { new_name: this.name }) {

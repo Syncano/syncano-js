@@ -196,7 +196,7 @@ describe('Template', function() {
       });
     });
 
-    it('should be able to bulk create an objects', function() {
+    it('should be able to bulk create objects', function() {
       const data = {
         name: templateName,
         instanceName: instanceName,
@@ -296,6 +296,31 @@ describe('Template', function() {
         should(tpl).have.property('name').which.is.String().equal(templateName);
         should(tpl).have.property('instanceName').which.is.String().equal(instanceName);
         should(tpl.content).which.is.String().equal('new content');
+      });
+    });
+
+    it('should be able to rename a template', function() {
+      return Template.please().create({name: templateName, instanceName, content: 'template content', content_type: contentType}).then((tpl) => {
+        should(tpl).be.an.Object();
+        should(tpl).have.property('name').which.is.String().equal(templateName);
+        should(tpl).have.property('instanceName').which.is.String().equal(instanceName);
+        should(tpl).have.property('content').which.is.String().equal('template content');
+
+        return Template.please().rename({name: templateName, instanceName}, {new_name: 'new_name'});
+      })
+      .then((tpl) => {
+        should(tpl).have.property('name').which.is.String().equal('new_name');
+      });
+    });
+
+    it('should be able to render a template', function() {
+      return Template.please().create({name: templateName, instanceName, content: '<h1>{{ title }}</h1>', content_type: contentType}).then((tpl) => {
+        should(tpl).be.an.Object();
+
+        return Template.please().render({name: templateName, instanceName}, { title: 'My Title' });
+      })
+      .then((tpl) => {
+        should(tpl).be.a.String().equal('<h1>My Title</h1>');
       });
     });
 
