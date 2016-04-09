@@ -37,9 +37,20 @@ const Syncano = stampit()
     accountKey: null,
     userKey: null,
     apiKey: null,
-    socialToken: null
+    socialToken: null,
+    instanceName: null
   })
   .methods({
+
+    setInstanceName(instanceName) {
+      if(!_.isString(instanceName)) throw new Error('Instance name must be a string.');
+      this.instanceName = instanceName;
+      return this;
+    },
+
+    getInstanceName() {
+      return this.instanceName;
+    },
 
     /**
     * Sets *baseUrl*.
