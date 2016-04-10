@@ -11,6 +11,16 @@ const UserQuerySet = stampit().compose(
   List
 ).methods({
 
+  getDetails(properties = {}, user = {}) {
+    this.properties = _.assign({}, this.properties, properties, user);
+    this.method = 'GET';
+    this.endpoint = 'groupUser';
+
+    return this.then((response) => {
+      return this.model.fromJSON(response.user, this.properties);
+    });
+  },
+
   groupUsers(properties = {}) {
     this.properties = _.assign({}, this.properties, properties);
     this.method = 'GET';
@@ -18,7 +28,7 @@ const UserQuerySet = stampit().compose(
 
     return this.then((response) => {
       return this.model.please().asResultSet(response, 'user');
-    })
+    });
   },
 
   addUserToGroup(properties = {}, user = {}) {
@@ -27,7 +37,9 @@ const UserQuerySet = stampit().compose(
     this.method = 'POST';
     this.endpoint = 'groupUsers';
 
-    return this;
+    return this.then((response) => {
+      return this.model.fromJSON(response.user, this.properties);
+    });
   },
 
   deleteUserFromGroup(properties = {}, user = {}) {
