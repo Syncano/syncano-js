@@ -245,7 +245,7 @@ export const Model = stampit({
     please(properties = {}) {
       const querySet = this.getQuerySet();
       const instanceName = this.getConfig().getInstanceName();
-      const defaultProps = _.assign({}, properties, !_.isEmpty({instanceName}) ? {instanceName}: {});
+      const defaultProps = _.assign({}, !_.isEmpty({instanceName}) ? {instanceName}: {}, properties);
       return querySet({
         model: this,
         properties: defaultProps,
