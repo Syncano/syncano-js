@@ -43,8 +43,11 @@ const Syncano = stampit()
   .methods({
 
     setInstanceName(instanceName) {
-      if(!_.isString(instanceName)) throw new Error('Instance name must be a string.');
-      this.instanceName = instanceName;
+      if(_.isEmpty(instanceName)) _.unset(this, 'instanceName');
+      else {
+        if(!_.isString(instanceName)) throw new Error('Instance name must be a string.');
+        this.instanceName = instanceName;
+      }
       return this;
     },
 
