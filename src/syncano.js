@@ -41,7 +41,21 @@ const Syncano = stampit()
     instanceName: null
   })
   .methods({
+    /**
+    * Sets *instanceName*.
 
+    * @memberOf Syncano
+    * @instance
+
+    * @param {String} instanceName Instance name for all api calls
+    * @returns {Syncano}
+    * @throws {Error} Instance name must be a string.
+
+    * @example {@lang javascript}
+    * var connection = Syncano({accountKey: '123'});
+    * connection.setInstanceName('my-instance');
+
+    */
     setInstanceName(instanceName) {
       if(_.isEmpty(instanceName)) _.unset(this, 'instanceName');
       else {
@@ -50,7 +64,18 @@ const Syncano = stampit()
       }
       return this;
     },
+    /**
+    * Gets *instanceName*.
 
+    * @memberOf Syncano
+    * @instance
+    * @returns {String}
+
+    * @example {@lang javascript}
+    * var connection = Syncano({accountKey: '123'});
+    * var baseUrl = connection.getInstanceName();
+
+    */
     getInstanceName() {
       return this.instanceName;
     },

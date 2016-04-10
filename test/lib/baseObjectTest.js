@@ -3,8 +3,9 @@ import Syncano from '../../src/syncano';
 
 describe('Syncano', function() {
   let baseObject = null;
-  let testKey = '123';
-  let testUrl = 'http://api.syncano.rocks'
+  const testKey = '123';
+  const testUrl = 'http://api.syncano.rocks'
+  const testInstance = 'my-instance';
 
   beforeEach(function() {
     baseObject = Syncano();
@@ -43,6 +44,7 @@ describe('Syncano', function() {
       should(baseObject).have.property('accountKey').which.is.Null();
       should(baseObject).have.property('userKey').which.is.Null();
       should(baseObject).have.property('socialToken').which.is.Null();
+      should(baseObject).have.property('instanceName').which.is.Null();
     })
 
   });
@@ -93,6 +95,30 @@ describe('Syncano', function() {
 
       should(baseObject.getBaseUrl()).is.equal(testUrl);
 
+    });
+
+  });
+
+  describe('#setInstanceName()', function() {
+
+    it('should allow to set instance name', function() {
+      should(baseObject).have.property('setInstanceName').which.is.Function();
+
+      baseObject.setInstanceName(testInstance);
+
+      should(baseObject.instanceName).is.equal(testInstance);
+    });
+
+  });
+
+  describe('#getInstanceName()', function() {
+
+    it('should allow to get instance name', function() {
+      should(baseObject).have.property('getInstanceName').which.is.Function();
+
+      baseObject.setInstanceName(testInstance);
+
+      should(baseObject.getInstanceName()).is.equal(testInstance);
     });
 
   });
