@@ -57,7 +57,7 @@ const Syncano = stampit()
 
     */
     setInstanceName(instanceName) {
-      if(_.isEmpty(instanceName)) _.unset(this, 'instanceName');
+      if(_.isEmpty(instanceName)) this.instanceName = null;
       else {
         if(!_.isString(instanceName)) throw new Error('Instance name must be a string.');
         this.instanceName = instanceName;
