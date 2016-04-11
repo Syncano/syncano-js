@@ -24,8 +24,8 @@ import SyncanoFile from './file';
  */
 const Syncano = stampit()
   // We need function here, do not use arrow syntax!
-  .init(function(instance) {
-    this.defaults = _.pick(instance.instance, 'instanceName')
+  .init(function({instance}) {
+    this.defaults = _.pick(instance, 'instanceName');
     this.Account = Account.setConfig(this)();
     this.Monitor = Pinger.setConfig(this)();
 
