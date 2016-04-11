@@ -412,6 +412,9 @@ export const Model = stampit({
       }
     });
   }
+  if(!_.has(instance, 'instanceName') && !_.isEmpty(instance.getConfig().instanceName)) {
+    instance.instanceName = instance.getConfig().instanceName;
+  }
 })
 .compose(ConfigMixin, MetaMixin, ConstraintsMixin, Request);
 
