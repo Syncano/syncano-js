@@ -412,8 +412,8 @@ export const Model = stampit({
       }
     });
   }
-  if(!_.has(instance, 'instanceName') && !_.isEmpty(instance.getConfig().instanceName)) {
-    instance.instanceName = instance.getConfig().instanceName;
+  if(!_.has(instance, 'instanceName') && _.has(instance, '_config')) {
+    instance.instanceName = !_.isEmpty(instance.getConfig().getInstanceName()) ? instance.getConfig().getInstanceName() : null;
   }
 })
 .compose(ConfigMixin, MetaMixin, ConstraintsMixin, Request);
