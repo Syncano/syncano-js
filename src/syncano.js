@@ -24,7 +24,8 @@ import SyncanoFile from './file';
  */
 const Syncano = stampit()
   // We need function here, do not use arrow syntax!
-  .init(function() {
+  .init(function(instance) {
+    this.defaults = _.pick(instance.instance, 'instanceName')
     this.Account = Account.setConfig(this)();
     this.Monitor = Pinger.setConfig(this)();
 
@@ -38,7 +39,7 @@ const Syncano = stampit()
     userKey: null,
     apiKey: null,
     socialToken: null,
-    instanceName: null
+    defaults: {}
   })
   .methods({
     /**
@@ -57,10 +58,10 @@ const Syncano = stampit()
 
     */
     setInstanceName(instanceName) {
-      if(_.isEmpty(instanceName)) this.instanceName = null;
+      if(_.isEmpty(instanceName)) this.defaults.instanceName = null;
       else {
         if(!_.isString(instanceName)) throw new Error('Instance name must be a string.');
-        this.instanceName = instanceName;
+        this.defaults.instanceName = instanceName;
       }
       return this;
     },

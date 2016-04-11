@@ -25,6 +25,10 @@ export const EventEmittable = stampit.convertConstructor(EventEmitter);
 export const ConfigMixin = stampit({
   methods: {
 
+    getDefaultProperties() {
+      return this._config.defaults;
+    },
+
     /**
     * Sets config.
 
@@ -62,6 +66,10 @@ export const ConfigMixin = stampit({
   },
 
   static: {
+
+    getDefaultProperties() {
+      return this.fixed.refs._config.defaults;
+    },
 
     /**
     * Sets config and returns new {@link https://github.com/stampit-org/stampit|stampit} definition.
