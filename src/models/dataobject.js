@@ -107,10 +107,7 @@ const DataobjectConstraints = {
   },
   className: {
     presence: true,
-    string: true,
-    length: {
-      minimum: 5
-    }
+    string: true
   },
   owner: {
     numericality: {
