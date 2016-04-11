@@ -244,9 +244,10 @@ export const Model = stampit({
     */
     please(properties = {}) {
       const querySet = this.getQuerySet();
+      const defaultProps = _.assign({}, this.getDefaultProperties(), properties);
       return querySet({
         model: this,
-        properties: properties,
+        properties: defaultProps,
         _config: this.getConfig()
       });
     },
@@ -410,6 +411,7 @@ export const Model = stampit({
       }
     });
   }
+  if(_.has(instance, '_config')) _.defaults(instance, instance.getDefaultProperties());
 })
 .compose(ConfigMixin, MetaMixin, ConstraintsMixin, Request);
 
