@@ -78,7 +78,7 @@ const Syncano = stampit()
 
     */
     getInstanceName() {
-      return this.instanceName;
+      return this.defaults.instanceName;
     },
 
     /**

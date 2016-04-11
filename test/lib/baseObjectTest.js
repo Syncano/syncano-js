@@ -44,7 +44,7 @@ describe('Syncano', function() {
       should(baseObject).have.property('accountKey').which.is.Null();
       should(baseObject).have.property('userKey').which.is.Null();
       should(baseObject).have.property('socialToken').which.is.Null();
-      should(baseObject).have.property('instanceName').which.is.Null();
+      should(baseObject).have.property('defaults').which.is.Object();
     })
 
   });
@@ -106,7 +106,7 @@ describe('Syncano', function() {
 
       baseObject.setInstanceName(testInstance);
 
-      should(baseObject.instanceName).is.equal(testInstance);
+      should(baseObject.defaults.instanceName).is.equal(testInstance);
     });
 
   });
