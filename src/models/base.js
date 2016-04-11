@@ -411,7 +411,7 @@ export const Model = stampit({
       }
     });
   }
-  if(_.has(instance, 'config')) _.defaults(instance, instance.getDefaultProperties());
+  if(_.has(instance, '_config')) _.defaults(instance, instance.getDefaultProperties());
 })
 .compose(ConfigMixin, MetaMixin, ConstraintsMixin, Request);
 

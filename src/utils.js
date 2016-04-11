@@ -24,7 +24,18 @@ export const EventEmittable = stampit.convertConstructor(EventEmitter);
  */
 export const ConfigMixin = stampit({
   methods: {
+    /**
+    * Gets default properties.
 
+    * @memberOf ConfigMixin
+    * @instance
+    * @returns {Object}
+
+    * @example {@lang javascript}
+    * var MyStamp = stampit().compose(ConfigMixin);
+    * var config = MyStamp().getDefaultProperties();
+
+    */
     getDefaultProperties() {
       return this._config.defaults;
     },

@@ -15,17 +15,18 @@ import SyncanoFile from './file';
  * @param {Object} [options.accountKey = null] Your Syncano account key.
  * @param {Object} [options.userKey = null] Instance user api key.
  * @param {Object} [options.socialToken = null] Instance social authentication token.
+ * @param {Object} [options.defaults = {}] Object with default properties for api calls.
  * @returns {Syncano}
 
  * @example {@lang javascript}
  * var connection = Syncano({accountKey: '123'});
  * var connection = Syncano({userKey: '123'});
  * var connection = Syncano({socialToken: '123'});
+ * var connection = Syncano({ defaults: { instanceName: 'my-instance' }});
  */
 const Syncano = stampit()
   // We need function here, do not use arrow syntax!
-  .init(function({instance}) {
-    this.defaults = _.pick(instance, 'instanceName');
+  .init(function() {
     this.Account = Account.setConfig(this)();
     this.Monitor = Pinger.setConfig(this)();
 
