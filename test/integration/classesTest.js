@@ -170,7 +170,7 @@ describe('Class', function() {
             .get(data)
             .request();
         })
-        .then((cls) => {
+        .then(([cls, response]) => {
           should(cls).be.an.Object();
           should(cls).have.property('name').which.is.String().equal(className);
           should(cls).have.property('instanceName').which.is.String().equal(instanceName);

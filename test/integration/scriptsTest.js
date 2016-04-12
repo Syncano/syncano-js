@@ -195,7 +195,7 @@ describe('Script', function() {
             .get({id: scriptId, instanceName})
             .request();
         })
-      .then((script) => {
+      .then(([script, get]) => {
         should(script).be.an.Object();
         should(script).have.property('instanceName').which.is.String().equal(instanceName);
         should(script).have.property('description').which.is.String();

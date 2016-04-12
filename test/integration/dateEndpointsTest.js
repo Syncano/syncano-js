@@ -226,7 +226,7 @@ describe('DataEndpoint', function() {
             .get({name: dataEndpointName, instanceName})
             .request();
         })
-        .then((dta) => {
+        .then(([dta, response]) => {
           should(dta).be.a.Object();
           should(dta).have.property('name').which.is.String().equal(data.name);
           should(dta).have.property('description').which.is.String().equal(data.description);

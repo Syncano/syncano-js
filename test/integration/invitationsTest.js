@@ -151,7 +151,7 @@ describe('Instance Invitation', function() {
             .get({id: inv.id, instanceName})
             .request();
         })
-        .then((inv) => {
+        .then(([inv, response]) => {
           should(inv).be.an.Object();
           should(inv).have.property('id').which.is.Number();
           should(inv).have.property('email').which.is.String().equal(data.email);

@@ -45,7 +45,7 @@ describe('Admin', function() {
           .get({id: adminId, instanceName})
           .request();
       })
-      .then((admin) => {
+      .then(([admin, response]) => {
         should(admin).be.an.Object();
         should(admin).have.property('instanceName').which.is.String().equal(instanceName);
         should(admin).have.property('id').which.is.Number();

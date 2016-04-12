@@ -76,7 +76,7 @@ describe('ScriptEndpointTrace', function() {
     });
 
     it('should be able to get an object', function() {
-      return Model.please().get(data).then((object) => {
+      return Model.please().get(data).then(([object, response]) => {
         should(object).be.a.Object();
         should(object).have.property('id').which.is.Number();
         should(object).have.property('status').which.is.String();
