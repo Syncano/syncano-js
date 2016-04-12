@@ -195,6 +195,7 @@ describe('Schedule', function() {
             .request();
         })
         .then(([object, response]) => {
+          should(response).be.an.Object();
           should(object).be.a.Object();
           should(object).have.property('id').which.is.Number();
           should(object).have.property('label').which.is.String().equal(data.label);

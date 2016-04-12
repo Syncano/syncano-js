@@ -171,6 +171,7 @@ describe('Class', function() {
             .request();
         })
         .then(([cls, response]) => {
+          should(response).be.an.Object();
           should(cls).be.an.Object();
           should(cls).have.property('name').which.is.String().equal(className);
           should(cls).have.property('instanceName').which.is.String().equal(instanceName);

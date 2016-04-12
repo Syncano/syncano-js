@@ -211,7 +211,8 @@ describe('Dataobject', function() {
           .get({id: objId, instanceName, className})
           .request();
       })
-      .then(([dataobject, get]) => {
+      .then(([dataobject, response]) => {
+        should(response).be.an.Object();
         should(dataobject).be.a.Object();
         should(dataobject).have.property('id').which.is.Number();
         should(dataobject).have.property('instanceName').which.is.String().equal(data.instanceName);

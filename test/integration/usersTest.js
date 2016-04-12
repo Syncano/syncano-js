@@ -310,6 +310,7 @@ describe('User', function() {
             .request();
         })
         .then(([object, response]) => {
+          should(response).be.an.Object();
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
           should(object).have.property('profile').which.is.Object();

@@ -153,6 +153,7 @@ describe('Instance', function() {
             .request();
         })
         .then(([instance, response]) => {
+          should(response).be.an.Object();
           should(instance).be.an.Object();
           should(instance).have.property('name').which.is.String().equal(instanceName);
           should(instance).have.property('description').which.is.String();

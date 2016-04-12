@@ -185,6 +185,7 @@ describe('ApiKey', function() {
             .request();
         })
         .then(([apk, response]) => {
+          should(response).be.an.Object();
           should(apk).be.an.Object();
           should(apk).have.property('instanceName').which.is.String().equal(instanceName);
           should(apk).have.property('description').which.is.String();

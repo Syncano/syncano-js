@@ -255,7 +255,8 @@ describe('ScriptEndpoint', function() {
             .get(ModelData)
             .request();
         })
-        .then(([scriptendpoint, get]) => {
+        .then(([scriptendpoint, response]) => {
+          should(response).be.an.Object();
           should(scriptendpoint).be.a.Object();
           should(scriptendpoint).have.property('name').which.is.String().equal(ModelData.name);
           should(scriptendpoint).have.property('instanceName').which.is.String().equal(ModelData.instanceName);

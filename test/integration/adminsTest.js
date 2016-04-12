@@ -2,7 +2,7 @@ import should from 'should/as-function';
 import Syncano from '../../src/syncano';
 import {suffix, credentials} from './utils';
 
-describe('Admin', function() {
+describe.only('Admin', function() {
   this.timeout(15000);
 
   let connection = null;
@@ -46,6 +46,7 @@ describe('Admin', function() {
           .request();
       })
       .then(([admin, response]) => {
+        should(response).be.an.Object();
         should(admin).be.an.Object();
         should(admin).have.property('instanceName').which.is.String().equal(instanceName);
         should(admin).have.property('id').which.is.Number();

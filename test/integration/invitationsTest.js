@@ -152,6 +152,7 @@ describe('Instance Invitation', function() {
             .request();
         })
         .then(([inv, response]) => {
+          should(response).be.an.Object();
           should(inv).be.an.Object();
           should(inv).have.property('id').which.is.Number();
           should(inv).have.property('email').which.is.String().equal(data.email);

@@ -274,6 +274,7 @@ describe('Channel', function() {
             .request();
         })
         .then(([chn, response]) => {
+          should(response).be.an.Object();
           should(chn).have.property('name').which.is.String().equal(channelName);
           should(chn).have.property('instanceName').which.is.String().equal(instanceName);
           should(chn).have.property('type').which.is.String().equal('default');

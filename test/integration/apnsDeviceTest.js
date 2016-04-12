@@ -188,6 +188,7 @@ describe('APNS Device', function() {
             .request();
         })
         .then(([apns, response]) => {
+          should(response).be.an.Object();
           should(apns).be.an.Object();
           should(apns).have.property('instanceName').which.is.String().equal(instanceName);
           should(apns).have.property('label').which.is.String().equal(deviceLabel);
