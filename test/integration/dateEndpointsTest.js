@@ -116,8 +116,9 @@ describe('DataEndpoint', function() {
             .fetchData({name: dataEndpointName, instanceName})
             .request();
         })
-      .then((data) => {
-        should(data).be.a.Object();
+      .then(([data, response]) => {
+        should(response).be.an.Object();
+        should(data).be.an.Object();
         should(data).have.property('objects').which.is.Array();
         should(data.objects[0]).have.property('int').which.is.Number().equal(9);
         should(data.objects.length).equal(5);

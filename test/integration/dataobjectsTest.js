@@ -317,7 +317,8 @@ describe('Dataobject', function() {
           .fields(['author'])
           .request();
       })
-      .then((dataobject) => {
+      .then(([dataobject, response]) => {
+        should(response).be.an.Object();
         should(dataobject).have.property('author').equal(dataObj.author);
         should(dataobject).not.have.property('title');
       });
