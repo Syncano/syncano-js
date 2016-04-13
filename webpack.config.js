@@ -60,5 +60,32 @@ module.exports = [
         }
       })
     ]
+  },
+  {
+    name: 'commonjs2-package',
+    debug: false,
+    profile: false,
+    devtool: 'source-map',
+    entry: path.join(__dirname, 'src', 'syncano.js'),
+    target: 'web',
+    output: {
+      path: path.join(__dirname, 'dist'),
+      filename: 'syncano.commonjs2.js',
+      libraryTarget: 'commonjs2'
+    },
+    module: {
+      loaders: [
+        { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
+        { test: /\.json$/, loader: 'json-loader'}
+      ]
+    },
+    resolve: {
+      modulesDirectories: ['node_modules'],
+      extensions: ['', '.js', '.json']
+    },
+    plugins: [
+      new webpack.optimize.OccurenceOrderPlugin(true),
+      new webpack.optimize.DedupePlugin()
+    ]
   }
 ]
