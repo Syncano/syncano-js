@@ -337,54 +337,54 @@ describe('APNS Device', function() {
         });
     });
 
-    // it('should be able to change page size', function() {
-    //   const regIds = [
-    //     hex.getRandom(64),
-    //     hex.getRandom(64)
-    //   ];
-    //
-    //   return Promise
-    //     .mapSeries(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user: data.user, device_id: devId}))
-    //     .then(cleaner.mark)
-    //     .then((apns) => {
-    //       should(apns).be.an.Array().with.length(2);
-    //       return Model.please({instanceName}).pageSize(1);
-    //     })
-    //     .then((apns) => {
-    //       should(apns).be.an.Array().with.length(1);
-    //     });
-    // });
-    //
-    // it('should be able to change ordering', function() {
-    //   const regIds = [
-    //     hex.getRandom(64),
-    //     hex.getRandom(64)
-    //   ];
-    //   let asc = null;
-    //
-    //   return Promise
-    //   .mapSeries(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user: data.user, device_id: devId}))
-    //   .then(cleaner.mark)
-    //   .then((apns) => {
-    //       should(apns).be.an.Array().with.length(2);
-    //       return Model.please({instanceName}).ordering('asc');
-    //     })
-    //     .then((apns) => {
-    //       should(apns).be.an.Array().with.length(2);
-    //       asc = apns;
-    //       return Model.please({instanceName}).ordering('desc');
-    //     }).then((desc) => {
-    //       const ascLabels = _.map(asc, 'label');
-    //       const descLabels = _.map(desc, 'label');
-    //       descLabels.reverse();
-    //
-    //       should(desc).be.an.Array().with.length(2);
-    //
-    //       _.forEach(ascLabels, (ascLabel, index) => {
-    //         should(ascLabel).be.equal(descLabels[index]);
-    //       });
-    //     });
-    // });
+    it('should be able to change page size', function() {
+      const regIds = [
+        hex.getRandom(64),
+        hex.getRandom(64)
+      ];
+
+      return Promise
+        .mapSeries(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user: data.user, device_id: devId}))
+        .then(cleaner.mark)
+        .then((apns) => {
+          should(apns).be.an.Array().with.length(2);
+          return Model.please({instanceName}).pageSize(1);
+        })
+        .then((apns) => {
+          should(apns).be.an.Array().with.length(1);
+        });
+    });
+
+    it('should be able to change ordering', function() {
+      const regIds = [
+        hex.getRandom(64),
+        hex.getRandom(64)
+      ];
+      let asc = null;
+
+      return Promise
+      .mapSeries(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user: data.user, device_id: devId}))
+      .then(cleaner.mark)
+      .then((apns) => {
+          should(apns).be.an.Array().with.length(2);
+          return Model.please({instanceName}).ordering('asc');
+        })
+        .then((apns) => {
+          should(apns).be.an.Array().with.length(2);
+          asc = apns;
+          return Model.please({instanceName}).ordering('desc');
+        }).then((desc) => {
+          const ascLabels = _.map(asc, 'label');
+          const descLabels = _.map(desc, 'label');
+          descLabels.reverse();
+
+          should(desc).be.an.Array().with.length(2);
+
+          _.forEach(ascLabels, (ascLabel, index) => {
+            should(ascLabel).be.equal(descLabels[index]);
+          });
+        });
+    });
 
     it('should be able to get raw data', function() {
       return Model.please().list({instanceName}).raw().then((response) => {
