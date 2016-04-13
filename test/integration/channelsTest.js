@@ -273,7 +273,8 @@ describe('Channel', function() {
             .get({name: channelName, instanceName})
             .request();
         })
-        .then((chn) => {
+        .then(([chn, response]) => {
+          should(response).be.an.Object();
           should(chn).have.property('name').which.is.String().equal(channelName);
           should(chn).have.property('instanceName').which.is.String().equal(instanceName);
           should(chn).have.property('type').which.is.String().equal('default');

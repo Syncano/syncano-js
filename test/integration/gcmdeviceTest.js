@@ -163,7 +163,8 @@ describe('GCMDevice', function() {
             .get(data)
             .request();
         })
-        .then((object) => {
+        .then(([object, response]) => {
+          should(response).be.an.Object();
           should(object).be.a.Object();
           should(object).have.property('label').which.is.String().equal(data.label);
           should(object).have.property('instanceName').which.is.String().equal(instanceName);

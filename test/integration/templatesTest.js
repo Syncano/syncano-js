@@ -228,7 +228,8 @@ describe('Template', function() {
             .get({name: templateName, instanceName})
             .request();
         })
-        .then((tpl) => {
+        .then(([tpl, response]) => {
+          should(response).be.an.Object();
           should(tpl).be.a.Object();
           should(tpl).have.property('name').which.is.String().equal(templateName);
           should(tpl).have.property('instanceName').which.is.String().equal(instanceName);
