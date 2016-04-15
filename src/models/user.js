@@ -27,6 +27,23 @@ const UserQuerySet = stampit().compose(
     this.properties = _.assign({}, this.properties, properties);
     return Group.please().getUserGroups(this.properties);
   },
+  /**
+  * Gets a user's group.
+  * @memberOf UserQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @returns {Promise}
+
+  * @example {@lang javascript}
+  * User.please().getGroup({user: 1, instanceName: 'test-one', group_id: 1}).then(function(group) {});
+
+  */
+  getGroup(properties = {}) {
+    const {Group} = this.getConfig();
+    this.properties = _.assign({}, this.properties, properties);
+    return Group.please().getUserGroup(this.properties);
+  },
 
   getDetails(properties = {}, user = {}) {
     this.properties = _.assign({}, this.properties, properties, user);
@@ -278,6 +295,21 @@ const User = stampit()
     getGroups() {
       const {Group} = this.getConfig();
       return Group.please().getUserGroups({ id: this.id, instanceName: this.instanceName});
+    },
+    /**
+    * Gets a user's group.
+    * @memberOf User
+    * @instance
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * User.please().get({instanceName: 'test-one', id: 1}).then(function(user) {
+    *   user.getGroup().then(function(group) {});
+    * });
+    */
+    getGroup(group = {}) {
+      const {Group} = this.getConfig();
+      return Group.please().getUserGroup({ user: this.id, instanceName: this.instanceName}, group);
     },
     /**
     * Restes user key.
