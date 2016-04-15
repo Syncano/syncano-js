@@ -144,6 +144,17 @@ describe('User', function() {
       });
   });
 
+  it('should be able to get groups via model instance', function() {
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((user) => {
+        return user.getGroups();
+      })
+      .then((groups) => {
+        should(groups).be.an.Array();
+      })
+  });
+
   describe('#please()', function() {
 
     it('should be able to list objects', function() {
@@ -275,6 +286,17 @@ describe('User', function() {
     //       return Model.please().socialLogin({instanceName, backend: 'facebbok'}, {access_token: '123'});
     //     });
     // });
+
+    it('should be able to get groups', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((object) => {
+          return Model.please().getGroups({ instanceName, id: object.id})
+        })
+        .then((groups) => {
+          should(groups).be.an.Array();
+        })
+    });
 
     it('should be able to bulk create an objects', function() {
       const objects = [

@@ -10,6 +10,23 @@ const UserQuerySet = stampit().compose(
   BulkCreate,
   List
 ).methods({
+  /**
+  * Gets a user's groups.
+  * @memberOf UserQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @returns {Promise}
+
+  * @example {@lang javascript}
+  * User.please().getGroups({id: 1, instanceName: 'test-one'}).then(function(groups) {});
+
+  */
+  getGroups(properties = {}) {
+    const {Group} = this.getConfig();
+    this.properties = _.assign({}, this.properties, properties);
+    return Group.please().getUserGroups(this.properties);
+  },
 
   getDetails(properties = {}, user = {}) {
     this.properties = _.assign({}, this.properties, properties, user);
@@ -164,10 +181,6 @@ const UserMeta = Meta({
       'methods': ['post', 'get'],
       'path': '/v1.1/instances/{instanceName}/users/'
     },
-    'groups': {
-      'methods': ['get', 'post'],
-      'path': '/v1.1/instances/{instanceName}/users/{id}/groups/'
-    },
     'login': {
       'methods': ['post'],
       'path': '/v1.1/instances/{instanceName}/user/auth/'
@@ -251,6 +264,21 @@ const User = stampit()
   .setQuerySet(UserQuerySet)
   .setConstraints(UserConstraints)
   .methods({
+    /**
+    * Gets a user's groups.
+    * @memberOf User
+    * @instance
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * User.please().get({instanceName: 'test-one', id: 1}).then(function(user) {
+    *   user.getGroups().then(function(groups) {});
+    * });
+    */
+    getGroups() {
+      const {Group} = this.getConfig();
+      return Group.please().getUserGroups({ id: this.id, instanceName: this.instanceName});
+    },
     /**
     * Restes user key.
     * @memberOf User
