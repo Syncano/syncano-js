@@ -91,6 +91,17 @@ const GroupQuerySet = stampit().compose(QuerySet).methods({
     return this.then((response) => {
       return this.model.fromJSON(response.group, this.properties);
     });
+  },
+
+  addUserGroup(properties = {}, group = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = group;
+    this.method = 'POST';
+    this.endpoint = 'userGroups';
+
+    return this.then((response) => {
+      return this.model.fromJSON(response.group, this.properties);
+    });
   }
 
 });
@@ -109,11 +120,11 @@ const GroupMeta = Meta({
     },
     'userGroups': {
       'methods': ['get', 'post'],
-      'path': '/v1.1/instances/{instanceName}/users/{id}/groups/'
+      'path': '/v1.1/instances/{instanceName}/users/{user}/groups/'
     },
     'userGroup': {
       'methods': ['get', 'delete'],
-      'path': '/v1.1/instances/{instanceName}/users/{user}/groups/{group_id}/'
+      'path': '/v1.1/instances/{instanceName}/users/{user}/groups/{group}/'
     }
   }
 });
