@@ -322,7 +322,7 @@ const User = stampit()
 
     * @example {@lang javascript}
     * User.please().get({instanceName: 'test-one', id: 1}).then(function(user) {
-    *   user.getGroup().then(function(group) {});
+    *   user.getGroup({ group: 1 }).then(function(group) {});
     * });
     */
     getGroup(group = {}) {

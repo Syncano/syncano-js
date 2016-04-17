@@ -172,9 +172,38 @@ describe('User', function() {
         should(group).be.an.Object();
         should(group).have.property('id').which.is.Number().equal(groupId);
         should(group).have.property('user').which.is.Number();
+        should(group).have.property('instanceName').which.is.String().equal(instanceName);
         should(group).have.property('description').which.is.String().equal('group-desc');
         should(group).have.property('label').which.is.String().equal('group-label');
       });
+  });
+
+  it('should be able to get group via model instance', function() {
+    let groupId = null;
+    let tempUser = null;
+
+    return connection.Group({ instanceName, label: 'group-label', description: 'group-desc'}).save()
+      .then(cleaner.mark)
+      .then((group) => {
+        groupId = group.id;
+        return Model(data).save()
+      })
+      .then(cleaner.mark)
+      .then((user) => {
+        tempUser = user;
+        return tempUser.addGroup({ group: groupId });
+      })
+      .then(() => {
+        return tempUser.getGroup({ group: groupId})
+      })
+      .then((group) => {
+        should(group).be.an.Object();
+        should(group).have.property('id').which.is.Number().equal(groupId);
+        should(group).have.property('instanceName').which.is.String().equal(instanceName);
+        should(group).have.property('user').which.is.Number().equal(tempUser.id);
+        should(group).have.property('description').which.is.String().equal('group-desc');
+        should(group).have.property('label').which.is.String().equal('group-label');
+      })
   });
 
   describe('#please()', function() {
@@ -321,9 +350,7 @@ describe('User', function() {
     });
 
     it('should be able to add group', function() {
-
       let groupId = null;
-
 
       return connection.Group.please().create({ instanceName, label: 'group-label', description: 'group-desc'})
       .then(cleaner.mark)
@@ -339,6 +366,34 @@ describe('User', function() {
         should(group).be.an.Object();
         should(group).have.property('id').which.is.Number().equal(groupId);
         should(group).have.property('user').which.is.Number();
+        should(group).have.property('description').which.is.String().equal('group-desc');
+        should(group).have.property('label').which.is.String().equal('group-label');
+      })
+    });
+
+    it('should be able to get group', function() {
+      let groupId = null;
+      let tempUser = null;
+
+      return connection.Group.please().create({ instanceName, label: 'group-label', description: 'group-desc'})
+      .then(cleaner.mark)
+      .then((group) => {
+        groupId = group.id;
+        return Model.please().create(data)
+      })
+      .then(cleaner.mark)
+      .then((object) => {
+        tempUser = object;
+        return Model.please().addGroup({ instanceName, user: tempUser.id}, {group: groupId})
+      })
+      .then(() => {
+        return Model.please().getGroup({ instanceName, user: tempUser.id, group: groupId})
+      })
+      .then((group) => {
+        should(group).be.an.Object();
+        should(group).have.property('id').which.is.Number().equal(groupId);
+        should(group).have.property('instanceName').which.is.String().equal(instanceName);
+        should(group).have.property('user').which.is.Number().equal(tempUser.id);
         should(group).have.property('description').which.is.String().equal('group-desc');
         should(group).have.property('label').which.is.String().equal('group-label');
       })
