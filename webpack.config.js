@@ -62,7 +62,7 @@ module.exports = [
     ]
   },
   {
-    name: 'commonjs2-package',
+    name: 'fuse-package',
     debug: false,
     profile: false,
     devtool: 'source-map',
@@ -70,7 +70,7 @@ module.exports = [
     target: 'web',
     output: {
       path: path.join(__dirname, 'dist'),
-      filename: 'syncano.commonjs2.js',
+      filename: 'syncano.fuse.js',
       libraryTarget: 'commonjs2'
     },
     module: {
@@ -80,6 +80,9 @@ module.exports = [
       ]
     },
     resolve: {
+      alias: {
+        'bluebird': path.join(__dirname, 'src/promise.js')
+      },
       modulesDirectories: ['node_modules'],
       extensions: ['', '.js', '.json']
     },

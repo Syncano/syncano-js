@@ -57,8 +57,11 @@
   "dependencies": {
     "bluebird": "^3.2.2",
     "lodash": "^4.6.1",
+    "promise-map-series": "^0.2.2",
+    "promise-spread": "^0.1.0",
     "stampit": "^2.1.1",
     "superagent": "^1.7.2",
+    "tiny-promisify": "^0.1.1",
     "validate.js": "^0.9.0"
   },
   "devDependencies": {
