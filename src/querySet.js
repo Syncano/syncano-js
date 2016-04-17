@@ -159,7 +159,7 @@ const QuerySetRequest = stampit().compose(Request)
         return Promise.reject(new Error(`Invalid request method: "${this.method}".`));
       }
 
-      return this.makeRequest(method, path, options).then((body) => this.serialize(body));
+      return this.makeRequest(method, path, options).then((body) => [this.serialize(body), body]);
     },
 
     /**
@@ -172,7 +172,7 @@ const QuerySetRequest = stampit().compose(Request)
     * @returns {Promise}
     */
     then(callback) {
-      return this.request().then(callback);
+      return this.request().spread(callback);
     }
   });
 
