@@ -37,11 +37,71 @@ const GroupQuerySet = stampit().compose(QuerySet).methods({
     this.properties = _.assign({}, this.properties, properties);
     return User.please().addUserToGroup(this.properties, user);
   },
+  /**
+  * Deletes user from group.
+  * @memberOf GroupQuerySet
+  * @instance
 
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} user object with user to be added
+  * @returns {GroupQuerySet}
+
+  * @example {@lang javascript}
+  * Grop.please().deleteUser({ id: 1, instanceName: 'test-one'}, { user: 1 }).then(function(response) {});
+  */
   deleteUser(properties = {}, user = {}) {
     const {User} = this.getConfig();
-    this.properties = _.assign({}, this.properties, properties, user);
+    this.properties = _.assign({}, this.properties, properties);
     return User.please().deleteUserFromGroup(this.properties, user);
+  },
+  /**
+  * Fetches details of a user belonging to a group.
+  * @memberOf Group
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} user object with user to be fetched
+
+  * @example {@lang javascript}
+  * Group.please().getUserDetails({ user: 1}).then(function(response) {});
+  */
+  getUserDetails(properties = {}, user = {}) {
+    const {User} = this.getConfig();
+    this.properties = _.assign({}, this.properties, properties);
+    return User.please().getDetails(this.properties, user);
+  },
+
+  getUserGroups(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'GET';
+    this.endpoint = 'userGroups';
+
+    return this.then((response) => {
+      return this.model.please().asResultSet(response.objects, 'group');
+    });
+  },
+
+  getUserGroup(properties = {}, group = {}) {
+    this.properties = _.assign({}, this.properties, properties, group);
+
+    this.method = 'GET';
+    this.endpoint = 'userGroup';
+
+    return this.then((response) => {
+      return this.model.fromJSON(response.group, this.properties);
+    });
+  },
+
+  addUserGroup(properties = {}, group = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = group;
+    this.method = 'POST';
+    this.endpoint = 'userGroups';
+
+    return this.then((response) => {
+      return this.model.fromJSON(response.group, this.properties);
+    });
   }
 
 });
@@ -57,6 +117,14 @@ const GroupMeta = Meta({
     'list': {
       'methods': ['get'],
       'path': '/v1.1/instances/{instanceName}/groups/'
+    },
+    'userGroups': {
+      'methods': ['get', 'post'],
+      'path': '/v1.1/instances/{instanceName}/users/{user}/groups/'
+    },
+    'userGroup': {
+      'methods': ['get', 'delete'],
+      'path': '/v1.1/instances/{instanceName}/users/{user}/groups/{group}/'
     }
   }
 });
@@ -112,7 +180,7 @@ const Group = stampit()
       return User.please().groupUsers({ id: this.id, instanceName: this.instanceName});
     },
     /**
-    * Add user ti group.
+    * Add user to group.
     * @memberOf Group
     * @instance
 
@@ -125,10 +193,33 @@ const Group = stampit()
       const {User} = this.getConfig();
       return User.please().addUserToGroup({ id: this.id, instanceName: this.instanceName}, user);
     },
+    /**
+    * Delete user from group.
+    * @memberOf Group
+    * @instance
 
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * Group.deleteUser({ user: 1}).then(function(response) {});
+    */
     deleteUser(user = {}) {
       const {User} = this.getConfig();
       return User.please().deleteUserFromGroup({ id: this.id, instanceName: this.instanceName}, user);
+    },
+    /**
+    * Fetches details of a user belonging to a group.
+    * @memberOf Group
+    * @instance
+
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * Group.getUserDetails({ user: 1}).then(function(response) {});
+    */
+    getUserDetails(user = {}) {
+      const {User} = this.getConfig();
+      return User.please().getDetails({ id: this.id, instanceName: this.instanceName}, user);
     }
   });
 

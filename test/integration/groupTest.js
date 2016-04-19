@@ -108,6 +108,33 @@ describe('Group', function() {
       });
   });
 
+  it('should be able to get user details via model instance', function() {
+    let group = null;
+
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((object) => {
+        group = object;
+        return connection.User(userData).save()
+      })
+      .then(cleaner.mark)
+      .then((user) => {
+        return group.addUser({user: user.id})
+      })
+      .then((response) => {
+        return group.getUserDetails({ user: response.id})
+      })
+      .then((user) => {
+        should(user).be.a.Object();
+        should(user).have.property('instanceName').which.is.String().equal(instanceName);
+        should(user).have.property('profile').which.is.Object();
+        should(user).have.property('links').which.is.Object();
+        should(user).have.property('groups').which.is.Array();
+        should(user).have.property('username').which.is.String().equal(userData.username);
+        should(user).have.property('user_key').which.is.String();
+      });
+  });
+
   it('should be able to delete user via model instance', function() {
     let group = null;
     let user_id = null;
@@ -227,6 +254,33 @@ describe('Group', function() {
         });
     });
 
+    it('should be able to get user details', function() {
+      let group_id = null;
+
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((object) => {
+          group_id = object.id;
+          return connection.User(userData).save()
+        })
+        .then(cleaner.mark)
+        .then((user) => {
+          return Model.please().addUser({ id: group_id, instanceName}, {user: user.id})
+        })
+        .then((response) => {
+          return Model.please().getUserDetails({ id: group_id, instanceName}, { user: response.id})
+        })
+        .then((user) => {
+          should(user).be.a.Object();
+          should(user).have.property('instanceName').which.is.String().equal(instanceName);
+          should(user).have.property('profile').which.is.Object();
+          should(user).have.property('links').which.is.Object();
+          should(user).have.property('groups').which.is.Array();
+          should(user).have.property('username').which.is.String().equal(userData.username);
+          should(user).have.property('user_key').which.is.String();
+        });
+    });
+
     it('should be able to delete user', function() {
       let group_id = null;
       let user_id = null;
@@ -290,7 +344,8 @@ describe('Group', function() {
             .get(data)
             .request();
         })
-        .then((object) => {
+        .then(([object, response]) => {
+          should(response).be.an.Object();
           should(object).be.a.Object();
           should(object).have.property('id').which.is.Number();
           should(object).have.property('label').which.is.String().equal(data.label);

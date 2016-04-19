@@ -26,10 +26,7 @@ const ClassConstraints = {
   },
   name: {
     presence: true,
-    string: true,
-    length: {
-      minimum: 5
-    }
+    string: true
   },
   description: {
     string: true

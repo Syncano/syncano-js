@@ -10,6 +10,68 @@ const UserQuerySet = stampit().compose(
   BulkCreate,
   List
 ).methods({
+  /**
+  * Gets a user's groups.
+  * @memberOf UserQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @returns {Promise}
+
+  * @example {@lang javascript}
+  * User.please().getGroups({id: 1, instanceName: 'test-one'}).then(function(groups) {});
+
+  */
+  getGroups(properties = {}) {
+    const {Group} = this.getConfig();
+    this.properties = _.assign({}, this.properties, properties);
+    return Group.please().getUserGroups(this.properties);
+  },
+  /**
+  * Gets a user's group.
+  * @memberOf UserQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @returns {Promise}
+
+  * @example {@lang javascript}
+  * User.please().getGroup({user: 1, instanceName: 'test-one', group: 1}).then(function(group) {});
+
+  */
+  getGroup(properties = {}, group = {}) {
+    const {Group} = this.getConfig();
+    this.properties = _.assign({}, this.properties, properties);
+    return Group.please().getUserGroup(this.properties, group);
+  },
+  /**
+  * Adds a group to user.
+  * @memberOf UserQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} group object with id of group to be added
+  * @returns {Promise}
+
+  * @example {@lang javascript}
+  * User.please().getGroup({user: 1, instanceName: 'test-one'}, {group: 1}).then(function(group) {});
+
+  */
+  addGroup(properties = {}, group = {}) {
+    const {Group} = this.getConfig();
+    this.properties = _.assign({}, this.properties, properties);
+    return Group.please().addUserGroup(this.properties, group);
+  },
+
+  getDetails(properties = {}, user = {}) {
+    this.properties = _.assign({}, this.properties, properties, user);
+    this.method = 'GET';
+    this.endpoint = 'groupUser';
+
+    return this.then((response) => {
+      return this.model.fromJSON(response.user, this.properties);
+    });
+  },
 
   groupUsers(properties = {}) {
     this.properties = _.assign({}, this.properties, properties);
@@ -18,7 +80,7 @@ const UserQuerySet = stampit().compose(
 
     return this.then((response) => {
       return this.model.please().asResultSet(response, 'user');
-    })
+    });
   },
 
   addUserToGroup(properties = {}, user = {}) {
@@ -27,7 +89,9 @@ const UserQuerySet = stampit().compose(
     this.method = 'POST';
     this.endpoint = 'groupUsers';
 
-    return this;
+    return this.then((response) => {
+      return this.model.fromJSON(response.user, this.properties);
+    });
   },
 
   deleteUserFromGroup(properties = {}, user = {}) {
@@ -152,10 +216,6 @@ const UserMeta = Meta({
       'methods': ['post', 'get'],
       'path': '/v1.1/instances/{instanceName}/users/'
     },
-    'groups': {
-      'methods': ['get', 'post'],
-      'path': '/v1.1/instances/{instanceName}/users/{id}/groups/'
-    },
     'login': {
       'methods': ['post'],
       'path': '/v1.1/instances/{instanceName}/user/auth/'
@@ -239,6 +299,54 @@ const User = stampit()
   .setQuerySet(UserQuerySet)
   .setConstraints(UserConstraints)
   .methods({
+    /**
+    * Gets a user's groups.
+    * @memberOf User
+    * @instance
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * User.please().get({instanceName: 'test-one', id: 1}).then(function(user) {
+    *   user.getGroups().then(function(groups) {});
+    * });
+    */
+    getGroups() {
+      const {Group} = this.getConfig();
+      return Group.please().getUserGroups({ user: this.id, instanceName: this.instanceName});
+    },
+    /**
+    * Gets a user's group.
+    * @memberOf User
+    * @instance
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * User.please().get({instanceName: 'test-one', id: 1}).then(function(user) {
+    *   user.getGroup({ group: 1 }).then(function(group) {});
+    * });
+    */
+    getGroup(group = {}) {
+      const {Group} = this.getConfig();
+      return Group.please().getUserGroup({ user: this.id, instanceName: this.instanceName}, group);
+    },
+    /**
+    * Adds a group to user.
+    * @memberOf User
+    * @instance
+
+    * @param {Object} group object with id of group to be added
+
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * User.please().get({instanceName: 'test-one', id: 1}).then(function(user) {
+    *   user.addGroup({ group: 1}).then(function(group) {});
+    * });
+    */
+    addGroup(group = {}) {
+      const {Group} = this.getConfig();
+      return Group.please().addUserGroup({ user: this.id, instanceName: this.instanceName}, group);
+    },
     /**
     * Restes user key.
     * @memberOf User
