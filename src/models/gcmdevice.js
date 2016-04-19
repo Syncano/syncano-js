@@ -12,7 +12,15 @@ const GCMDeviceQuerySet = stampit().compose(
   Update,
   UpdateOrCreate,
   GetOrCreate
-);
+).methods({
+
+  sendMessage(properties = {}, content = {}) {
+    const {GCMMessage} = this.getConfig();
+    const properties = _.assign({}, this.properties, properties);
+    return GCMMessage.please().sendToDevice(properties, content);
+  }
+
+});
 
 const GCMDeviceMeta = Meta({
   name: 'gcmdevice',

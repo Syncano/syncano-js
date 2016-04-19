@@ -1,4 +1,5 @@
 import stampit from 'stampit';
+import _ from 'lodash';
 import {Meta, Model} from './base';
 import {BaseQuerySet, Create, BulkCreate, Delete, Get, Update, UpdateOrCreate, GetOrCreate, List} from '../querySet';
 
@@ -12,7 +13,15 @@ const APNSDeviceQuerySet = stampit().compose(
   Update,
   UpdateOrCreate,
   GetOrCreate
-);
+).methods({
+
+  sendMessage(properties = {}, content = {}) {
+    const {APNSMessage} = this.getConfig();
+    const properties = _.assign({}, this.properties, properties);
+    return APNSMessage.please().sendToDevice(properties, content);
+  }
+
+});
 
 const APNSDeviceMeta = Meta({
   name: 'apnsdevice',
