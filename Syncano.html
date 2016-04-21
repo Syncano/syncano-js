@@ -336,6 +336,46 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>defaults</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    {}
+                
+                </td>
+            
+
+            <td class="description last"><p>Object with default properties for api calls.</p></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -384,7 +424,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="syncano.js.html">syncano.js</a>,
-				 <a href="syncano.js.html#sunlight-1-line-25">line 25</a>
+				 <a href="syncano.js.html#sunlight-1-line-27">line 27</a>
 			</li>
 		</ul>
 	</dd>
@@ -436,7 +476,8 @@
     <pre class="sunlight-highlight-javascript">
 var connection = Syncano({accountKey: &#x27;123&#x27;});
 var connection = Syncano({userKey: &#x27;123&#x27;});
-var connection = Syncano({socialToken: &#x27;123&#x27;});</pre>
+var connection = Syncano({socialToken: &#x27;123&#x27;});
+var connection = Syncano({ defaults: { instanceName: &#x27;my-instance&#x27; }});</pre>
 
 
     
@@ -519,7 +560,7 @@ var connection = Syncano({socialToken: &#x27;123&#x27;});</pre>
 		<ul class="dummy">
 			<li>
 				<a href="syncano.js.html">syncano.js</a>,
-				 <a href="syncano.js.html#sunlight-1-line-112">line 112</a>
+				 <a href="syncano.js.html#sunlight-1-line-153">line 153</a>
 			</li>
 		</ul>
 	</dd>
@@ -635,7 +676,7 @@ var accountKey = connection.getAccountKey();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="syncano.js.html">syncano.js</a>,
-				 <a href="syncano.js.html#sunlight-1-line-182">line 182</a>
+				 <a href="syncano.js.html#sunlight-1-line-223">line 223</a>
 			</li>
 		</ul>
 	</dd>
@@ -751,7 +792,7 @@ var apiKey = connection.getApiKey();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="syncano.js.html">syncano.js</a>,
-				 <a href="syncano.js.html#sunlight-1-line-77">line 77</a>
+				 <a href="syncano.js.html#sunlight-1-line-118">line 118</a>
 			</li>
 		</ul>
 	</dd>
@@ -803,6 +844,122 @@ var apiKey = connection.getApiKey();</pre>
     <pre class="sunlight-highlight-javascript">
 var connection = Syncano({accountKey: &#x27;123&#x27;});
 var baseUrl = connection.getBaseUrl();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getInstanceName"><span class="type-signature"></span>getInstanceName()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Gets <em>instanceName</em>.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="syncano.js.html">syncano.js</a>,
+				 <a href="syncano.js.html#sunlight-1-line-81">line 81</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">
+var connection = Syncano({accountKey: &#x27;123&#x27;});
+var baseUrl = connection.getInstanceName();</pre>
 
 
     
@@ -867,7 +1024,7 @@ var baseUrl = connection.getBaseUrl();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="syncano.js.html">syncano.js</a>,
-				 <a href="syncano.js.html#sunlight-1-line-217">line 217</a>
+				 <a href="syncano.js.html#sunlight-1-line-258">line 258</a>
 			</li>
 		</ul>
 	</dd>
@@ -983,7 +1140,7 @@ var socialToken = connection.getSocialToken();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="syncano.js.html">syncano.js</a>,
-				 <a href="syncano.js.html#sunlight-1-line-147">line 147</a>
+				 <a href="syncano.js.html#sunlight-1-line-188">line 188</a>
 			</li>
 		</ul>
 	</dd>
@@ -1149,7 +1306,7 @@ var userKey = connection.getUserKey();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="syncano.js.html">syncano.js</a>,
-				 <a href="syncano.js.html#sunlight-1-line-95">line 95</a>
+				 <a href="syncano.js.html#sunlight-1-line-136">line 136</a>
 			</li>
 		</ul>
 	</dd>
@@ -1315,7 +1472,7 @@ connection.setAccountKey(&#x27;abcd&#x27;);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="syncano.js.html">syncano.js</a>,
-				 <a href="syncano.js.html#sunlight-1-line-165">line 165</a>
+				 <a href="syncano.js.html#sunlight-1-line-206">line 206</a>
 			</li>
 		</ul>
 	</dd>
@@ -1481,7 +1638,7 @@ connection.setApiKey(&#x27;abcd&#x27;);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="syncano.js.html">syncano.js</a>,
-				 <a href="syncano.js.html#sunlight-1-line-59">line 59</a>
+				 <a href="syncano.js.html#sunlight-1-line-100">line 100</a>
 			</li>
 		</ul>
 	</dd>
@@ -1561,6 +1718,200 @@ connection.setApiKey(&#x27;abcd&#x27;);</pre>
     <pre class="sunlight-highlight-javascript">
 var connection = Syncano({accountKey: &#x27;123&#x27;});
 connection.setBaseUrl(&#x27;https://dummy.com/&#x27;);</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setInstanceName"><span class="type-signature"></span>setInstanceName(instanceName)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Sets <em>instanceName</em>.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>instanceName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Instance name for all api calls</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="syncano.js.html">syncano.js</a>,
+				 <a href="syncano.js.html#sunlight-1-line-61">line 61</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Throws:</h5>
+    
+            
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        <p>Instance name must be a string.</p>
+        </div>
+    </dt>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
+
+
+
+            </dd>
+        </dl>
+    </dt>
+</dl>
+
+
+        
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Syncano.html">Syncano</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">
+var connection = Syncano({accountKey: &#x27;123&#x27;});
+connection.setInstanceName(&#x27;my-instance&#x27;);</pre>
 
 
     
@@ -1675,7 +2026,7 @@ connection.setBaseUrl(&#x27;https://dummy.com/&#x27;);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="syncano.js.html">syncano.js</a>,
-				 <a href="syncano.js.html#sunlight-1-line-200">line 200</a>
+				 <a href="syncano.js.html#sunlight-1-line-241">line 241</a>
 			</li>
 		</ul>
 	</dd>
@@ -1841,7 +2192,7 @@ connection.setSocialToken(&#x27;abcd&#x27;);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="syncano.js.html">syncano.js</a>,
-				 <a href="syncano.js.html#sunlight-1-line-130">line 130</a>
+				 <a href="syncano.js.html#sunlight-1-line-171">line 171</a>
 			</li>
 		</ul>
 	</dd>
@@ -1950,7 +2301,7 @@ connection.setUserKey(&#x27;abcd&#x27;);</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Sun Apr 10th 2016
+		on Thu Apr 21st 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
