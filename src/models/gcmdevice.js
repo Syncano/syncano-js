@@ -16,8 +16,7 @@ const GCMDeviceQuerySet = stampit().compose(
 
   sendMessage(properties = {}, content = {}) {
     const {GCMMessage} = this.getConfig();
-    const properties = _.assign({}, this.properties, properties);
-    return GCMMessage.please().sendToDevice(properties, content);
+    return GCMMessage.please().sendToDevice(_.assign({}, this.properties, properties), content);
   }
 
 });
