@@ -1,4 +1,5 @@
 import stampit from 'stampit';
+import _ from 'lodash';
 import {Meta, Model} from './base';
 import {BaseQuerySet, Create, BulkCreate, Get, GetOrCreate, List} from '../querySet';
 
@@ -9,7 +10,18 @@ const APNSMessageQuerySet = stampit().compose(
   Get,
   List,
   GetOrCreate
-);
+).methods({
+
+  sendToDevice(properties = {}, content = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = {content};
+    this.method = 'POST';
+    this.endpoint = 'deviceMessage';
+
+    return this;
+  }
+
+});
 
 const APNSMessageMeta = Meta({
   name: 'apnsmessage',
@@ -22,6 +34,10 @@ const APNSMessageMeta = Meta({
     'list': {
       'methods': ['get'],
       'path': '/v1.1/instances/{instanceName}/push_notifications/apns/messages/'
+    },
+    'deviceMessage': {
+      'methods': ['post'],
+      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/devices/{registration_id}/send_message/'
     }
   }
 });

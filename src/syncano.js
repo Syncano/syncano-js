@@ -15,12 +15,14 @@ import SyncanoFile from './file';
  * @param {Object} [options.accountKey = null] Your Syncano account key.
  * @param {Object} [options.userKey = null] Instance user api key.
  * @param {Object} [options.socialToken = null] Instance social authentication token.
+ * @param {Object} [options.defaults = {}] Object with default properties for api calls.
  * @returns {Syncano}
 
  * @example {@lang javascript}
  * var connection = Syncano({accountKey: '123'});
  * var connection = Syncano({userKey: '123'});
  * var connection = Syncano({socialToken: '123'});
+ * var connection = Syncano({ defaults: { instanceName: 'my-instance' }});
  */
 const Syncano = stampit()
   // We need function here, do not use arrow syntax!
@@ -37,9 +39,48 @@ const Syncano = stampit()
     accountKey: null,
     userKey: null,
     apiKey: null,
-    socialToken: null
+    socialToken: null,
+    defaults: {}
   })
   .methods({
+    /**
+    * Sets *instanceName*.
+
+    * @memberOf Syncano
+    * @instance
+
+    * @param {String} instanceName Instance name for all api calls
+    * @returns {Syncano}
+    * @throws {Error} Instance name must be a string.
+
+    * @example {@lang javascript}
+    * var connection = Syncano({accountKey: '123'});
+    * connection.setInstanceName('my-instance');
+
+    */
+    setInstanceName(instanceName) {
+      if(_.isEmpty(instanceName)) this.defaults.instanceName = null;
+      else {
+        if(!_.isString(instanceName)) throw new Error('Instance name must be a string.');
+        this.defaults.instanceName = instanceName;
+      }
+      return this;
+    },
+    /**
+    * Gets *instanceName*.
+
+    * @memberOf Syncano
+    * @instance
+    * @returns {String}
+
+    * @example {@lang javascript}
+    * var connection = Syncano({accountKey: '123'});
+    * var baseUrl = connection.getInstanceName();
+
+    */
+    getInstanceName() {
+      return this.defaults.instanceName;
+    },
 
     /**
     * Sets *baseUrl*.

@@ -144,6 +144,96 @@ describe('User', function() {
       });
   });
 
+  it('should be able to get groups via model instance', function() {
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((user) => {
+        return user.getGroups();
+      })
+      .then((groups) => {
+        should(groups).be.an.Array();
+      })
+  });
+
+  it('should be able to add group via model instance', function() {
+    let groupId = null;
+
+    return connection.Group({ instanceName, label: 'group-label', description: 'group-desc'}).save()
+      .then(cleaner.mark)
+      .then((group) => {
+        groupId = group.id;
+        return Model(data).save()
+      })
+      .then(cleaner.mark)
+      .then((user) => {
+        return user.addGroup({ group: groupId });
+      })
+      .then((group) => {
+        should(group).be.an.Object();
+        should(group).have.property('id').which.is.Number().equal(groupId);
+        should(group).have.property('user').which.is.Number();
+        should(group).have.property('instanceName').which.is.String().equal(instanceName);
+        should(group).have.property('description').which.is.String().equal('group-desc');
+        should(group).have.property('label').which.is.String().equal('group-label');
+      });
+  });
+
+  it('should be able to get group via model instance', function() {
+    let groupId = null;
+    let tempUser = null;
+
+    return connection.Group({ instanceName, label: 'group-label', description: 'group-desc'}).save()
+      .then(cleaner.mark)
+      .then((group) => {
+        groupId = group.id;
+        return Model(data).save()
+      })
+      .then(cleaner.mark)
+      .then((user) => {
+        tempUser = user;
+        return tempUser.addGroup({ group: groupId });
+      })
+      .then(() => {
+        return tempUser.getGroup({ group: groupId})
+      })
+      .then(() => {
+        return tempUser.getGroups()
+      })
+      .then((groups) => {
+        should(groups).be.an.Array().with.length(1);
+      })
+  });
+
+  it('should be able to delete group via model instance', function() {
+    let groupId = null;
+    let tempUser = null;
+
+    return connection.Group({ instanceName, label: 'group-label', description: 'group-desc'}).save()
+      .then(cleaner.mark)
+      .then((group) => {
+        groupId = group.id;
+        return Model(data).save()
+      })
+      .then(cleaner.mark)
+      .then((user) => {
+        tempUser = user;
+        return tempUser.addGroup({ group: groupId });
+      })
+      .then(() => {
+        return tempUser.getGroups()
+      })
+      .then((groups) => {
+        should(groups).be.an.Array().with.length(1);
+        return tempUser.deleteGroup({ group: groupId });
+      })
+      .then(() => {
+        return tempUser.getGroups()
+      })
+      .then((groups) => {
+        should(groups).be.an.Array().with.length(0);
+      })
+  });
+
   describe('#please()', function() {
 
     it('should be able to list objects', function() {
@@ -276,6 +366,98 @@ describe('User', function() {
     //     });
     // });
 
+    it('should be able to get groups', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((object) => {
+          return Model.please().getGroups({ instanceName, user: object.id})
+        })
+        .then((groups) => {
+          should(groups).be.an.Array();
+        })
+    });
+
+    it('should be able to add group', function() {
+      let groupId = null;
+      let userId = null;
+
+      return connection.Group.please().create({ instanceName, label: 'group-label', description: 'group-desc'})
+        .then(cleaner.mark)
+        .then((group) => {
+          groupId = group.id;
+          return Model.please().create(data)
+        })
+        .then(cleaner.mark)
+        .then((object) => {
+          userId = object.id;
+          return Model.please().addGroup({ instanceName, user: userId}, {group: groupId})
+        })
+        .then(() => {
+          return Model.please().getGroups({ instanceName, user: userId})
+        })
+        .then((groups) => {
+          should(groups).be.an.Array().with.length(1);
+        })
+    });
+
+    it('should be able to delete group', function() {
+      let groupId = null;
+      let userId = null;
+
+      return connection.Group.please().create({ instanceName, label: 'group-label', description: 'group-desc'})
+      .then(cleaner.mark)
+      .then((group) => {
+        groupId = group.id;
+        return Model.please().create(data)
+      })
+      .then(cleaner.mark)
+      .then((object) => {
+        userId = object.id
+        return Model.please().addGroup({ instanceName, user: userId}, {group: groupId})
+      })
+      .then(() => {
+        return Model.please().getGroups({ instanceName, user: userId})
+      })
+      .then((groups) => {
+        should(groups).be.an.Array().with.length(1);
+        return Model.please().deleteGroup({ instanceName, user: userId}, {group: groupId})
+      })
+      .then(() => {
+        return Model.please().getGroups({ instanceName, user: userId})
+      })
+      .then((groups) => {
+        should(groups).be.an.Array().with.length(0);
+      })
+    });
+
+    it('should be able to get group', function() {
+      let groupId = null;
+      let tempUser = null;
+
+      return connection.Group.please().create({ instanceName, label: 'group-label', description: 'group-desc'})
+      .then(cleaner.mark)
+      .then((group) => {
+        groupId = group.id;
+        return Model.please().create(data)
+      })
+      .then(cleaner.mark)
+      .then((object) => {
+        tempUser = object;
+        return Model.please().addGroup({ instanceName, user: tempUser.id}, {group: groupId})
+      })
+      .then(() => {
+        return Model.please().getGroup({ instanceName, user: tempUser.id, group: groupId})
+      })
+      .then((group) => {
+        should(group).be.an.Object();
+        should(group).have.property('id').which.is.Number().equal(groupId);
+        should(group).have.property('instanceName').which.is.String().equal(instanceName);
+        should(group).have.property('user').which.is.Number().equal(tempUser.id);
+        should(group).have.property('description').which.is.String().equal('group-desc');
+        should(group).have.property('label').which.is.String().equal('group-label');
+      })
+    });
+
     it('should be able to bulk create an objects', function() {
       const objects = [
         Model(data),
@@ -309,7 +491,8 @@ describe('User', function() {
             .get({ id: object.id, instanceName })
             .request();
         })
-        .then((object) => {
+        .then(([object, response]) => {
+          should(response).be.an.Object();
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
           should(object).have.property('profile').which.is.Object();
@@ -353,7 +536,8 @@ describe('User', function() {
             .get({ id: object.id, instanceName })
             .request();
         })
-        .then((object) => {
+        .then(([object, response]) => {
+          should(response).be.an.Object();
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
           should(object).have.property('profile').which.is.Object();

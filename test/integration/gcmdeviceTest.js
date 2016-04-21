@@ -163,7 +163,8 @@ describe('GCMDevice', function() {
             .get(data)
             .request();
         })
-        .then((object) => {
+        .then(([object, response]) => {
+          should(response).be.an.Object();
           should(object).be.a.Object();
           should(object).have.property('label').which.is.String().equal(data.label);
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
@@ -338,6 +339,32 @@ describe('GCMDevice', function() {
         should(response).have.property('next').which.is.null();
         should(response).have.property('prev').which.is.null();
       });
+    });
+
+    it('should be able to send message directly from device', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then(() => {
+          return connection.GCMConfig.please().update({instanceName}, {
+            development_api_key: suffix.get('key')
+          })
+        })
+        .then(() => {
+          return Model.please().sendMessage({registration_id: data.registration_id, instanceName}, {environment: 'development'});
+        })
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('id').which.is.Number();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('status').which.is.String();
+          should(object).have.property('created_at').which.is.Date();
+          should(object).have.property('updated_at').which.is.Date();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('result').which.is.Object();
+          should(object).have.property('content').which.is.Object();
+          should(object.content).have.property('environment').which.is.String();
+          should(object.content).have.property('registration_ids').which.is.Array();
+        });
     });
 
   });

@@ -1,4 +1,5 @@
 import stampit from 'stampit';
+import _ from 'lodash';
 import {Meta, Model} from './base';
 import {BaseQuerySet, Create, BulkCreate, Delete, Get, Update, UpdateOrCreate, GetOrCreate, List} from '../querySet';
 
@@ -12,7 +13,14 @@ const GCMDeviceQuerySet = stampit().compose(
   Update,
   UpdateOrCreate,
   GetOrCreate
-);
+).methods({
+
+  sendMessage(properties = {}, content = {}) {
+    const {GCMMessage} = this.getConfig();
+    return GCMMessage.please().sendToDevice(_.assign({}, this.properties, properties), content);
+  }
+
+});
 
 const GCMDeviceMeta = Meta({
   name: 'gcmdevice',

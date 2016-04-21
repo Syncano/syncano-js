@@ -214,7 +214,8 @@ describe('Trigger', function() {
             .get({ id: object.id, instanceName })
             .request();
         })
-        .then((object) => {
+        .then(([object, response]) => {
+          should(response).be.an.Object();
           should(object).be.a.Object();
           should(object).have.property('id').which.is.Number();
           should(object).have.property('script').which.is.Number().equal(data.script);
