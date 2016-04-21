@@ -395,6 +395,33 @@ describe('APNS Device', function() {
       });
     });
 
+    it('should be able to send message directly from device', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then(() => {
+          return connection.APNSConfig.please().update({instanceName}, {
+            development_certificate: Syncano.file(__dirname + '/certificates/ApplePushDevelopment.p12'),
+            development_bundle_identifier: 'com.syncano.testAPNS'
+          });
+        })
+        .then(() => {
+          return Model
+            .please()
+            .sendMessage({registration_id: data.registration_id, instanceName}, {environment: 'development', aps: {alert: 'message'}});
+        })
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('id').which.is.Number();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('status').which.is.String();
+          should(object).have.property('created_at').which.is.Date();
+          should(object).have.property('updated_at').which.is.Date();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('result').which.is.Object();
+          should(object).have.property('content').which.is.Object();
+        });
+    });
+
   });
 
 });
