@@ -62,6 +62,24 @@ const UserQuerySet = stampit().compose(
     this.properties = _.assign({}, this.properties, properties);
     return Group.please().addUserGroup(this.properties, group);
   },
+  /**
+  * Removes a user's group.
+  * @memberOf UserQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} group object with id of group to be added
+  * @returns {Promise}
+
+  * @example {@lang javascript}
+  * User.please().deleteGroup({user: 1, instanceName: 'test-one'}, {group: 1}).then(function(group) {});
+
+  */
+  deleteGroup(properties = {}, group = {}) {
+    const {Group} = this.getConfig();
+    this.properties = _.assign({}, this.properties, properties);
+    return Group.please().deleteUserGroup(this.properties, group);
+  },
 
   getDetails(properties = {}, user = {}) {
     this.properties = _.assign({}, this.properties, properties, user);
@@ -322,7 +340,7 @@ const User = stampit()
 
     * @example {@lang javascript}
     * User.please().get({instanceName: 'test-one', id: 1}).then(function(user) {
-    *   user.getGroup().then(function(group) {});
+    *   user.getGroup({ group: 1 }).then(function(group) {});
     * });
     */
     getGroup(group = {}) {
@@ -346,6 +364,24 @@ const User = stampit()
     addGroup(group = {}) {
       const {Group} = this.getConfig();
       return Group.please().addUserGroup({ user: this.id, instanceName: this.instanceName}, group);
+    },
+    /**
+    * Removes a user's group.
+    * @memberOf User
+    * @instance
+
+    * @param {Object} group object with id of group to be added
+
+    * @returns {Promise}
+
+    * @example {@lang javascript}
+    * User.please().get({instanceName: 'test-one', id: 1}).then(function(user) {
+    *   user.deleteGroup({ group: 1}).then(function(group) {});
+    * });
+    */
+    deleteGroup(group = {}) {
+      const {Group} = this.getConfig();
+      return Group.please().deleteUserGroup({ user: this.id, instanceName: this.instanceName}, group);
     },
     /**
     * Restes user key.

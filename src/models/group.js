@@ -78,7 +78,7 @@ const GroupQuerySet = stampit().compose(QuerySet).methods({
     this.endpoint = 'userGroups';
 
     return this.then((response) => {
-      return this.model.please().asResultSet(response.objects, 'group');
+      return this.model.please().asResultSet(response, 'group');
     });
   },
 
@@ -98,6 +98,17 @@ const GroupQuerySet = stampit().compose(QuerySet).methods({
     this.payload = group;
     this.method = 'POST';
     this.endpoint = 'userGroups';
+
+    return this.then((response) => {
+      return this.model.fromJSON(response.group, this.properties);
+    });
+  },
+
+  deleteUserGroup(properties = {}, group = {}) {
+    this.properties = _.assign({}, this.properties, properties, group);
+
+    this.method = 'DELETE';
+    this.endpoint = 'userGroup';
 
     return this.then((response) => {
       return this.model.fromJSON(response.group, this.properties);
