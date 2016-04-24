@@ -1,5 +1,6 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
+import Promise from 'bluebird';
 import _ from 'lodash';
 import QuerySet from '../querySet';
 
@@ -164,8 +165,8 @@ const DataObject = stampit()
   .setMeta(DataObjectMeta)
   .methods({
     increment(field, by) {
-      if(!_.isNumber(this[field])) throw new Error(`The ${field} is not numeric.`);
-      if(!_.isNumber(by)) throw new Error('The provided value is not numeric.');
+      if(!_.isNumber(this[field])) return Promise.reject(new Error(`The ${field} is not numeric.`));
+      if(!_.isNumber(by)) return Promise.reject(new Error('The provided value is not numeric.'));
 
       this[field] += _.add(this[field], by);
 

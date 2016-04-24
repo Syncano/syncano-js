@@ -73,7 +73,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
       const config = this.getConfig();
 
       if (!_.isString(path)) {
-        throw new Error('"path" needs to be a string.');
+        return Promise.reject(new Error('"path" needs to be a string.'));
       }
 
       if (_.startsWith(path, config.getBaseUrl())) {

@@ -47,9 +47,7 @@ describe('Request', function() {
   describe('#buildUrl()', function() {
 
     it('should check "path" type', function() {
-      should(function() {
-        request.buildUrl(1);
-      }).throw(new Error('"path" needs to be a string.'));
+      should(request.buildUrl(1)).be.rejectedWith(/path/);
     });
 
     it('should ignore already joined path', function() {
