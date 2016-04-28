@@ -19,10 +19,29 @@ const Account = stampit().compose(Request)
     _account: {
       registerPath: '/v1.1/account/register/',
       loginPath: '/v1.1/account/auth/',
-      updatePath: '/v1.1/account/'
+      updatePath: '/v1.1/account/',
+      activatePath: '/v1.1/account/activate/'
     }
   })
   .methods({
+
+    /**
+    * A convenience method for activating an accoung.
+
+    * @memberOf Account
+    * @instance
+
+    * @param {Object} payload
+    * @param {String} payload.uid
+    * @param {String} payload.token
+    * @returns {Promise}
+
+    */
+
+    activate(payload = {}) {
+      const path = this._account.activatePath;
+      return this.makeRequest('POST', path, {payload});
+    },
 
     /**
     * A convenience method for creating a new account.
