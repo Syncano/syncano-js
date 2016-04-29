@@ -19,6 +19,7 @@ const Account = stampit().compose(Request)
     _account: {
       registerPath: '/v1.1/account/register/',
       loginPath: '/v1.1/account/auth/',
+      socialLoginPath: '/v1.1/account/auth/{backend}/',
       updatePath: '/v1.1/account/',
       activatePath: '/v1.1/account/activate/'
     }
@@ -83,6 +84,23 @@ const Account = stampit().compose(Request)
         }
         return user;
       });
+    },
+
+    /**
+    * A convenience method for authenticating with a social media token.
+
+    * @memberOf Account
+    * @instance
+
+    * @param {Object} payload
+    * @param {String} payload.backend
+    * @param {String} payload.access_token
+    * @returns {Promise}
+
+    */
+    socialLogin(payload = {}) {
+      const path = _.replace(this._account.socialLoginPath, '{backend}', payload.backend);
+      return this.makeRequest('POST', path, {payload});
     },
 
     /**

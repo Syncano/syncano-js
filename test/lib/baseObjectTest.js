@@ -56,6 +56,7 @@ describe('Syncano', function() {
       should(baseObject.Account).have.property('register').which.is.Function();
       should(baseObject.Account).have.property('login').which.is.Function();
       should(baseObject.Account).have.property('update').which.is.Function();
+      should(baseObject.Account).have.property('socialLogin').which.is.Function();
     });
   });
 
