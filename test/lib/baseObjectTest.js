@@ -37,6 +37,8 @@ describe('Syncano', function() {
       should(baseObject).have.property('APNSDevice').which.is.Function();
       should(baseObject).have.property('GCMMessage').which.is.Function();
       should(baseObject).have.property('APNSMessage').which.is.Function();
+      should(baseObject).have.property('Account').which.is.Object();
+      should(baseObject).have.property('Monitor').which.is.Object();
     });
 
     it('shoud have baseUrl and accountKey properties', function() {
@@ -46,7 +48,22 @@ describe('Syncano', function() {
       should(baseObject).have.property('socialToken').which.is.Null();
       should(baseObject).have.property('defaults').which.is.Object();
     })
+  });
 
+  describe('#Account', function() {
+    it('should have correct methods', function() {
+      should(baseObject.Account).have.property('activate').which.is.Function();
+      should(baseObject.Account).have.property('register').which.is.Function();
+      should(baseObject.Account).have.property('login').which.is.Function();
+      should(baseObject.Account).have.property('update').which.is.Function();
+    });
+  });
+
+  describe('#Monitor', function() {
+    it('should have correct methods', function() {
+      should(baseObject.Monitor).have.property('startMonitoring').which.is.Function();
+      should(baseObject.Monitor).have.property('stopMonitoring').which.is.Function();
+    });
   });
 
   describe('#setAccountKey()', function() {
