@@ -92,15 +92,14 @@ const Account = stampit().compose(Request)
     * @memberOf Account
     * @instance
 
-    * @param {Object} payload
-    * @param {String} payload.backend
-    * @param {String} payload.access_token
+    * @param {String} backend
+    * @param {String} access_token
     * @returns {Promise}
 
     */
-    socialLogin(payload = {}) {
-      const path = _.replace(this._account.socialLoginPath, '{backend}', payload.backend);
-      return this.makeRequest('POST', path, {payload});
+    socialLogin(backend, access_token) {
+      const path = _.replace(this._account.socialLoginPath, '{backend}', backend);
+      return this.makeRequest('POST', path, {access_token});
     },
 
     /**
