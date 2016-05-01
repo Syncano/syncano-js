@@ -21,7 +21,8 @@ const Account = stampit().compose(Request)
       loginPath: '/v1.1/account/auth/',
       socialLoginPath: '/v1.1/account/auth/{backend}/',
       updatePath: '/v1.1/account/',
-      activatePath: '/v1.1/account/activate/'
+      activatePath: '/v1.1/account/activate/',
+      emailPath: '/v1.1/account/resend_email/'
     }
   })
   .methods({
@@ -100,6 +101,21 @@ const Account = stampit().compose(Request)
     socialLogin(backend, access_token) {
       const path = _.replace(this._account.socialLoginPath, '{backend}', backend);
       return this.makeRequest('POST', path, {access_token});
+    },
+
+    /**
+    * A convenience method for resending email.
+
+    * @memberOf Account
+    * @instance
+
+    * @param {String} email
+    * @returns {Promise}
+
+    */
+    resendEmail(email) {
+      const path = this._account.emailPath;
+      return this.makeRequest('POST', path, {email});
     },
 
     /**
