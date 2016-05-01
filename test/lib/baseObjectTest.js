@@ -58,6 +58,7 @@ describe('Syncano', function() {
       should(baseObject.Account).have.property('update').which.is.Function();
       should(baseObject.Account).have.property('socialLogin').which.is.Function();
       should(baseObject.Account).have.property('resendEmail').which.is.Function();
+      should(baseObject.Account).have.property('resetKey').which.is.Function();
     });
   });
 

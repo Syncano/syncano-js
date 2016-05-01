@@ -22,7 +22,8 @@ const Account = stampit().compose(Request)
       socialLoginPath: '/v1.1/account/auth/{backend}/',
       updatePath: '/v1.1/account/',
       activatePath: '/v1.1/account/activate/',
-      emailPath: '/v1.1/account/resend_email/'
+      emailPath: '/v1.1/account/resend_email/',
+      resetKeyPath: '/v1.1/account/reset_key/'
     }
   })
   .methods({
@@ -43,6 +44,20 @@ const Account = stampit().compose(Request)
     activate(payload = {}) {
       const path = this._account.activatePath;
       return this.makeRequest('POST', path, {payload});
+    },
+
+    /**
+    * A convenience method for resetting the account key.
+
+    * @memberOf Account
+    * @instance
+
+    * @returns {Promise}
+
+    */
+    resetKey() {
+      const path = this._account.resetKeyPath;
+      return this.makeRequest('POST', path);
     },
 
     /**
