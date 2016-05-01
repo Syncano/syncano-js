@@ -82,6 +82,24 @@ const Account = stampit().compose(Request)
     },
 
     /**
+    * A convenience method for confirming password reset.
+
+    * @memberOf Account
+    * @instance
+
+    * @param {Object} payload
+    * @param {String} payload.uid
+    * @param {String} payload.token
+    * @param {String} payload.new_password
+    * @returns {Promise}
+
+    */
+    confirmPasswordReset(payload = {}) {
+      const path = this._account.resetPasswordConfimPath;
+      return this.makeRequest('POST', path, {payload});
+    },
+
+    /**
     * A convenience method for setting the password.
 
     * @memberOf Account
