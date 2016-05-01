@@ -48,7 +48,24 @@ const Account = stampit().compose(Request)
     },
 
     /**
-    * A convenience method for changing the password.
+    * A convenience method for changing an accoung.
+
+    * @memberOf Account
+    * @instance
+
+    * @param {Object} payload
+    * @param {String} payload.current_password
+    * @param {String} payload.new_password
+    * @returns {Promise}
+
+    */
+    changePassword(payload = {}) {
+      const path = this._account.changePasswordPath;
+      return this.makeRequest('POST', path, {payload})
+    },
+
+    /**
+    * A convenience method for setting the password.
 
     * @memberOf Account
     * @param {String} password
