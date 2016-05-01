@@ -23,7 +23,8 @@ const Account = stampit().compose(Request)
       updatePath: '/v1.1/account/',
       activatePath: '/v1.1/account/activate/',
       emailPath: '/v1.1/account/resend_email/',
-      resetKeyPath: '/v1.1/account/reset_key/'
+      resetKeyPath: '/v1.1/account/reset_key/',
+      changePasswordPath: '/v1.1/account/password/set/'
     }
   })
   .methods({
@@ -40,10 +41,24 @@ const Account = stampit().compose(Request)
     * @returns {Promise}
 
     */
-
     activate(payload = {}) {
       const path = this._account.activatePath;
       return this.makeRequest('POST', path, {payload});
+    },
+
+    /**
+    * A convenience method for changing the password.
+
+    * @memberOf Account
+    * @param {String} password
+    * @instance
+
+    * @returns {Promise}
+
+    */
+    changePassword(password) {
+      const path = this._account.changePasswordPath;
+      return this.makeRequest('POST', path, {password});
     },
 
     /**
