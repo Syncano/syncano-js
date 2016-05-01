@@ -24,7 +24,8 @@ const Account = stampit().compose(Request)
       activatePath: '/v1.1/account/activate/',
       emailPath: '/v1.1/account/resend_email/',
       resetKeyPath: '/v1.1/account/reset_key/',
-      changePasswordPath: '/v1.1/account/password/set/'
+      changePasswordPath: '/v1.1/account/password/',
+      setPasswordPath: '/v1.1/account/password/set/'
     }
   })
   .methods({
@@ -56,8 +57,8 @@ const Account = stampit().compose(Request)
     * @returns {Promise}
 
     */
-    changePassword(password) {
-      const path = this._account.changePasswordPath;
+    setPassword(password) {
+      const path = this._account.setPasswordPath;
       return this.makeRequest('POST', path, {password});
     },
 
