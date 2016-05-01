@@ -61,6 +61,7 @@ describe('Syncano', function() {
       should(baseObject.Account).have.property('resetKey').which.is.Function();
       should(baseObject.Account).have.property('setPassword').which.is.Function();
       should(baseObject.Account).have.property('changePassword').which.is.Function();
+      should(baseObject.Account).have.property('resetPassword').which.is.Function();
     });
   });
 
