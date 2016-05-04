@@ -73,7 +73,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
       const config = this.getConfig();
 
       if (!_.isString(path)) {
-        throw new Error('"path" needs to be a string.');
+        return Promise.reject(new Error('"path" needs to be a string.'));
       }
 
       if (_.startsWith(path, config.getBaseUrl())) {
@@ -180,11 +180,11 @@ const Request = stampit().compose(ConfigMixin, Logger)
       return Promise.promisify(request.end, {context: request})()
         .then((response) => {
           if (!response.ok) {
-            throw new RequestError({
+            return Promise.reject(new RequestError({
               response: response,
               status: response.status,
               message: 'Bad request'
-            });
+            }));
           }
           return response[options.responseAttr];
         })
@@ -194,7 +194,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
             this.log(`Response ${err.status}:`, err.errors);
 
             if (err.name !== 'RequestError') {
-              throw new RequestError(err, err.response);
+              return Promise.reject(new RequestError(err, err.response));
             }
           }
           throw err;

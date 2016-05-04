@@ -1,5 +1,6 @@
 import stampit from 'stampit';
 import _ from 'lodash';
+import Promise from 'bluebird';
 import models from './models';
 import Account from './account';
 import Pinger from './pinger';
@@ -61,7 +62,7 @@ const Syncano = stampit()
     setInstanceName(instanceName) {
       if(_.isEmpty(instanceName)) this.defaults.instanceName = null;
       else {
-        if(!_.isString(instanceName)) throw new Error('Instance name must be a string.');
+        if(!_.isString(instanceName)) return Promise.reject(new Error('Instance name must be a string.'));
         this.defaults.instanceName = instanceName;
       }
       return this;
@@ -98,7 +99,7 @@ const Syncano = stampit()
 
     */
     setBaseUrl(baseUrl) {
-      if(_.isEmpty(baseUrl)) throw new Error('Base URL is required.');
+      if(_.isEmpty(baseUrl)) return Promise.reject(new Error('Base URL is required.'));
       this.baseUrl = baseUrl;
       return this;
     },

@@ -21,15 +21,11 @@ describe('Meta', function() {
     });
 
     it('should throw error when endpoint is not found', function() {
-      should(function() {
-        meta.resolveEndpointPath(testEndpoint, model);
-      }).throw(Error(`Invalid endpoit name: ${testEndpoint}.`));
+      should(meta.resolveEndpointPath(testEndpoint, model)).be.rejectedWith(/endpoint/);
     });
 
     it('should throw error when path properties are missing', function() {
-      should(function() {
-        meta.resolveEndpointPath('detail', null);
-      }).throw(Error('Missing "detail" path properties "name"'))
+      should(meta.resolveEndpointPath('detail', null)).be.rejectedWith(/path properties/);
     });
 
     it('shoud return path', function() {
@@ -46,9 +42,7 @@ describe('Meta', function() {
     });
 
     it('should throw error when unsupported methods are passed', function() {
-      should(function() {
-        meta.findAllowedMethod('list', 'UPDATE');
-      }).throw(Error('Unsupported request methods: UPDATE.'))
+      should(meta.findAllowedMethod('list', 'UPDATE')).be.rejectedWith(/Unsupported/);
     });
 
     it('should return supported method', function() {
