@@ -46,7 +46,6 @@ const ScriptQuerySet = stampit().compose(QuerySet).methods({
 
     this.method = 'GET';
     this.endpoint = 'runtimes';
-    this.payload = payload;
     this._serialize = false;
 
     return this;
@@ -88,7 +87,7 @@ const ScriptConstraints = {
   },
   runtime_name: {
     presence: true,
-    inclusion: ['nodejs', 'python', 'ruby', 'golang', 'php', 'swift']
+    inclusion: ['golang', 'nodejs_library_v1.0', 'ruby', 'nodejs_library_v0.4', 'python_library_v4.2', 'python_library_v5.0', 'php', 'swift']
   },
   source: {
     string: true
@@ -164,7 +163,7 @@ const Script = stampit()
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('runtimes', this);
 
-      return this.makeRequest('GET', path, {payload});
+      return this.makeRequest('GET', path);
     }
 
   });
