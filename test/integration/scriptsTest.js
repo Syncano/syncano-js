@@ -12,7 +12,7 @@ describe('Script', function() {
   let Model = null;
   const instanceName = suffix.get('Script');
   const scriptName = suffix.get('script');
-  const runtimeName = 'python';
+  const runtimeName = 'python_library_v4.2';
   const data = {
     instanceName: instanceName,
     label: scriptName,
