@@ -46,7 +46,6 @@ const ScriptQuerySet = stampit().compose(QuerySet).methods({
 
     this.method = 'GET';
     this.endpoint = 'runtimes';
-    this.payload = payload;
     this._serialize = false;
 
     return this;
@@ -164,7 +163,7 @@ const Script = stampit()
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('runtimes', this);
 
-      return this.makeRequest('GET', path, {payload});
+      return this.makeRequest('GET', path);
     }
 
   });

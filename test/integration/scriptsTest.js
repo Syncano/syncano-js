@@ -140,6 +140,27 @@ describe('Script', function() {
       });
   });
 
+  it('should be able to get runtimes via model instance', function() {
+    return Model(data).save()
+      .then((script) => {
+        should(script).have.property('instanceName').which.is.String().equal(data.instanceName);
+        should(script).have.property('label').which.is.String().equal(data.label);
+
+        return script.getRuntimes();
+      })
+      .then((runtimes) => {
+        should(runtimes).be.an.Object();
+        should(runtimes).have.property('python_library_v4.2').which.is.Object();
+        should(runtimes).have.property('nodejs_library_v1.0').which.is.Object();
+        should(runtimes).have.property('swift').which.is.Object();
+        should(runtimes).have.property('nodejs_library_v0.4').which.is.Object();
+        should(runtimes).have.property('golang').which.is.Object();
+        should(runtimes).have.property('python_library_v5.0').which.is.Object();
+        should(runtimes).have.property('php').which.is.Object();
+        should(runtimes).have.property('ruby').which.is.Object();
+      })
+  });
+
   describe('#please()', function() {
 
     it('should be able to list objects', function() {
@@ -338,6 +359,27 @@ describe('Script', function() {
           should(trace).have.property('result');
           should(trace).have.property('links').which.is.Object();
         });
+    });
+
+    it('should be able to get runtimes', function() {
+      return Model(data).save()
+        .then((script) => {
+          should(script).have.property('instanceName').which.is.String().equal(data.instanceName);
+          should(script).have.property('label').which.is.String().equal(data.label);
+
+          return Model.please().getRuntimes({instanceName});
+        })
+        .then((runtimes) => {
+          should(runtimes).be.an.Object();
+          should(runtimes).have.property('python_library_v4.2').which.is.Object();
+          should(runtimes).have.property('nodejs_library_v1.0').which.is.Object();
+          should(runtimes).have.property('swift').which.is.Object();
+          should(runtimes).have.property('nodejs_library_v0.4').which.is.Object();
+          should(runtimes).have.property('golang').which.is.Object();
+          should(runtimes).have.property('python_library_v5.0').which.is.Object();
+          should(runtimes).have.property('php').which.is.Object();
+          should(runtimes).have.property('ruby').which.is.Object();
+        })
     });
 
   });
