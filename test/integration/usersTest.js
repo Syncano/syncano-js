@@ -276,6 +276,21 @@ describe('User', function() {
         })
     });
 
+    it('should be able to delete an object', function() {
+      return Model(data).save()
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('profile').which.is.Object();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('groups').which.is.Array();
+          should(object).have.property('username').which.is.String().equal(data.username);
+          should(object).have.property('user_key').which.is.String();
+
+          return Model.please().delete({id: object.id, instanceName});
+        });
+    });
+
     it('should be able to update an object (userKey & apiKey)', function() {
       let accountKey = null;
       let apiKey = null;
