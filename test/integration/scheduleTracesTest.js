@@ -25,7 +25,7 @@ describe('ScheduleTrace', function() {
       return connection.Script.please().create({
         instanceName: instanceName,
         label: instanceName,
-        runtime_name: 'python',
+        runtime_name: 'python_library_v4.2',
         source: 'print "x"'
       });
     }).then((script) => {
