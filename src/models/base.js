@@ -131,7 +131,7 @@ export const Meta = stampit()
     */
     resolveEndpointPath(endpointName, properties) {
       if (_.isEmpty(this.endpoints[endpointName])) {
-        throw new Error(`Invalid endpoit name: "${endpointName}".`);
+        return Promise.reject(new Error(`Invalid endpoint name: "${endpointName}".`));
       }
 
       const endpoint = this.endpoints[endpointName];
@@ -139,7 +139,7 @@ export const Meta = stampit()
       let path = endpoint.path;
 
       if (diff.length) {
-        throw new Error(`Missing path properties "${diff.join()}" for "${endpointName}" endpoint.`)
+        return Promise.reject(new Error(`Missing path properties "${diff.join()}" for "${endpointName}" endpoint.`));
       }
 
       _.forEach(endpoint.properties, (property) => {
@@ -165,7 +165,7 @@ export const Meta = stampit()
       const methods = _.intersection(_.map(methodNames, (m) => m.toLowerCase()), endpoint.methods);
 
       if (_.isEmpty(methods)) {
-        throw Error(`Unsupported request methods: ${methodNames.join()}.`);
+        return Promise.reject(new Error(`Unsupported request methods: ${methodNames.join()}.`));
       }
 
       return methods[0];

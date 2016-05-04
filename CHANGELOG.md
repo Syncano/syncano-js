@@ -1,4 +1,17 @@
 ### Change Log
+* **1.0.7** - 2016-05-04
+    * Syncano user account methods
+* **1.0.6** - 2016-04-21
+    * Enable setting of default properties for the main object
+    * Raw request response can now be accessed
+    * User model methods for groups
+    * APNS and GCM missing methods
+    * FuseTools build
+* **1.0.5** - 2016-04-10
+    * Fix for Class model validations
+    * `getUSerDetails()` method for Group model
+* **1.0.4** - 2016-04-07
+    * Group model methods for getting, adding and removing users
 * **1.0.3** - 2016-03-30
     * React native support
     * Support for `QuerySet` count method
