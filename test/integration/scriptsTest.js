@@ -142,6 +142,7 @@ describe('Script', function() {
 
   it('should be able to get runtimes via model instance', function() {
     return Model(data).save()
+      .then(cleaner.mark)
       .then((script) => {
         should(script).have.property('instanceName').which.is.String().equal(data.instanceName);
         should(script).have.property('label').which.is.String().equal(data.label);
@@ -363,6 +364,7 @@ describe('Script', function() {
 
     it('should be able to get runtimes', function() {
       return Model(data).save()
+        .then(cleaner.mark)
         .then((script) => {
           should(script).have.property('instanceName').which.is.String().equal(data.instanceName);
           should(script).have.property('label').which.is.String().equal(data.label);
