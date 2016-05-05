@@ -162,7 +162,7 @@ const channelConstraints = {
     string: true
   },
   type: {
-    inclusion: ['default', 'seperate_rooms']
+    inclusion: ['default', 'separate_rooms']
   },
   group: {
     numericality: {
