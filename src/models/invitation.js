@@ -13,10 +13,10 @@ const InvitationQuerySet = stampit().compose(
   Delete
 ).methods({
 
-  accept(invitationKey) {
+  accept(invitation_key) {
     this.method = 'POST';
     this.endpoint = 'accept';
-    this.payload = {invitationKey};
+    this.payload = {invitation_key};
     this._serialize = false;
 
     return this;
@@ -65,11 +65,11 @@ const Invitation = stampit()
   .setQuerySet(InvitationQuerySet)
   .methods({
 
-    accept(invitationKey) {
+    accept(invitation_key) {
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('accept', this);
 
-      return this.makeRequest('POST', path, {invitationKey});
+      return this.makeRequest('POST', path, {invitation_key});
     }
 
   });
