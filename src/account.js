@@ -111,7 +111,7 @@ const Account = stampit().compose(Request)
     */
     setPassword(password) {
       const path = this._account.setPasswordPath;
-      return this.makeRequest('POST', path, {password});
+      return this.makeRequest('POST', path, { payload: {password} });
     },
 
     /**
