@@ -1,6 +1,6 @@
 import stampit from 'stampit';
 import Request from './request';
-
+import _ from 'lodash';
 
 /**
  * Wrapper around account endpoint. Meant to be used directly form {@link Syncano} instance.
@@ -183,7 +183,7 @@ const Account = stampit().compose(Request)
     */
     socialLogin(backend, access_token) {
       const path = _.replace(this._account.socialLoginPath, '{backend}', backend);
-      return this.makeRequest('POST', path, {access_token});
+      return this.makeRequest('POST', path, { payload: {access_token} });
     },
 
     /**
