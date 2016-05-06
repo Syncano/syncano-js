@@ -198,7 +198,7 @@ const Account = stampit().compose(Request)
     */
     resendEmail(email) {
       const path = this._account.emailPath;
-      return this.makeRequest('POST', path, {email});
+      return this.makeRequest('POST', path, { payload: {email} });
     },
 
     /**
