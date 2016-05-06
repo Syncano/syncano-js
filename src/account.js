@@ -78,7 +78,7 @@ const Account = stampit().compose(Request)
     */
     resetPassword(email) {
       const path = this._account.resetPasswordPath;
-      return this.makeRequest('POST', path, {email});
+      return this.makeRequest('POST', path, { payload: {email} });
     },
 
     /**
