@@ -116,5 +116,3 @@ This library is built using [Stampit](https://github.com/stampit-org/stampit). I
 ## Contributors
 * Daniel Kopka - [twitter](https://twitter.com/danielkopka), [github](https://github.com/dancio)
 * Jakub Bilko - [twitter](https://twitter.com/jakubbilko), [github](https://github.com/jakubbilko)
-
-## Changelog
