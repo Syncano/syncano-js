@@ -1,6 +1,6 @@
 import stampit from 'stampit';
 import Request from './request';
-
+import _ from 'lodash';
 
 /**
  * Wrapper around account endpoint. Meant to be used directly form {@link Syncano} instance.
@@ -78,7 +78,7 @@ const Account = stampit().compose(Request)
     */
     resetPassword(email) {
       const path = this._account.resetPasswordPath;
-      return this.makeRequest('POST', path, {email});
+      return this.makeRequest('POST', path, { payload: {email} });
     },
 
     /**
@@ -111,7 +111,7 @@ const Account = stampit().compose(Request)
     */
     setPassword(password) {
       const path = this._account.setPasswordPath;
-      return this.makeRequest('POST', path, {password});
+      return this.makeRequest('POST', path, { payload: {password} });
     },
 
     /**
@@ -183,7 +183,7 @@ const Account = stampit().compose(Request)
     */
     socialLogin(backend, access_token) {
       const path = _.replace(this._account.socialLoginPath, '{backend}', backend);
-      return this.makeRequest('POST', path, {access_token});
+      return this.makeRequest('POST', path, { payload: {access_token} });
     },
 
     /**
@@ -198,7 +198,7 @@ const Account = stampit().compose(Request)
     */
     resendEmail(email) {
       const path = this._account.emailPath;
-      return this.makeRequest('POST', path, {email});
+      return this.makeRequest('POST', path, { payload: {email} });
     },
 
     /**

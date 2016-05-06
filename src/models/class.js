@@ -32,7 +32,7 @@ const ClassConstraints = {
     string: true
   },
   schema: {
-    object: true
+    array: true
   },
   group: {
     numericality: {

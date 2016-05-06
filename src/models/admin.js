@@ -1,11 +1,13 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
-import {BaseQuerySet, Get, List} from '../querySet';
+import {BaseQuerySet, Get, List, Delete, Update} from '../querySet';
 
 const AdminQuerySet = stampit().compose(
   BaseQuerySet,
   Get,
-  List
+  List,
+  Delete,
+  Update
 );
 
 const AdminMeta = Meta({

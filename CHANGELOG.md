@@ -1,4 +1,10 @@
 ### Change Log
+* **1.0.8** - 2016-05-06
+    * Syncano user account bugfixes
+    * Added `update()` and `delete()` methods to Admin model `QuerySet`
+    * Added `delete()` method to User model `QuerySet`
+    * Fixed `schema` field validation in Class model
+    * Fixed `getRuntimes()` method in Script model
 * **1.0.7** - 2016-05-04
     * Syncano user account methods
 * **1.0.6** - 2016-04-21

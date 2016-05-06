@@ -15,7 +15,7 @@ describe('ScriptEndpoint', function() {
 
   const instanceName = suffix.get('ScriptEndpoint');
   const ModelName = suffix.get('scriptendpoint');
-  const runtimeName = 'python';
+  const runtimeName = 'python_library_v4.2';
   const scriptLabel = suffix.get('script');
   const ModelData = {
     name: ModelName,
