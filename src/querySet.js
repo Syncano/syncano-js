@@ -46,7 +46,12 @@ const ResultSet = function(querySet, response, objects) {
       return Promise.reject(new PaginationError('There is no next page'));
     }
 
-    return querySet.request(response.next, {query: {}});
+    return new Promise((resolve, reject) => {
+      return querySet
+        .request(response.next, {query: {}})
+        .spread(resolve)
+        .catch(reject);
+    });
   };
 
   /**
@@ -63,7 +68,12 @@ const ResultSet = function(querySet, response, objects) {
       return Promise.reject(new PaginationError('There is no previous page'));
     }
 
-    return querySet.request(response.prev, {query: {}});
+    return new Promise((resolve, reject) => {
+      return querySet
+        .request(response.prev, {query: {}})
+        .spread(resolve)
+        .catch(reject);
+    });
   };
 
   return results;
