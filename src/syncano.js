@@ -76,7 +76,7 @@ const Syncano = stampit()
 
     * @example {@lang javascript}
     * var connection = Syncano({accountKey: '123'});
-    * var baseUrl = connection.getInstanceName();
+    * var instanceName = connection.getInstanceName();
 
     */
     getInstanceName() {
