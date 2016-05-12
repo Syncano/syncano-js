@@ -12,9 +12,7 @@ describe('ScriptTrace', function() {
   let Instance = null;
 
   const instanceName = suffix.get('ScriptTrace');
-  const data = {
-    instanceName,
-  };
+  const data = {instanceName};
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
@@ -32,7 +30,6 @@ describe('ScriptTrace', function() {
       data.scriptId = script.id;
       return script.run();
     }).then((trace) => {
-      console.log('trace', trace);
       data.id = trace.id;
     });
   });
