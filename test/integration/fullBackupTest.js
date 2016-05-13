@@ -3,7 +3,7 @@ import Syncano from '../../src/syncano';
 import {suffix, credentials} from './utils';
 import {ValidationError} from '../../src/errors';
 
-describe.only('FullBackup', function() {
+describe('FullBackup', function() {
   this.timeout(15000);
 
   let connection = null;
@@ -72,7 +72,7 @@ describe.only('FullBackup', function() {
     });
 
     it('should be able to create full instance backup'), function() {
-      return FullBackup.please().create({instanceName}, data)
+      return FullBackup.please().create(data)
         .then((backup) => {
           should(backup).be.an.Object();
           should(backup).have.property('id').which.is.Number();
