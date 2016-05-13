@@ -2,7 +2,7 @@ import should from 'should/as-function';
 import Syncano from '../../src/syncano';
 import {suffix, credentials} from './utils';
 
-describe.only('PartialBackup', function() {
+describe('PartialBackup', function() {
   this.timeout(15000);
 
   let connection = null;
