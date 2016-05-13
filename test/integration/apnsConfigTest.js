@@ -32,6 +32,32 @@ describe('APNSConfig', function() {
     should(Model().save()).be.rejectedWith(/instanceName/);
   });
 
+  it('should be able to remove certificate via model instance', function() {
+    return Model.please()
+        .update(data, {
+          production_certificate_name: instanceName,
+          development_certificate: Syncano.file(__dirname + '/certificates/ApplePushDevelopment.p12'),
+          development_bundle_identifier: 'com.syncano.testAPNS'
+        }).then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('production_certificate_name').which.is.String().equal(instanceName);
+          should(object).have.property('development_certificate').which.is.true();
+          should(object).have.property('development_bundle_identifier').which.is.String().equal('com.syncano.testAPNS');
+
+          return object.removeCertificate({development_certificate: true});
+        }).then(() => Model.please().get(data))
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('production_certificate_name').which.is.String().equal(instanceName);
+          should(object).have.property('development_certificate').which.is.false();
+          should(object).have.property('development_bundle_identifier').which.is.String().equal('com.syncano.testAPNS');
+        });
+  });
+
   describe('#please()', function() {
 
     it('should be able to get a Model', function() {
@@ -40,14 +66,14 @@ describe('APNSConfig', function() {
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
           should(object).have.property('links').which.is.Object();
-          should(object).have.property('production_certificate').which.is.false();
-          should(object).have.property('production_expiration_date').which.is.null();
-          should(object).have.property('production_bundle_identifier').which.is.null();
-          should(object).have.property('production_certificate_name').which.is.null();
-          should(object).have.property('development_certificate').which.is.false();
-          should(object).have.property('development_expiration_date').which.is.null();
-          should(object).have.property('development_bundle_identifier').which.is.null();
-          should(object).have.property('development_certificate_name').which.is.null();
+          should(object).have.property('production_certificate');
+          should(object).have.property('production_expiration_date');
+          should(object).have.property('production_bundle_identifier');
+          should(object).have.property('production_certificate_name');
+          should(object).have.property('development_certificate');
+          should(object).have.property('development_expiration_date');
+          should(object).have.property('development_bundle_identifier');
+          should(object).have.property('development_certificate_name');
         });
     });
 
@@ -64,6 +90,31 @@ describe('APNSConfig', function() {
           should(object).have.property('links').which.is.Object();
           should(object).have.property('production_certificate_name').which.is.String().equal(instanceName);
           should(object).have.property('development_certificate').which.is.true();
+          should(object).have.property('development_bundle_identifier').which.is.String().equal('com.syncano.testAPNS');
+        });
+    });
+
+    it('should be able to remove certificate', function() {
+      return Model.please()
+        .update(data, {
+          development_certificate: Syncano.file(__dirname + '/certificates/ApplePushDevelopment.p12'),
+          development_bundle_identifier: 'com.syncano.testAPNS'
+        })
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('development_certificate').which.is.true();
+          should(object).have.property('development_bundle_identifier').which.is.String().equal('com.syncano.testAPNS');
+
+          return Model.please().removeCertificate(data, {development_certificate: true});
+        }).then(() => Model.please().get(data))
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('production_certificate_name').which.is.String().equal(instanceName);
+          should(object).have.property('development_certificate').which.is.false();
           should(object).have.property('development_bundle_identifier').which.is.String().equal('com.syncano.testAPNS');
         });
     });
