@@ -9,7 +9,7 @@ describe('PartialBackup', function() {
   let connection = null;
   let Instance = null;
   let PartialBackup = null;
-  const instanceName = suffix.get('fullbackup');
+  const instanceName = suffix.get('partialbackup');
   const description = suffix.get('description');
   const label = suffix.get('label');
   const data = {
