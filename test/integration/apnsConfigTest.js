@@ -5,7 +5,7 @@ import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
 import {suffix, credentials, hex} from './utils';
 
-describe.only('APNSConfig', function() {
+describe('APNSConfig', function() {
   this.timeout(15000);
 
   let connection = null;
