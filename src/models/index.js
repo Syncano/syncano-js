@@ -23,7 +23,9 @@ import APNSDevice from './apnsdevice';
 import APNSConfig from './apnsconfig';
 import GCMMessage from './gcmmessage';
 import APNSMessage from './apnsmessage';
-import Template from './template'
+import Template from './template';
+import FullBackup from './fullBackup';
+import PartialBackup from './partialBackup';
 
 export default {
   Instance,
@@ -51,5 +53,7 @@ export default {
   GCMMessage,
   GCMConfig,
   APNSMessage,
-  Template
+  Template,
+  FullBackup,
+  PartialBackup
 };
