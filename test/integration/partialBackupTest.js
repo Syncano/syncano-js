@@ -3,7 +3,7 @@ import Syncano from '../../src/syncano';
 import {suffix, credentials} from './utils';
 import {ValidationError} from '../../src/errors';
 
-describe.only('PartialBackup', function() {
+describe('PartialBackup', function() {
   this.timeout(15000);
 
   let connection = null;
