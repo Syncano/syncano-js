@@ -36,9 +36,7 @@ export const credentials = {
 
   isAuthenticated() {
     const keys = ['accountKey', 'userKey', 'socialToken', 'user'];
-    return _.some(keys, (key) => {
-      return !_.isEmpty(this[key]) && !_.isUndefined(this[key]);
-    });
+    return _.some(keys, (key) => !_.isUndefined(this[key]));
   }
 };
 
