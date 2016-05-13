@@ -9,8 +9,8 @@ const APNSConfigQuerySet = stampit().compose(
 );
 
 const APNSConfigMeta = Meta({
-  name: 'gcmconfig',
-  pluralName: 'gcmconfig',
+  name: 'apnsconfig',
+  pluralName: 'apnsconfig',
   endpoints: {
     'detail': {
       'methods': ['post', 'get', 'patch', 'put'],
