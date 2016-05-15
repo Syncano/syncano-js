@@ -65,7 +65,7 @@ const InvoiceMeta = Meta({
 const Invoice = stampit()
   .compose(Model)
   .setQuerySet(InvoiceQuerySet)
-  .setMeta(InvoiceMeta);
+  .setMeta(InvoiceMeta)
   .methods({
 
     pdf() {
