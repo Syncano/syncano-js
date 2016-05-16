@@ -1,4 +1,5 @@
 import stampit from 'stampit';
+import _ from 'lodash';
 import {Meta, Model} from './base';
 import {BaseQuerySet, Update, Get} from '../querySet';
 
@@ -6,7 +7,17 @@ const APNSConfigQuerySet = stampit().compose(
   BaseQuerySet,
   Update,
   Get
-);
+).methods({
+
+  removeCertificate(properties = {}, payload = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = payload;
+    this.method = 'POST';
+    this.endpoint = 'removeCertificate';
+    return this;
+  }
+
+});
 
 const APNSConfigMeta = Meta({
   name: 'apnsconfig',
@@ -15,6 +26,10 @@ const APNSConfigMeta = Meta({
     'detail': {
       'methods': ['post', 'get', 'patch', 'put'],
       'path': '/v1.1/instances/{instanceName}/push_notifications/apns/config/'
+    },
+    'removeCertificate': {
+      'methods': ['post'],
+      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/config/remove_certificate/'
     }
   }
 });
@@ -48,6 +63,16 @@ const APNSConfig = stampit()
   .compose(Model)
   .setMeta(APNSConfigMeta)
   .setQuerySet(APNSConfigQuerySet)
-  .setConstraints(APNSConfigConstraints);
+  .setConstraints(APNSConfigConstraints)
+  .methods({
+
+    removeCertificate(payload = {}) {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('removeCertificate', this);
+
+      return this.makeRequest('POST', path, {payload});
+    }
+
+  });
 
 export default APNSConfig;
