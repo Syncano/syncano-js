@@ -55,6 +55,16 @@ const ResultSet = function(querySet, response, objects) {
   };
 
   /**
+  * Helper method which will check if next page is available.
+
+  * @memberOf ResultSet
+  * @instance
+
+  * @returns {Boolean}
+  */
+  results.hasNext = () => response.next !== null;
+
+  /**
   * Helper method which will fetch previous page or throws `PaginationError`.
 
   * @memberOf ResultSet
@@ -75,6 +85,16 @@ const ResultSet = function(querySet, response, objects) {
         .catch(reject);
     });
   };
+
+  /**
+  * Helper method which will check if prev page is available.
+
+  * @memberOf ResultSet
+  * @instance
+
+  * @returns {Boolean}
+  */
+  results.hasPrev = () => response.prev !== null;
 
   return results;
 }
