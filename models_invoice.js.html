@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Source: models/schedule.js</title>
+	<title>Syncano Source: models/invoice.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -70,88 +70,98 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: models/schedule.js</h1>
+		<h1 class="page-title">Source: models/invoice.js</h1>
     
 <section>
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
 import {Meta, Model} from './base';
+import {BaseQuerySet, Get, List} from '../querySet';
 
-const ScheduleMeta = Meta({
-  name: 'schedule',
-  pluralName: 'schedules',
-  endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1.1/instances/{instanceName}/schedules/{id}/'
-    },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/schedules/'
-    }
+const InvoiceQuerySet = stampit().compose(
+  BaseQuerySet,
+  Get,
+  List
+).methods({
+
+  pdf(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'GET';
+    this.endpoint = 'pdf';
+
+    return this;
   },
-  relatedModels: [ 'ScheduleTrace' ]
+
+  retryPayment(properties = {}, payload = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.payload = {payload}
+    this.endpoint = 'retryPayment';
+
+    return this;
+  }
+
 });
 
-
-const ScheduleConstraints = {
-  instanceName: {
-    presence: true,
-    length: {
-      minimum: 5
-    }
-  },
-  label: {
-    presence: true,
-    string: true
-  },
-  description: {
-    string: true
-  },
-  interval_sec: {
-    numericality: {
-      noStrings: true
-    }
-  },
-  crontab: {
-    format: {
-      pattern: /([0-59]|\*)\s([0-23]|\*)\s([1-31]|\*)\s([1-12]|\*)\s([0-7]|\*)/
-    }
-  },
-  timezone: {
-    string: true
-  },
-  script: {
-    presence: true,
-    numericality: {
-      noStrings: true
+const InvoiceMeta = Meta({
+  name: 'invoice',
+  pluralName: 'invoices',
+  endpoints: {
+    'detail': {
+      'methods': ['get'],
+      'path': '/v1.1/billing/invoices/{id}/'
+    },
+    'list': {
+      'methods': ['get'],
+      'path': '/v1.1/billing/invoices/'
+    },
+    'pdf': {
+      'methods': ['get'],
+      'path': '/v1.1/billing/invoices/{id}/pdf/'
+    },
+    'retryPayment': {
+      'methods': ['post'],
+      'path': '/v1.1/billing/invoices/{id}/retry_payment/'
     }
   }
-};
-
+});
 /**
- * OO wrapper around instance groups {@link http://docs.syncano.com/v4.0/docs/codebox-schedules-list endpoint}.
+ * OO wrapper around Invoice.
  * @constructor
- * @type {Schedule}
+ * @type {Invoice}
 
+ * @property {String} status
+ * @property {Array} items
+ * @property {String} period
+ * @property {String} amount
  * @property {Number} id
- * @property {String} instanceName
- * @property {String} label
- * @property {Number} interval_sec
- * @property {String} crontab
- * @property {Object} payload
- * @property {String} scheduled_next
- * @property {String} [links = {}]
  * @property {Date} [created_at = null]
  * @property {Date} [updated_at = null]
  */
-const Schedule = stampit()
+const Invoice = stampit()
   .compose(Model)
-  .setMeta(ScheduleMeta)
-  .setConstraints(ScheduleConstraints);
+  .setQuerySet(InvoiceQuerySet)
+  .setMeta(InvoiceMeta)
+  .methods({
 
-export default Schedule;
+    pdf() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('pdf', this);
+
+      return this.makeRequest('POST', path);
+    },
+
+    retryPayment(payload = {}) {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('retryPayment', this);
+
+      return this.makeRequest('POST', path, {payload});
+    }
+
+  });
+
+export default Invoice;
 </pre>
     </article>
 </section>

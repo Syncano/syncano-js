@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Source: models/schedule.js</title>
+	<title>Syncano Source: models/partialBackup.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -70,88 +70,81 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: models/schedule.js</h1>
+		<h1 class="page-title">Source: models/partialBackup.js</h1>
     
 <section>
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
 import {Meta, Model} from './base';
+import {BaseQuerySet, List, Get, Delete, Create} from '../querySet';
 
-const ScheduleMeta = Meta({
-  name: 'schedule',
-  pluralName: 'schedules',
+const PartialBackupQuerySet = stampit().compose(
+  BaseQuerySet,
+  List,
+  Get,
+  Delete,
+  Create
+);
+
+const PartialBackupMeta = Meta({
+  name: 'partialBackup',
+  pluralName: 'partialBackups',
   endpoints: {
     'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1.1/instances/{instanceName}/schedules/{id}/'
+      'methods': ['delete', 'get'],
+      'path': '/v1.1/instances/{instanceName}/backups/partial/{id}/'
     },
     'list': {
-      'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/schedules/'
+      'methods': ['get', 'post'],
+      'path': '/v1.1/instances/{instanceName}/backups/partial/'
     }
-  },
-  relatedModels: [ 'ScheduleTrace' ]
+  }
 });
 
-
-const ScheduleConstraints = {
+const PartialBackupConstraints = {
   instanceName: {
     presence: true,
     length: {
       minimum: 5
     }
   },
-  label: {
-    presence: true,
-    string: true
-  },
   description: {
     string: true
   },
-  interval_sec: {
-    numericality: {
-      noStrings: true
-    }
-  },
-  crontab: {
-    format: {
-      pattern: /([0-59]|\*)\s([0-23]|\*)\s([1-31]|\*)\s([1-12]|\*)\s([0-7]|\*)/
-    }
-  },
-  timezone: {
+  label: {
     string: true
   },
-  script: {
+  query_args: {
     presence: true,
-    numericality: {
-      noStrings: true
-    }
+    object: true
   }
 };
 
 /**
- * OO wrapper around instance groups {@link http://docs.syncano.com/v4.0/docs/codebox-schedules-list endpoint}.
+ * OO wrapper around instance backups {@link # endpoint}.
  * @constructor
- * @type {Schedule}
+ * @type {Backup}
 
  * @property {Number} id
- * @property {String} instanceName
+ * @property {String} instance
+ * @property {String} created_at
+ * @property {String} updated_at
+ * @property {String} archive - link with zipped backup file
+ * @property {Number} size
+ * @property {String} status
+ * @property {String} status_info
+ * @property {String} description
  * @property {String} label
- * @property {Number} interval_sec
- * @property {String} crontab
- * @property {Object} payload
- * @property {String} scheduled_next
- * @property {String} [links = {}]
- * @property {Date} [created_at = null]
- * @property {Date} [updated_at = null]
+ * @property {Object} [links = {}]
  */
-const Schedule = stampit()
+const PartialBackup = stampit()
   .compose(Model)
-  .setMeta(ScheduleMeta)
-  .setConstraints(ScheduleConstraints);
+  .setQuerySet(PartialBackupQuerySet)
+  .setMeta(PartialBackupMeta)
+  .setConstraints(PartialBackupConstraints);
 
-export default Schedule;
+export default PartialBackup;
 </pre>
     </article>
 </section>
