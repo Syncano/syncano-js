@@ -25,7 +25,7 @@ import APNSConfig from './apnsconfig';
 import GCMMessage from './gcmmessage';
 import APNSMessage from './apnsmessage';
 import Template from './template';
-import Subscription from './ubscription';
+import Subscription from './subscription';
 
 export default {
   Instance,
