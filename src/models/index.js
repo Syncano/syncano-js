@@ -8,6 +8,7 @@ import Admin from './admin';
 import ApiKey from './apikey';
 import InstanceInvitation from './instanceinvitation';
 import Invitation from './invitation';
+import Invoice from './invoice';
 import Script from './script';
 import Schedule from './schedule';
 import Trigger from './trigger';
@@ -23,7 +24,9 @@ import APNSDevice from './apnsdevice';
 import APNSConfig from './apnsconfig';
 import GCMMessage from './gcmmessage';
 import APNSMessage from './apnsmessage';
-import Template from './template'
+import Template from './template';
+import FullBackup from './fullBackup';
+import PartialBackup from './partialBackup';
 
 export default {
   Instance,
@@ -36,6 +39,7 @@ export default {
   ApiKey,
   InstanceInvitation,
   Invitation,
+  Invoice,
   Script,
   Schedule,
   Trigger,
@@ -51,5 +55,7 @@ export default {
   GCMMessage,
   GCMConfig,
   APNSMessage,
-  Template
+  Template,
+  FullBackup,
+  PartialBackup
 };
