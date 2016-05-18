@@ -25,6 +25,7 @@ import APNSConfig from './apnsconfig';
 import GCMMessage from './gcmmessage';
 import APNSMessage from './apnsmessage';
 import Template from './template';
+import Subscription from './subscription';
 import FullBackup from './fullBackup';
 import PartialBackup from './partialBackup';
 
@@ -56,6 +57,7 @@ export default {
   GCMConfig,
   APNSMessage,
   Template,
+  Subscription,
   FullBackup,
   PartialBackup
 };
