@@ -30,9 +30,24 @@ describe('Subscription', function() {
   describe('#please()', function() {
 
     it('should be able to list Models', function() {
-      return Model.please().list({instanceName}).then((Models) => {
+      return Model.please().list().then((Models) => {
         should(Models).be.an.Array();
       });
+    });
+
+    it('should be able to get a Model', function() {
+      return Model.please().list().then((Models) => {
+
+        return Model.please().get({id: Models[0].id })
+      })
+      .then((Model) => {
+        should(Model).have.property('id').which.is.Number();
+        should(Model).have.property('start').which.is.String();
+        should(Model).have.property('end').which.is.String();
+        should(Model).have.property('commitment').which.is.Object();
+        should(Model).have.property('pricing').which.is.Object();
+        should(Model).have.property('plan').which.is.String().equal('builder');
+      })
     });
 
   });
