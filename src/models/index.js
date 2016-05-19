@@ -29,6 +29,7 @@ import Subscription from './subscription';
 import FullBackup from './fullBackup';
 import PartialBackup from './partialBackup';
 import Usage from './usage';
+import DailyUsage from './dailyusage';
 
 export default {
   Instance,
@@ -61,5 +62,6 @@ export default {
   Subscription,
   FullBackup,
   PartialBackup,
-  Usage
+  Usage,
+  DailyUsage
 };
