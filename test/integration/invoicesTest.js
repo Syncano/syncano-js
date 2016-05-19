@@ -30,7 +30,7 @@ describe('Invoice', function() {
   describe('#please()', function() {
 
     it('should be able to list Models', function() {
-      return Model.please().list({instanceName}).then((Models) => {
+      return Model.please().list().then((Models) => {
         should(Models).be.an.Array();
       });
     });
