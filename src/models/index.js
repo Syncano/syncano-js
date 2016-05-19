@@ -30,6 +30,7 @@ import FullBackup from './fullBackup';
 import PartialBackup from './partialBackup';
 import Usage from './usage';
 import DailyUsage from './dailyusage';
+import HourlyUsage from './hourlyusage';
 
 export default {
   Instance,
@@ -63,5 +64,6 @@ export default {
   FullBackup,
   PartialBackup,
   Usage,
-  DailyUsage
+  DailyUsage,
+  HourlyUsage
 };

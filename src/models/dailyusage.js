@@ -21,11 +21,6 @@ const DailyUsageMeta = Meta({
  * OO wrapper around DailyUsage.
  * @constructor
  * @type {DailyUsage}
-
- * @property {String} date
- * @property {String} source
- * @property {Number} value
- * @property {String} instance
  */
 const DailyUsage = stampit()
   .compose(Model)
