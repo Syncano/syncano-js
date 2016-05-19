@@ -28,6 +28,7 @@ import Template from './template';
 import Subscription from './subscription';
 import FullBackup from './fullBackup';
 import PartialBackup from './partialBackup';
+import Restore from './restore';
 
 export default {
   Instance,
@@ -59,5 +60,6 @@ export default {
   Template,
   Subscription,
   FullBackup,
-  PartialBackup
+  PartialBackup,
+  Restore
 };
