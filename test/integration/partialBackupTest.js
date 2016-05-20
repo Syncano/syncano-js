@@ -94,6 +94,7 @@ describe('PartialBackup', function() {
           should(backup).have.property('description').which.is.String().equal(data.description);
           should(backup).have.property('label').which.is.String().equal(data.label);
           should(backup).have.property('links').which.is.Object();
+          should(backup).have.property('author').which.is.Object();
           return backup;
         })
         .then((createdBackup) => {
@@ -109,6 +110,7 @@ describe('PartialBackup', function() {
               should(backup).have.property('description').which.is.String().equal(data.description);
               should(backup).have.property('label').which.is.String().equal(data.label);
               should(backup).have.property('links').which.is.Object();
+              should(backup).have.property('author').which.is.Object();
           });
       })
     });
