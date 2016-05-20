@@ -40,7 +40,7 @@ const SubscriptionMeta = Meta({
 /**
  * OO wrapper around Subscription.
  * @constructor
- * @type {Invoice}
+ * @type {Subscription}
 
  * @property {String} end
  * @property {String} commitment
