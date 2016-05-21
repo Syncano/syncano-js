@@ -57,6 +57,7 @@
   "dependencies": {
     "bluebird": "^3.2.2",
     "lodash": "^4.6.1",
+    "moment": "^2.13.0",
     "promise-map-series": "^0.2.2",
     "promise-spread": "^0.1.0",
     "stampit": "^2.1.1",

@@ -1,11 +1,12 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
-import {BaseQuerySet, List, Total} from '../querySet';
+import {BaseQuerySet, List, Total, StartDate} from '../querySet';
 
 const DailyUsageQuerySet = stampit().compose(
   BaseQuerySet,
   List,
-  Total
+  Total,
+  StartDate
 );
 
 const DailyUsageMeta = Meta({

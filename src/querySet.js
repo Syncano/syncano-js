@@ -3,6 +3,7 @@ import Promise from 'bluebird';
 import _ from 'lodash';
 import Request from './request';
 import PaginationError from './errors';
+import moment from 'moment';
 
 /**
  * Wrapper around plain JavaScript Array which provides two additional methods for pagination.
@@ -564,10 +565,33 @@ export const PageSize = stampit().methods({
   }
 });
 
+export const StartDate = stampit().methods({
+
+  /**
+  * Sets start date for Usage.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Date} date
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DailyUsage.please().list().startDate(new Date()).then(function(usage) {});
+
+  */
+
+  startDate(date) {
+    this.query['start'] = moment(date).format('YYYY-MM-DD');
+    return this;
+  }
+
+});
+
 export const Total = stampit().methods({
 
   /**
-  * Sets grouping for usage.
+  * Sets grouping for Usage.
 
   * @memberOf QuerySet
   * @instance
