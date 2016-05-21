@@ -564,6 +564,28 @@ export const PageSize = stampit().methods({
   }
 });
 
+export const Total = stampit().methods({
+
+  /**
+  * Sets grouping for usage.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DailyUsage.please().list().total().then(function(usage) {});
+
+  */
+
+  total() {
+    this.query['total'] = true;
+    return this;
+  }
+
+});
+
 export const Ordering = stampit().methods({
 
   /**
