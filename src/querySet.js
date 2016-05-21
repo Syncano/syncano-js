@@ -565,6 +565,28 @@ export const PageSize = stampit().methods({
   }
 });
 
+export const CurrentMonth = stampit().methods({
+
+  /**
+  * Sets the range of Usage query to current month.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DailyUsage.please().list().currentMonth().then(function(usage) {});
+
+  */
+  currentMonth() {
+    this.query['start'] = moment().startOf('month').format('YYYY-MM-DD');
+    this.query['start'] = moment().endOf('month').format('YYYY-MM-DD');
+    return this;
+  }
+
+});
+
 export const StartDate = stampit().methods({
 
   /**
@@ -580,9 +602,30 @@ export const StartDate = stampit().methods({
   * DailyUsage.please().list().startDate(new Date()).then(function(usage) {});
 
   */
-
   startDate(date) {
     this.query['start'] = moment(date).format('YYYY-MM-DD');
+    return this;
+  }
+
+});
+
+export const EndDate = stampit().methods({
+
+  /**
+  * Sets end date for Usage.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Date} date
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DailyUsage.please().list().endDate(new Date()).then(function(usage) {});
+
+  */
+  endDate(date) {
+    this.query['end'] = moment(date).format('YYYY-MM-DD');
     return this;
   }
 
@@ -602,7 +645,6 @@ export const Total = stampit().methods({
   * DailyUsage.please().list().total().then(function(usage) {});
 
   */
-
   total() {
     this.query['total'] = true;
     return this;
