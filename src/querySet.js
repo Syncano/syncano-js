@@ -581,7 +581,7 @@ export const CurrentMonth = stampit().methods({
   */
   currentMonth() {
     this.query['start'] = moment().startOf('month').format('YYYY-MM-DD');
-    this.query['start'] = moment().endOf('month').format('YYYY-MM-DD');
+    this.query['end'] = moment().endOf('month').format('YYYY-MM-DD');
     return this;
   }
 
