@@ -32,6 +32,7 @@ import Restore from './restore';
 import Usage from './usage';
 import DailyUsage from './dailyusage';
 import HourlyUsage from './hourlyusage';
+import Plan from './plan';
 
 export default {
   Instance,
@@ -67,5 +68,6 @@ export default {
   Restore,
   Usage,
   DailyUsage,
-  HourlyUsage
+  HourlyUsage,
+  Plan
 };
