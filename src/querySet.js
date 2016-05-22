@@ -3,6 +3,7 @@ import Promise from 'bluebird';
 import _ from 'lodash';
 import Request from './request';
 import PaginationError from './errors';
+import moment from 'moment';
 
 /**
  * Wrapper around plain JavaScript Array which provides two additional methods for pagination.
@@ -562,6 +563,93 @@ export const PageSize = stampit().methods({
     this.query['page_size'] = value;
     return this;
   }
+});
+
+export const CurrentMonth = stampit().methods({
+
+  /**
+  * Sets the range of Usage query to current month.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DailyUsage.please().list().currentMonth().then(function(usage) {});
+
+  */
+  currentMonth() {
+    this.query['start'] = moment().startOf('month').format('YYYY-MM-DD');
+    this.query['end'] = moment().endOf('month').format('YYYY-MM-DD');
+    return this;
+  }
+
+});
+
+export const StartDate = stampit().methods({
+
+  /**
+  * Sets start date for Usage.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Date} date
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DailyUsage.please().list().startDate(new Date()).then(function(usage) {});
+
+  */
+  startDate(date) {
+    this.query['start'] = moment(date).format('YYYY-MM-DD');
+    return this;
+  }
+
+});
+
+export const EndDate = stampit().methods({
+
+  /**
+  * Sets end date for Usage.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Date} date
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DailyUsage.please().list().endDate(new Date()).then(function(usage) {});
+
+  */
+  endDate(date) {
+    this.query['end'] = moment(date).format('YYYY-MM-DD');
+    return this;
+  }
+
+});
+
+export const Total = stampit().methods({
+
+  /**
+  * Sets grouping for Usage.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DailyUsage.please().list().total().then(function(usage) {});
+
+  */
+  total() {
+    this.query['total'] = true;
+    return this;
+  }
+
 });
 
 export const Ordering = stampit().methods({
