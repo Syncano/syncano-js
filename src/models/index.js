@@ -33,6 +33,7 @@ import Usage from './usage';
 import DailyUsage from './dailyusage';
 import HourlyUsage from './hourlyusage';
 import Plan from './plan';
+import Profile from './profile';
 
 export default {
   Instance,
@@ -69,5 +70,6 @@ export default {
   Usage,
   DailyUsage,
   HourlyUsage,
-  Plan
+  Plan,
+  Profile
 };
