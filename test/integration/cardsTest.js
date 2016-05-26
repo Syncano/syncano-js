@@ -11,7 +11,7 @@ describe('Card', function() {
   let Model = null;
   let Instance = null;
   const instanceName = suffix.get('Card');
-  const stripe = Stripe('pk_test_KpGUBLDblMcqWefiyj7iKC52');
+  const stripe = Stripe(process.env.STRIPE_KEY);
   let token = null;
 
   before(function() {
