@@ -1,11 +1,13 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
-import {BaseQuerySet, Get, Update} from '../querySet';
+import {BaseQuerySet, Get, Update, Create, Delete} from '../querySet';
 
 const CardQuerySet = stampit().compose(
   BaseQuerySet,
   Get,
-  Update
+  Update,
+  Create,
+  Delete
 );
 
 const CardMeta = Meta({
@@ -22,10 +24,6 @@ const CardMeta = Meta({
     }
   }
 });
-
-const CardConstraints = {
-
-}
 
 /**
  * OO wrapper around Card.
@@ -44,6 +42,5 @@ const Card = stampit()
   .compose(Model)
   .setQuerySet(CardQuerySet)
   .setMeta(CardMeta);
-  //.setConstraints(CardConstraints);
 
 export default Card;
