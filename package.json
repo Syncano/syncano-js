@@ -57,6 +57,7 @@
   "dependencies": {
     "bluebird": "^3.2.2",
     "lodash": "^4.6.1",
+    "moment": "^2.13.0",
     "promise-map-series": "^0.2.2",
     "promise-spread": "^0.1.0",
     "stampit": "^2.1.1",
@@ -100,6 +101,7 @@
     "rimraf": "^2.5.1",
     "should": "^8.2.2",
     "sinon": "^1.17.3",
+    "stripe": "^4.7.0",
     "webpack": "^1.12.13"
   },
   "babel": {

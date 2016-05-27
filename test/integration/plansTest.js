@@ -2,19 +2,19 @@ import should from 'should/as-function';
 import Syncano from '../../src/syncano';
 import {suffix, credentials, createCleaner} from './utils';
 
-describe('Invoice', function() {
+describe('Plan', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('Invoice');
+  const instanceName = suffix.get('Plan');
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
-    Model = connection.Invoice;
+    Model = connection.Plan;
 
     return Instance.please().create({name: instanceName});
   });
@@ -32,6 +32,16 @@ describe('Invoice', function() {
     it('should be able to list Models', function() {
       return Model.please().list().then((Models) => {
         should(Models).be.an.Array();
+      });
+    });
+
+    it('should be able to get a Model', function() {
+      return Model.please().get({ name: 'paid-commitment'}).then((Model) => {
+        should(Model).be.an.Object();
+        should(Model).have.property('name').equal('paid-commitment');
+        should(Model).have.property('options').which.is.Object();
+        should(Model).have.property('pricing').which.is.Object();
+        should(Model).have.property('links').which.is.Object();
       });
     });
 

@@ -25,8 +25,16 @@ import APNSConfig from './apnsconfig';
 import GCMMessage from './gcmmessage';
 import APNSMessage from './apnsmessage';
 import Template from './template';
+import Subscription from './subscription';
 import FullBackup from './fullBackup';
 import PartialBackup from './partialBackup';
+import Restore from './restore';
+import Usage from './usage';
+import DailyUsage from './dailyusage';
+import HourlyUsage from './hourlyusage';
+import Plan from './plan';
+import Profile from './profile';
+import Card from './card';
 
 export default {
   Instance,
@@ -56,6 +64,14 @@ export default {
   GCMConfig,
   APNSMessage,
   Template,
+  Subscription,
   FullBackup,
-  PartialBackup
+  PartialBackup,
+  Restore,
+  Usage,
+  DailyUsage,
+  HourlyUsage,
+  Plan,
+  Profile,
+  Card
 };
