@@ -175,9 +175,8 @@ const Request = stampit().compose(ConfigMixin, Logger)
         request = _.reduce(options.payload, (result, value, key) => {
           if(!_.isFunction(value)) {
             return (files[key]) ? result.attach(key, value.content): result.field(key, value);
-          } else {
-            return result;
           }
+          return result;
         }, request.type('form'));
       }
 
