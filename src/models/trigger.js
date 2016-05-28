@@ -39,9 +39,7 @@ const TriggerConstraints = {
   },
   script: {
     presence: true,
-    numericality: {
-      noStrings: true
-    }
+    numericality: true
   },
   class: {
     presence: true,
