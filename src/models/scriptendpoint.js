@@ -137,9 +137,7 @@ const ScriptEndpointConstraints = {
   },
   script: {
     presence: true,
-    numericality: {
-      noStrings: true
-    }
+    numericality: true
   }
 };
 

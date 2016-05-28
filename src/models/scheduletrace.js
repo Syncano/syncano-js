@@ -32,9 +32,7 @@ const ScheduleTraceConstraints = {
   },
   scheduleId: {
     presence: true,
-    numericality: {
-      noStrings: true
-    }
+    numericality: true
   }
 };
 

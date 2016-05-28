@@ -111,17 +111,13 @@ const DataobjectConstraints = {
     string: true
   },
   owner: {
-    numericality: {
-      noStrings: true
-    }
+    numericality: true
   },
   owner_permissions: {
     inclusion: ['none', 'read', 'write', 'full']
   },
   group: {
-    numericality: {
-      noStrings: true
-    }
+    numericality: true
   },
   group_permissions: {
     inclusion: ['none', 'read', 'write', 'full']
