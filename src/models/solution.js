@@ -30,7 +30,7 @@ const SolutionMeta = Meta({
       'methods': ['post'],
       'path': '/v1.1/marketplace/solutions/{id}/unstar/'
     },
-    'version': {
+    'versions': {
       'methods': ['post', 'get'],
       'path': '/v1.1/marketplace/solutions/{id}/versions/'
     },
@@ -82,6 +82,44 @@ const Solution = stampit()
   .compose(Model)
   .setQuerySet(SolutionQuerySet)
   .setMeta(SolutionMeta)
-  .setConstraints(SolutionConstraints);
+  .setConstraints(SolutionConstraints)
+  .methods({
+
+    star() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('star', this);
+
+      return this.makeRequest('POST', path);
+    },
+
+    unstar() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('unstar', this);
+
+      return this.makeRequest('POST', path);
+    },
+
+    getVersions() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('versions', this);
+
+      return this.makeRequest('GET', path);
+    },
+
+    createVersion(payload = {}) {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('versions', this);
+
+      return this.makeRequest('POST', path, {payload});
+    },
+
+    createFromInstance(payload = {}) {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('createFromInstance', this);
+
+      return this.makeRequest('POST', path, {payload});
+    }
+
+  });
 
 export default Solution;
