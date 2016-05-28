@@ -91,9 +91,7 @@ const DataEndpointConstraints = {
     string: true
   },
   page_size: {
-    numericality: {
-      noStrings: true
-    }
+    numericality: true
   },
   expand: {
     string: true
