@@ -51,6 +51,7 @@ const SolutionMeta = Meta({
 
 const SolutionConstraints = {
   label: {
+    presence: true,
     string: true
   },
   description: {
