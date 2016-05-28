@@ -76,10 +76,7 @@ const DataEndpointConstraints = {
   },
   class: {
     presence: true,
-    string: true,
-    length: {
-      minimum: 5
-    }
+    string: true
   },
   query: {
     object: true
