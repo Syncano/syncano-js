@@ -1,6 +1,7 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
 import {BaseQuerySet, Get, List, Delete, Update} from '../querySet';
+import _ from 'lodash';
 
 const SolutionQuerySet = stampit().compose(
   BaseQuerySet,
@@ -104,6 +105,20 @@ const Solution = stampit()
       const path = meta.resolveEndpointPath('versions', this);
 
       return this.makeRequest('GET', path);
+    },
+
+    getVersion(version_id) {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('versionDetail', _.assign({}, this, {version_id}));
+
+      return this.makeRequest('GET', path);
+    },
+
+    installVersion(version_id, payload = {}) {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('versionInstall', _.assign({}, this, {version_id}));
+
+      return this.makeRequest('POST', path, {payload});
     },
 
     createVersion(payload = {}) {

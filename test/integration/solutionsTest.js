@@ -20,6 +20,12 @@ describe('Solution', function() {
     public: true
   };
 
+  const classData = {
+    name: 'test_class',
+    instanceName: instanceName,
+    description: 'test'
+  };
+
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
@@ -166,14 +172,48 @@ describe('Solution', function() {
       })
   });
 
-  // it('should be able to create a version from instance via model instance', function() {
+  it('should be able to get a version via model instance', function() {
+    let modelInstance = null;
+
+    return Model(solutionData).save()
+      .then(cleaner.mark)
+      .then((Model) => {
+        should(Model).have.property('description').which.is.String().equal(solutionData.description);
+        should(Model).have.property('label').which.is.String().equal(solutionData.label);
+
+        modelInstance = Model;
+
+        return modelInstance.createVersion({ type: 'stable', data: Syncano.file(__dirname + '/files/dummy.txt')});
+      })
+      .then((version) => {
+        return modelInstance.getVersion(version.id)
+      })
+      .then((version) => {
+        should(version).be.an.Object();
+        should(version).have.property('id').which.is.Number();
+        should(version).have.property('links').which.is.Object();
+        should(version).have.property('data').which.is.Object();
+        should(version).have.property('created_at').which.is.String();
+        should(version).have.property('number').which.is.String().equal('1.0');
+        should(version).have.property('type').which.is.String().equal('stable');
+      });
+  });
+
+  // it('should be able to install a version via model instance', function() {
+  //   let modelInstance = null;
+  //
   //   return Model(solutionData).save()
   //     .then(cleaner.mark)
   //     .then((Model) => {
   //       should(Model).have.property('description').which.is.String().equal(solutionData.description);
   //       should(Model).have.property('label').which.is.String().equal(solutionData.label);
   //
-  //       return Model.createFromInstance({ instance: instanceName, type: 'stable', export_spec: true});
+  //       modelInstance = Model;
+  //
+  //       return modelInstance.createVersion({ type: 'stable', data: Syncano.file(__dirname + '/files/dummy.txt')});
+  //     })
+  //     .then((version) => {
+  //       return modelInstance.installVersion(version.id, { instance: instanceName });
   //     })
   //     .then((version) => {
   //       should(version).be.an.Object();
@@ -185,6 +225,30 @@ describe('Solution', function() {
   //       should(version).have.property('type').which.is.String().equal('stable');
   //     })
   // });
+
+  it('should be able to create a version from instance via model instance', function() {
+    return connection.Class(classData).save()
+      .then(cleaner.mark)
+      .then(() => {
+        return Model(solutionData).save()
+      })
+      .then(cleaner.mark)
+      .then((Model) => {
+        should(Model).have.property('description').which.is.String().equal(solutionData.description);
+        should(Model).have.property('label').which.is.String().equal(solutionData.label);
+
+        return Model.createFromInstance({ instance: instanceName, type: 'stable', export_spec: { classes: [{ name: classData.name }]}});
+      })
+      .then((version) => {
+        should(version).be.an.Object();
+        should(version).have.property('id').which.is.Number();
+        should(version).have.property('links').which.is.Object();
+        should(version).have.property('data').which.is.Object();
+        should(version).have.property('created_at').which.is.String();
+        should(version).have.property('number').which.is.String().equal('1.0');
+        should(version).have.property('type').which.is.String().equal('stable');
+      })
+  });
 
   describe('#please()', function() {
 
