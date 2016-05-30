@@ -78,16 +78,6 @@ const PartialBackup = stampit()
   .compose(Model)
   .setQuerySet(PartialBackupQuerySet)
   .setMeta(PartialBackupMeta)
-  .setConstraints(PartialBackupConstraints)
-  .methods({
-
-    listAll() {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('all', this);
-
-      return this.makeRequest('GET', path);
-    }
-
-  });
+  .setConstraints(PartialBackupConstraints);
 
 export default PartialBackup;

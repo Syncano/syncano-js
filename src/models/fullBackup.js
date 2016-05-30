@@ -72,16 +72,6 @@ const FullBackup = stampit()
   .compose(Model)
   .setQuerySet(FullBackupQuerySet)
   .setMeta(FullBackupMeta)
-  .setConstraints(FullBackupConstraints)
-  .methods({
-
-    listAll() {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('all', this);
-
-      return this.makeRequest('GET', path);
-    }
-
-  });
+  .setConstraints(FullBackupConstraints);
 
 export default FullBackup;
