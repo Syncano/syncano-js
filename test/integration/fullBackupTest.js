@@ -27,16 +27,14 @@ describe('FullBackup', function() {
 
     return Instance.please()
       .create({name: instanceName})
-      .then(() =>
-        FullBackup.please()
-        .create(data)
-        .then((backup) => {
-          backupId = backup.id;
-          mlog.pending('Waiting 20 sec for backup to finish...');
-          return new Promise((resolve) => {
-            setInterval(() => resolve(), 20000);
-          });
-        }));
+      .then(() => FullBackup.please().create(data))
+      .then((backup) => {
+        backupId = backup.id;
+        mlog.pending('Waiting 20 sec for backup to finish...');
+        return new Promise((resolve) => {
+          setInterval(() => resolve(), 20000);
+        });
+      });
   });
 
   after(function() {

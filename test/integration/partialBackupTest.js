@@ -28,16 +28,14 @@ describe('PartialBackup', function() {
 
     return Instance.please()
       .create({name: instanceName})
-      .then(() =>
-        PartialBackup.please()
-        .create(data)
-        .then((backup) => {
-          backupId = backup.id;
-          mlog.pending('Waiting 20 sec for backup to finish...');
-          return new Promise((resolve) => {
-            setInterval(() => resolve(), 20000);
-          });
-        }));
+      .then(() => PartialBackup.please().create(data))
+      .then((backup) => {
+        backupId = backup.id;
+        mlog.pending('Waiting 20 sec for backup to finish...');
+        return new Promise((resolve) => {
+          setInterval(() => resolve(), 20000);
+        });
+      });
   });
 
   after(function() {
