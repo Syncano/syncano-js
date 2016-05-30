@@ -5,7 +5,7 @@ import {suffix, credentials} from './utils';
 import {ValidationError} from '../../src/errors';
 
 describe('PartialBackup', function() {
-  this.timeout(35000);
+  this.timeout(25000);
 
   let connection = null;
   let backupId = null;
@@ -31,9 +31,9 @@ describe('PartialBackup', function() {
       .then(() => PartialBackup.please().create(data))
       .then((backup) => {
         backupId = backup.id;
-        mlog.pending('Waiting 20 sec for backup to finish...');
+        mlog.pending('Waiting 10 sec for backup to finish...');
         return new Promise((resolve) => {
-          setInterval(() => resolve(), 20000);
+          setInterval(() => resolve(), 10000);
         });
       });
   });
@@ -129,7 +129,12 @@ describe('PartialBackup', function() {
           should(backup).have.property('label').which.is.String().equal(data.label);
           should(backup).have.property('links').which.is.Object();
           should(backup).have.property('author').which.is.Object();
-          return backup;
+        })
+        .then(() => {
+          mlog.pending('Waiting 10 sec for backup to finish...');
+          return new Promise((resolve) => {
+            setInterval(() => resolve(), 10000);
+          });
         });
     });
   });

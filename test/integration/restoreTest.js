@@ -4,7 +4,7 @@ import mlog from 'mocha-logger';
 import {suffix, credentials} from './utils';
 
 describe('Restore', function() {
-  this.timeout(45000);
+  this.timeout(25000);
 
   let connection = null;
   let Instance = null;
@@ -32,9 +32,9 @@ describe('Restore', function() {
       .then(() => FullBackup.please().create(backupData))
       .then((backup) => {
         backupId = backup.id;
-        mlog.pending('Waiting 30 sec for backup to finish...');
+        mlog.pending('Waiting 10 sec for backup to finish...');
         return new Promise((resolve) => {
-          setInterval(() => resolve(), 30000);
+          setInterval(() => resolve(), 10000);
         });
       });
   });
@@ -64,7 +64,6 @@ describe('Restore', function() {
           should(restore).have.property('archive').which.is.null();
           should(restore).have.property('status_info').which.is.String();
           should(restore).have.property('author').which.is.Object();
-          return restore;
         });
     });
 
