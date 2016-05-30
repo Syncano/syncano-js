@@ -70,7 +70,7 @@ const APNSConfig = stampit()
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('removeCertificate', this);
 
-      return this.makeRequest('POST', path, {payload});
+      return this.makeRequest('POST', path, {payload}).then((body) => this.serialize(body));
     }
 
   });
