@@ -8,7 +8,16 @@ const PartialBackupQuerySet = stampit().compose(
   Get,
   Delete,
   Create
-);
+).methods({
+
+  listAll() {
+    this.resultSetEndpoints = ['list', 'all'];
+    this.method = 'GET';
+    this.endpoint = 'all';
+    return this;
+  }
+
+});
 
 const PartialBackupMeta = Meta({
   name: 'partialBackup',
@@ -21,6 +30,10 @@ const PartialBackupMeta = Meta({
     'list': {
       'methods': ['get', 'post'],
       'path': '/v1.1/instances/{instanceName}/backups/partial/'
+    },
+    'all': {
+      'methods': ['get'],
+      'path': '/v1.1/backups/partial/'
     }
   }
 });
@@ -65,6 +78,16 @@ const PartialBackup = stampit()
   .compose(Model)
   .setQuerySet(PartialBackupQuerySet)
   .setMeta(PartialBackupMeta)
-  .setConstraints(PartialBackupConstraints);
+  .setConstraints(PartialBackupConstraints)
+  .methods({
+
+    listAll() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('all', this);
+
+      return this.makeRequest('GET', path);
+    }
+
+  });
 
 export default PartialBackup;

@@ -8,7 +8,15 @@ const FullBackupQuerySet = stampit().compose(
   Get,
   Delete,
   Create
-);
+).methods({
+
+  listAll() {
+    this.resultSetEndpoints = ['list', 'all'];
+    this.method = 'GET';
+    this.endpoint = 'all';
+    return this;
+  }
+})
 
 const FullBackupMeta = Meta({
   name: 'fullBackup',
@@ -21,6 +29,10 @@ const FullBackupMeta = Meta({
     'list': {
       'methods': ['get', 'post'],
       'path': '/v1.1/instances/{instanceName}/backups/full/'
+    },
+    'all': {
+      'methods': ['get'],
+      'path': '/v1.1/backups/full/'
     }
   }
 });
@@ -60,6 +72,16 @@ const FullBackup = stampit()
   .compose(Model)
   .setQuerySet(FullBackupQuerySet)
   .setMeta(FullBackupMeta)
-  .setConstraints(FullBackupConstraints);
+  .setConstraints(FullBackupConstraints)
+  .methods({
+
+    listAll() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('all', this);
+
+      return this.makeRequest('GET', path);
+    }
+
+  });
 
 export default FullBackup;

@@ -67,9 +67,15 @@ describe('FullBackup', function() {
 
   describe('#please()', function() {
 
-    it('should be able to list full backups', function() {
+    it('should be able to list instance full backups', function() {
       return FullBackup.please().list({instanceName}).then((keys) => {
         should(keys).be.an.Array();
+      });
+    });
+
+    it('should be able to list all full backups', function() {
+      return FullBackup.please().listAll().then((response) => {
+        should(response).be.an.Array();
       });
     });
 
