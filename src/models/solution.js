@@ -1,11 +1,12 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
-import {BaseQuerySet, Get, List, Delete, Update} from '../querySet';
+import {BaseQuerySet, Get, List, Delete, Update, Create} from '../querySet';
 import _ from 'lodash';
 
 const SolutionQuerySet = stampit().compose(
   BaseQuerySet,
   Get,
+  Create,
   List,
   Delete,
   Update

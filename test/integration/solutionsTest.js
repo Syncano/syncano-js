@@ -248,9 +248,6 @@ describe('Solution', function() {
         should(version).have.property('created_at').which.is.String();
         should(version).have.property('number').which.is.String().equal('1.0');
         should(version).have.property('type').which.is.String().equal('stable');
-      })
-      .catch((err) => {
-        console.log(err);
       });
   });
 
@@ -260,6 +257,52 @@ describe('Solution', function() {
       return Model.please().list().then((Models) => {
         should(Models).be.an.Array();
       });
+    });
+
+    it('should be able to create a Model', function() {
+      return Model.please().create(solutionData)
+        .then(cleaner.mark)
+        .then((Model) => {
+          should(Model).have.property('id').which.is.Number();
+          should(Model).have.property('version_id');
+          should(Model).have.property('starred_by_me').which.is.Null();
+          should(Model).have.property('description').which.is.String().equal(solutionData.description);
+          should(Model).have.property('links').which.is.Object();
+          should(Model).have.property('tags').which.is.Array();
+          should(Model).have.property('created_at').which.is.Date();
+          should(Model).have.property('updated_at').which.is.Date();
+          should(Model).have.property('versions').which.is.Object();
+          should(Model).have.property('author').which.is.Object();
+          should(Model).have.property('stars_count').which.is.Number().equal(0);
+          should(Model).have.property('label').which.is.String().equal(solutionData.label);
+          should(Model).have.property('public').which.is.Boolean().equal(solutionData.public);
+          should(Model).have.property('metadata').which.is.Object();
+          should(Model.metadata).have.property('test').which.is.String().equal(solutionData.metadata.test);
+        });
+    });
+
+    it('should be able to update a Model', function() {
+      return Model.please().create(solutionData)
+        .then(cleaner.mark)
+        .then((Model) => {
+          should(Model).have.property('description').which.is.String().equal(solutionData.description);
+          should(Model).have.property('label').which.is.String().equal(solutionData.label);
+
+          return connection.Solution.please().update({ id: Model.id }, { label: 'new-label' })
+        })
+        .then((Model) => {
+          should(Model).have.property('label').which.is.String().equal('new-label');
+        });
+    });
+
+    it('should be able to delete a Model', function() {
+      return Model.please().create(solutionData)
+        .then((Model) => {
+          should(Model).have.property('description').which.is.String().equal(solutionData.description);
+          should(Model).have.property('label').which.is.String().equal(solutionData.label);
+
+          return connection.Solution.please().delete({ id: Model.id }).request();
+        });
     });
 
   });
