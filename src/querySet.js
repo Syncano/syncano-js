@@ -113,7 +113,8 @@ const QuerySetRequest = stampit().compose(Request)
     query: {},
     payload: {},
     attachments: {},
-    _serialize: true
+    _serialize: true,
+    resultSetEndpoints: ['list']
   })
   .methods({
 
@@ -132,7 +133,7 @@ const QuerySetRequest = stampit().compose(Request)
         return response;
       }
 
-      if (this.endpoint === 'list') {
+      if (_.includes(this.resultSetEndpoints, this.endpoint)) {
         return this.asResultSet(response);
       }
 

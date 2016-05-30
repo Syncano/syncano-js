@@ -73,9 +73,15 @@ describe('PartialBackup', function() {
 
   describe('#please()', function() {
 
-    it('should be able to list partial backups', function() {
+    it('should be able to list instance partial backups', function() {
       return PartialBackup.please().list({instanceName}).then((keys) => {
         should(keys).be.an.Array();
+      });
+    });
+
+    it('should be able to list all partial backups', function() {
+      return PartialBackup.please().listAll().then((response) => {
+        should(response).be.an.Array();
       });
     });
 
