@@ -1,12 +1,14 @@
 import should from 'should/as-function';
+import mlog from 'mocha-logger';
 import Syncano from '../../src/syncano';
 import {suffix, credentials} from './utils';
 import {ValidationError} from '../../src/errors';
 
 describe('FullBackup', function() {
-  this.timeout(15000);
+  this.timeout(35000);
 
   let connection = null;
+  let backupId = null;
   let Instance = null;
   let FullBackup = null;
   const instanceName = suffix.get('fullbackup');
@@ -23,7 +25,18 @@ describe('FullBackup', function() {
     Instance = connection.Instance;
     FullBackup = connection.FullBackup;
 
-    return Instance.please().create({name: instanceName});
+    return Instance.please()
+      .create({name: instanceName})
+      .then(() =>
+        FullBackup.please()
+        .create(data)
+        .then((backup) => {
+          backupId = backup.id;
+          mlog.pending('Waiting 20 sec for backup to finish...');
+          return new Promise((resolve) => {
+            setInterval(() => resolve(), 20000);
+          });
+        }));
   });
 
   after(function() {
@@ -79,7 +92,24 @@ describe('FullBackup', function() {
       });
     });
 
-    it('should be able to create and get full instance backup details', function() {
+    it('should be able to get full instance backup details', function() {
+      return FullBackup.please().get({instanceName, id: backupId})
+        .then((backup) => {
+          should(backup).be.an.Object();
+          should(backup).have.property('id').which.is.Number().equal(backupId);
+          should(backup).have.property('instance').which.is.String().equal(data.instanceName);
+          should(backup).have.property('created_at').which.is.Date();
+          should(backup).have.property('updated_at').which.is.Date();
+          should(backup).have.property('status').which.is.String().equalOneOf('scheduled', 'running', 'success');
+          should(backup).have.property('status_info').which.is.String();
+          should(backup).have.property('description').which.is.String().equal(data.description);
+          should(backup).have.property('label').which.is.String().equal(data.label);
+          should(backup).have.property('links').which.is.Object();
+          should(backup).have.property('author').which.is.Object();
+      });
+    });
+
+    it('should be able to create full instance backup', function() {
       return FullBackup.please().create(data)
         .then((backup) => {
           should(backup).be.an.Object();
@@ -94,24 +124,7 @@ describe('FullBackup', function() {
           should(backup).have.property('label').which.is.String().equal(data.label);
           should(backup).have.property('links').which.is.Object();
           should(backup).have.property('author').which.is.Object();
-          return backup;
-        })
-        .then((createdBackup) => {
-          FullBackup.please().get({instanceName, id: createdBackup.id})
-            .then((backup) => {
-              should(backup).be.an.Object();
-              should(backup).have.property('id').which.is.Number().equal(createdBackup.id);
-              should(backup).have.property('instance').which.is.String().equal(data.instanceName);
-              should(backup).have.property('created_at').which.is.Date();
-              should(backup).have.property('updated_at').which.is.Date();
-              should(backup).have.property('status').which.is.String().equalOneOf('scheduled', 'running', 'success');
-              should(backup).have.property('status_info').which.is.String();
-              should(backup).have.property('description').which.is.String().equal(data.description);
-              should(backup).have.property('label').which.is.String().equal(data.label);
-              should(backup).have.property('links').which.is.Object();
-              should(backup).have.property('author').which.is.Object();
-          });
-      })
+        });
     });
   });
 
