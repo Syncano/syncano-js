@@ -35,9 +35,7 @@ const ClassConstraints = {
     array: true
   },
   group: {
-    numericality: {
-      noStrings: true
-    }
+    numericality: true
   },
   group_permissions: {
     inclusion: ['none', 'read', 'create_objects']

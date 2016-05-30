@@ -1,12 +1,14 @@
 import should from 'should/as-function';
+import mlog from 'mocha-logger';
 import Syncano from '../../src/syncano';
 import {suffix, credentials} from './utils';
 import {ValidationError} from '../../src/errors';
 
 describe('PartialBackup', function() {
-  this.timeout(15000);
+  this.timeout(25000);
 
   let connection = null;
+  let backupId = null;
   let Instance = null;
   let PartialBackup = null;
   const instanceName = suffix.get('partialbackup');
@@ -24,7 +26,16 @@ describe('PartialBackup', function() {
     Instance = connection.Instance;
     PartialBackup = connection.PartialBackup;
 
-    return Instance.please().create({name: instanceName});
+    return Instance.please()
+      .create({name: instanceName})
+      .then(() => PartialBackup.please().create(data))
+      .then((backup) => {
+        backupId = backup.id;
+        mlog.pending('Waiting 10 sec for backup to finish...');
+        return new Promise((resolve) => {
+          setInterval(() => resolve(), 10000);
+        });
+      });
   });
 
   after(function() {
@@ -73,13 +84,36 @@ describe('PartialBackup', function() {
 
   describe('#please()', function() {
 
-    it('should be able to list partial backups', function() {
+    it('should be able to list instance partial backups', function() {
       return PartialBackup.please().list({instanceName}).then((keys) => {
         should(keys).be.an.Array();
       });
     });
 
-    it('should be able to create and get partial instance backup details', function() {
+    it('should be able to list all partial backups', function() {
+      return PartialBackup.please().listAll().then((response) => {
+        should(response).be.an.Array();
+      });
+    });
+
+    it('should be able to get partial instance backup details', function() {
+      return PartialBackup.please().get({instanceName, id: backupId})
+        .then((backup) => {
+          should(backup).be.an.Object();
+          should(backup).have.property('id').which.is.Number().equal(backupId);
+          should(backup).have.property('instance').which.is.String().equal(data.instanceName);
+          should(backup).have.property('created_at').which.is.Date();
+          should(backup).have.property('updated_at').which.is.Date();
+          should(backup).have.property('status').which.is.String().equalOneOf('scheduled', 'running', 'success');
+          should(backup).have.property('status_info').which.is.String();
+          should(backup).have.property('description').which.is.String().equal(data.description);
+          should(backup).have.property('label').which.is.String().equal(data.label);
+          should(backup).have.property('links').which.is.Object();
+          should(backup).have.property('author').which.is.Object();
+      });
+    });
+
+    it('should be able to create partial instance backup', function() {
       return PartialBackup.please().create(data)
         .then((backup) => {
           should(backup).be.an.Object();
@@ -95,24 +129,13 @@ describe('PartialBackup', function() {
           should(backup).have.property('label').which.is.String().equal(data.label);
           should(backup).have.property('links').which.is.Object();
           should(backup).have.property('author').which.is.Object();
-          return backup;
         })
-        .then((createdBackup) => {
-          PartialBackup.please().get({instanceName, id: createdBackup.id})
-            .then((backup) => {
-              should(backup).be.an.Object();
-              should(backup).have.property('id').which.is.Number().equal(createdBackup.id);
-              should(backup).have.property('instance').which.is.String().equal(data.instanceName);
-              should(backup).have.property('created_at').which.is.Date();
-              should(backup).have.property('updated_at').which.is.Date();
-              should(backup).have.property('status').which.is.String().equalOneOf('scheduled', 'running', 'success');
-              should(backup).have.property('status_info').which.is.String();
-              should(backup).have.property('description').which.is.String().equal(data.description);
-              should(backup).have.property('label').which.is.String().equal(data.label);
-              should(backup).have.property('links').which.is.Object();
-              should(backup).have.property('author').which.is.Object();
+        .then(() => {
+          mlog.pending('Waiting 10 sec for backup to finish...');
+          return new Promise((resolve) => {
+            setInterval(() => resolve(), 10000);
           });
-      })
+        });
     });
   });
 

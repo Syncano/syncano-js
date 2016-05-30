@@ -76,10 +76,7 @@ const DataEndpointConstraints = {
   },
   class: {
     presence: true,
-    string: true,
-    length: {
-      minimum: 5
-    }
+    string: true
   },
   query: {
     object: true
@@ -91,9 +88,7 @@ const DataEndpointConstraints = {
     string: true
   },
   page_size: {
-    numericality: {
-      noStrings: true
-    }
+    numericality: true
   },
   expand: {
     string: true

@@ -165,9 +165,7 @@ const channelConstraints = {
     inclusion: ['default', 'separate_rooms']
   },
   group: {
-    numericality: {
-      noStrings: true
-    }
+    numericality: true
   },
   group_permissions: {
     inclusion: ['none', 'subscribe', 'publish']

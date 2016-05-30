@@ -45,9 +45,7 @@ const GCMDevicConstraints = {
     }
   },
   user: {
-    numericality: {
-      noStrings: true
-    }
+    numericality: true
   },
   registration_id: {
     presence: true,

@@ -33,9 +33,7 @@ const ScheduleConstraints = {
     string: true
   },
   interval_sec: {
-    numericality: {
-      noStrings: true
-    }
+    numericality: true
   },
   crontab: {
     format: {
@@ -47,9 +45,7 @@ const ScheduleConstraints = {
   },
   script: {
     presence: true,
-    numericality: {
-      noStrings: true
-    }
+    numericality: true
   }
 };
 

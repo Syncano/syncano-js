@@ -47,8 +47,7 @@ describe('APNSConfig', function() {
           should(object).have.property('development_bundle_identifier').which.is.String().equal('com.syncano.testAPNS');
 
           return object.removeCertificate({development_certificate: true});
-        }).then(() => Model.please().get(data))
-        .then((object) => {
+        }).then((object) => {
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
           should(object).have.property('links').which.is.Object();
@@ -108,8 +107,7 @@ describe('APNSConfig', function() {
           should(object).have.property('development_bundle_identifier').which.is.String().equal('com.syncano.testAPNS');
 
           return Model.please().removeCertificate(data, {development_certificate: true});
-        }).then(() => Model.please().get(data))
-        .then((object) => {
+        }).then((object) => {
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
           should(object).have.property('links').which.is.Object();
