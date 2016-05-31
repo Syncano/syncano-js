@@ -280,9 +280,7 @@ const UserConstraints = {
     inclusion: ['none', 'read', 'write', 'full']
   },
   'profile.group': {
-    numericality: {
-      noStrings: true
-    }
+    numericality: true
   },
   'profile.group_permissions': {
     inclusion: ['none', 'read', 'write', 'full']
