@@ -10,7 +10,68 @@ const SolutionQuerySet = stampit().compose(
   List,
   Delete,
   Update
-);
+).methods({
+
+  star(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.endpoint = 'star';
+
+    return this;
+  },
+
+  unstar(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.endpoint = 'unstar';
+
+    return this;
+  },
+
+  getVersions(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'GET';
+    this.endpoint = 'versions'
+
+    return this;
+  },
+
+  createVersion(properties = {}, payload = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = payload;
+    this.method = 'POST';
+    this.endpoint = 'versions';
+
+    return this;
+  },
+
+  getVersion(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'GET';
+    this.endpoint = 'versionDetail';
+
+    return this;
+  },
+
+  installVersion(properties = {}, payload = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.payload = payload;
+    this.endpoint = 'versionInstall';
+
+    return this;
+  },
+
+  createVersionFromInstance(properties = {}, payload = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'POST';
+    this.payload = payload;
+    this.endpoint = 'createFromInstance';
+
+    return this;
+  }
+
+});
 
 const SolutionMeta = Meta({
   name: 'solution',
@@ -129,7 +190,7 @@ const Solution = stampit()
       return this.makeRequest('POST', path, {payload});
     },
 
-    createFromInstance(payload = {}) {
+    createVersionFromInstance(payload = {}) {
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('createFromInstance', this);
 

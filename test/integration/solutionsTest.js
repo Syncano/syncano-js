@@ -238,7 +238,7 @@ describe('Solution', function() {
         should(Model).have.property('description').which.is.String().equal(solutionData.description);
         should(Model).have.property('label').which.is.String().equal(solutionData.label);
 
-        return Model.createFromInstance({ instance: instanceName, type: 'stable', export_spec: { classes: [{ name: classData.name }]}});
+        return Model.createVersionFromInstance({ instance: instanceName, type: 'stable', export_spec: { classes: [{ name: classData.name }]}});
       })
       .then((version) => {
         should(version).be.an.Object();
@@ -305,7 +305,142 @@ describe('Solution', function() {
         });
     });
 
+    it('should be able to star a Model', function() {
+      return Model.please().create(solutionData)
+        .then(cleaner.mark)
+        .then((Model) => {
+          should(Model).have.property('description').which.is.String().equal(solutionData.description);
+          should(Model).have.property('label').which.is.String().equal(solutionData.label);
+
+          return connection.Solution.please().star({ id: Model.id }).request();
+        });
+    });
+
+    it('should be able to unstar a Model', function() {
+      return Model.please().create(solutionData)
+        .then(cleaner.mark)
+        .then((Model) => {
+          should(Model).have.property('description').which.is.String().equal(solutionData.description);
+          should(Model).have.property('label').which.is.String().equal(solutionData.label);
+
+          return connection.Solution.please().unstar({ id: Model.id }).request();
+        });
+    });
+
+    it('should be able to get versions', function() {
+      return Model.please().create(solutionData)
+        .then(cleaner.mark)
+        .then((Model) => {
+          should(Model).have.property('description').which.is.String().equal(solutionData.description);
+          should(Model).have.property('label').which.is.String().equal(solutionData.label);
+
+          return connection.Solution.please().getVersions({ id: Model.id });
+        })
+        .then((versions) => {
+          should(versions).be.an.Object();
+          should(versions).have.property('next').which.is.Null();
+          should(versions).have.property('prev').which.is.Null();
+        })
+    });
+
+    it('should be able to create a version', function() {
+      return Model.please().create(solutionData)
+        .then(cleaner.mark)
+        .then((Model) => {
+          should(Model).have.property('description').which.is.String().equal(solutionData.description);
+          should(Model).have.property('label').which.is.String().equal(solutionData.label);
+
+          return connection.Solution.please().createVersion({id: Model.id}, { type: 'stable', data: Syncano.file(__dirname + '/files/dummy.txt')});
+        })
+        .then((version) => {
+          should(version).be.an.Object();
+          should(version).have.property('id').which.is.Number();
+          should(version).have.property('links').which.is.Object();
+          should(version).have.property('data').which.is.Object();
+          should(version).have.property('created_at').which.is.Date();
+          should(version).have.property('number').which.is.String().equal('1.0');
+          should(version).have.property('type').which.is.String().equal('stable');
+        });
+    });
+
+    it('should be able to get a version', function() {
+      let solutionId = null;
+
+      return Model.please().create(solutionData)
+        .then(cleaner.mark)
+        .then((Model) => {
+          should(Model).have.property('description').which.is.String().equal(solutionData.description);
+          should(Model).have.property('label').which.is.String().equal(solutionData.label);
+
+          solutionId = Model.id
+
+          return connection.Solution.please().createVersion({id: solutionId}, { type: 'stable', data: Syncano.file(__dirname + '/files/dummy.txt')});
+        })
+        .then((version) => {
+          return connection.Solution.please().getVersion({ id: solutionId, version_id: version.id})
+        })
+        .then((version) => {
+          should(version).be.an.Object();
+          should(version).have.property('id').which.is.Number();
+          should(version).have.property('links').which.is.Object();
+          should(version).have.property('data').which.is.Object();
+          should(version).have.property('created_at').which.is.Date();
+          should(version).have.property('number').which.is.String().equal('1.0');
+          should(version).have.property('type').which.is.String().equal('stable');
+        })
+    });
+
+    it('should be able to install a version', function() {
+      let solutionId = null;
+
+      return Model.please().create(solutionData)
+        .then(cleaner.mark)
+        .then((Model) => {
+          should(Model).have.property('description').which.is.String().equal(solutionData.description);
+          should(Model).have.property('label').which.is.String().equal(solutionData.label);
+
+          solutionId = Model.id
+
+          return connection.Solution.please().createVersion({id: solutionId}, { type: 'stable', data: Syncano.file(__dirname + '/files/dummy.txt')});
+        })
+        .then((version) => {
+          return connection.Solution.please().installVersion({ id: solutionId, version_id: version.id}, { instance: instanceName})
+        })
+        .then((version) => {
+          should(version).be.an.Object();
+          should(version).have.property('instance').which.is.String();
+          should(version).have.property('solution_version').which.is.Object();
+          should(version).have.property('id').which.is.Number();
+          should(version).have.property('links').which.is.Object();
+          should(version).have.property('solution').which.is.Object();
+
+          return connection.Class.please().delete(classData).request();
+        });
+    });
+
+    it('should be able to create from instance', function() {
+      return connection.Class(classData).save()
+        .then(cleaner.mark)
+        .then(() => {
+          return Model.please().create(solutionData)
+        })
+        .then(cleaner.mark)
+        .then((Model) => {
+          should(Model).have.property('description').which.is.String().equal(solutionData.description);
+          should(Model).have.property('label').which.is.String().equal(solutionData.label);
+
+          return connection.Solution.please().createVersionFromInstance({ id: Model.id}, { instance: instanceName, type: 'stable', export_spec: { classes: [{ name: classData.name }]}});
+        })
+        .then((version) => {
+          should(version).be.an.Object();
+          should(version).have.property('id').which.is.Number();
+          should(version).have.property('links').which.is.Object();
+          should(version).have.property('data').which.is.Object();
+          should(version).have.property('created_at').which.is.Date();
+          should(version).have.property('number').which.is.String().equal('1.0');
+          should(version).have.property('type').which.is.String().equal('stable');
+        });
+    });
+
   });
-
-
 });
