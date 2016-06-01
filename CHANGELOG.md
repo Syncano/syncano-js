@@ -1,4 +1,27 @@
 ### Change Log
+* **1.0.14** - 2016-05-30
+    * Solutions management
+* **1.0.13** - 2016-05-30
+    * Test release for new deployment workflow
+* **1.0.12** - 2016-05-30
+    * Small validation changes
+    * Small changes in `removeCertificate()` method in APNSConfig
+    * Backup listing functionality
+* **1.0.11** - 2016-05-27
+    * Subscription management
+    * Usage management
+    * Plan management
+    * Profile management
+    * Card management
+    * Restore backup functionality
+* **1.0.10** - 2016-05-17
+    * Backups management
+    * Invoice management
+    * `hasPrev()` and `hasNext()` helper methods
+    * `removeCertificate()` method for APNSConfig
+* **1.0.9** - 2016-05-12
+    * Script traces fix
+    * Small fix in generated docs
 * **1.0.8** - 2016-05-06
     * Syncano user account bugfixes
     * Added `update()` and `delete()` methods to Admin model `QuerySet`
