@@ -35,6 +35,7 @@ import HourlyUsage from './hourlyusage';
 import Plan from './plan';
 import Profile from './profile';
 import Card from './card';
+import Solution from './solution';
 
 export default {
   Instance,
@@ -73,5 +74,6 @@ export default {
   HourlyUsage,
   Plan,
   Profile,
-  Card
+  Card,
+  Solution
 };

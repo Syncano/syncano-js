@@ -37,6 +37,18 @@ describe('Syncano', function() {
       should(baseObject).have.property('APNSDevice').which.is.Function();
       should(baseObject).have.property('GCMMessage').which.is.Function();
       should(baseObject).have.property('APNSMessage').which.is.Function();
+      should(baseObject).have.property('Template').which.is.Function();
+      should(baseObject).have.property('Subscription').which.is.Function();
+      should(baseObject).have.property('FullBackup').which.is.Function();
+      should(baseObject).have.property('PartialBackup').which.is.Function();
+      should(baseObject).have.property('Restore').which.is.Function();
+      should(baseObject).have.property('Usage').which.is.Function();
+      should(baseObject).have.property('DailyUsage').which.is.Function();
+      should(baseObject).have.property('HourlyUsage').which.is.Function();
+      should(baseObject).have.property('Plan').which.is.Function();
+      should(baseObject).have.property('Profile').which.is.Function();
+      should(baseObject).have.property('Card').which.is.Function();
+      should(baseObject).have.property('Solution').which.is.Function();
       should(baseObject).have.property('Account').which.is.Object();
       should(baseObject).have.property('Monitor').which.is.Object();
     });
