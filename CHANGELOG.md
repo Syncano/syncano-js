@@ -1,5 +1,7 @@
 ### Change Log
-* **1.0.12** - 2016-05-30
+* **1.0.14** - 2016-05-30
+    * Solutions management
+* **1.0.13** - 2016-05-30
     * Test release for new deployment workflow
 * **1.0.12** - 2016-05-30
     * Small validation changes
