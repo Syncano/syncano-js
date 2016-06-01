@@ -110,6 +110,16 @@ describe('Instance', function() {
       });
     });
 
+    it('should be able to list classes as template', function() {
+      return Instance.please().create(data)
+        .then(cleaner.mark)
+        .then(() => {
+          return Instance.please().list().templateResponse('objects_html_table').then((response) => {
+            should(response).be.html;
+          });
+        })
+    });
+
     it('should be able to create an instance', function() {
       return Instance.please().create(data)
         .then(cleaner.mark)

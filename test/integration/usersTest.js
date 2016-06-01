@@ -242,6 +242,16 @@ describe('User', function() {
       });
     });
 
+    it('should be able to list objects as template', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then(() => {
+          return Model.please().list({instanceName}).templateResponse('objects_html_table').then((response) => {
+            should(response).be.html;
+          });
+        })
+    });
+
     it('should be able to create an object', function() {
       return Model.please().create(data)
         .then(cleaner.mark)

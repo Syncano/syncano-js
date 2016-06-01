@@ -125,6 +125,16 @@ describe('Class', function() {
       });
     });
 
+    it('should be able to list classes as template', function() {
+      return Class.please().create(data)
+        .then(cleaner.mark)
+        .then(() => {
+          return Class.please().list({instanceName}).templateResponse('objects_html_table').then((response) => {
+            should(response).be.html;
+          });
+        })
+    });
+
     it('should be able to create a class', function() {
       return Class.please().create(data)
         .then(cleaner.mark)
