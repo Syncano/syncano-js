@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Source: models/apnsmessage.js</title>
+	<title>Syncano Class: Solution</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,111 +65,416 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: models/apnsmessage.js</h1>
-    
+	<h1 class="page-title">Class: Solution</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
-import _ from 'lodash';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Create, BulkCreate, Get, GetOrCreate, List} from '../querySet';
 
-const APNSMessageQuerySet = stampit().compose(
-  BaseQuerySet,
-  Create,
-  BulkCreate,
-  Get,
-  List,
-  GetOrCreate
-).methods({
+<header>
+    
+        <h2>
+        Solution
+        </h2>
+        
+    
+</header>
 
-  sendToDevice(properties = {}, content = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = {content};
-    this.method = 'POST';
-    this.endpoint = 'deviceMessage';
 
-    return this;
-  }
+<article>
+    <div class="container-overview">
+    
+        
+<hr>
+<dt>
+    <h4 class="name" id="Solution"><span class="type-signature"></span>new Solution()</h4>
+    
+    
+</dt>
+<dd>
 
-});
+    
+    <div class="description">
+        <p>OO wrapper around Invoice.</p>
+    </div>
+    
 
-const APNSMessageMeta = Meta({
-  name: 'apnsmessage',
-  pluralName: 'apnsmessages',
-  endpoints: {
-    'detail': {
-      'methods': ['delete', 'get'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/messages/{id}/'
-    },
-    'list': {
-      'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/messages/'
-    },
-    'deviceMessage': {
-      'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/devices/{registration_id}/send_message/'
-    }
-  }
-});
+    
 
-const APNSMessageConstraints = {
-  instanceName: {
-    presence: true,
-    length: {
-      minimum: 5
-    }
-  },
-  content: {
-    presence: true,
-    object: true
-  },
-  'content.registration_ids': {
-    presence: true,
-    array: true
-  },
-  'content.environment': {
-    presence: true,
-    inclusion: ['development', 'production']
-  },
-  'content.aps': {
-    presence: true
-  },
-  'content.aps.alert': {
-    presence: true
-  }
-};
+    
 
-/**
- * OO wrapper around instance APNS messages {@link # endpoint}.
- * @constructor
- * @type {APNSMessage}
+    
+    
 
- * @property {Number} id
- * @property {String} [status = null]
- * @property {Object} [content = {}]
- * @property {Object} [result = {}]
- * @property {String} [links = {}]
- * @property {Date} [created_at = null]
- * @property {Date} [updated_at = null]
- */
-const APNSMessage = stampit()
-  .compose(Model)
-  .setQuerySet(APNSMessageQuerySet)
-  .setConstraints(APNSMessageConstraints)
-  .setMeta(APNSMessageMeta);
+    
+<dl class="details">
+    
 
-export default APNSMessage;
-</pre>
-    </article>
+    <h5 class="subsection-title">Properties:</h5>
+
+    <dl>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>status</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>items</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>period</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>amount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>created_at</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>updated_at</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+</dl>
+
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="models_solution.js.html">models/solution.js</a>,
+				 <a href="models_solution.js.html#sunlight-1-line-144">line 144</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -179,6 +484,10 @@ export default APNSMessage;
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>
