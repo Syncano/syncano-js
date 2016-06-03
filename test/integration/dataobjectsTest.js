@@ -15,10 +15,11 @@ describe('Dataobject', function() {
   let Model = null;
   const instanceName = suffix.get('Dataobject');
   const className = suffix.get('class');
+  const description = suffix.get('description');
   const data = {
     name: className,
-    instanceName: instanceName,
-    description: suffix.get('description'),
+    instanceName,
+    description,
     schema: [
       { name: "title", type: "string", "order_index": true, "filter_index": true },
       { name: "author", type: "string", "order_index": true, "filter_index": true  },
@@ -32,15 +33,33 @@ describe('Dataobject', function() {
     className: className,
     instanceName: instanceName
   };
+  const geoPointClass = {
+    name: 'locations',
+    instanceName,
+    description,
+    schema: [
+      { name: "location_name", type: "string" },
+      { name: "coordinates", type: "geopoint" }
+    ]
+  }
+  const location1 = {
+    instanceName,
+    className: geoPointClass.name,
+    location_name: "Explorer HQ",
+    coordinates: {
+      latitude: 52.226972,
+      longitude: 21.001542
+    }
+  }
 
-  before(function(done) {
+  before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
     Class = connection.Class;
     Model = connection.DataObject;
 
-    Instance.please().create({name: instanceName}).then(() => {
-      Class.please().create(data).then(() => done());
+    return Instance.please().create({name: instanceName}).then(() => {
+      return Class.please().bulkCreate([Class(data), Class(geoPointClass)]);
     })
   });
 
@@ -110,6 +129,29 @@ describe('Dataobject', function() {
         should(dataobj).have.property('title').which.is.String().equal('Pulp');
         should(dataobj).have.property('author').which.is.String().equal('Bukowski');
         should(dataobj).have.property('reads').which.is.Number().equal(0);
+      })
+  });
+
+  it('should be able to save with a geopoint via model instance', function() {
+    return Model(location1).save()
+      .then(cleaner.mark)
+      .then((dataobj) => {
+        should(dataobj).be.a.Object();
+        should(dataobj).have.property('id').which.is.Number();
+        should(dataobj).have.property('instanceName').which.is.String().equal(instanceName);
+        should(dataobj).have.property('created_at').which.is.Date();
+        should(dataobj).have.property('updated_at').which.is.Date();
+        should(dataobj).have.property('links').which.is.Object();
+        should(dataobj).have.property('channel').which.is.Null();
+        should(dataobj).have.property('owner').which.is.Null();
+        should(dataobj).have.property('group_permissions').which.is.String().equal('none');
+        should(dataobj).have.property('other_permissions').which.is.String().equal('none');
+        should(dataobj).have.property('owner_permissions').which.is.String().equal('full');
+        should(dataobj).have.property('coordinates').which.is.Object();
+        should(dataobj).have.property('location_name').which.is.String().equal(location1.location_name);
+        should(dataobj.coordinates).have.property('type').which.is.String().equal('geopoint');
+        should(dataobj.coordinates).have.property('latitude').which.is.Number().equal(location1.coordinates.latitude);
+        should(dataobj.coordinates).have.property('longitude').which.is.Number().equal(location1.coordinates.longitude);
       });
   });
 
@@ -161,7 +203,6 @@ describe('Dataobject', function() {
     });
 
     it('should be able to create a Model', function() {
-
       return Model.please().create(dataObj)
         .then(cleaner.mark)
         .then((dataobject) => {
@@ -178,6 +219,29 @@ describe('Dataobject', function() {
           should(dataobject).have.property('owner_permissions').which.is.String().equal('full');
           should(dataobject).have.property('title').which.is.String().equal('Pulp');
           should(dataobject).have.property('author').which.is.String().equal('Bukowski');
+        });
+    });
+
+    it('should be able to create a Model with a geopoint', function() {
+      return Model.please().create(location1)
+        .then(cleaner.mark)
+        .then((dataobj) => {
+          should(dataobj).be.a.Object();
+          should(dataobj).have.property('id').which.is.Number();
+          should(dataobj).have.property('instanceName').which.is.String().equal(instanceName);
+          should(dataobj).have.property('created_at').which.is.Date();
+          should(dataobj).have.property('updated_at').which.is.Date();
+          should(dataobj).have.property('links').which.is.Object();
+          should(dataobj).have.property('channel').which.is.Null();
+          should(dataobj).have.property('owner').which.is.Null();
+          should(dataobj).have.property('group_permissions').which.is.String().equal('none');
+          should(dataobj).have.property('other_permissions').which.is.String().equal('none');
+          should(dataobj).have.property('owner_permissions').which.is.String().equal('full');
+          should(dataobj).have.property('coordinates').which.is.Object();
+          should(dataobj).have.property('location_name').which.is.String().equal(location1.location_name);
+          should(dataobj.coordinates).have.property('type').which.is.String().equal('geopoint');
+          should(dataobj.coordinates).have.property('latitude').which.is.Number().equal(location1.coordinates.latitude);
+          should(dataobj.coordinates).have.property('longitude').which.is.Number().equal(location1.coordinates.longitude);
         });
     });
 
