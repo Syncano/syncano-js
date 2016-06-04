@@ -5,7 +5,7 @@ import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
-describe('Dataobject', function() {
+describe.only('Dataobject', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();
@@ -39,7 +39,7 @@ describe('Dataobject', function() {
     description,
     schema: [
       { name: "location_name", type: "string" },
-      { name: "coordinates", type: "geopoint" }
+      { name: "coordinates", type: "geopoint", "filter_index": true }
     ]
   }
   const location1 = {
@@ -218,6 +218,42 @@ describe('Dataobject', function() {
       return Model.please().list({instanceName, className}).then((dataobjects) => {
         should(dataobjects).be.an.Array();
       });
+    });
+
+    it('should be able to list objects near coordinates', function() {
+      return Model.please().create(location1)
+        .then(cleaner.mark)
+        .then(() => {
+          return Model.please().list({instanceName, className: location1.className}).near({ coordinates: {latitude: 52.229676, longitude: 21.012229}});
+        })
+        .then((objects) => {
+          should(objects).be.an.Array().with.length(1);
+          should(objects[0].coordinates).have.property('latitude').which.is.Number().equal(location1.coordinates.latitude);   should(objects[0].coordinates).have.property('longitude').which.is.Number().equal(location1.coordinates.longitude);
+        })
+    });
+
+    it('should be able to list objects near coordinates within a distance in kilometers', function() {
+      return Model.please().create(location1)
+        .then(cleaner.mark)
+        .then(() => {
+          return Model.please().list({instanceName, className: location1.className}).near({ coordinates: {latitude: 51.865512, longitude: 20.866603, distance_in_kilometers: 50}});
+        })
+        .then((objects) => {
+          should(objects).be.an.Array().with.length(1);
+          should(objects[0].coordinates).have.property('latitude').which.is.Number().equal(location1.coordinates.latitude);   should(objects[0].coordinates).have.property('longitude').which.is.Number().equal(location1.coordinates.longitude);
+        })
+    });
+
+    it('should be able to list objects near coordinates within a distance in miles', function() {
+      return Model.please().create(location1)
+        .then(cleaner.mark)
+        .then(() => {
+          return Model.please().list({instanceName, className: location1.className}).near({ coordinates: {latitude: 51.982047, longitude: 20.521618, distance_in_miles: 31}});
+        })
+        .then((objects) => {
+          should(objects).be.an.Array().with.length(1);
+          should(objects[0].coordinates).have.property('latitude').which.is.Number().equal(location1.coordinates.latitude);   should(objects[0].coordinates).have.property('longitude').which.is.Number().equal(location1.coordinates.longitude);
+        })
     });
 
     it('should be able to create a Model', function() {
