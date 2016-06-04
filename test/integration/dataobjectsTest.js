@@ -155,6 +155,24 @@ describe('Dataobject', function() {
       });
   });
 
+  it('should be able to update geopoint via model instance', function() {
+    return Model(location1).save()
+      .then(cleaner.mark)
+      .then((dataobj) => {
+        should(dataobj).have.property('location_name').which.is.String().equal(location1.location_name);
+        should(dataobj.coordinates).have.property('type').which.is.String().equal('geopoint');
+        should(dataobj.coordinates).have.property('latitude').which.is.Number().equal(location1.coordinates.latitude);
+        should(dataobj.coordinates).have.property('longitude').which.is.Number().equal(location1.coordinates.longitude);
+
+        dataobj.coordinates = { latitude: 40.739496, longitude: -73.985720 };
+        return dataobj.save();
+      })
+      .then((dataobj) => {
+        should(dataobj.coordinates).have.property('latitude').which.is.Number().equal(40.739496);
+        should(dataobj.coordinates).have.property('longitude').which.is.Number().equal(-73.985720);
+      })
+  });
+
   it('should be able to update via model instance', function() {
     return Model(dataObj).save()
       .then(cleaner.mark)
@@ -242,6 +260,23 @@ describe('Dataobject', function() {
           should(dataobj.coordinates).have.property('type').which.is.String().equal('geopoint');
           should(dataobj.coordinates).have.property('latitude').which.is.Number().equal(location1.coordinates.latitude);
           should(dataobj.coordinates).have.property('longitude').which.is.Number().equal(location1.coordinates.longitude);
+        });
+    });
+
+    it('should be able to update a Model with a geopoint', function() {
+      return Model.please().create(location1)
+        .then(cleaner.mark)
+        .then((dataobject) => {
+          should(dataobject).be.a.Object();
+          should(dataobject.coordinates).have.property('type').which.is.String().equal('geopoint');
+          should(dataobject.coordinates).have.property('latitude').which.is.Number().equal(location1.coordinates.latitude);
+          should(dataobject.coordinates).have.property('longitude').which.is.Number().equal(location1.coordinates.longitude);
+
+          return Model.please().update({ id: dataobject.id, instanceName: dataobject.instanceName, className: dataobject.className }, { coordinates: { latitude: 40.739496, longitude: -73.985720 } })
+        })
+        .then((dataobject) => {
+          should(dataobject.coordinates).have.property('latitude').which.is.Number().equal(40.739496);
+          should(dataobject.coordinates).have.property('longitude').which.is.Number().equal(-73.985720);
         });
     });
 
