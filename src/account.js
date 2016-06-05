@@ -31,6 +31,19 @@ const Account = stampit().compose(Request)
     }
   })
   .methods({
+    /**
+    * A convenience method for getting the currently logged in user details.
+
+    * @memberOf Account
+    * @instance
+
+    * @returns {Promise}
+
+    */
+    getUserDetails() {
+      const path = this._account.updatePath;
+      return this.makeRequest('GET', path);
+    },
 
     /**
     * A convenience method for activating an accoung.

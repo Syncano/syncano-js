@@ -88,7 +88,21 @@ describe('Account', function() {
         should(user).have.property('last_name').which.is.String().equal('b');
       });
     });
+  });
 
+  describe('#getUserDetails()', function() {
+
+    it('should get user data', function() {
+      return Account.getUserDetails().then((user) => {
+        should(user).be.an.Object();
+        should(user).have.property('id').which.is.Number();
+        should(user).have.property('first_name').which.is.String().equal('a');
+        should(user).have.property('last_name').which.is.String().equal('b');
+        should(user).have.property('is_active').which.is.false();
+        should(user).have.property('email').which.is.String();
+        should(user).have.property('has_password').which.is.true();
+      });
+    });
   });
 
 });
