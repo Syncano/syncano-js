@@ -45,6 +45,42 @@ describe('Account', function() {
     should(Account).have.property('update').which.is.Function();
   });
 
+  it('has "getUserDetails" method', function() {
+    should(Account).have.property('getUserDetails').which.is.Function();
+  });
+
+  it('has "activate" method', function() {
+    should(Account).have.property('activate').which.is.Function();
+  });
+
+  it('has "changePassword" method', function() {
+    should(Account).have.property('changePassword').which.is.Function();
+  });
+
+  it('has "resetPassword" method', function() {
+    should(Account).have.property('resetPassword').which.is.Function();
+  });
+
+  it('has "confirmPasswordReset" method', function() {
+    should(Account).have.property('confirmPasswordReset').which.is.Function();
+  });
+
+  it('has "setPassword" method', function() {
+    should(Account).have.property('setPassword').which.is.Function();
+  });
+
+  it('has "resetKey" method', function() {
+    should(Account).have.property('resetKey').which.is.Function();
+  });
+
+  it('has "socialLogin" method', function() {
+    should(Account).have.property('socialLogin').which.is.Function();
+  });
+
+  it('has "resendEmail" method', function() {
+    should(Account).have.property('resendEmail').which.is.Function();
+  });
+
   describe('#register()', function() {
 
     it('should register a new user', function() {
