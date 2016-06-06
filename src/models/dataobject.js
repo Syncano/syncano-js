@@ -192,6 +192,24 @@ const DataObject = stampit()
       this[field] += _.add(this[field], by);
 
       return this.save();
+    },
+
+    add(field, array) {
+      if(!_.isArray(this[field].value)) return Promise.reject(new Error(`The ${field} is not an array.`));
+      if(!_.isArray(array)) return Promise.reject(new Error('The provided value is not an array.'));
+
+      this[field] = _.concat(this[field].value, array);
+
+      return this.save();
+    },
+
+    remove(field, array) {
+      if(!_.isArray(this[field].value)) return Promise.reject(new Error(`The ${field} is not an array.`));
+      if(!_.isArray(array)) return Promise.reject(new Error('The provided value is not an array.'));
+
+      this[field] = _.difference(this[field].value, array);
+
+      return this.save();
     }
   })
   .setQuerySet(DataObjectQuerySet)

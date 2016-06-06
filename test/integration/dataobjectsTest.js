@@ -42,6 +42,34 @@ describe('Dataobject', function() {
       { name: "coordinates", type: "geopoint", "filter_index": true }
     ]
   }
+  const booksClass = {
+    name: 'books',
+    instanceName,
+    schema: [
+      { name: 'title', type: 'string', filter_index: true },
+      { name: 'authors', type: 'relation', target: 'authors'}
+    ]
+  };
+  const authorsClass = {
+    name: 'authors',
+    instanceName,
+    schema: [
+      { name: 'name', type: 'string', filter_index: true},
+      { name: 'year_born', type: 'integer'}
+    ]
+  };
+  const philipKDick = {
+    instanceName,
+    className: 'authors',
+    name: 'Philip K Dick',
+    year_born: 1928
+  };
+  const charlesBukowski = {
+    instanceName,
+    className: 'authors',
+    name: 'Charles Bukowski',
+    year_born: 1920
+  };
   const location1 = {
     instanceName,
     className: geoPointClass.name,
@@ -59,7 +87,7 @@ describe('Dataobject', function() {
     Model = connection.DataObject;
 
     return Instance.please().create({name: instanceName}).then(() => {
-      return Class.please().bulkCreate([Class(data), Class(geoPointClass)]);
+      return Class.please().bulkCreate([Class(data), Class(geoPointClass), Class(authorsClass), Class(booksClass)]);
     })
   });
 
@@ -170,6 +198,101 @@ describe('Dataobject', function() {
       .then((dataobj) => {
         should(dataobj.coordinates).have.property('latitude').which.is.Number().equal(40.739496);
         should(dataobj.coordinates).have.property('longitude').which.is.Number().equal(-73.985720);
+      })
+  });
+
+  it('should be able to save with relation via model instance', function() {
+    let authorId = null;
+
+    return Model(philipKDick).save()
+      .then(cleaner.mark)
+      .then((author) => {
+        should(author).be.an.Object();
+        should(author).have.property('instanceName').which.is.String().equal(philipKDick.instanceName);
+        should(author).have.property('className').which.is.String().equal(philipKDick.className);
+        should(author).have.property('name').which.is.String().equal(philipKDick.name);
+        should(author).have.property('year_born').which.is.Number().equal(philipKDick.year_born);
+
+        authorId = author.id;
+
+        return Model({instanceName, className: 'books', title: 'Ubik', authors: [author.id]}).save();
+      })
+      .then(cleaner.mark)
+      .then((book) => {
+        should(book).be.an.Object();
+        should(book).have.property('instanceName').which.is.String().equal(instanceName);
+        should(book).have.property('className').which.is.String().equal('books');
+        should(book).have.property('title').which.is.String().equal('Ubik');
+        should(book).have.property('authors').which.is.Object();
+        should(book.authors).have.property('target').which.is.String().equal('authors');
+        should(book.authors).have.property('value').which.is.Array().with.length(1);
+        should(book.authors.value[0]).be.a.Number().equal(authorId);
+      })
+  });
+
+  it('should be able to add relation via model instance', function() {
+    let authorIds = null;
+
+    return Model.please().bulkCreate([Model(philipKDick), Model(charlesBukowski)])
+      .then(cleaner.mark)
+      .then((authors) => {
+        should(authors).be.an.Array().with.length(2);
+
+        authorIds = _.map(authors, (x) => x.id)
+
+        return Model({instanceName, className: 'books', title: 'Ubik', authors: [authorIds[0]]}).save();
+      })
+      .then(cleaner.mark)
+      .then((book) => {
+        should(book).be.an.Object();
+        should(book).have.property('instanceName').which.is.String().equal(instanceName);
+        should(book).have.property('className').which.is.String().equal('books');
+        should(book).have.property('title').which.is.String().equal('Ubik');
+        should(book).have.property('authors').which.is.Object();
+        should(book.authors).have.property('target').which.is.String().equal('authors');
+        should(book.authors).have.property('value').which.is.Array().with.length(1);
+        should(book.authors.value[0]).be.a.Number().equal(authorIds[0]);
+
+        return book.add('authors', [authorIds[1]]);
+      })
+      .then((book) => {
+        should(book.authors).have.property('target').which.is.String().equal('authors');
+        should(book.authors).have.property('value').which.is.Array().with.length(2);
+        should(book.authors.value[0]).be.a.Number().equal(authorIds[0]);
+        should(book.authors.value[1]).be.a.Number().equal(authorIds[1]);
+      })
+  });
+
+  it('should be able to remove relation via model instance', function() {
+    let authorIds = null;
+
+    return Model.please().bulkCreate([Model(philipKDick), Model(charlesBukowski)])
+      .then(cleaner.mark)
+      .then((authors) => {
+        should(authors).be.an.Array().with.length(2);
+
+        authorIds = _.map(authors, (x) => x.id)
+
+        return Model({instanceName, className: 'books', title: 'Ubik', authors: authorIds}).save();
+      })
+      .then(cleaner.mark)
+      .then((book) => {
+        should(book).be.an.Object();
+        should(book).have.property('instanceName').which.is.String().equal(instanceName);
+        should(book).have.property('className').which.is.String().equal('books');
+        should(book).have.property('title').which.is.String().equal('Ubik');
+        should(book).have.property('authors').which.is.Object();
+        should(book.authors).have.property('target').which.is.String().equal('authors');
+        should(book.authors).have.property('value').which.is.Array().with.length(2);
+        should(book.authors.value[0]).be.a.Number().equal(authorIds[0]);
+        should(book.authors.value[1]).be.a.Number().equal(authorIds[1]);
+
+        return book.remove('authors', [authorIds[1]]);
+      })
+      .then((book) => {
+        should(book.authors).have.property('target').which.is.String().equal('authors');
+        should(book.authors).have.property('value').which.is.Array().with.length(1);
+        should(book.authors.value[0]).be.a.Number().equal(authorIds[0]);
       })
   });
 
