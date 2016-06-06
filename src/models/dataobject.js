@@ -65,6 +65,31 @@ const DataObjectQuerySet = stampit().compose(QuerySet).methods({
     return this;
   },
   /**
+    * Filters dataobjects by a geopoint field.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {Object} coordinates
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * DataObject.please().list({ instanceName: 'test-instace', className: 'test-class' }).near({ geopoint_field_name: { latitude: POINT_LATITUDE, longitude: POINT_LONGITUDE }}).then(function(dataobjects) {});
+
+    * @example {@lang javascript}
+    * DataObject.please().list({ instanceName: 'test-instace', className: 'test-class' }).near({ geopoint_field_name: { latitude: POINT_LATITUDE, longitude: POINT_LONGITUDE, distance_in_kilometers: DISTANCE_IN_KILOMETERS }}).then(function(dataobjects) {});
+
+    * @example {@lang javascript}
+    * DataObject.please().list({ instanceName: 'test-instace', className: 'test-class' }).near({ geopoint_field_name: { latitude: POINT_LATITUDE, longitude: POINT_LONGITUDE, distance_in_miles: DISTANCE_IN_MILES }}).then(function(dataobjects) {});
+
+    */
+  near(object = {}) {
+    const query = {};
+    query[_.keys(object)[0]] = { _near: object[_.keys(object)[0]]};
+    this.query['query'] = JSON.stringify(query);
+    return this;
+  },
+  /**
     * Returns DataObject count.
 
     * @memberOf QuerySet
