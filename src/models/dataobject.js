@@ -86,8 +86,7 @@ const DataObjectQuerySet = stampit().compose(QuerySet).methods({
   near(object = {}) {
     const query = {};
     query[_.keys(object)[0]] = { _near: object[_.keys(object)[0]]};
-    this.query['query'] = JSON.stringify(query);
-    return this;
+    return this.filter(query);
   },
   /**
     * Returns DataObject count.
