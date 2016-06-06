@@ -46,8 +46,8 @@ describe('Dataobject', function() {
     name: 'books',
     instanceName,
     schema: [
-      { name: 'title', type: 'string', filter_index: true },
-      { name: 'authors', type: 'relation', target: 'authors'}
+      { name: 'title', type: 'string'},
+      { name: 'authors', type: 'relation', target: 'authors', filter_index: true }
     ]
   };
   const authorsClass = {
@@ -403,6 +403,78 @@ describe('Dataobject', function() {
           should(book.authors.value[0]).be.a.Number().equal(authorIds[0]);
           should(book.authors.value[1]).be.a.Number().equal(authorIds[1]);
         });
+    });
+
+    it('should be able to filter objects by relation using #is()', function() {
+      let authorIds = null;
+      const books = [
+        Model({instanceName, className: 'books', title: 'Ubik'}),
+        Model({instanceName, className: 'books', title: 'Man in the high castle'})
+      ]
+
+      return Model.please().bulkCreate([Model(philipKDick), Model(charlesBukowski)])
+        .then(cleaner.mark)
+        .then((authors) => {
+          should(authors).be.an.Array().with.length(2);
+
+          authorIds = _.map(authors, (x) => x.id);
+
+          books[0].authors = [authorIds[0]];
+
+          return Model.please().bulkCreate(books);
+        })
+        .then(cleaner.mark)
+        .then(() => {
+
+          return Model.please().list({instanceName, className: 'books'}).is('authors', { name: { _eq: 'Philip K Dick'}})
+        })
+        .then((books) => {
+          should(books).be.an.Array().with.length(1);
+          should(books[0]).be.an.Object();
+          should(books[0]).have.property('instanceName').which.is.String().equal(instanceName);
+          should(books[0]).have.property('className').which.is.String().equal('books');
+          should(books[0]).have.property('title').which.is.String().equal('Ubik');
+          should(books[0]).have.property('authors').which.is.Object();
+          should(books[0].authors).have.property('target').which.is.String().equal('authors');
+          should(books[0].authors).have.property('value').which.is.Array().with.length(1);
+          should(books[0].authors.value[0]).be.a.Number().equal(authorIds[0]);
+        })
+    });
+
+    it('should be able to filter objects by relation using #contains()', function() {
+      let authorIds = null;
+      const books = [
+        Model({instanceName, className: 'books', title: 'Ubik'}),
+        Model({instanceName, className: 'books', title: 'Valis'})
+      ]
+
+      return Model.please().bulkCreate([Model(philipKDick), Model(charlesBukowski)])
+        .then(cleaner.mark)
+        .then((authors) => {
+          should(authors).be.an.Array().with.length(2);
+
+          authorIds = _.map(authors, (x) => x.id);
+
+          books[1].authors = [authorIds[1]];
+
+          return Model.please().bulkCreate(books);
+        })
+        .then(cleaner.mark)
+        .then(() => {
+
+          return Model.please().list({instanceName, className: 'books'}).contains('authors', [authorIds[1]])
+        })
+        .then((books) => {
+          should(books).be.an.Array().with.length(1);
+          should(books[0]).be.an.Object();
+          should(books[0]).have.property('instanceName').which.is.String().equal(instanceName);
+          should(books[0]).have.property('className').which.is.String().equal('books');
+          should(books[0]).have.property('title').which.is.String().equal('Valis');
+          should(books[0]).have.property('authors').which.is.Object();
+          should(books[0].authors).have.property('target').which.is.String().equal('authors');
+          should(books[0].authors).have.property('value').which.is.Array().with.length(1);
+          should(books[0].authors.value[0]).be.a.Number().equal(authorIds[1]);
+        })
     });
 
     it('should be able to remove relation', function() {

@@ -65,6 +65,44 @@ const DataObjectQuerySet = stampit().compose(QuerySet).methods({
     return this;
   },
   /**
+    * Filters DataObjects using _is.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {String} field name
+    * @param {Object} filters
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * DataObject.please().list({instanceName: 'my-instance', className: 'books'}).is('authors', { name: { _eq: 'Stephen King'}})
+
+    */
+  is(field, object = {}) {
+    const query = {};
+    query[field] = { _is: object};
+    return this.filter(query);
+  },
+  /**
+    * Filters DataObjects using _contains.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {String} field name
+    * @param {Array} array of ids
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * DataObject.please().list({instanceName: 'my-instance', className: 'books'}).contains('authors', [1, 2, 3])
+
+    */
+  contains(field, array = []) {
+    const query = {};
+    query[field] = { _contains: array};
+    return this.filter(query);
+  },
+  /**
   * Subtracts an array from an array field.
 
   * @memberOf QuerySet
