@@ -41,7 +41,55 @@ const DataObjectQuerySet = stampit().compose(QuerySet).methods({
     return this;
   },
   /**
-  * Updates single object based on provided arguments
+  * Adds an array to an array field.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} field to add to.
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DataObject.please().add({instanceName: 'my-instance', className: 'my-class', id: 1}, {array_field: [1,2]})
+
+  */
+  add(properties = {}, object = {}) {
+    const payload = {};
+    payload[_.keys(object)[0]] = { _add: object[_.keys(object)[0]] };
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = JSON.stringify(payload);
+
+    this.method = 'PATCH';
+    this.endpoint = 'detail';
+    return this;
+  },
+  /**
+  * Subtracts an array from an array field.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} field to subtract from.
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DataObject.please().remove({instanceName: 'my-instance', className: 'my-class', id: 1}, {array_field: [1,2]})
+
+  */
+  remove(properties = {}, object = {}) {
+    const payload = {};
+    payload[_.keys(object)[0]] = { _remove: object[_.keys(object)[0]] };
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = JSON.stringify(payload);
+
+    this.method = 'PATCH';
+    this.endpoint = 'detail';
+    return this;
+  },
+  /**
+  * Increments single object based on provided arguments
 
   * @memberOf QuerySet
   * @instance
@@ -184,6 +232,20 @@ const DataObject = stampit()
   .compose(Model)
   .setMeta(DataObjectMeta)
   .methods({
+    /**
+    * Increments single object field based on provided arguments
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {String} field name.
+    * @param {Number} value to increment the field by,
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * Object.increment('views', 1);
+
+    */
     increment(field, by) {
       if(!_.isNumber(this[field])) return Promise.reject(new Error(`The ${field} is not numeric.`));
       if(!_.isNumber(by)) return Promise.reject(new Error('The provided value is not numeric.'));
@@ -192,7 +254,20 @@ const DataObject = stampit()
 
       return this.save();
     },
+    /**
+    * Adds an array to an array field.
 
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {String} field name.
+    * @param {Array} array to add to the field.
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * Object.add('authors', [1,2,3]);
+
+    */
     add(field, array) {
       if(!_.isArray(this[field].value)) return Promise.reject(new Error(`The ${field} is not an array.`));
       if(!_.isArray(array)) return Promise.reject(new Error('The provided value is not an array.'));
@@ -201,7 +276,20 @@ const DataObject = stampit()
 
       return this.save();
     },
+    /**
+    * Subtracts an array from an array field.
 
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {String} field name.
+    * @param {Array} array to subtract from the field.
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * Object.remove('authors', [1]);
+
+    */
     remove(field, array) {
       if(!_.isArray(this[field].value)) return Promise.reject(new Error(`The ${field} is not an array.`));
       if(!_.isArray(array)) return Promise.reject(new Error('The provided value is not an array.'));

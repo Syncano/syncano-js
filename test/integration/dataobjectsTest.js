@@ -343,6 +343,101 @@ describe('Dataobject', function() {
       });
     });
 
+    it('should be able to create a model with a relation field', function() {
+      let authorId = null;
+
+      return Model.please().create(philipKDick)
+        .then(cleaner.mark)
+        .then((author) => {
+          should(author).be.an.Object();
+          should(author).have.property('instanceName').which.is.String().equal(philipKDick.instanceName);
+          should(author).have.property('className').which.is.String().equal(philipKDick.className);
+          should(author).have.property('name').which.is.String().equal(philipKDick.name);
+          should(author).have.property('year_born').which.is.Number().equal(philipKDick.year_born);
+
+          authorId = author.id;
+
+          return Model.please().create({instanceName, className: 'books', title: 'Ubik', authors: [author.id]})
+        })
+        .then(cleaner.mark)
+        .then((book) => {
+          should(book).be.an.Object();
+          should(book).have.property('instanceName').which.is.String().equal(instanceName);
+          should(book).have.property('className').which.is.String().equal('books');
+          should(book).have.property('title').which.is.String().equal('Ubik');
+          should(book).have.property('authors').which.is.Object();
+          should(book.authors).have.property('target').which.is.String().equal('authors');
+          should(book.authors).have.property('value').which.is.Array().with.length(1);
+          should(book.authors.value[0]).be.a.Number().equal(authorId);
+        })
+    });
+
+    it('should be able to add relation', function() {
+      let authorIds = null;
+
+      return Model.please().bulkCreate([Model(philipKDick), Model(charlesBukowski)])
+        .then(cleaner.mark)
+        .then((authors) => {
+          should(authors).be.an.Array().with.length(2);
+
+          authorIds = _.map(authors, (x) => x.id)
+
+          return Model.please().create({instanceName, className: 'books', title: 'Ubik', authors: [authorIds[0]]});
+        })
+        .then(cleaner.mark)
+        .then((book) => {
+          should(book).be.an.Object();
+          should(book).have.property('instanceName').which.is.String().equal(instanceName);
+          should(book).have.property('className').which.is.String().equal('books');
+          should(book).have.property('title').which.is.String().equal('Ubik');
+          should(book).have.property('authors').which.is.Object();
+          should(book.authors).have.property('target').which.is.String().equal('authors');
+          should(book.authors).have.property('value').which.is.Array().with.length(1);
+          should(book.authors.value[0]).be.a.Number().equal(authorIds[0]);
+
+          return Model.please().add({id: book.id, instanceName, className: 'books'}, { authors: [authorIds[1]]});
+        })
+        .then((book) => {
+          should(book.authors).have.property('target').which.is.String().equal('authors');
+          should(book.authors).have.property('value').which.is.Array().with.length(2);
+          should(book.authors.value[0]).be.a.Number().equal(authorIds[0]);
+          should(book.authors.value[1]).be.a.Number().equal(authorIds[1]);
+        });
+    });
+
+    it('should be able to remove relation', function() {
+      let authorIds = null;
+
+      return Model.please().bulkCreate([Model(philipKDick), Model(charlesBukowski)])
+        .then(cleaner.mark)
+        .then((authors) => {
+          should(authors).be.an.Array().with.length(2);
+
+          authorIds = _.map(authors, (x) => x.id)
+
+          return Model.please().create({instanceName, className: 'books', title: 'Ubik', authors: authorIds});
+        })
+        .then(cleaner.mark)
+        .then((book) => {
+          should(book).be.an.Object();
+          should(book).have.property('instanceName').which.is.String().equal(instanceName);
+          should(book).have.property('className').which.is.String().equal('books');
+          should(book).have.property('title').which.is.String().equal('Ubik');
+          should(book).have.property('authors').which.is.Object();
+          should(book.authors).have.property('target').which.is.String().equal('authors');
+          should(book.authors).have.property('value').which.is.Array().with.length(2);
+          should(book.authors.value[0]).be.a.Number().equal(authorIds[0]);
+          should(book.authors.value[1]).be.a.Number().equal(authorIds[1]);
+
+          return Model.please().remove({id: book.id, instanceName, className: 'books'}, { authors: [authorIds[1]]});
+        })
+        .then((book) => {
+          should(book.authors).have.property('target').which.is.String().equal('authors');
+          should(book.authors).have.property('value').which.is.Array().with.length(1);
+          should(book.authors.value[0]).be.a.Number().equal(authorIds[0]);
+        });
+    });
+
     it('should be able to list objects near coordinates', function() {
       return Model.please().create(location1)
         .then(cleaner.mark)
