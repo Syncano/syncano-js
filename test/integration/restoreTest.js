@@ -4,7 +4,7 @@ import mlog from 'mocha-logger';
 import {suffix, credentials} from './utils';
 
 describe('Restore', function() {
-  this.timeout(25000);
+  this.timeout(65000);
 
   let connection = null;
   let Instance = null;
@@ -32,9 +32,9 @@ describe('Restore', function() {
       .then(() => FullBackup.please().create(backupData))
       .then((backup) => {
         backupId = backup.id;
-        mlog.pending('Waiting 10 sec for backup to finish...');
+        mlog.pending('Waiting 50 sec for backup to finish...');
         return new Promise((resolve) => {
-          setInterval(() => resolve(), 10000);
+          setInterval(() => resolve(), 50000);
         });
       });
   });
