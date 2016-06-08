@@ -62,7 +62,7 @@ describe('PartialBackup', function() {
     should(PartialBackup({instanceName, query_args: 123}).save()).be.rejectedWith(/query_args/);
   });
 
-  it('should be able to save via model instance', function() {
+  xit('should be able to save via model instance', function() {
     return PartialBackup(data).save()
       .then((backup) => {
         should(backup).be.an.Object();

@@ -57,7 +57,7 @@ describe('FullBackup', function() {
     should(FullBackup({instanceName, label: 123}).save()).be.rejectedWith(/label/);
   });
 
-  it('should be able to save via model instance', function() {
+  xit('should be able to save via model instance', function() {
     return FullBackup(data).save()
       .then((backup) => {
         should(backup).be.an.Object();
