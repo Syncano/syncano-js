@@ -30,9 +30,9 @@ describe('FullBackup', function() {
       .then(() => FullBackup.please().create(data))
       .then((backup) => {
         backupId = backup.id;
-        mlog.pending('Waiting 30 sec for backup to finish...');
+        mlog.pending('Waiting 50 sec for backup to finish...');
         return new Promise((resolve) => {
-          setInterval(() => resolve(), 30000);
+          setInterval(() => resolve(), 50000);
         });
       });
   });
@@ -122,9 +122,9 @@ describe('FullBackup', function() {
           should(backup).have.property('author').which.is.Object();
         })
         .then(() => {
-          mlog.pending('Waiting 30 sec for backup to finish...');
+          mlog.pending('Waiting 50 sec for backup to finish...');
           return new Promise((resolve) => {
-            setInterval(() => resolve(), 30000);
+            setInterval(() => resolve(), 50000);
           });
         });
     });
