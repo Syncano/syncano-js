@@ -375,21 +375,59 @@ describe('User', function() {
         });
     });
 
-    // it('should be able to do a social login', function() {
-    //   return Model.please().create(data)
-    //     .then(cleaner.mark)
-    //     .then((object) => {
-    //       should(object).be.a.Object();
-    //       should(object).have.property('instanceName').which.is.String().equal(instanceName);
-    //       should(object).have.property('profile').which.is.Object();
-    //       should(object).have.property('links').which.is.Object();
-    //       should(object).have.property('groups').which.is.Array();
-    //       should(object).have.property('username').which.is.String().equal(data.username);
-    //       should(object).have.property('user_key').which.is.String();
+    it('should be able get currently logged in user details', function() {
+      return connection.ApiKey.please().create({instanceName, allow_user_create: true})
+        .then(cleaner.mark)
+        .then((apiKey) => {
+          connection.setAccountKey('');
+          connection.setApiKey(apiKey.api_key);
 
-    //       return Model.please().socialLogin({instanceName, backend: 'facebbok'}, {access_token: '123'});
-    //     });
-    // });
+          return Model.please().create(data);
+        })
+        .then(cleaner.mark)
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('profile').which.is.Object();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('groups').which.is.Array();
+          should(object).have.property('username').which.is.String().equal(data.username);
+          should(object).have.property('user_key').which.is.String();
+
+          return Model.please().login(data, data);
+        })
+        .then(() => {
+          return Model.please().get({instanceName});
+        })
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('profile').which.is.Object();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('groups').which.is.Array();
+          should(object).have.property('username').which.is.String().equal(data.username);
+          should(object).have.property('user_key').which.is.String();
+
+          connection.setAccountKey(credentials.accountKey);
+          connection.setApiKey('');
+        });
+    });
+
+    xit('should be able to do a social login', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((object) => {
+          should(object).be.a.Object();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('profile').which.is.Object();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('groups').which.is.Array();
+          should(object).have.property('username').which.is.String().equal(data.username);
+          should(object).have.property('user_key').which.is.String();
+
+          return Model.please().socialLogin({instanceName, backend: 'facebbok'}, {access_token: '123'});
+        });
+    });
 
     it('should be able to get groups', function() {
       return Model.please().create(data)

@@ -186,12 +186,16 @@ const UserQuerySet = stampit().compose(
 
   */
   login(properties = {}, credentials = {}) {
+    const config = this.getConfig();
     this.properties = _.assign({}, this.properties, properties);
     this.method = 'POST';
     this.endpoint = 'login';
     this.payload = credentials;
 
-    return this;
+    return this.then((response) => {
+      config.setUserKey(response.user_key);
+      return this.model.fromJSON(response, this.properties);
+    });
   },
 
   /**
