@@ -5,7 +5,7 @@ import {suffix, credentials} from './utils';
 import {ValidationError} from '../../src/errors';
 
 describe('PartialBackup', function() {
-  this.timeout(25000);
+  this.timeout(65000);
 
   let connection = null;
   let backupId = null;
@@ -31,9 +31,9 @@ describe('PartialBackup', function() {
       .then(() => PartialBackup.please().create(data))
       .then((backup) => {
         backupId = backup.id;
-        mlog.pending('Waiting 10 sec for backup to finish...');
+        mlog.pending('Waiting 30 sec for backup to finish...');
         return new Promise((resolve) => {
-          setInterval(() => resolve(), 10000);
+          setInterval(() => resolve(), 30000);
         });
       });
   });
@@ -62,25 +62,23 @@ describe('PartialBackup', function() {
     should(PartialBackup({instanceName, query_args: 123}).save()).be.rejectedWith(/query_args/);
   });
 
-  // Sometimes this test causes fail because we can have only one active backup running at once.
-
-  // it('should be able to save via model instance', function() {
-  //   return PartialBackup(data).save()
-  //     .then((backup) => {
-  //       should(backup).be.an.Object();
-  //       should(backup).have.property('id').which.is.Number();
-  //       should(backup).have.property('instance').which.is.String().equal(data.instanceName);
-  //       should(backup).have.property('created_at').which.is.Date();
-  //       should(backup).have.property('updated_at').which.is.Date();
-  //       should(backup).have.property('archive').which.is.null();
-  //       should(backup).have.property('size').which.is.null();
-  //       should(backup).have.property('status').which.is.String().equal('scheduled');
-  //       should(backup).have.property('status_info').which.is.String();
-  //       should(backup).have.property('description').which.is.String().equal(data.description);
-  //       should(backup).have.property('label').which.is.String().equal(data.label);
-  //       should(backup).have.property('links').which.is.Object();
-  //     });
-  // });
+  it('should be able to save via model instance', function() {
+    return PartialBackup(data).save()
+      .then((backup) => {
+        should(backup).be.an.Object();
+        should(backup).have.property('id').which.is.Number();
+        should(backup).have.property('instance').which.is.String().equal(data.instanceName);
+        should(backup).have.property('created_at').which.is.Date();
+        should(backup).have.property('updated_at').which.is.Date();
+        should(backup).have.property('archive').which.is.null();
+        should(backup).have.property('size').which.is.null();
+        should(backup).have.property('status').which.is.String().equal('scheduled');
+        should(backup).have.property('status_info').which.is.String();
+        should(backup).have.property('description').which.is.String().equal(data.description);
+        should(backup).have.property('label').which.is.String().equal(data.label);
+        should(backup).have.property('links').which.is.Object();
+      });
+  });
 
   describe('#please()', function() {
 
@@ -131,9 +129,9 @@ describe('PartialBackup', function() {
           should(backup).have.property('author').which.is.Object();
         })
         .then(() => {
-          mlog.pending('Waiting 10 sec for backup to finish...');
+        mlog.pending('Waiting 30 sec for backup to finish...');
           return new Promise((resolve) => {
-            setInterval(() => resolve(), 10000);
+            setInterval(() => resolve(), 30000);
           });
         });
     });
