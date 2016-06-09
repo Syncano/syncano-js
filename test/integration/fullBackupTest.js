@@ -77,6 +77,8 @@ describe('FullBackup', function() {
           should(backup).have.property('label').which.is.String().equal(data.label);
           should(backup).have.property('links').which.is.Object();
           should(backup).have.property('author').which.is.Object();
+
+          backupId = backup.id;
         })
         .then(() => {
           mlog.pending('Waiting 50 sec for backup to finish...');
