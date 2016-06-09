@@ -331,10 +331,10 @@ const DataObject = stampit()
 
     */
     add(field, array) {
-      if(!_.isArray(this[field].value)) return Promise.reject(new Error(`The ${field} is not an array.`));
+      if((_.has(this[field], 'value') && !_.isArray(this[field].value)) || (!_.has(this[field], 'value') && !_.isArray(this[field]))) return Promise.reject(new Error(`The ${field} is not an array.`));
       if(!_.isArray(array)) return Promise.reject(new Error('The provided value is not an array.'));
 
-      this[field] = _.concat(this[field].value, array);
+      this[field] = _.has(this[field], 'value') ? _.concat(this[field].value, array) :  _.concat(this[field], array);
 
       return this.save();
     },
@@ -353,10 +353,10 @@ const DataObject = stampit()
 
     */
     addUnique(field, array) {
-      if(!_.isArray(this[field].value)) return Promise.reject(new Error(`The ${field} is not an array.`));
+      if(!_.isArray(this[field])) return Promise.reject(new Error(`The ${field} is not an array.`));
       if(!_.isArray(array)) return Promise.reject(new Error('The provided value is not an array.'));
 
-      this[field] = _.union(this[field].value, array);
+      this[field] = _.union(this[field], array);
 
       return this.save();
     },
@@ -375,10 +375,10 @@ const DataObject = stampit()
 
     */
     remove(field, array) {
-      if(!_.isArray(this[field].value)) return Promise.reject(new Error(`The ${field} is not an array.`));
+      if((_.has(this[field], 'value') && !_.isArray(this[field].value)) || (!_.has(this[field], 'value') && !_.isArray(this[field]))) return Promise.reject(new Error(`The ${field} is not an array.`));
       if(!_.isArray(array)) return Promise.reject(new Error('The provided value is not an array.'));
 
-      this[field] = _.difference(this[field].value, array);
+      this[field] = _.has(this[field], 'value') ? _.difference(this[field].value, array) : _.difference(this[field], array);
 
       return this.save();
     }
