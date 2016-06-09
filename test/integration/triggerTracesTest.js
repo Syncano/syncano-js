@@ -4,7 +4,7 @@ import {ValidationError} from '../../src/errors';
 import {suffix, credentials} from './utils';
 
 
-describe('TriggerTrace', function() {
+describe.skip('TriggerTrace', function() {
   this.timeout(15000);
 
   let connection = null;
