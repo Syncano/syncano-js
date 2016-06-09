@@ -27,7 +27,16 @@ describe('Restore', function() {
     Restore = connection.Restore;
     FullBackup = connection.FullBackup;
 
-    return Instance.please().create({name: instanceName})
+    return Instance.please()
+      .create({name: instanceName})
+      .then(() => FullBackup.please().create(backupData))
+      .then((backup) => {
+        backupId = backup.id;
+        mlog.pending('Waiting 50 sec for backup to finish...');
+        return new Promise((resolve) => {
+          setInterval(() => resolve(), 50000);
+        });
+      });
   });
 
   after(function() {
