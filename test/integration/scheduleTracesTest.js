@@ -5,7 +5,7 @@ import {ValidationError} from '../../src/errors';
 import {suffix, credentials} from './utils';
 
 
-describe('ScheduleTrace', function() {
+describe.skip('ScheduleTrace', function() {
   this.timeout(65000);
 
   let Instance = null;
