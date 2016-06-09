@@ -45,6 +45,42 @@ describe('Account', function() {
     should(Account).have.property('update').which.is.Function();
   });
 
+  it('has "getUserDetails" method', function() {
+    should(Account).have.property('getUserDetails').which.is.Function();
+  });
+
+  it('has "activate" method', function() {
+    should(Account).have.property('activate').which.is.Function();
+  });
+
+  it('has "changePassword" method', function() {
+    should(Account).have.property('changePassword').which.is.Function();
+  });
+
+  it('has "resetPassword" method', function() {
+    should(Account).have.property('resetPassword').which.is.Function();
+  });
+
+  it('has "confirmPasswordReset" method', function() {
+    should(Account).have.property('confirmPasswordReset').which.is.Function();
+  });
+
+  it('has "setPassword" method', function() {
+    should(Account).have.property('setPassword').which.is.Function();
+  });
+
+  it('has "resetKey" method', function() {
+    should(Account).have.property('resetKey').which.is.Function();
+  });
+
+  it('has "socialLogin" method', function() {
+    should(Account).have.property('socialLogin').which.is.Function();
+  });
+
+  it('has "resendEmail" method', function() {
+    should(Account).have.property('resendEmail').which.is.Function();
+  });
+
   describe('#register()', function() {
 
     it('should register a new user', function() {
@@ -88,7 +124,21 @@ describe('Account', function() {
         should(user).have.property('last_name').which.is.String().equal('b');
       });
     });
+  });
 
+  describe('#getUserDetails()', function() {
+
+    it('should get user data', function() {
+      return Account.getUserDetails().then((user) => {
+        should(user).be.an.Object();
+        should(user).have.property('id').which.is.Number();
+        should(user).have.property('first_name').which.is.String().equal('a');
+        should(user).have.property('last_name').which.is.String().equal('b');
+        should(user).have.property('is_active').which.is.false();
+        should(user).have.property('email').which.is.String();
+        should(user).have.property('has_password').which.is.true();
+      });
+    });
   });
 
 });

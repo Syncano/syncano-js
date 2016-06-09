@@ -41,7 +41,117 @@ const DataObjectQuerySet = stampit().compose(QuerySet).methods({
     return this;
   },
   /**
-  * Updates single object based on provided arguments
+  * Adds an array to an array field.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} field to add to.
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DataObject.please().add({instanceName: 'my-instance', className: 'my-class', id: 1}, {array_field: [1,2]})
+
+  */
+  add(properties = {}, object = {}) {
+    const payload = {};
+    payload[_.keys(object)[0]] = { _add: object[_.keys(object)[0]] };
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = JSON.stringify(payload);
+
+    this.method = 'PATCH';
+    this.endpoint = 'detail';
+    return this;
+  },
+  /**
+  * Adds an array to an array field without duplicate values.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} field to add to.
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DataObject.please().add({instanceName: 'my-instance', className: 'my-class', id: 1}, {array_field: [1,2]})
+
+  */
+  addUnique(properties = {}, object = {}) {
+    const payload = {};
+    payload[_.keys(object)[0]] = { _addunique: object[_.keys(object)[0]] };
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = JSON.stringify(payload);
+
+    this.method = 'PATCH';
+    this.endpoint = 'detail';
+    return this;
+  },
+  /**
+    * Filters DataObjects using _is.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {String} field name
+    * @param {Object} filters
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * DataObject.please().list({instanceName: 'my-instance', className: 'books'}).is('authors', { name: { _eq: 'Stephen King'}})
+
+    */
+  is(field, object = {}) {
+    const query = {};
+    query[field] = { _is: object};
+    return this.filter(query);
+  },
+  /**
+    * Filters DataObjects using _contains.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {String} field name
+    * @param {Array} array of ids
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * DataObject.please().list({instanceName: 'my-instance', className: 'books'}).contains('authors', [1, 2, 3])
+
+    */
+  contains(field, array = []) {
+    const query = {};
+    query[field] = { _contains: array};
+    return this.filter(query);
+  },
+  /**
+  * Subtracts an array from an array field.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} field to subtract from.
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DataObject.please().remove({instanceName: 'my-instance', className: 'my-class', id: 1}, {array_field: [1,2]})
+
+  */
+  remove(properties = {}, object = {}) {
+    const payload = {};
+    payload[_.keys(object)[0]] = { _remove: object[_.keys(object)[0]] };
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = JSON.stringify(payload);
+
+    this.method = 'PATCH';
+    this.endpoint = 'detail';
+    return this;
+  },
+  /**
+  * Increments single object based on provided arguments
 
   * @memberOf QuerySet
   * @instance
@@ -63,6 +173,30 @@ const DataObjectQuerySet = stampit().compose(QuerySet).methods({
     this.method = 'PATCH';
     this.endpoint = 'detail';
     return this;
+  },
+  /**
+    * Filters dataobjects by a geopoint field.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {Object} coordinates
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * DataObject.please().list({ instanceName: 'test-instace', className: 'test-class' }).near({ geopoint_field_name: { latitude: POINT_LATITUDE, longitude: POINT_LONGITUDE }}).then(function(dataobjects) {});
+
+    * @example {@lang javascript}
+    * DataObject.please().list({ instanceName: 'test-instace', className: 'test-class' }).near({ geopoint_field_name: { latitude: POINT_LATITUDE, longitude: POINT_LONGITUDE, distance_in_kilometers: DISTANCE_IN_KILOMETERS }}).then(function(dataobjects) {});
+
+    * @example {@lang javascript}
+    * DataObject.please().list({ instanceName: 'test-instace', className: 'test-class' }).near({ geopoint_field_name: { latitude: POINT_LATITUDE, longitude: POINT_LONGITUDE, distance_in_miles: DISTANCE_IN_MILES }}).then(function(dataobjects) {});
+
+    */
+  near(object = {}) {
+    const query = {};
+    query[_.keys(object)[0]] = { _near: object[_.keys(object)[0]]};
+    return this.filter(query);
   },
   /**
     * Returns DataObject count.
@@ -160,11 +294,91 @@ const DataObject = stampit()
   .compose(Model)
   .setMeta(DataObjectMeta)
   .methods({
+    /**
+    * Increments single object field based on provided arguments
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {String} field name.
+    * @param {Number} value to increment the field by,
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * Object.increment('views', 1);
+
+    */
     increment(field, by) {
       if(!_.isNumber(this[field])) return Promise.reject(new Error(`The ${field} is not numeric.`));
       if(!_.isNumber(by)) return Promise.reject(new Error('The provided value is not numeric.'));
 
       this[field] += _.add(this[field], by);
+
+      return this.save();
+    },
+    /**
+    * Adds an array to an array field.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {String} field name.
+    * @param {Array} array to add to the field.
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * Object.add('authors', [1,2,3]);
+
+    */
+    add(field, array) {
+      if(!_.isArray(this[field].value)) return Promise.reject(new Error(`The ${field} is not an array.`));
+      if(!_.isArray(array)) return Promise.reject(new Error('The provided value is not an array.'));
+
+      this[field] = _.concat(this[field].value, array);
+
+      return this.save();
+    },
+    /**
+    * Adds an array to an array field without duplicate values.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {String} field name.
+    * @param {Array} array to add to the field.
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * Object.add('authors', [1,2,3]);
+
+    */
+    addUnique(field, array) {
+      if(!_.isArray(this[field].value)) return Promise.reject(new Error(`The ${field} is not an array.`));
+      if(!_.isArray(array)) return Promise.reject(new Error('The provided value is not an array.'));
+
+      this[field] = _.union(this[field].value, array);
+
+      return this.save();
+    },
+    /**
+    * Subtracts an array from an array field.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {String} field name.
+    * @param {Array} array to subtract from the field.
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * Object.remove('authors', [1]);
+
+    */
+    remove(field, array) {
+      if(!_.isArray(this[field].value)) return Promise.reject(new Error(`The ${field} is not an array.`));
+      if(!_.isArray(array)) return Promise.reject(new Error('The provided value is not an array.'));
+
+      this[field] = _.difference(this[field].value, array);
 
       return this.save();
     }
