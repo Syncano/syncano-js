@@ -4,7 +4,7 @@ import Syncano from '../../src/syncano';
 import {suffix, credentials} from './utils';
 import {ValidationError} from '../../src/errors';
 
-describe('PartialBackup', function() {
+describe.skip('PartialBackup', function() {
   this.timeout(65000);
 
   let connection = null;

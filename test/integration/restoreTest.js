@@ -3,7 +3,7 @@ import Syncano from '../../src/syncano';
 import mlog from 'mocha-logger';
 import {suffix, credentials} from './utils';
 
-describe('Restore', function() {
+describe.skip('Restore', function() {
   this.timeout(65000);
 
   let connection = null;
