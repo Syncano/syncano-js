@@ -1,6 +1,6 @@
 {
   "name": "syncano",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "A library to intereact with the Syncano API.",
   "main": "lib/syncano.js",
   "author": "Kelly Andrews",
