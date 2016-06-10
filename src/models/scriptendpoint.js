@@ -12,14 +12,18 @@ const ScriptEndpointQuerySet = stampit().compose(QuerySet).methods({
   * @instance
 
   * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} payload the payload to be sent
+  * @param {String}  cache_key the cache key for the result
   * @returns {Promise}
 
   * @example {@lang javascript}
   * ScriptEndpoint.please().run({name: 'test', instanceName: 'test-one'}).then(function(trace) {});
 
   */
-  run(properties = {}, payload = {}) {
+  run(properties = {}, payload = {}, cache_key) {
     const {ScriptEndpointTrace} = this.getConfig();
+
+    if(!_.isEmpty(cache_key)) this.query['cache_key'] = cache_key;
 
     this.properties = _.assign({}, this.properties, properties);
     this.method = 'POST';
@@ -41,14 +45,18 @@ const ScriptEndpointQuerySet = stampit().compose(QuerySet).methods({
   * @instance
 
   * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} payload the payload to be sent
+  * @param {String}  cache_key the cache key for the result
   * @returns {Promise}
 
   * @example {@lang javascript}
   * ScriptEndpoint.please().runPublic({public_link: '44cfc5552eacc', instanceName: 'test-one'}).then(function(trace) {});
 
   */
-  runPublic(properties = {}, payload = {}) {
+  runPublic(properties = {}, payload = {}, cache_key) {
     const {ScriptEndpointTrace} = this.getConfig();
+
+    if(!_.isEmpty(cache_key)) this.query['cache_key'] = cache_key;
 
     this.properties = _.assign({}, this.properties, properties);
     this.method = 'POST';
@@ -174,10 +182,12 @@ const ScriptEndpoint = stampit()
         codebox.run({some: 'variable'}).then(function(trace) {});
       });
     */
-    run(payload = {}) {
+    run(payload = {}, cache_key) {
       const {ScriptEndpointTrace} = this.getConfig();
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('run', this);
+
+      if(!_.isEmpty(cache_key)) _.assign(payload, { query: {cache_key} })
 
       return this.makeRequest('POST', path, {payload})
         .then((body) => {
@@ -201,12 +211,14 @@ const ScriptEndpoint = stampit()
         codebox.runPublic({some: 'variable'}).then(function(trace) {});
       });
     */
-    runPublic(payload = {}) {
+    runPublic(payload = {}, cache_key) {
       const {ScriptEndpointTrace} = this.getConfig();
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('public', this);
 
-      return this.makeRequest('POST', path, {payload})
+      if(!_.isEmpty(cache_key)) _.assign(payload, { query: {cache_key} })
+
+      return this.makeRequest('POST', path, {payload}, cache_key)
         .then((body) => {
           return ScriptEndpointTrace.fromJSON(body, {
             instanceName: this.instanceName,
