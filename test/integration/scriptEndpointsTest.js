@@ -499,7 +499,7 @@ describe('ScriptEndpoint', function() {
           should(scriptendpoint).have.property('script').which.is.Number().equal(ModelData.script);
           should(scriptendpoint).have.property('links').which.is.Object();
 
-          return Model.please().run(scriptendpoint, {}, '123');
+          return Model.please().run(scriptendpoint).cacheKey('123');
         }).then((trace) => {
           should(trace).be.a.Object();
           should(trace).have.property('id').which.is.Number();
@@ -544,7 +544,7 @@ describe('ScriptEndpoint', function() {
         should(scriptendpoint).have.property('script').which.is.Number().equal(ModelData.script);
         should(scriptendpoint).have.property('links').which.is.Object();
 
-        return Model.please().runPublic(scriptendpoint, {}, '123');
+        return Model.please().runPublic(scriptendpoint).cacheKey('123');
       }).then((trace) => {
         should(trace).be.a.Object();
         should(trace).have.property('id').which.is.Number();

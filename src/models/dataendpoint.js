@@ -12,17 +12,14 @@ const DataEndpointQerySet = stampit().compose(QuerySet).methods({
   * @instance
 
   * @param {Object} properties lookup properties used for path resolving
-  * @param {String} cache_key the cache key for the result
   * @returns {DataEndpointQerySet}
 
   * @example {@lang javascript}
   * DataEndpoint.please().fetchData({name: 'dataViewName', instanceName: 'test-one'}).then(function(dataObjects) {});
 
   */
-  fetchData(properties = {}, cache_key) {
+  fetchData(properties = {}) {
     this.properties = _.assign({}, this.properties, properties);
-
-    if(!_.isEmpty(cache_key)) this.query['cache_key'] = cache_key;
 
     this.method = 'GET';
     this.endpoint = 'get';

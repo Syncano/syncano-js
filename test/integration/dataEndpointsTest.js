@@ -284,7 +284,7 @@ describe('DataEndpoint', function() {
         });
     });
 
-    it('should be able to fetch DataObjects with cache key', function() {
+    it('should be able to fetch DataObjects with cache_key', function() {
       return Promise
         .mapSeries(_.range(10), (int) => dataObject({className, instanceName, int}).save())
         .then(cleaner.mark)
@@ -302,7 +302,7 @@ describe('DataEndpoint', function() {
         .then(() => {
           return Model
             .please()
-            .fetchData({name: dataEndpointName, instanceName}, '123')
+            .fetchData({name: dataEndpointName, instanceName}).cacheKey('123')
         })
         .then((data) => {
           should(data).be.an.Object();

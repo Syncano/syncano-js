@@ -13,17 +13,14 @@ const ScriptEndpointQuerySet = stampit().compose(QuerySet).methods({
 
   * @param {Object} properties lookup properties used for path resolving
   * @param {Object} payload the payload to be sent
-  * @param {String}  cache_key the cache key for the result
   * @returns {Promise}
 
   * @example {@lang javascript}
   * ScriptEndpoint.please().run({name: 'test', instanceName: 'test-one'}).then(function(trace) {});
 
   */
-  run(properties = {}, payload = {}, cache_key) {
+  run(properties = {}, payload = {}) {
     const {ScriptEndpointTrace} = this.getConfig();
-
-    if(!_.isEmpty(cache_key)) this.query['cache_key'] = cache_key;
 
     this.properties = _.assign({}, this.properties, properties);
     this.method = 'POST';
@@ -46,17 +43,14 @@ const ScriptEndpointQuerySet = stampit().compose(QuerySet).methods({
 
   * @param {Object} properties lookup properties used for path resolving
   * @param {Object} payload the payload to be sent
-  * @param {String}  cache_key the cache key for the result
   * @returns {Promise}
 
   * @example {@lang javascript}
   * ScriptEndpoint.please().runPublic({public_link: '44cfc5552eacc', instanceName: 'test-one'}).then(function(trace) {});
 
   */
-  runPublic(properties = {}, payload = {}, cache_key) {
+  runPublic(properties = {}, payload = {}) {
     const {ScriptEndpointTrace} = this.getConfig();
-
-    if(!_.isEmpty(cache_key)) this.query['cache_key'] = cache_key;
 
     this.properties = _.assign({}, this.properties, properties);
     this.method = 'POST';
