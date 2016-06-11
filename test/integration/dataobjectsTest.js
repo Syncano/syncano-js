@@ -446,7 +446,7 @@ describe('Dataobject', function() {
       });
     });
 
-    it('should be able to save with an array field via model instance', function() {
+    it('should be able to save with an array field', function() {
       return Model.please().create({ instanceName, className: arrayClass.name, name: 'John', numbers: [1, 2, 3, 4, 5]})
         .then(cleaner.mark)
         .then((object) => {
@@ -466,7 +466,7 @@ describe('Dataobject', function() {
         })
     });
 
-    it('should be able to add array elements via model instance', function() {
+    it('should be able to add array elements', function() {
       return Model.please().create({ instanceName, className: arrayClass.name, name: 'John', numbers: [1, 2, 3, 4, 5]})
         .then(cleaner.mark)
         .then((object) => {
@@ -491,7 +491,7 @@ describe('Dataobject', function() {
         });
     });
 
-    it('should be able to remove array elements via model instance', function() {
+    it('should be able to remove array elements', function() {
       return Model.please().create({ instanceName, className: arrayClass.name, name: 'John', numbers: [1, 2, 3, 4, 5]})
         .then(cleaner.mark)
         .then((object) => {
@@ -516,7 +516,7 @@ describe('Dataobject', function() {
         });
     });
 
-    it('should be able to add unique array elements via model instance', function() {
+    it('should be able to add unique array elements', function() {
       return Model.please().create({ instanceName, className: arrayClass.name, name: 'John', numbers: [1, 2, 3, 4, 5]})
         .then(cleaner.mark)
         .then((object) => {
