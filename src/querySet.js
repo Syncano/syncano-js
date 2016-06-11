@@ -777,7 +777,8 @@ const QuerySet = stampit.compose(
   Fields,
   ExcludedFields,
   Raw,
-  TemplateResponse
+  TemplateResponse,
+  CacheKey
 );
 
 export const BaseQuerySet = stampit.compose(
@@ -788,8 +789,7 @@ export const BaseQuerySet = stampit.compose(
   Ordering,
   First,
   PageSize,
-  TemplateResponse,
-  CacheKey
+  TemplateResponse
 );
 
 export default QuerySet;
