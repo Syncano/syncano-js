@@ -260,7 +260,7 @@ const CacheKey = stampit().methods({
 
   cacheKey(cache_key) {
     this.query['cache_key'] = cache_key;
-    return this
+    return this;
   }
 });
 

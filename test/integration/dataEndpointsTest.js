@@ -302,7 +302,8 @@ describe('DataEndpoint', function() {
         .then(() => {
           return Model
             .please()
-            .fetchData({name: dataEndpointName, instanceName}).cacheKey('123')
+            .fetchData({name: dataEndpointName, instanceName})
+            .cacheKey('123')
         })
         .then((data) => {
           should(data).be.an.Object();
