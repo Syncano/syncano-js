@@ -66,6 +66,14 @@ describe('Dataobject', function() {
       { name: 'year_born', type: 'integer'}
     ]
   };
+  const objectClass = {
+    name: 'objects',
+    instanceName,
+    schema: [
+      { name: 'name', type: 'string'},
+      { name: 'someobj', type: 'object'}
+    ]
+  };
   const philipKDick = {
     instanceName,
     className: 'authors',
@@ -95,7 +103,7 @@ describe('Dataobject', function() {
     Model = connection.DataObject;
 
     return Instance.please().create({name: instanceName}).then(() => {
-      return Class.please().bulkCreate([Class(data), Class(geoPointClass), Class(authorsClass), Class(booksClass), Class(arrayClass)]);
+      return Class.please().bulkCreate([Class(data), Class(geoPointClass), Class(authorsClass), Class(booksClass), Class(arrayClass), Class(objectClass)]);
     })
   });
 
@@ -165,6 +173,27 @@ describe('Dataobject', function() {
         should(dataobj).have.property('title').which.is.String().equal('Pulp');
         should(dataobj).have.property('author').which.is.String().equal('Bukowski');
         should(dataobj).have.property('reads').which.is.Number().equal(0);
+      })
+  });
+
+  it('should be able to save with an object field via model instance', function() {
+    return Model({ instanceName, className: objectClass.name, name: 'John', someobj: { age: 18, height: 181}}).save()
+      .then(cleaner.mark)
+      .then((object) => {
+        should(object).be.a.Object();
+        should(object).have.property('id').which.is.Number();
+        should(object).have.property('instanceName').which.is.String().equal(instanceName);
+        should(object).have.property('created_at').which.is.Date();
+        should(object).have.property('updated_at').which.is.Date();
+        should(object).have.property('links').which.is.Object();
+        should(object).have.property('channel').which.is.Null();
+        should(object).have.property('owner').which.is.Null();
+        should(object).have.property('group_permissions').which.is.String().equal('none');
+        should(object).have.property('other_permissions').which.is.String().equal('none');
+        should(object).have.property('owner_permissions').which.is.String().equal('full');
+        should(object).have.property('someobj').which.is.Object();
+        should(object.someobj).have.property('age').which.is.Number().equal(18);
+        should(object.someobj).have.property('height').which.is.Number().equal(181);
       })
   });
 
