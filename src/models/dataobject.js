@@ -295,7 +295,28 @@ const DataObject = stampit()
   .setMeta(DataObjectMeta)
   .methods({
     /**
-    * Increments single object field based on provided arguments
+    * Gets related objects via relation field name.
+
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {String} field name.
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * Object.getRelatedObjects('authors');
+
+    */
+    getRelatedObjects(field) {
+      if(!_.has(this, field)) return Promise.reject(new Error(`The ${field} field does not exist.`));
+      if(!_.has(this[field], 'value') || !_.isArray(this[field].value)) return Promise.reject(new Error(`The ${field} is not a relation.`));
+
+      const {DataObject} =  this.getConfig();
+
+      return DataObject.please().list({instanceName: this.instanceName, className: this[field].target }).filter({ id: { _in: this[field].value }});
+    },
+    /**
+    * Increments single object field based on provided arguments.
 
     * @memberOf QuerySet
     * @instance
