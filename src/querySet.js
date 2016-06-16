@@ -244,6 +244,26 @@ export const Create = stampit().methods({
   }
 });
 
+const CacheKey = stampit().methods({
+  /**
+  * Sets the provided cache key in the request query.
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {String} cache_key the cache key for the result
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DataEndpoint.please().DataEndpoint.please().fetchData({name: 'dataViewName', instanceName: 'test-one'}).cacheKey('123').then(function(data) {});
+
+  */
+
+  cacheKey(cache_key) {
+    this.query['cache_key'] = cache_key;
+    return this;
+  }
+});
+
 export const Get = stampit().methods({
 
   /**
@@ -757,7 +777,8 @@ const QuerySet = stampit.compose(
   Fields,
   ExcludedFields,
   Raw,
-  TemplateResponse
+  TemplateResponse,
+  CacheKey
 );
 
 export const BaseQuerySet = stampit.compose(

@@ -98,33 +98,6 @@ describe('DataEndpoint', function() {
     should(Model({name: dataEndpointName, instanceName, expand: 1337}).save()).be.rejectedWith(/expand/);
   });
 
-  it('should be able to fetch Data Objects', function() {
-
-    return Promise
-      .mapSeries(_.range(10), (int) => dataObject({className, instanceName, int}).save())
-      .then(cleaner.mark)
-      .then(() => {
-        return Model.please().create(data)
-      })
-      .then(cleaner.mark)
-      .then((dta) => {
-        should(dta).be.an.Object();
-      })
-      .then(() => {
-          return Model
-            .please()
-            .fetchData({name: dataEndpointName, instanceName})
-            .request();
-        })
-      .then(([data, response]) => {
-        should(response).be.an.Object();
-        should(data).be.an.Object();
-        should(data).have.property('objects').which.is.Array();
-        should(data.objects[0]).have.property('int').which.is.Number().equal(9);
-        should(data.objects.length).equal(5);
-      });
-  });
-
   it('should be able to save via model instance', function() {
     return Model(data).save()
       .then(cleaner.mark)
@@ -140,6 +113,46 @@ describe('DataEndpoint', function() {
         should(dta).have.property('expand').which.is.Null();
         should(dta).have.property('links').which.is.Object();
         should(dta).have.property('class').which.is.String().equal(data.class)
+      });
+  });
+
+  it('should be able to fetch DataObjects via model instance', function() {
+    return Promise
+      .mapSeries(_.range(10), (int) => dataObject({className, instanceName, int}).save())
+      .then(cleaner.mark)
+      .then(() => {
+        return Model(data).save();
+      })
+      .then(cleaner.mark)
+      .then((dta) => {
+        should(dta).be.an.Object();
+        return dta.fetchData();
+      })
+      .then((data) => {
+        should(data).be.an.Object();
+        should(data).have.property('objects').which.is.Array();
+        should(data.objects[0]).have.property('int').which.is.Number().equal(9);
+        should(data.objects.length).equal(5);
+      });
+  });
+
+  it('should be able to fetch DataObjects via model instance with cache_key', function() {
+    return Promise
+      .mapSeries(_.range(10), (int) => dataObject({className, instanceName, int}).save())
+      .then(cleaner.mark)
+      .then(() => {
+        return Model(data).save();
+      })
+      .then(cleaner.mark)
+      .then((dta) => {
+        should(dta).be.an.Object();
+        return dta.fetchData('123');
+      })
+      .then((data) => {
+        should(data).be.an.Object();
+        should(data).have.property('objects').which.is.Array();
+        should(data.objects[0]).have.property('int').which.is.Number().equal(9);
+        should(data.objects.length).equal(5);
       });
   });
 
@@ -198,7 +211,7 @@ describe('DataEndpoint', function() {
         });
     });
 
-    it('should be able to bulk create an objects', function() {
+    it('should be able to bulk create objects', function() {
       const objects = [
         Model(data),
         Model(_.assign({}, data, {name: `${dataEndpointName}1`}))
@@ -211,7 +224,7 @@ describe('DataEndpoint', function() {
         });
     });
 
-    it('should be able to get a Model', function() {
+    it('should be able to get model', function() {
       return Model.please().create(data)
         .then(cleaner.mark)
         .then((dta) => {
@@ -240,6 +253,63 @@ describe('DataEndpoint', function() {
           should(dta).have.property('expand').which.is.Null();
           should(dta).have.property('links').which.is.Object();
           should(dta).have.property('class').which.is.String().equal(data.class)
+        });
+    });
+
+    it('should be able to fetch DataObjects', function() {
+      return Promise
+        .mapSeries(_.range(10), (int) => dataObject({className, instanceName, int}).save())
+        .then(cleaner.mark)
+        .then(() => {
+            return Model.please().create(data)
+        })
+        .then(cleaner.mark)
+        .then((dta) => {
+          should(dta).be.a.Object();
+          should(dta).have.property('name').which.is.String().equal(dataEndpointName);
+          should(dta).have.property('instanceName').which.is.String().equal(instanceName);
+
+          return dta;
+        })
+        .then(() => {
+          return Model
+            .please()
+            .fetchData({name: dataEndpointName, instanceName})
+        })
+        .then((data) => {
+          should(data).be.an.Object();
+          should(data).have.property('objects').which.is.Array();
+          should(data.objects[0]).have.property('int').which.is.Number().equal(9);
+          should(data.objects.length).equal(5);
+        });
+    });
+
+    it('should be able to fetch DataObjects with cache_key', function() {
+      return Promise
+        .mapSeries(_.range(10), (int) => dataObject({className, instanceName, int}).save())
+        .then(cleaner.mark)
+        .then(() => {
+            return Model.please().create(data)
+        })
+        .then(cleaner.mark)
+        .then((dta) => {
+          should(dta).be.a.Object();
+          should(dta).have.property('name').which.is.String().equal(dataEndpointName);
+          should(dta).have.property('instanceName').which.is.String().equal(instanceName);
+
+          return dta;
+        })
+        .then(() => {
+          return Model
+            .please()
+            .fetchData({name: dataEndpointName, instanceName})
+            .cacheKey('123')
+        })
+        .then((data) => {
+          should(data).be.an.Object();
+          should(data).have.property('objects').which.is.Array();
+          should(data.objects[0]).have.property('int').which.is.Number().equal(9);
+          should(data.objects.length).equal(5);
         });
     });
 

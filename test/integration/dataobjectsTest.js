@@ -41,7 +41,15 @@ describe('Dataobject', function() {
       { name: "location_name", type: "string" },
       { name: "coordinates", type: "geopoint", "filter_index": true }
     ]
-  }
+  };
+  const arrayClass = {
+    name: 'arrays',
+    instanceName,
+    schema: [
+      { name: 'name', type: 'string'},
+      { name: 'numbers', type: 'array'}
+    ]
+  };
   const booksClass = {
     name: 'books',
     instanceName,
@@ -56,6 +64,14 @@ describe('Dataobject', function() {
     schema: [
       { name: 'name', type: 'string', filter_index: true},
       { name: 'year_born', type: 'integer'}
+    ]
+  };
+  const objectClass = {
+    name: 'objects',
+    instanceName,
+    schema: [
+      { name: 'name', type: 'string'},
+      { name: 'someobj', type: 'object'}
     ]
   };
   const philipKDick = {
@@ -87,7 +103,7 @@ describe('Dataobject', function() {
     Model = connection.DataObject;
 
     return Instance.please().create({name: instanceName}).then(() => {
-      return Class.please().bulkCreate([Class(data), Class(geoPointClass), Class(authorsClass), Class(booksClass)]);
+      return Class.please().bulkCreate([Class(data), Class(geoPointClass), Class(authorsClass), Class(booksClass), Class(arrayClass), Class(objectClass)]);
     })
   });
 
@@ -158,6 +174,122 @@ describe('Dataobject', function() {
         should(dataobj).have.property('author').which.is.String().equal('Bukowski');
         should(dataobj).have.property('reads').which.is.Number().equal(0);
       })
+  });
+
+  it('should be able to save with an object field via model instance', function() {
+    return Model({ instanceName, className: objectClass.name, name: 'John', someobj: { age: 18, height: 181}}).save()
+      .then(cleaner.mark)
+      .then((object) => {
+        should(object).be.a.Object();
+        should(object).have.property('id').which.is.Number();
+        should(object).have.property('instanceName').which.is.String().equal(instanceName);
+        should(object).have.property('created_at').which.is.Date();
+        should(object).have.property('updated_at').which.is.Date();
+        should(object).have.property('links').which.is.Object();
+        should(object).have.property('channel').which.is.Null();
+        should(object).have.property('owner').which.is.Null();
+        should(object).have.property('group_permissions').which.is.String().equal('none');
+        should(object).have.property('other_permissions').which.is.String().equal('none');
+        should(object).have.property('owner_permissions').which.is.String().equal('full');
+        should(object).have.property('someobj').which.is.Object();
+        should(object.someobj).have.property('age').which.is.Number().equal(18);
+        should(object.someobj).have.property('height').which.is.Number().equal(181);
+      })
+  });
+
+  it('should be able to save with an array field via model instance', function() {
+    return Model({ instanceName, className: arrayClass.name, name: 'John', numbers: [1, 2, 3, 4, 5]}).save()
+      .then(cleaner.mark)
+      .then((object) => {
+        should(object).be.an.Object();
+        should(object).have.property('id').which.is.Number();
+        should(object).have.property('instanceName').which.is.String().equal(instanceName);
+        should(object).have.property('created_at').which.is.Date();
+        should(object).have.property('updated_at').which.is.Date();
+        should(object).have.property('links').which.is.Object();
+        should(object).have.property('channel').which.is.Null();
+        should(object).have.property('owner').which.is.Null();
+        should(object).have.property('group_permissions').which.is.String().equal('none');
+        should(object).have.property('other_permissions').which.is.String().equal('none');
+        should(object).have.property('owner_permissions').which.is.String().equal('full');
+        should(object).have.property('name').which.is.String().equal('John');
+        should(object).have.property('numbers').which.is.Array().with.length(5);
+      })
+  });
+
+  it('should be able to add array elements via model instance', function() {
+    return Model({ instanceName, className: arrayClass.name, name: 'John', numbers: [1, 2, 3, 4, 5]}).save()
+      .then(cleaner.mark)
+      .then((object) => {
+        should(object).be.an.Object();
+        should(object).have.property('id').which.is.Number();
+        should(object).have.property('instanceName').which.is.String().equal(instanceName);
+        should(object).have.property('created_at').which.is.Date();
+        should(object).have.property('updated_at').which.is.Date();
+        should(object).have.property('links').which.is.Object();
+        should(object).have.property('channel').which.is.Null();
+        should(object).have.property('owner').which.is.Null();
+        should(object).have.property('group_permissions').which.is.String().equal('none');
+        should(object).have.property('other_permissions').which.is.String().equal('none');
+        should(object).have.property('owner_permissions').which.is.String().equal('full');
+        should(object).have.property('name').which.is.String().equal('John');
+        should(object).have.property('numbers').which.is.Array().with.length(5);
+
+        return object.add('numbers', [6, 7, 8, 9])
+      })
+      .then((object) => {
+        should(object).have.property('numbers').which.is.Array().with.length(9);
+      });
+  });
+
+  it('should be able to remove array elements via model instance', function() {
+    return Model({ instanceName, className: arrayClass.name, name: 'John', numbers: [1, 2, 3, 4, 5]}).save()
+      .then(cleaner.mark)
+      .then((object) => {
+        should(object).be.an.Object();
+        should(object).have.property('id').which.is.Number();
+        should(object).have.property('instanceName').which.is.String().equal(instanceName);
+        should(object).have.property('created_at').which.is.Date();
+        should(object).have.property('updated_at').which.is.Date();
+        should(object).have.property('links').which.is.Object();
+        should(object).have.property('channel').which.is.Null();
+        should(object).have.property('owner').which.is.Null();
+        should(object).have.property('group_permissions').which.is.String().equal('none');
+        should(object).have.property('other_permissions').which.is.String().equal('none');
+        should(object).have.property('owner_permissions').which.is.String().equal('full');
+        should(object).have.property('name').which.is.String().equal('John');
+        should(object).have.property('numbers').which.is.Array().with.length(5);
+
+        return object.remove('numbers', [3, 4, 5])
+      })
+      .then((object) => {
+        should(object).have.property('numbers').which.is.Array().with.length(2);
+      });
+  });
+
+  it('should be able to add unique array elements via model instance', function() {
+    return Model({ instanceName, className: arrayClass.name, name: 'John', numbers: [1, 2, 3, 4, 5]}).save()
+      .then(cleaner.mark)
+      .then((object) => {
+        should(object).be.an.Object();
+        should(object).have.property('id').which.is.Number();
+        should(object).have.property('instanceName').which.is.String().equal(instanceName);
+        should(object).have.property('created_at').which.is.Date();
+        should(object).have.property('updated_at').which.is.Date();
+        should(object).have.property('links').which.is.Object();
+        should(object).have.property('channel').which.is.Null();
+        should(object).have.property('owner').which.is.Null();
+        should(object).have.property('group_permissions').which.is.String().equal('none');
+        should(object).have.property('other_permissions').which.is.String().equal('none');
+        should(object).have.property('owner_permissions').which.is.String().equal('full');
+        should(object).have.property('name').which.is.String().equal('John');
+        should(object).have.property('numbers').which.is.Array().with.length(5);
+
+        return object.addUnique('numbers', [4, 5, 6, 7])
+      })
+      .then((object) => {
+        should(object).have.property('numbers').which.is.Array().with.length(7);
+      });
   });
 
   it('should be able to save with a geopoint via model instance', function() {
@@ -263,39 +395,6 @@ describe('Dataobject', function() {
       })
   });
 
-  it('should be able to add unique relations via model instance', function() {
-    let authorIds = null;
-
-    return Model.please().bulkCreate([Model(philipKDick), Model(charlesBukowski)])
-      .then(cleaner.mark)
-      .then((authors) => {
-        should(authors).be.an.Array().with.length(2);
-
-        authorIds = _.map(authors, (x) => x.id)
-
-        return Model({instanceName, className: 'books', title: 'Ubik', authors: [authorIds[0]]}).save();
-      })
-      .then(cleaner.mark)
-      .then((book) => {
-        should(book).be.an.Object();
-        should(book).have.property('instanceName').which.is.String().equal(instanceName);
-        should(book).have.property('className').which.is.String().equal('books');
-        should(book).have.property('title').which.is.String().equal('Ubik');
-        should(book).have.property('authors').which.is.Object();
-        should(book.authors).have.property('target').which.is.String().equal('authors');
-        should(book.authors).have.property('value').which.is.Array().with.length(1);
-        should(book.authors.value[0]).be.a.Number().equal(authorIds[0]);
-
-        return book.addUnique('authors', authorIds);
-      })
-      .then((book) => {
-        should(book.authors).have.property('target').which.is.String().equal('authors');
-        should(book.authors).have.property('value').which.is.Array().with.length(2);
-        should(book.authors.value[0]).be.a.Number().equal(authorIds[0]);
-        should(book.authors.value[1]).be.a.Number().equal(authorIds[1]);
-      })
-  });
-
   it('should be able to remove relation via model instance', function() {
     let authorIds = null;
 
@@ -328,6 +427,38 @@ describe('Dataobject', function() {
         should(book.authors.value[0]).be.a.Number().equal(authorIds[0]);
       })
   });
+
+  it('should be able to get related objects via model instance', function() {
+    let authorIds = null;
+
+    return Model.please().bulkCreate([Model(philipKDick), Model(charlesBukowski)])
+      .then(cleaner.mark)
+      .then((authors) => {
+        should(authors).be.an.Array().with.length(2);
+
+        authorIds = _.map(authors, (x) => x.id)
+
+        return Model({instanceName, className: 'books', title: 'Ubik', authors: authorIds}).save();
+      })
+      .then(cleaner.mark)
+      .then((book) => {
+        should(book).be.an.Object();
+        should(book).have.property('instanceName').which.is.String().equal(instanceName);
+        should(book).have.property('className').which.is.String().equal('books');
+        should(book).have.property('title').which.is.String().equal('Ubik');
+        should(book).have.property('authors').which.is.Object();
+        should(book.authors).have.property('target').which.is.String().equal('authors');
+        should(book.authors).have.property('value').which.is.Array().with.length(2);
+        should(book.authors.value[0]).be.a.Number().equal(authorIds[0]);
+        should(book.authors.value[1]).be.a.Number().equal(authorIds[1]);
+
+        return book.getRelatedObjects('authors');
+      })
+      .then((authors) => {
+        should(authors).be.an.Array().with.length(2);
+      })
+  });
+
 
   it('should be able to update via model instance', function() {
     return Model(dataObj).save()
@@ -374,6 +505,101 @@ describe('Dataobject', function() {
       return Model.please().list({instanceName, className}).then((dataobjects) => {
         should(dataobjects).be.an.Array();
       });
+    });
+
+    it('should be able to save with an array field', function() {
+      return Model.please().create({ instanceName, className: arrayClass.name, name: 'John', numbers: [1, 2, 3, 4, 5]})
+        .then(cleaner.mark)
+        .then((object) => {
+          should(object).be.an.Object();
+          should(object).have.property('id').which.is.Number();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('created_at').which.is.Date();
+          should(object).have.property('updated_at').which.is.Date();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('channel').which.is.Null();
+          should(object).have.property('owner').which.is.Null();
+          should(object).have.property('group_permissions').which.is.String().equal('none');
+          should(object).have.property('other_permissions').which.is.String().equal('none');
+          should(object).have.property('owner_permissions').which.is.String().equal('full');
+          should(object).have.property('name').which.is.String().equal('John');
+          should(object).have.property('numbers').which.is.Array().with.length(5);
+        })
+    });
+
+    it('should be able to add array elements', function() {
+      return Model.please().create({ instanceName, className: arrayClass.name, name: 'John', numbers: [1, 2, 3, 4, 5]})
+        .then(cleaner.mark)
+        .then((object) => {
+          should(object).be.an.Object();
+          should(object).have.property('id').which.is.Number();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('created_at').which.is.Date();
+          should(object).have.property('updated_at').which.is.Date();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('channel').which.is.Null();
+          should(object).have.property('owner').which.is.Null();
+          should(object).have.property('group_permissions').which.is.String().equal('none');
+          should(object).have.property('other_permissions').which.is.String().equal('none');
+          should(object).have.property('owner_permissions').which.is.String().equal('full');
+          should(object).have.property('name').which.is.String().equal('John');
+          should(object).have.property('numbers').which.is.Array().with.length(5);
+
+          return Model.please().add({ instanceName, className: arrayClass.name, id: object.id }, { numbers: [6, 7, 8, 9]})
+        })
+        .then((object) => {
+          should(object).have.property('numbers').which.is.Array().with.length(9);
+        });
+    });
+
+    it('should be able to remove array elements', function() {
+      return Model.please().create({ instanceName, className: arrayClass.name, name: 'John', numbers: [1, 2, 3, 4, 5]})
+        .then(cleaner.mark)
+        .then((object) => {
+          should(object).be.an.Object();
+          should(object).have.property('id').which.is.Number();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('created_at').which.is.Date();
+          should(object).have.property('updated_at').which.is.Date();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('channel').which.is.Null();
+          should(object).have.property('owner').which.is.Null();
+          should(object).have.property('group_permissions').which.is.String().equal('none');
+          should(object).have.property('other_permissions').which.is.String().equal('none');
+          should(object).have.property('owner_permissions').which.is.String().equal('full');
+          should(object).have.property('name').which.is.String().equal('John');
+          should(object).have.property('numbers').which.is.Array().with.length(5);
+
+          return Model.please().remove({ instanceName, className: arrayClass.name, id: object.id }, { numbers: [3, 4, 5]})
+        })
+        .then((object) => {
+          should(object).have.property('numbers').which.is.Array().with.length(2);
+        });
+    });
+
+    it('should be able to add unique array elements', function() {
+      return Model.please().create({ instanceName, className: arrayClass.name, name: 'John', numbers: [1, 2, 3, 4, 5]})
+        .then(cleaner.mark)
+        .then((object) => {
+          should(object).be.an.Object();
+          should(object).have.property('id').which.is.Number();
+          should(object).have.property('instanceName').which.is.String().equal(instanceName);
+          should(object).have.property('created_at').which.is.Date();
+          should(object).have.property('updated_at').which.is.Date();
+          should(object).have.property('links').which.is.Object();
+          should(object).have.property('channel').which.is.Null();
+          should(object).have.property('owner').which.is.Null();
+          should(object).have.property('group_permissions').which.is.String().equal('none');
+          should(object).have.property('other_permissions').which.is.String().equal('none');
+          should(object).have.property('owner_permissions').which.is.String().equal('full');
+          should(object).have.property('name').which.is.String().equal('John');
+          should(object).have.property('numbers').which.is.Array().with.length(5);
+
+          return Model.please().addUnique({ instanceName, className: arrayClass.name, id: object.id }, { numbers: [4, 5, 6, 7]})
+        })
+        .then((object) => {
+          should(object).have.property('numbers').which.is.Array().with.length(7);
+        });
     });
 
     it('should be able to create a model with a relation field', function() {

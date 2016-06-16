@@ -12,6 +12,7 @@ const ScriptEndpointQuerySet = stampit().compose(QuerySet).methods({
   * @instance
 
   * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} payload the payload to be sent
   * @returns {Promise}
 
   * @example {@lang javascript}
@@ -41,6 +42,7 @@ const ScriptEndpointQuerySet = stampit().compose(QuerySet).methods({
   * @instance
 
   * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} payload the payload to be sent
   * @returns {Promise}
 
   * @example {@lang javascript}
@@ -174,10 +176,12 @@ const ScriptEndpoint = stampit()
         codebox.run({some: 'variable'}).then(function(trace) {});
       });
     */
-    run(payload = {}) {
+    run(payload = {}, cache_key) {
       const {ScriptEndpointTrace} = this.getConfig();
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('run', this);
+
+      if(!_.isEmpty(cache_key)) _.assign(payload, { query: {cache_key} })
 
       return this.makeRequest('POST', path, {payload})
         .then((body) => {
@@ -201,12 +205,14 @@ const ScriptEndpoint = stampit()
         codebox.runPublic({some: 'variable'}).then(function(trace) {});
       });
     */
-    runPublic(payload = {}) {
+    runPublic(payload = {}, cache_key) {
       const {ScriptEndpointTrace} = this.getConfig();
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('public', this);
 
-      return this.makeRequest('POST', path, {payload})
+      if(!_.isEmpty(cache_key)) _.assign(payload, { query: {cache_key} })
+
+      return this.makeRequest('POST', path, {payload}, cache_key)
         .then((body) => {
           return ScriptEndpointTrace.fromJSON(body, {
             instanceName: this.instanceName,

@@ -123,17 +123,20 @@ const DataEndpoint = stampit()
     * @memberOf DataEndpoint
     * @instance
 
-    * @param {Object}
+    * @param {String} cache_key the cache key for the result
     * @returns {Promise}
 
     * @example {@lang javascript}
     * DataEndpoint.please().fetchData({name: 'dataViewName', instanceName: 'test-one'}).then(function(dataObjects) {});
     */
-    fetchData() {
+    fetchData(cache_key) {
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('get', this);
 
-      return this.makeRequest('GET', path);
+      const query = {};
+      if(!_.isEmpty(cache_key)) query.cache_key = cache_key;
+
+      return this.makeRequest('GET', path, {query});
     }
 
   });
