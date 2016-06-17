@@ -57,6 +57,40 @@ describe('Instance', function() {
       });
   });
 
+  it('should be able to set global config via model instance', function() {
+    return Instance(data).save()
+      .then(cleaner.mark)
+      .then((instance) => {
+        return instance.setGlobalConfig({ var1: 'value1', var2: 'value2' });
+      })
+      .then((response) => {
+        should(response).be.an.Object();
+        should(response).have.property('config').which.is.Object();
+        should(response.config).have.property('var1').which.is.String().equal('value1');
+        should(response.config).have.property('var2').which.is.String().equal('value2');
+      })
+  });
+
+  it('should be able to get global config via model instance', function() {
+    let tempInstance = null;
+
+    return Instance(data).save()
+      .then(cleaner.mark)
+      .then((instance) => {
+        tempInstance = instance;
+        return tempInstance.setGlobalConfig({ var1: 'value1', var2: 'value2' });
+      })
+      .then(() => {
+        return tempInstance.getGlobalConfig();
+      })
+      .then((response) => {
+        should(response).be.an.Object();
+        should(response).have.property('config').which.is.Object();
+        should(response.config).have.property('var1').which.is.String().equal('value1');
+        should(response.config).have.property('var2').which.is.String().equal('value2');
+      })
+  });
+
   it('should be able to update via model instance', function() {
     return Instance(data).save()
       .then(cleaner.mark)
