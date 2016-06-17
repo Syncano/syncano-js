@@ -1073,7 +1073,31 @@ describe('Dataobject', function() {
         .then((dataobjects) => {
           should(dataobjects).be.an.Array().with.length(1);
         });
+    });
 
+    it('should send correct query when using pagination with filtering', function() {
+      const objects = [
+        Model(_.merge({}, dataObj, { title: "Pulp", author: "Bukowski"})),
+        Model(_.merge({}, dataObj, { title: "Blade Runner", author: "Dick" }))
+      ];
+
+      return Model.please().bulkCreate(objects)
+        .then(cleaner.mark)
+        .then((dataobjects) => {
+          should(dataobjects).be.an.Array().with.length(2);
+          return Model.please({instanceName, className}).pageSize(1).fields(['title']);
+        })
+        .then((dataobjects) => {
+          should(dataobjects).be.an.Array().with.length(1);
+          should(dataobjects[0]).have.property('title').which.is.String();
+          should(dataobjects[0]).not.have.property('author');
+          return dataobjects.next();
+        })
+        .then((dataobjects) => {
+          should(dataobjects).be.an.Array().with.length(1);
+          should(dataobjects[0]).have.property('title').which.is.String();
+          should(dataobjects[0]).not.have.property('author');
+        })
     });
 
     it('should be able to get count', function() {
