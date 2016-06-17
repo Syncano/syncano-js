@@ -12,6 +12,23 @@ const InstanceQuerySet = stampit().compose(QuerySet).methods({
     this.method = 'POST';
     this.endpoint = 'rename';
     return this;
+  },
+
+  setGlobalConfig(properties = {}, config = {}){
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = {config};
+
+    this.method = 'PUT';
+    this.endpoint = 'config';
+    return this;
+  },
+
+  getGlobalConfig(properties = {}){
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'GET';
+    this.endpoint = 'config';
+    return this;
   }
 
 });

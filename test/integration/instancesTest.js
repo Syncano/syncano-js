@@ -169,6 +169,41 @@ describe('Instance', function() {
         });
     });
 
+    it('should be able to set global config', function() {
+      return Instance.please().create(data)
+        .then(cleaner.mark)
+        .then((instance) => {
+          return Instance.please().setGlobalConfig(instance, { var1: 'value1', var2: 'value2' });
+        })
+        .then((response) => {
+          should(response).be.an.Object();
+          should(response).have.property('config').which.is.Object();
+          should(response.config).have.property('var1').which.is.String().equal('value1');
+          should(response.config).have.property('var2').which.is.String().equal('value2');
+        })
+    });
+
+    it('should be able to get global config', function() {
+      let tempInstance = null;
+
+      return Instance.please().create(data)
+        .then(cleaner.mark)
+        .then((instance) => {
+          tempInstance = instance
+
+          return Instance.please().setGlobalConfig(tempInstance, { var1: 'value1', var2: 'value2' });
+        })
+        .then(() => {
+          return Instance.please().getGlobalConfig(tempInstance);
+        })
+        .then((response) => {
+          should(response).be.an.Object();
+          should(response).have.property('config').which.is.Object();
+          should(response.config).have.property('var1').which.is.String().equal('value1');
+          should(response.config).have.property('var2').which.is.String().equal('value2');
+        })
+    });
+
     it('should be able to bulk create an objects', function() {
       const objects = [
         Instance({name: instanceName}),
