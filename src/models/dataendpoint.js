@@ -1,10 +1,10 @@
 import stampit from 'stampit';
 import _ from 'lodash';
 import {Meta, Model} from './base';
-import QuerySet from '../querySet';
+import QuerySet, {Filter} from '../querySet';
 
 
-const DataEndpointQerySet = stampit().compose(QuerySet).methods({
+const DataEndpointQerySet = stampit().compose(QuerySet, Filter).methods({
 
   /**
   * Fetches Data Objects matching the Data View properties.
@@ -124,17 +124,19 @@ const DataEndpoint = stampit()
     * @instance
 
     * @param {String} cache_key the cache key for the result
+    * @param {Object} filters object containing the filters for the query.
     * @returns {Promise}
 
     * @example {@lang javascript}
     * DataEndpoint.please().fetchData({name: 'dataViewName', instanceName: 'test-one'}).then(function(dataObjects) {});
     */
-    fetchData(cache_key) {
+    fetchData(cache_key, filters = {}) {
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('get', this);
 
       const query = {};
       if(!_.isEmpty(cache_key)) query.cache_key = cache_key;
+      if(!_.isEmpty(filters)) query.query = JSON.stringify(filters)
 
       return this.makeRequest('GET', path, {query});
     }
