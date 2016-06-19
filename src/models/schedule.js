@@ -36,9 +36,7 @@ const ScheduleConstraints = {
     numericality: true
   },
   crontab: {
-    format: {
-      pattern: /([0-59]|\*)\s([0-23]|\*)\s([1-31]|\*)\s([1-12]|\*)\s([0-7]|\*)/
-    }
+    string: true
   },
   timezone: {
     string: true
