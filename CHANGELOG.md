@@ -1,5 +1,5 @@
 ### Change Log
-* **1.0.19 d** - 2016-06-20
+* **1.0.19** - 2016-06-20
     * Global config methods for instances
     * Support for filtering the `fetchData()` method in DataEndpoints
     * Fix for `next()` and `prev()` methods not receiving queries
