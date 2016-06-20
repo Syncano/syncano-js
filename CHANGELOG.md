@@ -10,7 +10,7 @@
 * **1.0.16** - 2016-06-09
     * Geopoint support with filtering
     * Relation support with filtering
-* **1.0.16** - 2016-06-01
+* **1.0.15** - 2016-06-01
     * Solutions management
 * **1.0.13** - 2016-05-30
     * Test release for new deployment workflow
