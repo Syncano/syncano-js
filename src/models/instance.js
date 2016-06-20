@@ -12,6 +12,23 @@ const InstanceQuerySet = stampit().compose(QuerySet).methods({
     this.method = 'POST';
     this.endpoint = 'rename';
     return this;
+  },
+
+  setGlobalConfig(properties = {}, config = {}){
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = {config};
+
+    this.method = 'PUT';
+    this.endpoint = 'config';
+    return this;
+  },
+
+  getGlobalConfig(properties = {}){
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'GET';
+    this.endpoint = 'config';
+    return this;
   }
 
 });
@@ -31,6 +48,10 @@ const InstanceMeta = Meta({
     'rename': {
       'methods': ['post'],
       'path': '/v1.1/instances/{name}/rename/'
+    },
+    'config': {
+      'methods': ['get', 'put', 'patch'],
+      'path': '/v1.1/instances/{name}/snippets/config/'
     }
   },
   relatedModels: [
@@ -82,11 +103,25 @@ const Instance = stampit()
   .methods({
 
     rename(payload = { new_name: this.name }) {
-      const options = {payload};
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('rename', this);
 
-      return this.makeRequest('POST', path, options);
+      return this.makeRequest('POST', path, {payload});
+    },
+
+    setGlobalConfig(config = {}) {
+      const payload = {config};
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('config', this);
+
+      return this.makeRequest('PUT', path, {payload});
+    },
+
+    getGlobalConfig() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('config', this);
+
+      return this.makeRequest('GET', path);
     }
 
   })
