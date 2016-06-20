@@ -209,6 +209,25 @@ const QuerySetRequest = stampit().compose(Request)
     }
   });
 
+export const Filter = stampit().methods({
+
+  /**
+  * Allows to filter the request.
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Object} filters object containing the filters.
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DataObject.please().list({instanceName: 'INSTANCE_NAME', className: 'CLASS_NAME'}).filter({ title: { _eq: "Star Wars"} }).then(function(dataobjects) {});
+
+  */
+  filter(filters = {}) {
+    this.query['query'] = JSON.stringify(filters);
+    return this;
+  }
+});
 
 export const Create = stampit().methods({
 

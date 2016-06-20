@@ -116,7 +116,7 @@ describe('DataEndpoint', function() {
       });
   });
 
-  it('should be able to fetch DataObjects via model instance', function() {
+  it('should be able to fetch DataObjects via model instance with filtering', function() {
     return Promise
       .mapSeries(_.range(10), (int) => dataObject({className, instanceName, int}).save())
       .then(cleaner.mark)
@@ -126,13 +126,12 @@ describe('DataEndpoint', function() {
       .then(cleaner.mark)
       .then((dta) => {
         should(dta).be.an.Object();
-        return dta.fetchData();
+        return dta.fetchData(null, { int: { _eq: 5 } });
       })
       .then((data) => {
         should(data).be.an.Object();
-        should(data).have.property('objects').which.is.Array();
-        should(data.objects[0]).have.property('int').which.is.Number().equal(9);
-        should(data.objects.length).equal(5);
+        should(data).have.property('objects').which.is.Array().with.length(1);
+        should(data.objects[0]).have.property('int').which.is.Number().equal(5);
       });
   });
 
@@ -281,6 +280,34 @@ describe('DataEndpoint', function() {
           should(data).have.property('objects').which.is.Array();
           should(data.objects[0]).have.property('int').which.is.Number().equal(9);
           should(data.objects.length).equal(5);
+        });
+    });
+
+    it('should be able to fetch DataObjects with filtering', function() {
+      return Promise
+        .mapSeries(_.range(10), (int) => dataObject({className, instanceName, int}).save())
+        .then(cleaner.mark)
+        .then(() => {
+            return Model.please().create(data)
+        })
+        .then(cleaner.mark)
+        .then((dta) => {
+          should(dta).be.a.Object();
+          should(dta).have.property('name').which.is.String().equal(dataEndpointName);
+          should(dta).have.property('instanceName').which.is.String().equal(instanceName);
+
+          return dta;
+        })
+        .then(() => {
+          return Model
+            .please()
+            .filter({ int: { _eq: 5 } })
+            .fetchData({name: dataEndpointName, instanceName})
+        })
+        .then((data) => {
+          should(data).be.an.Object();
+          should(data).have.property('objects').which.is.Array().with.length(1);
+          should(data.objects[0]).have.property('int').which.is.Number().equal(5);
         });
     });
 
