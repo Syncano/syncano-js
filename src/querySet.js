@@ -31,6 +31,7 @@ import moment from 'moment';
 const ResultSet = function(querySet, response, objects) {
   let results = [];
   results.push.apply(results, objects);
+  const query = _.omit(querySet.query, ['page_size', 'last_pk', 'direction']);
 
 
   /**
@@ -49,7 +50,7 @@ const ResultSet = function(querySet, response, objects) {
 
     return new Promise((resolve, reject) => {
       return querySet
-        .request(response.next, {query: {}})
+        .request(response.next, {query})
         .spread(resolve)
         .catch(reject);
     });
@@ -81,7 +82,7 @@ const ResultSet = function(querySet, response, objects) {
 
     return new Promise((resolve, reject) => {
       return querySet
-        .request(response.prev, {query: {}})
+        .request(response.prev, {query})
         .spread(resolve)
         .catch(reject);
     });
@@ -208,6 +209,25 @@ const QuerySetRequest = stampit().compose(Request)
     }
   });
 
+export const Filter = stampit().methods({
+
+  /**
+  * Allows to filter the request.
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Object} filters object containing the filters.
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * DataObject.please().list({instanceName: 'INSTANCE_NAME', className: 'CLASS_NAME'}).filter({ title: { _eq: "Star Wars"} }).then(function(dataobjects) {});
+
+  */
+  filter(filters = {}) {
+    this.query['query'] = JSON.stringify(filters);
+    return this;
+  }
+});
 
 export const Create = stampit().methods({
 

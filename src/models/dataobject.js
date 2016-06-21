@@ -2,26 +2,9 @@ import stampit from 'stampit';
 import {Meta, Model} from './base';
 import Promise from 'bluebird';
 import _ from 'lodash';
-import QuerySet from '../querySet';
+import QuerySet, {Filter} from '../querySet';
 
-const DataObjectQuerySet = stampit().compose(QuerySet).methods({
-  /**
-    * Filters DataObjects.
-
-    * @memberOf QuerySet
-    * @instance
-
-    * @param {Object} filters
-    * @returns {QuerySet}
-
-    * @example {@lang javascript}
-    * DataObject.please().list({ instanceName: 'test-instace', className: 'test-class' }).filter({ field_name: { _contains: 'Lord Of The Rings' }}).then(function(dataobjects) {});
-
-    */
-  filter(filters = {}) {
-    this.query['query'] = JSON.stringify(filters);
-    return this;
-  },
+const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
   /**
     * Orders DataObject by field.
 
