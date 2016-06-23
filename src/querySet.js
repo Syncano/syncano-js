@@ -4,6 +4,7 @@ import _ from 'lodash';
 import Request from './request';
 import PaginationError from './errors';
 import moment from 'moment';
+import {EventEmittable} from './utils';
 
 /**
  * Wrapper around plain JavaScript Array which provides two additional methods for pagination.
@@ -742,6 +743,147 @@ export const Raw = stampit().methods({
     return this;
   }
 });
+/**
+* Wrapper for fetching all objects (DataObjects, Classes etc.).
+
+* @memberOf QuerySet
+* @instance
+
+* @constructor
+* @type {ChannelPoll}
+
+* @property {Number} [timeout = 15000] 15 seconds
+* @property {String} [path = null] request path
+* @property {Boolean} [abort = false]  used internally to conrole for loop
+
+* @example {@lang javascript}
+* var all = AllObjects.setConfig(config)({
+*   path: '/v1.1/instances/some-instance/classes/some-class/objects/'
+* });
+*
+* all.on('start', function() {
+*   console.log('all::start');
+* });
+*
+* all.on('stop', function() {
+*   console.log('all::stop');
+* });
+*
+* all.on('page', function(page) {
+*   console.log('all::page', page);
+* });
+*
+* all.on('error', function(error) {
+*   console.log('all::error', error);
+* });
+
+*/
+const AllObjects = stampit()
+  .compose(Request, EventEmittable)
+  .props({
+    timeout: 15000,
+    path: null,
+    abort: false,
+    model: null
+  })
+  .methods({
+
+    request() {
+      return this.makeRequest('GET', this.path);
+    },
+
+    start() {
+
+      const pageLoop = () => {
+
+        if(this.abort === true) {
+          this.emit('stop');
+          return
+        }
+
+        return this.request()
+          .then((page) => {
+            const serializedPage = this.model.please().asResultSet(page);
+            this.emit('page', serializedPage);
+            if(serializedPage.hasNext() === true) {
+              this.path = page.next;
+            } else {
+              this.abort = true;
+            }
+            return serializedPage;
+          })
+          .finally(pageLoop)
+          .catch((error) => {
+            if (error.timeout && error.timeout === this.timeout) {
+              return this.emit('timeout', error);
+            }
+
+            this.emit('error', error);
+            this.stop();
+          });
+      }
+
+      pageLoop();
+    },
+
+    stop() {
+      this.abort = true;
+      return this;
+    }
+
+  });
+  /**
+  * Allows fetching of all objects of a type (DataObjects, Classes etc.) recursively.
+
+  * @memberOf QuerySet
+  * @instance
+
+  * @returns {AllObjects}
+
+  * @example {@lang javascript}
+  * @example {@lang javascript}
+  * var all = DataObject.please().all({ instanceName: 'test-instace', className: 'test-class' });
+  *
+  * all.on('start', function() {
+  *   console.log('all::start');
+  * });
+  *
+  * all.on('stop', function() {
+  *   console.log('all::stop');
+  * });
+  *
+  * all.on('page', function(page) {
+  *   console.log('all::page', page);
+  * });
+  *
+  * all.on('error', function(error) {
+  *   console.log('all::error', error);
+  * });
+
+  */
+const All = stampit().methods({
+
+  all(properties = {}, start = true) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    const config = this.getConfig();
+    const meta = this.model.getMeta();
+    const path = meta.resolveEndpointPath('list', this.properties);
+
+    let options = {}
+    options.path = path;
+    options.model = this.model;
+
+    const allObjects = AllObjects.setConfig(config)(options);
+
+    if (start === true) {
+      allObjects.start();
+    }
+
+    return allObjects;
+  }
+
+});
 
 export const BulkCreate = stampit().methods({
 
@@ -798,7 +940,8 @@ const QuerySet = stampit.compose(
   ExcludedFields,
   Raw,
   TemplateResponse,
-  CacheKey
+  CacheKey,
+  All
 );
 
 export const BaseQuerySet = stampit.compose(
@@ -809,7 +952,9 @@ export const BaseQuerySet = stampit.compose(
   Ordering,
   First,
   PageSize,
-  TemplateResponse
+  TemplateResponse,
+  EventEmittable,
+  All
 );
 
 export default QuerySet;
