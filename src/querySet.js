@@ -784,12 +784,17 @@ const AllObjects = stampit()
     timeout: 15000,
     path: null,
     abort: false,
-    model: null
+    model: null,
+    query: {}
   })
   .methods({
 
     request() {
-      return this.makeRequest('GET', this.path);
+      const options = {
+        query: this.query
+      }
+
+      return this.makeRequest('GET', this.path, options);
     },
 
     start() {
@@ -863,7 +868,7 @@ const AllObjects = stampit()
   */
 const All = stampit().methods({
 
-  all(properties = {}, start = true) {
+  all(properties = {}, query = {}, start = true) {
     this.properties = _.assign({}, this.properties, properties);
 
     const config = this.getConfig();
@@ -873,6 +878,7 @@ const All = stampit().methods({
     let options = {}
     options.path = path;
     options.model = this.model;
+    options.query = query;
 
     const allObjects = AllObjects.setConfig(config)(options);
 

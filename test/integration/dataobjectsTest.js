@@ -509,13 +509,13 @@ describe('Dataobject', function() {
 
     it('should be able to fetch all objects', function(done) {
       return Promise
-        .mapSeries(_.range(200), (int) => Model({instanceName, className: authorsClass.name, name: 'Somebody', year_born: int}).save())
+        .mapSeries(_.range(30), (int) => Model({instanceName, className: authorsClass.name, name: 'Somebody', year_born: int}).save())
         .then(cleaner.mark)
         .then(() => {
-          let all = Model.please().all({instanceName, className: authorsClass.name});
+          let all = Model.please().all({instanceName, className: authorsClass.name}, { page_size: 10});
 
           all.on('page', function(page) {
-            should(page).be.an.Array().with.length(100);
+            should(page).be.an.Array().with.length(10);
           });
 
           all.on('stop', function() {
