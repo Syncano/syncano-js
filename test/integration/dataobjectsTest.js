@@ -512,7 +512,7 @@ describe('Dataobject', function() {
         .mapSeries(_.range(30), (int) => Model({instanceName, className: authorsClass.name, name: 'Somebody', year_born: int}).save())
         .then(cleaner.mark)
         .then(() => {
-          let all = Model.please().all({instanceName, className: authorsClass.name}, { page_size: 10});
+          const all = Model.please().all({instanceName, className: authorsClass.name}, { page_size: 10});
 
           all.on('page', function(page) {
             should(page).be.an.Array().with.length(10);
