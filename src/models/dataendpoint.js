@@ -198,7 +198,6 @@ const DataEndpoint = stampit()
 
       return this.makeRequest('POST', path, {payload})
         .then((response) => {
-          this.name = response.name;
           return this.serialize(response);
         })
     },

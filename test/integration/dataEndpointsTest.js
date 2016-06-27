@@ -6,7 +6,7 @@ import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
 
-describe('DataEndpoint', function() {
+describe.only('DataEndpoint', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();
@@ -187,7 +187,6 @@ describe('DataEndpoint', function() {
 
   it('should be able to rename via model instance', function() {
     return Model(data).save()
-      .then(cleaner.mark)
       .then((dta) => {
         should(dta).have.property('name').which.is.String().equal(data.name);
         should(dta).have.property('instanceName').which.is.String().equal(data.instanceName);
@@ -195,6 +194,7 @@ describe('DataEndpoint', function() {
 
         return dta.rename({ new_name: 'new_name'})
       })
+      .then(cleaner.mark)
       .then((dta) => {
         should(dta).have.property('name').which.is.String().equal('new_name');
       });
