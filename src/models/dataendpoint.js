@@ -26,6 +26,16 @@ const DataEndpointQerySet = stampit().compose(QuerySet, Filter).methods({
     this._serialize = false;
 
     return this;
+  },
+
+  rename(properties = {}, payload = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'POST';
+    this.endpoint = 'rename';
+    this.payload = payload;
+
+    return this;
   }
 
 });
@@ -139,6 +149,17 @@ const DataEndpoint = stampit()
       if(!_.isEmpty(filters)) query.query = JSON.stringify(filters)
 
       return this.makeRequest('GET', path, {query});
+    },
+
+    rename(payload = { new_name: this.name }) {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('rename', this);
+
+      return this.makeRequest('POST', path, {payload})
+        .then((response) => {
+          this.name = response.name;
+          return response;
+        })
     }
 
   });
