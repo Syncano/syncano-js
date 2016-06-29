@@ -38,6 +38,7 @@ const BatchManager = stampit()
       if(!_.every(this.objects, (object) => {
         return _.has(object, 'object._meta') && _.has(object, 'action');
       })) {
+        this.removeObjects();
         return Promise.reject(new Error('The Batch Manager only accepts properly formatted object models.'));
       }
       return this;
