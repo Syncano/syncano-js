@@ -26,7 +26,7 @@ import Promise from 'bluebird';
 */
 const BatchManager = stampit()
   .props({
-    objects: null
+    objects: []
   })
   .methods({
 
@@ -34,10 +34,7 @@ const BatchManager = stampit()
       _.each(objects, (object) => {
           this.objects = _.concat(this.objects, object);
       });
-      this.objects = _.compact(_.flatten(this.objects));
-      /* eslint-disable no-console */
-      console.log(this.objects);
-      /* eslint-enable no-console */
+      this.objects = _.flatten(this.objects);
       if(!_.every(this.objects, (object) => {
         return _.has(object, 'object._meta') && _.has(object, 'action');
       })) {
@@ -63,7 +60,7 @@ const BatchManager = stampit()
     },
 
     removeObjects() {
-      this.objects = null;
+      this.objects = [];
       return this;
     },
 
