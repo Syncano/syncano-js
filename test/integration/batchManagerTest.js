@@ -57,6 +57,7 @@ describe.only('BatchManager', function() {
   });
 
   it('should be able to batch create objects', function() {
+    console.log(Objects);
     return Manager.addObjects(Objects).batch()
       .then(cleaner.mark)
       .then((objects) => {
