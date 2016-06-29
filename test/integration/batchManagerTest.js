@@ -3,14 +3,13 @@ import Syncano from '../../src/syncano';
 import {suffix, credentials, createCleaner } from './utils';
 import _ from 'lodash';
 
-describe('BatchManager', function() {
+describe.only('BatchManager', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();
   let connection = null;
   let Class = null;
   let Model = null;
-  let Objects = null;
   let Instance = null;
   let Manager = null;
   const instanceName = suffix.get('name');
@@ -22,6 +21,9 @@ describe('BatchManager', function() {
       { name: 'name', type: 'string'}
     ]
   };
+  const Objects = _.map(_.range(10), (int) => {
+    return { object: Model({ name: `name-${int}`, instanceName, className }), action: 'save' }
+  });
 
   before(function(done) {
     connection = Syncano(credentials.getCredentials());
@@ -30,9 +32,7 @@ describe('BatchManager', function() {
     Model = connection.DataObject;
     Manager = connection.BatchManager;
 
-    Objects = _.map(_.range(10), (int) => {
-      return { object: Model({ name: `name-${int}`, instanceName, className }), action: 'save' }
-    });
+
 
     return Instance.please().create({name: instanceName}).then(() => {
       Class.please().create(classData).then(() => done());
