@@ -38,6 +38,7 @@ const BatchManager = stampit()
 
       if(!_.every(this.objects, (object) => {
         /* eslint-disable no-console */
+        console.log(object);
         console.log(_.has(object, 'object._meta'));
         console.log(_.has(object, 'action'));
         /* eslint-enable no-console */
