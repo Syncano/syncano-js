@@ -9,7 +9,7 @@ describe.only('BatchManager', function() {
   const cleaner = createCleaner();
   let connection = null;
   let Class = null;
-  let Model = null;
+  let Model = connection.DataObject;;
   let Instance = null;
   let Manager = null;
   const instanceName = suffix.get('name');
@@ -29,10 +29,7 @@ describe.only('BatchManager', function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
     Class = connection.Class;
-    Model = connection.DataObject;
     Manager = connection.BatchManager;
-
-
 
     return Instance.please().create({name: instanceName}).then(() => {
       Class.please().create(classData).then(() => done());
