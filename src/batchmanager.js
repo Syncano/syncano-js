@@ -35,10 +35,12 @@ const BatchManager = stampit()
           this.objects = _.concat(this.objects, object);
       });
       this.objects = _.flatten(this.objects);
-      /* eslint-disable no-console */
-      console.log(this.objects);
-      /* eslint-enable no-console */
+
       if(!_.every(this.objects, (object) => {
+        /* eslint-disable no-console */
+        console.log(_.has(object, 'object._meta'));
+        console.log(_.has(object, 'action'));
+        /* eslint-enable no-console */
         return _.has(object, 'object._meta') && _.has(object, 'action');
       })) {
         this.removeObjects();
