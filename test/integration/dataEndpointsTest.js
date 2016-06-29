@@ -6,7 +6,7 @@ import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
 
-describe.only('DataEndpoint', function() {
+describe('DataEndpoint', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();
