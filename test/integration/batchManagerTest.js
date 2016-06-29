@@ -57,7 +57,9 @@ describe.only('BatchManager', function() {
   });
 
   it('should be able to batch create objects', function() {
+    /* eslint-disable no-console */
     console.log(Objects);
+    /* eslint-enable no-console */
     return Manager.addObjects(Objects).batch()
       .then(cleaner.mark)
       .then((objects) => {
