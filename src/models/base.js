@@ -278,7 +278,7 @@ export const Model = stampit({
     * @returns {Boolean}
     */
     isNew() {
-      return !_.has(this, 'links');
+      return (!_.has(this, 'links') && !_.has(this, 'update'));
     },
 
     /**
@@ -339,6 +339,12 @@ export const Model = stampit({
       }
 
       return this.makeRequest(method, path, {payload}).then((body) => this.serialize(body));
+    },
+
+    update() {
+      this.update = true;
+
+      return this.save();
     },
 
     /**

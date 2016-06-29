@@ -173,6 +173,33 @@ describe('DataEndpoint', function() {
       });
   });
 
+  it('should be able to clear cache via model instance', function() {
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((dta) => {
+        should(dta).have.property('name').which.is.String().equal(data.name);
+        should(dta).have.property('instanceName').which.is.String().equal(data.instanceName);
+        should(dta).have.property('description').which.is.String().equal(data.description);
+
+        return dta.clearCache();
+      })
+  });
+
+  it('should be able to rename via model instance', function() {
+    return Model(data).save()
+      .then((dta) => {
+        should(dta).have.property('name').which.is.String().equal(data.name);
+        should(dta).have.property('instanceName').which.is.String().equal(data.instanceName);
+        should(dta).have.property('description').which.is.String().equal(data.description);
+
+        return dta.rename({ new_name: 'new_name'})
+      })
+      .then(cleaner.mark)
+      .then((dta) => {
+        should(dta).have.property('name').which.is.String().equal('new_name');
+      });
+  });
+
   it('should be able to delete via model instance', function() {
     return Model(data).save()
       .then((dta) => {
@@ -207,6 +234,34 @@ describe('DataEndpoint', function() {
           should(dta).have.property('expand').which.is.Null();
           should(dta).have.property('links').which.is.Object();
           should(dta).have.property('class').which.is.String().equal(data.class)
+        });
+    });
+
+    it('should be able to rename a Model', function() {
+      return Model.please().create(data)
+        .then((dta) => {
+          should(dta).be.a.Object();
+          should(dta).have.property('name').which.is.String().equal(data.name);
+          should(dta).have.property('description').which.is.String().equal(data.description);
+
+          return Model.please().rename(dta, { new_name: 'new_name'})
+        })
+        .then((dta) => {
+          should(dta).have.property('name').which.is.String().equal('new_name');
+
+          return Model.please().delete(dta);
+        });
+    });
+
+    it('should be able to clear cache', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((dta) => {
+          should(dta).be.a.Object();
+          should(dta).have.property('name').which.is.String().equal(data.name);
+          should(dta).have.property('description').which.is.String().equal(data.description);
+
+          return Model.please().clearCache(dta)
         });
     });
 

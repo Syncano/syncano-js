@@ -6,7 +6,7 @@ import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
 describe('Dataobject', function() {
-  this.timeout(15000);
+  this.timeout(65000);
 
   const cleaner = createCleaner();
   let connection = null;
@@ -505,6 +505,24 @@ describe('Dataobject', function() {
       return Model.please().list({instanceName, className}).then((dataobjects) => {
         should(dataobjects).be.an.Array();
       });
+    });
+
+    it('should be able to fetch all objects', function(done) {
+      return Promise
+        .mapSeries(_.range(30), (int) => Model({instanceName, className: authorsClass.name, name: 'Somebody', year_born: int}).save())
+        .then(cleaner.mark)
+        .then(() => {
+          const all = Model.please().all({instanceName, className: authorsClass.name}, { page_size: 10});
+
+          all.on('page', function(page) {
+            should(page).be.an.Array().with.length(10);
+          });
+
+          all.on('stop', function() {
+            done();
+          })
+
+        });
     });
 
     it('should be able to save with an array field', function() {
