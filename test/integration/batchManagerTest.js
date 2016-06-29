@@ -3,7 +3,7 @@ import Syncano from '../../src/syncano';
 import {suffix, credentials, createCleaner } from './utils';
 import _ from 'lodash';
 
-describe.only('BatchManager', function() {
+describe('BatchManager', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();
