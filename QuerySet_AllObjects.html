@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Class: Profile</title>
+	<title>Syncano Class: AllObjects</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -70,13 +70,15 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Profile</h1>
+	<h1 class="page-title">Class: AllObjects</h1>
 <section>
 
 <header>
     
         <h2>
-        Profile
+            <span class="ancestors"><a href="QuerySet.html">QuerySet</a>#</span>
+        
+        AllObjects
         </h2>
         
     
@@ -89,7 +91,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="Profile"><span class="type-signature"></span>new Profile()</h4>
+    <h4 class="name" id="AllObjects"><span class="type-signature"></span>new AllObjects()</h4>
     
     
 </dt>
@@ -97,7 +99,7 @@
 
     
     <div class="description">
-        <p>OO wrapper around Profile.</p>
+        <p>Wrapper for fetching all objects (DataObjects, Classes etc.).</p>
     </div>
     
 
@@ -142,13 +144,13 @@
 
         <tr>
             
-                <td class="name"><code>balance</code></td>
+                <td class="name"><code>timeout</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">Number</span>
 
 
 
@@ -158,39 +160,7 @@
             
                 <td class="attributes">
                 
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>subscription</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
+                    &lt;optional><br>
                 
 
                 
@@ -200,425 +170,19 @@
             
                 <td class="default">
                 
+                    15000
+                
                 </td>
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>15 seconds</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>hard_limit</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>soft_limit</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>company_name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>first_name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>last_name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>address_line1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>address_line2</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>address_city</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>address_state</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>address_zip</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>address_country</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>tax_number</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>failed_invoice</code></td>
+                <td class="name"><code>path</code></td>
             
 
             <td class="type">
@@ -649,7 +213,45 @@
                 </td>
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>request path</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>abort</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>used internally to conrole for loop</p></td>
         </tr>
 
     
@@ -690,8 +292,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="models_profile.js.html">models/profile.js</a>,
-				 <a href="models_profile.js.html#sunlight-1-line-42">line 42</a>
+				<a href="querySet.js.html">querySet.js</a>,
+				 <a href="querySet.js.html#sunlight-1-line-781">line 781</a>
 			</li>
 		</ul>
 	</dd>
@@ -716,6 +318,31 @@
     
 
     
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">
+var all = AllObjects.setConfig(config)({
+  path: &#x27;/v1.1/instances/some-instance/classes/some-class/objects/&#x27;
+});
+
+all.on(&#x27;start&#x27;, function() {
+  console.log(&#x27;all::start&#x27;);
+});
+
+all.on(&#x27;stop&#x27;, function() {
+  console.log(&#x27;all::stop&#x27;);
+});
+
+all.on(&#x27;page&#x27;, function(page) {
+  console.log(&#x27;all::page&#x27;, page);
+});
+
+all.on(&#x27;error&#x27;, function(error) {
+  console.log(&#x27;all::error&#x27;, error);
+});</pre>
+
 
     
 </dd>

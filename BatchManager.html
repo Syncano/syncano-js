@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Source: models/scriptendpointtrace.js</title>
+	<title>Syncano Class: BatchManager</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,82 +65,157 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: models/scriptendpointtrace.js</h1>
-    
+	<h1 class="page-title">Class: BatchManager</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Get, List} from '../querySet';
 
-const ScriptEndpointTraceQuerySet = stampit().compose(
-  BaseQuerySet,
-  Get,
-  List
-);
+<header>
+    
+        <h2>
+        BatchManager
+        </h2>
+        
+    
+</header>
 
-const ScriptEndpointTraceMeta = Meta({
-  name: 'triggertrace',
-  pluralName: 'triggertraces',
-  endpoints: {
-    'detail': {
-      'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{scriptEndpointName}/traces/{id}/'
-    },
-    'list': {
-      'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{scriptEndpointName}/traces/'
-    }
-  }
-});
 
-const ScriptEndpointTraceConstraints = {
-  instanceName: {
-    presence: true,
-    length: {
-      minimum: 5
-    }
-  },
-  scriptEndpointName: {
-    presence: true,
-    string: true
-  }
-};
+<article>
+    <div class="container-overview">
+    
+        
+<hr>
+<dt>
+    <h4 class="name" id="BatchManager"><span class="type-signature"></span>new BatchManager()</h4>
+    
+    
+</dt>
+<dd>
 
-/**
- * OO wrapper around webhook traces {@link # endpoint}.
- * This model is *read only*.
- * @constructor
- * @type {ScriptEndpointTrace}
+    
+    <div class="description">
+        <p>Manager for handling batch requests to the platform. Supported actions are 'save', 'update', 'delete'. Meant to be used directly form the <a href="Syncano.html">Syncano</a> instance.</p>
+    </div>
+    
 
- * @property {Number} id
- * @property {String} instanceName
- * @property {String} scriptEndpointName
- * @property {String} status
- * @property {Date} executed_at
- * @property {Number} duration
- * @property {Object} [result = {}]
- * @property {String} result.stderr
- * @property {String} result.stdout
- * @property {String} [links = {}]
- */
-const ScriptEndpointTrace = stampit()
-  .compose(Model)
-  .setMeta(ScriptEndpointTraceMeta)
-  .setQuerySet(ScriptEndpointTraceQuerySet)
-  .setConstraints(ScriptEndpointTraceConstraints);
+    
 
-export default ScriptEndpointTrace;
-</pre>
-    </article>
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="batchmanager.js.html">batchmanager.js</a>,
+				 <a href="batchmanager.js.html#sunlight-1-line-27">line 27</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">
+const connection = Syncano();
+const manager = connection.BatchManager;
+manager.addObjects({ object: DataObject({data}), action: &#x27;save&#x27; }, { object: DataObject({other_data}), action: &#x27;save&#x27; });
+manager.batch().then(() =&gt; {
+  // success
+})</pre>
+
+    <pre class="sunlight-highlight-javascript">
+const connection = Syncano();
+const manager = connection.BatchManager;
+manager.addSingleObject(DataObject({data}), &#x27;save&#x27;);
+manager.batch().then(() =&gt; {
+  // success
+})</pre>
+
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -150,6 +225,10 @@ export default ScriptEndpointTrace;
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>
