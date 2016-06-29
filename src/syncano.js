@@ -5,6 +5,7 @@ import models from './models';
 import Account from './account';
 import Pinger from './pinger';
 import SyncanoFile from './file';
+import BatchManager from './batchmanager';
 
 /**
  * Main Syncano object.
@@ -30,6 +31,7 @@ const Syncano = stampit()
   .init(function() {
     this.Account = Account.setConfig(this)();
     this.Monitor = Pinger.setConfig(this)();
+    this.BatchManager = BatchManager();
 
     _.forEach(models, (model, name) => {
       this[name] = model.setConfig(this);
