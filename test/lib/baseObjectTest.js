@@ -51,6 +51,7 @@ describe('Syncano', function() {
       should(baseObject).have.property('Solution').which.is.Function();
       should(baseObject).have.property('Account').which.is.Object();
       should(baseObject).have.property('Monitor').which.is.Object();
+      should(baseObject).have.property('BatchManager').which.is.Object();
     });
 
     it('shoud have baseUrl and accountKey properties', function() {
@@ -82,6 +83,16 @@ describe('Syncano', function() {
     it('should have correct methods', function() {
       should(baseObject.Monitor).have.property('startMonitoring').which.is.Function();
       should(baseObject.Monitor).have.property('stopMonitoring').which.is.Function();
+    });
+  });
+
+  describe('#BatchManager', function() {
+    it('should have correct methods', function() {
+      should(baseObject.BatchManager).have.property('addObjects').which.is.Function();
+      should(baseObject.BatchManager).have.property('addSingleObject').which.is.Function();
+      should(baseObject.BatchManager).have.property('batch').which.is.Function();
+      should(baseObject.BatchManager).have.property('removeObjects').which.is.Function();
+      should(baseObject.BatchManager).have.property('getObjects').which.is.Function();
     });
   });
 
