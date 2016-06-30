@@ -1,7 +1,11 @@
 ### Change Log
+* **1.0.20** - 2016-06-29
+    * BatchManager for batch requests
+    * `clearCache()` and `rename()` methods for DataEnpoint
+    * `all()` method for querySets
 * **1.0.19** - 2016-06-20
     * Global config methods for instances
-    * Support for filtering the `fetchData()` method in DataEndpoints
+    * Support for filtering the `fetchData()` method in DataEndpoint
     * Fix for `next()` and `prev()` methods not receiving queries
     * Removed strict crontab validation in Schedule model
 * **1.0.17** - 2016-06-16
