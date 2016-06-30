@@ -785,7 +785,9 @@ const AllObjects = stampit()
     path: null,
     abort: false,
     model: null,
-    query: {}
+    query: {},
+    pages: null,
+    currentPage: 0
   })
   .methods({
 
@@ -799,6 +801,8 @@ const AllObjects = stampit()
 
     start() {
 
+      this.currentPage = 0;
+
       const pageLoop = () => {
 
         if(this.abort === true) {
@@ -810,7 +814,8 @@ const AllObjects = stampit()
           .then((page) => {
             const serializedPage = this.model.please().asResultSet(page);
             this.emit('page', serializedPage);
-            if(serializedPage.hasNext() === true) {
+            this.currentPage++;
+            if(serializedPage.hasNext() === true && (!_.isEmpty(this, 'pages') && this.currentPage < this.pages)) {
               this.path = page.next;
             } else {
               this.abort = true;
@@ -868,7 +873,7 @@ const AllObjects = stampit()
   */
 const All = stampit().methods({
 
-  all(properties = {}, query = {}, start = true) {
+  all(properties = {}, query = {}, start = true, pages = 0) {
     this.properties = _.assign({}, this.properties, properties);
 
     const config = this.getConfig();
@@ -879,6 +884,7 @@ const All = stampit().methods({
     options.path = path;
     options.model = this.model;
     options.query = query;
+    options.pages = pages;
 
     const allObjects = AllObjects.setConfig(config)(options);
 
