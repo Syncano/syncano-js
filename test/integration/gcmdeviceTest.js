@@ -376,7 +376,7 @@ describe('GCMDevice', function() {
           })
         })
         .then(() => {
-          return Model.please().sendMessages({instanceName}, {environment: 'development', registration_ids: [data.registration_id]});
+          return Model.please().sendMessages({instanceName}, {environment: 'development', registration_ids: [data.registration_id]}).request();
         })
     });
 
