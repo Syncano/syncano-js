@@ -521,7 +521,26 @@ describe('Dataobject', function() {
           all.on('stop', function() {
             done();
           })
+        });
+    });
 
+    it('should be able to fetch a specified number of pages', function(done) {
+      let currentPage = 0;
+      return Promise
+        .mapSeries(_.range(30), (int) => Model({instanceName, className: authorsClass.name, name: 'Somebody', year_born: int}).save())
+        .then(cleaner.mark)
+        .then(() => {
+          const all = Model.please().all({instanceName, className: authorsClass.name}, { page_size: 10}, true, 2);
+
+          all.on('page', function(page) {
+            currentPage++;
+            should(page).be.an.Array().with.length(10);
+          });
+
+          all.on('stop', function() {
+            should(currentPage).be.equal(2);
+            done();
+          })
         });
     });
 
