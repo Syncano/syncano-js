@@ -278,6 +278,15 @@ export const SendToDevice = stampit().methods({
 
 });
 
+export const ListAll = stampit().methods({
+  listAll() {
+    this.resultSetEndpoints = ['list', 'all'];
+    this.method = 'GET';
+    this.endpoint = 'all';
+    return this;
+  }
+})
+
 export const Rename = stampit().methods({
   /**
   * A convenience method for renaming an object that support the action.
