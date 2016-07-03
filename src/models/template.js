@@ -1,5 +1,5 @@
 import stampit from 'stampit';
-import {Meta, Model} from './base';
+import {Meta, Model, Rename} from './base';
 import _ from 'lodash';
 import QuerySet from '../querySet';
 
@@ -105,15 +105,8 @@ const Template = stampit()
   .compose(Model)
   .setMeta(TemplateMeta)
   .setQuerySet(TemplateQuerySet)
+  .compose(Rename)
   .methods({
-
-    rename(payload = { new_name: this.name }) {
-      const options = {payload};
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('rename', this);
-
-      return this.makeRequest('POST', path, options);
-    },
 
     render(context = {}) {
       const options = {

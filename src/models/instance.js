@@ -1,6 +1,6 @@
 import stampit from 'stampit';
 import _ from 'lodash';
-import {Meta, Model} from './base';
+import {Meta, Model, Rename} from './base';
 import QuerySet from '../querySet';
 
 const InstanceQuerySet = stampit().compose(QuerySet).methods({
@@ -100,14 +100,8 @@ const InstanceConstraints = {
 const Instance = stampit()
   .compose(Model)
   .setMeta(InstanceMeta)
+  .compose(Rename)
   .methods({
-
-    rename(payload = { new_name: this.name }) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('rename', this);
-
-      return this.makeRequest('POST', path, {payload});
-    },
 
     setGlobalConfig(config = {}) {
       const payload = {config};
