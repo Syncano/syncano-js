@@ -278,6 +278,19 @@ export const SendToDevice = stampit().methods({
 
 });
 
+export const SendToDevices = stampit().methods({
+
+  sendToDevices(properties = {}, content = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = {content};
+    this.method = 'POST';
+    this.endpoint = 'list';
+
+    return this;
+  }
+
+});
+
 export const ListAll = stampit().methods({
   listAll() {
     this.resultSetEndpoints = ['list', 'all'];
