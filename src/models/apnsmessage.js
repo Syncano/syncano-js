@@ -1,7 +1,6 @@
 import stampit from 'stampit';
-import _ from 'lodash';
 import {Meta, Model} from './base';
-import {BaseQuerySet, Create, BulkCreate, Get, GetOrCreate, List} from '../querySet';
+import {BaseQuerySet, Create, BulkCreate, Get, GetOrCreate, List, SendToDevice} from '../querySet';
 
 const APNSMessageQuerySet = stampit().compose(
   BaseQuerySet,
@@ -9,19 +8,9 @@ const APNSMessageQuerySet = stampit().compose(
   BulkCreate,
   Get,
   List,
-  GetOrCreate
-).methods({
-
-  sendToDevice(properties = {}, content = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = {content};
-    this.method = 'POST';
-    this.endpoint = 'deviceMessage';
-
-    return this;
-  }
-
-});
+  GetOrCreate,
+  SendToDevice
+);
 
 const APNSMessageMeta = Meta({
   name: 'apnsmessage',

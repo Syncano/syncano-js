@@ -1,8 +1,6 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
 
-
-
 const TriggerMeta = Meta({
   name: 'trigger',
   pluralName: 'triggers',

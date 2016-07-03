@@ -265,6 +265,19 @@ export const Create = stampit().methods({
   }
 });
 
+export const SendToDevice = stampit().methods({
+
+  sendToDevice(properties = {}, content = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = {content};
+    this.method = 'POST';
+    this.endpoint = 'deviceMessage';
+
+    return this;
+  }
+
+});
+
 export const Rename = stampit().methods({
   /**
   * A convenience method for renaming an object that support the action.
