@@ -422,6 +422,22 @@ describe('APNS Device', function() {
         });
     });
 
+    it('should be able to send messages directly from device', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then(() => {
+          return connection.APNSConfig.please().update({instanceName}, {
+            development_certificate: Syncano.file(__dirname + '/certificates/ApplePushDevelopment.p12'),
+            development_bundle_identifier: 'com.syncano.testAPNS'
+          });
+        })
+        .then(() => {
+          return Model
+            .please()
+            .sendMessages({instanceName}, {environment: 'development', aps: {alert: 'message'}, registration_ids: [data.registration_id]}).request();
+        })
+    });
+
   });
 
 });

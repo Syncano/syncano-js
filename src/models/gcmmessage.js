@@ -10,7 +10,18 @@ const GCMMessageQuerySet = stampit().compose(
   List,
   GetOrCreate,
   SendToDevice
-);
+).methods({
+
+  sendToDevices(properties = {}, content = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = {content};
+    this.method = 'POST';
+    this.endpoint = 'list';
+
+    return this;
+  }
+
+});
 
 const GCMMessageMeta = Meta({
   name: 'gcmmessage',
@@ -21,7 +32,7 @@ const GCMMessageMeta = Meta({
       'path': '/v1.1/instances/{instanceName}/push_notifications/gcm/messages/{id}/'
     },
     'list': {
-      'methods': ['get'],
+      'methods': ['get', 'post'],
       'path': '/v1.1/instances/{instanceName}/push_notifications/gcm/messages/'
     },
     'deviceMessage': {
