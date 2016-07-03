@@ -367,6 +367,19 @@ describe('GCMDevice', function() {
         });
     });
 
+    it('should be able to send messages directly from device', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then(() => {
+          return connection.GCMConfig.please().update({instanceName}, {
+            development_api_key: suffix.get('key')
+          })
+        })
+        .then(() => {
+          return Model.please().sendMessages({instanceName}, {environment: 'development', registration_ids: [data.registration_id]}).request();
+        })
+    });
+
   });
 
 });

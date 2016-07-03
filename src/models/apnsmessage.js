@@ -19,6 +19,15 @@ const APNSMessageQuerySet = stampit().compose(
     this.endpoint = 'deviceMessage';
 
     return this;
+  },
+
+  sendToDevices(properties = {}, content = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = {content};
+    this.method = 'POST';
+    this.endpoint = 'list';
+
+    return this;
   }
 
 });
@@ -32,7 +41,7 @@ const APNSMessageMeta = Meta({
       'path': '/v1.1/instances/{instanceName}/push_notifications/apns/messages/{id}/'
     },
     'list': {
-      'methods': ['get'],
+      'methods': ['get', 'post'],
       'path': '/v1.1/instances/{instanceName}/push_notifications/apns/messages/'
     },
     'deviceMessage': {
