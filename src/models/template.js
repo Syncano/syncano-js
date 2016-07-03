@@ -1,30 +1,9 @@
 import stampit from 'stampit';
 import {Meta, Model, Rename} from './base';
 import _ from 'lodash';
-import QuerySet from '../querySet';
+import QuerySet, {Rename as QsRename} from '../querySet';
 
-const TemplateQuerySet = stampit().compose(QuerySet).methods({
-  /**
-  * Renames a template.
-  * @memberOf TemplateQuerySet
-  * @instance
-
-  * @param {Object} properties lookup properties used for path resolving
-  * @param {Object} payload object with request payload
-  * @returns {Promise}
-
-  * @example {@lang javascript}
-  * Template.please().rename({name: 'my-template', instanceName: 'test-one'}, { new_name: 'new-name'}).then(function(template) {});
-
-  */
-  rename(properties = {}, payload = { new_name: this.name }) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'POST';
-    this.endpoint = 'rename'
-    this.payload = payload;
-
-    return this;
-  },
+const TemplateQuerySet = stampit().compose(QuerySet, QsRename).methods({
 
   render(properties = {}, context = {}) {
     this.properties = _.assign({}, this.properties, properties);

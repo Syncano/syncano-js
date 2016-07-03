@@ -1,19 +1,9 @@
 import stampit from 'stampit';
 import _ from 'lodash';
 import {Meta, Model, Rename} from './base';
-import QuerySet from '../querySet';
+import QuerySet, {Rename as QsRename} from '../querySet';
 
-const InstanceQuerySet = stampit().compose(QuerySet).methods({
-
-  rename(properties = {}, object = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = object;
-
-    this.method = 'POST';
-    this.endpoint = 'rename';
-    return this;
-  },
-
+const InstanceQuerySet = stampit().compose(QuerySet, QsRename).methods({
   setGlobalConfig(properties = {}, config = {}){
     this.properties = _.assign({}, this.properties, properties);
     this.payload = {config};

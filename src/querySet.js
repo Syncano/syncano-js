@@ -265,6 +265,31 @@ export const Create = stampit().methods({
   }
 });
 
+export const Rename = stampit().methods({
+  /**
+  * A convenience method for renaming an object that support the action.
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} payload object containing the payload to be sent
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * Model.please().fetchData({name: 'model_name', instanceName: 'test-one'}, { new_name: 'new_name'}).then(function(model) {});
+
+  */
+  rename(properties = {}, payload = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'POST';
+    this.endpoint = 'rename';
+    this.payload = payload;
+
+    return this;
+  }
+});
+
 const CacheKey = stampit().methods({
   /**
   * Sets the provided cache key in the request query.
