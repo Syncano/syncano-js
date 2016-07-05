@@ -269,6 +269,13 @@ export const Model = stampit({
     please(properties = {}) {
       const querySet = this.getQuerySet();
       const defaultProps = _.assign({}, this.getDefaultProperties(), properties);
+      const {mapDefaults} = this.getMeta();
+      _.forOwn(defaultProps, (v, k) => {
+        if(_.has(mapDefaults, k)) {
+          _.set(defaultProps, [mapDefaults[k]], v)
+          _.unset(defaultProps, k);
+        }
+      });
       return querySet({
         model: this,
         properties: defaultProps,

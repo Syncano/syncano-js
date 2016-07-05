@@ -48,7 +48,10 @@ const InstanceMeta = Meta({
     'Admin', 'Class', 'Script', 'Schedule', 'InstanceInvitation', 'ApiKey'
     , 'Trigger', 'ScriptEndpoint', 'User', 'Group', 'GCMDevice', 'Channel'
     , 'APNSDevice', 'Template'
-  ]
+  ],
+  mapDefaults: {
+    instanceName: 'name'
+  }
 });
 
 const InstanceConstraints = {
