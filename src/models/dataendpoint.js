@@ -1,10 +1,10 @@
 import stampit from 'stampit';
 import _ from 'lodash';
-import {Meta, Model} from './base';
-import QuerySet, {Filter} from '../querySet';
+import {Meta, Model, Rename} from './base';
+import QuerySet, {Filter, Rename as QsRename} from '../querySet';
 
 
-const DataEndpointQerySet = stampit().compose(QuerySet, Filter).methods({
+const DataEndpointQerySet = stampit().compose(QuerySet, Filter, QsRename).methods({
 
   /**
   * Fetches Data Objects matching the Data View properties.
@@ -24,28 +24,6 @@ const DataEndpointQerySet = stampit().compose(QuerySet, Filter).methods({
     this.method = 'GET';
     this.endpoint = 'get';
     this._serialize = false;
-
-    return this;
-  },
-  /**
-  * Renames DataEndpoint.
-  * @memberOf DataEndpointQerySet
-  * @instance
-
-  * @param {Object} properties lookup properties used for path resolving
-  * @param {Object} payload object containing the payload to be sent
-  * @returns {DataEndpointQerySet}
-
-  * @example {@lang javascript}
-  * DataEndpoint.please().fetchData({name: 'dataViewName', instanceName: 'test-one'}, { new_name: 'new_name'}).then(function(dateendpoint) {});
-
-  */
-  rename(properties = {}, payload = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-
-    this.method = 'POST';
-    this.endpoint = 'rename';
-    this.payload = payload;
 
     return this;
   },
@@ -157,6 +135,7 @@ const DataEndpoint = stampit()
   .setMeta(DataEndpointMeta)
   .setQuerySet(DataEndpointQerySet)
   .setConstraints(DataEndpointConstraints)
+  .compose(Rename)
   .methods({
 
     /**
@@ -180,26 +159,6 @@ const DataEndpoint = stampit()
       if(!_.isEmpty(filters)) query.query = JSON.stringify(filters)
 
       return this.makeRequest('GET', path, {query});
-    },
-    /**
-    * Renames DataEndpoint.
-    * @memberOf DataEndpoint
-    * @instance
-
-    * @param {Object} payload object containing the payload to be sent
-    * @returns {Promise}
-
-    * @example {@lang javascript}
-    * DataEndpoint.rename({ new_name: 'new_name'}).then(function(dataendpoint) {});
-    */
-    rename(payload = { new_name: this.name }) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('rename', this);
-
-      return this.makeRequest('POST', path, {payload})
-        .then((response) => {
-          return this.serialize(response);
-        })
     },
     /**
     * Clears cache of DataEndpoint.
