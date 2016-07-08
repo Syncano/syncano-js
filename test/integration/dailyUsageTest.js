@@ -34,8 +34,5 @@ describe('DailyUsage', function() {
         should(Models).be.an.Array();
       });
     });
-
   });
-
-
 });
