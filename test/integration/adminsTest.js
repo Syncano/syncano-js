@@ -7,13 +7,13 @@ describe('Admin', function() {
 
   let connection = null;
   let Instance = null;
-  let Admin = null;
+  let Model = null;
   const instanceName = suffix.get('Admin');
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
-    Admin = connection.Admin;
+    Model = connection.Admin;
 
     return Instance.please().create({name: instanceName});
   });
@@ -25,7 +25,7 @@ describe('Admin', function() {
   describe('#please()', function() {
 
     it('should be able to list admins', function() {
-      return Admin.please().list({instanceName}).then((keys) => {
+      return Model.please().list({instanceName}).then((keys) => {
         should(keys).be.an.Array();
       });
     });
@@ -33,14 +33,14 @@ describe('Admin', function() {
     it('should be able to get an admin', function() {
       let adminId = null;
 
-      return Admin.please().first({instanceName}).then((admin) => {
+      return Model.please().first({instanceName}).then((admin) => {
         should(admin).have.property('instanceName').which.is.String().equal(instanceName);
         adminId = admin.id;
 
         return admin;
       })
       .then(() => {
-        return Admin
+        return Model
           .please()
           .get({id: adminId, instanceName})
           .request();
@@ -59,13 +59,13 @@ describe('Admin', function() {
     });
 
     it('should be able to get first admin', function() {
-      return Admin.please().list({instanceName}).then((admin) => {
+      return Model.please().list({instanceName}).then((admin) => {
         should(admin).be.an.Object();
       });
     });
 
     it('should be able to get raw data', function() {
-      return Admin.please().list({instanceName}).raw().then((response) => {
+      return Model.please().list({instanceName}).raw().then((response) => {
         should(response).be.a.Object();
         should(response).have.property('objects').which.is.Array();
         should(response).have.property('next').which.is.null();

@@ -9,7 +9,7 @@ describe('Account', function() {
 
   let connection = null;
   let Instance = null;
-  let Account = null;
+  let Model = null;
   const username = suffix.get('account');
   const email = `${username}@internal.com`;
   const data = {
@@ -24,7 +24,7 @@ describe('Account', function() {
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
-    Account = connection.Account;
+    Model = connection.Account;
 
     return Instance.please().create({name: username});
   });
@@ -84,7 +84,7 @@ describe('Account', function() {
   describe('#register()', function() {
 
     it('should register a new user', function() {
-      return Account.register(data).then((user) => {
+      return Model.register(data).then((user) => {
         should(user).be.an.Object();
         should(user).have.property('id').which.is.Number();
         should(user).have.property('first_name').which.is.String().equal(data.first_name);
@@ -101,7 +101,7 @@ describe('Account', function() {
   describe('#login()', function() {
 
     it('should login user', function() {
-      return Account.login(data, false).then((user) => {
+      return Model.login(data, false).then((user) => {
         should(user).be.an.Object();
         should(user).have.property('id').which.is.Number();
         should(user).have.property('first_name').which.is.String().equal(data.first_name);
@@ -118,7 +118,7 @@ describe('Account', function() {
   describe('#update()', function() {
 
     it('should update user data', function() {
-      return Account.update(_.assign({}, data, {first_name: 'a', last_name: 'b'}), false).then((user) => {
+      return Model.update(_.assign({}, data, {first_name: 'a', last_name: 'b'}), false).then((user) => {
         should(user).be.an.Object();
         should(user).have.property('first_name').which.is.String().equal('a');
         should(user).have.property('last_name').which.is.String().equal('b');
@@ -129,7 +129,7 @@ describe('Account', function() {
   describe('#getUserDetails()', function() {
 
     it('should get user data', function() {
-      return Account.getUserDetails().then((user) => {
+      return Model.getUserDetails().then((user) => {
         should(user).be.an.Object();
         should(user).have.property('id').which.is.Number();
         should(user).have.property('first_name').which.is.String().equal('a');
