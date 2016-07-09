@@ -1,11 +1,10 @@
 import should from 'should/as-function';
 import Syncano from '../../src/syncano';
-import {suffix, credentials, createCleaner} from './utils';
+import {suffix, credentials} from './utils';
 
 describe('HourlyUsage', function() {
   this.timeout(15000);
 
-  const cleaner = createCleaner();
   let connection = null;
   let Model = null;
   let Instance = null;
@@ -21,10 +20,6 @@ describe('HourlyUsage', function() {
 
   after(function() {
     return Instance.please().delete({name: instanceName});
-  });
-
-  afterEach(function() {
-    return cleaner.clean();
   });
 
   describe('#please()', function() {
