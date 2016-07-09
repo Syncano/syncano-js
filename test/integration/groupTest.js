@@ -1,5 +1,4 @@
 import should from 'should/as-function';
-import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
@@ -18,19 +17,24 @@ describe('Group', function() {
   const data = {
     instanceName,
     label: groupLabel,
-    description: 'test',
-    id: null
+    description: 'test'
   };
   const userData = {
     instanceName,
     username: 'testuser',
     password: 'y5k8Y4&-'
-  }
+  };
+  let objects = null;
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
     Model = connection.Group;
+
+    objects = [
+      Model({ instanceName, description: 'test', label: `${groupLabel}1`}),
+      Model({ instanceName, description: 'test', label: `${groupLabel}2`})
+    ];
 
     return Instance.please().create({name: instanceName});
   });
@@ -311,7 +315,7 @@ describe('Group', function() {
         })
     });
 
-    it('should be able to bulk create an objects', function() {
+    it('should be able to bulk create objects', function() {
       const objects = [
         Model(data),
         Model(data)
@@ -450,8 +454,8 @@ describe('Group', function() {
     });
 
     it('should be able to update or create an object (CREATE)', function() {
-      let object = {description: 'updateTest'};
-      let defaults = {description: 'createTest'};
+      const object = {description: 'updateTest'};
+      const defaults = {description: 'createTest'};
 
       return Model.please().updateOrCreate(data, object, defaults)
         .then(cleaner.mark)
@@ -465,13 +469,7 @@ describe('Group', function() {
     });
 
     it('should be able to get first object (SUCCESS)', function() {
-      const labels = [
-        `${groupLabel}1`,
-        `${groupLabel}2`
-      ];
-
-      return Promise
-        .mapSeries(labels, (label) => Model.please().create(_.assign({}, data, {label})))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then(() => {
           return Model.please().first(data);
@@ -482,13 +480,7 @@ describe('Group', function() {
     });
 
     it('should be able to change page size', function() {
-      const labels = [
-        `${groupLabel}1`,
-        `${groupLabel}2`
-      ];
-
-      return Promise
-        .mapSeries(labels, (label) => Model.please().create(_.assign({}, data, {label})))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((objects) => {
           should(objects).be.an.Array().with.length(2);
@@ -500,14 +492,9 @@ describe('Group', function() {
     });
 
     it('should be able to change ordering', function() {
-      const labels = [
-        `${groupLabel}1`,
-        `${groupLabel}2`
-      ];
       let asc = null;
 
-      return Promise
-        .mapSeries(labels, (label) => Model.please().create(_.assign({}, data, {label})))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((objects) => {
           should(objects).be.an.Array().with.length(2);
@@ -538,7 +525,5 @@ describe('Group', function() {
         should(response).have.property('prev').which.is.null();
       });
     });
-
   });
-
 });

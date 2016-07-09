@@ -1,5 +1,4 @@
 import should from 'should/as-function';
-import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
@@ -23,12 +22,18 @@ describe('User', function() {
     instanceName,
     username: 'testuser2',
     password: 'x5Z2f8*='
-  }
+  };
+  let objects = null;
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
     Model = connection.User;
+
+    objects = [
+      Model(data),
+      Model(data2)
+    ];
 
     return Instance.please().create({name: instanceName});
   });
@@ -521,12 +526,7 @@ describe('User', function() {
       })
     });
 
-    it('should be able to bulk create an objects', function() {
-      const objects = [
-        Model(data),
-        Model(data2)
-      ];
-
+    it('should be able to bulk create objects', function() {
       return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((result) => {
@@ -617,13 +617,7 @@ describe('User', function() {
 
 
     it('should be able to get first object (SUCCESS)', function() {
-      const users = [
-        data,
-        data2
-      ];
-
-      return Promise
-        .mapSeries(users, (user) => Model.please().create(user))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then(() => {
           return Model.please().first(data);
@@ -634,13 +628,7 @@ describe('User', function() {
     });
 
     it('should be able to change page size', function() {
-      const users = [
-        data,
-        data2
-      ];
-
-      return Promise
-        .mapSeries(users, (user) => Model.please().create(user))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((objects) => {
           should(objects).be.an.Array().with.length(2);
@@ -652,14 +640,9 @@ describe('User', function() {
     });
 
     it('should be able to change ordering', function() {
-      const users = [
-        data,
-        data2
-      ];
       let asc = null;
 
-      return Promise
-        .mapSeries(users, (user) => Model.please().create(user))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((objects) => {
           should(objects).be.an.Array().with.length(2);
@@ -690,7 +673,5 @@ describe('User', function() {
         should(response).have.property('prev').which.is.null();
       });
     });
-
   });
-
 });

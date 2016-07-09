@@ -10,7 +10,7 @@ describe.skip('PartialBackup', function() {
   let connection = null;
   let backupId = null;
   let Instance = null;
-  let PartialBackup = null;
+  let Model = null;
   const instanceName = suffix.get('partialbackup');
   const description = suffix.get('description');
   const label = suffix.get('label');
@@ -24,7 +24,7 @@ describe.skip('PartialBackup', function() {
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
-    PartialBackup = connection.PartialBackup;
+    Model = connection.PartialBackup;
 
     return Instance.please().create({name: instanceName})
   });
@@ -34,41 +34,41 @@ describe.skip('PartialBackup', function() {
   });
 
   it('should be validated', function() {
-    should(PartialBackup().save()).be.rejectedWith(ValidationError);
+    should(Model().save()).be.rejectedWith(ValidationError);
   });
 
   it('should require "instanceName"', function() {
-    should(PartialBackup({}).save()).be.rejectedWith(/instanceName/);
+    should(Model({}).save()).be.rejectedWith(/instanceName/);
   });
 
   it('should validate "description"', function() {
-    should(PartialBackup({instanceName, description: 123}).save()).be.rejectedWith(/description/);
+    should(Model({instanceName, description: 123}).save()).be.rejectedWith(/description/);
   });
 
   it('should validate "label"', function() {
-    should(PartialBackup({instanceName, label: 123}).save()).be.rejectedWith(/label/);
+    should(Model({instanceName, label: 123}).save()).be.rejectedWith(/label/);
   });
 
   it('should validate "query_args"', function() {
-    should(PartialBackup({instanceName, query_args: 123}).save()).be.rejectedWith(/query_args/);
+    should(Model({instanceName, query_args: 123}).save()).be.rejectedWith(/query_args/);
   });
 
   describe('#please()', function() {
 
     it('should be able to list instance partial backups', function() {
-      return PartialBackup.please().list({instanceName}).then((keys) => {
+      return Model.please().list({instanceName}).then((keys) => {
         should(keys).be.an.Array();
       });
     });
 
     it('should be able to list all partial backups', function() {
-      return PartialBackup.please().listAll().then((response) => {
+      return Model.please().listAll().then((response) => {
         should(response).be.an.Array();
       });
     });
 
     it('should be able to create partial instance backup', function() {
-      return PartialBackup.please().create(data)
+      return Model.please().create(data)
         .then((backup) => {
           should(backup).be.an.Object();
           should(backup).have.property('id').which.is.Number();
@@ -95,7 +95,7 @@ describe.skip('PartialBackup', function() {
     });
 
     it('should be able to get partial instance backup details', function() {
-      return PartialBackup.please().get({instanceName, id: backupId})
+      return Model.please().get({instanceName, id: backupId})
         .then((backup) => {
           should(backup).be.an.Object();
           should(backup).have.property('id').which.is.Number().equal(backupId);
@@ -111,5 +111,4 @@ describe.skip('PartialBackup', function() {
       });
     });
   });
-
 });

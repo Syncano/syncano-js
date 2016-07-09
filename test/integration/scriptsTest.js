@@ -19,11 +19,17 @@ describe('Script', function() {
     runtime_name: runtimeName,
     source: 'print "test"'
   };
+  let objects = null;
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
     Model = connection.Script;
+
+    objects = [
+      Model({instanceName, label: 'label_1', runtime_name: runtimeName}),
+      Model({instanceName, label: 'label_2', runtime_name: runtimeName})
+    ];
 
     return Instance.please().create({name: instanceName});
   });
@@ -187,12 +193,7 @@ describe('Script', function() {
         });
       });
 
-    it('should be able to bulk create an objects', function() {
-      const objects = [
-        Model({instanceName, label: scriptName, runtime_name: runtimeName}),
-        Model({instanceName, label: scriptName, runtime_name: runtimeName})
-      ];
-
+    it('should be able to bulk create objects', function() {
       return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((result) => {
@@ -269,11 +270,6 @@ describe('Script', function() {
     });
 
     it('should be able to get first script', function() {
-      const objects = [
-        Model({instanceName, label: 'label_1', runtime_name: runtimeName}),
-        Model({instanceName, label: 'label_2', runtime_name: runtimeName})
-      ];
-
       return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then(() => {
@@ -285,11 +281,6 @@ describe('Script', function() {
     });
 
     it('should be able to change page size', function() {
-      const objects = [
-        Model({instanceName, label: 'label_1', runtime_name: runtimeName}),
-        Model({instanceName, label: 'label_2', runtime_name: runtimeName})
-      ];
-
       return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((keys) => {
@@ -302,10 +293,6 @@ describe('Script', function() {
     });
 
     it('should be able to change ordering', function() {
-      const objects = [
-        Model({instanceName, label: 'label_1', runtime_name: runtimeName}),
-        Model({instanceName, label: 'label_2', runtime_name: runtimeName})
-      ];
       let asc = null;
 
       return Model.please().bulkCreate(objects)
@@ -383,7 +370,5 @@ describe('Script', function() {
           should(runtimes).have.property('ruby').which.is.Object();
         })
     });
-
   });
-
 });

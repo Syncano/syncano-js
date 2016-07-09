@@ -19,7 +19,7 @@ describe('GCMMessage', function() {
       'environment': 'development'
     }
   };
-
+  let objects = null;
   let connection = null;
   let Model = null;
   let Instance = null;
@@ -28,6 +28,11 @@ describe('GCMMessage', function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
     Model = connection.GCMMessage;
+
+    objects = [
+      Model(data),
+      Model(data)
+    ];
 
     return Instance.please().create({name: instanceName}).then(() => {
       return connection.GCMConfig.please().update({instanceName}, {
@@ -109,12 +114,7 @@ describe('GCMMessage', function() {
         });
     });
 
-    it('should be able to bulk create an objects', function() {
-      const objects = [
-        Model(data),
-        Model(data)
-      ];
-
+    it('should be able to bulk create objects', function() {
       return Model.please().bulkCreate(objects)
         .then((result) => {
           should(result).be.an.Array().with.length(2);
@@ -227,6 +227,5 @@ describe('GCMMessage', function() {
         should(response).have.property('prev').which.is.null();
       });
     });
-
   });
 });

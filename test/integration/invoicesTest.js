@@ -34,8 +34,5 @@ describe('Invoice', function() {
         should(Models).be.an.Array();
       });
     });
-
   });
-
-
 });

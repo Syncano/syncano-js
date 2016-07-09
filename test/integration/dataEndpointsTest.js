@@ -1,10 +1,8 @@
 import should from 'should/as-function';
-import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
-
 
 describe('DataEndpoint', function() {
   this.timeout(15000);
@@ -37,6 +35,8 @@ describe('DataEndpoint', function() {
       "name": "int"
       }]
     };
+  let objects = null;
+  let dataobjects = null;
 
   before(function(done) {
     connection = Syncano(credentials.getCredentials());
@@ -44,6 +44,13 @@ describe('DataEndpoint', function() {
     Model = connection.DataEndpoint;
     Class = connection.Class;
     dataObject = connection.DataObject;
+
+    dataobjects = _.map(_.range(10), (int) => dataObject({className, instanceName, int}));
+
+    objects = [
+      Model({name: `${dataEndpointName}_1`, instanceName, class: className}),
+      Model({name: `${dataEndpointName}_2`, instanceName, class: className})
+    ];
 
     return Instance.please().create({name: instanceName}).then(() => {
       Class.please().create(classData).then(() => done());
@@ -117,8 +124,7 @@ describe('DataEndpoint', function() {
   });
 
   it('should be able to fetch DataObjects via model instance with filtering', function() {
-    return Promise
-      .mapSeries(_.range(10), (int) => dataObject({className, instanceName, int}).save())
+    return dataObject.please().bulkCreate(dataobjects)
       .then(cleaner.mark)
       .then(() => {
         return Model(data).save();
@@ -136,8 +142,7 @@ describe('DataEndpoint', function() {
   });
 
   it('should be able to fetch DataObjects via model instance with cache_key', function() {
-    return Promise
-      .mapSeries(_.range(10), (int) => dataObject({className, instanceName, int}).save())
+    return dataObject.please().bulkCreate(dataobjects)
       .then(cleaner.mark)
       .then(() => {
         return Model(data).save();
@@ -311,8 +316,7 @@ describe('DataEndpoint', function() {
     });
 
     it('should be able to fetch DataObjects', function() {
-      return Promise
-        .mapSeries(_.range(10), (int) => dataObject({className, instanceName, int}).save())
+      return dataObject.please().bulkCreate(dataobjects)
         .then(cleaner.mark)
         .then(() => {
             return Model.please().create(data)
@@ -339,8 +343,7 @@ describe('DataEndpoint', function() {
     });
 
     it('should be able to fetch DataObjects with filtering', function() {
-      return Promise
-        .mapSeries(_.range(10), (int) => dataObject({className, instanceName, int}).save())
+      return dataObject.please().bulkCreate(dataobjects)
         .then(cleaner.mark)
         .then(() => {
             return Model.please().create(data)
@@ -367,8 +370,7 @@ describe('DataEndpoint', function() {
     });
 
     it('should be able to fetch DataObjects with cache_key', function() {
-      return Promise
-        .mapSeries(_.range(10), (int) => dataObject({className, instanceName, int}).save())
+      return dataObject.please().bulkCreate(dataobjects)
         .then(cleaner.mark)
         .then(() => {
             return Model.please().create(data)
@@ -487,9 +489,9 @@ describe('DataEndpoint', function() {
     });
 
     it('should be able to update or create Model (CREATE)', function() {
-      let properties = {name: dataEndpointName, instanceName, class: className};
-      let object = {description: 'updateTest'};
-      let defaults = {
+      const properties = {name: dataEndpointName, instanceName, class: className};
+      const object = {description: 'updateTest'};
+      const defaults = {
           description: 'createTest',
           order_by: 'int',
           page_size: 10
@@ -513,13 +515,7 @@ describe('DataEndpoint', function() {
     });
 
     it('should be able to get first Model (SUCCESS)', function() {
-      const names = [
-        `${dataEndpointName}_1`,
-        `${dataEndpointName}_2`
-      ];
-
-      return Promise
-        .mapSeries(names, (name) => Model.please().create({name, instanceName, class: className}))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then(() => {
           return Model.please().first({instanceName});
@@ -530,13 +526,7 @@ describe('DataEndpoint', function() {
     });
 
     it('should be able to change page size', function() {
-      const names = [
-        `${dataEndpointName}_1`,
-        `${dataEndpointName}_2`
-      ];
-
-      return Promise
-        .mapSeries(names, (name) => Model.please().create({name, instanceName, class: className}))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((dta) => {
           should(dta).be.an.Array().with.length(2);
@@ -548,14 +538,9 @@ describe('DataEndpoint', function() {
     });
 
     it('should be able to change ordering', function() {
-      const names = [
-        `${dataEndpointName}_1`,
-        `${dataEndpointName}_2`
-      ];
       let asc = null;
 
-      return Promise
-        .mapSeries(names, (name) => Model.please().create({name, instanceName, class: className}))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((dta) => {
           should(dta).be.an.Array().with.length(2);
@@ -586,6 +571,5 @@ describe('DataEndpoint', function() {
         should(response).have.property('prev').which.is.null();
       });
     });
-
   });
 });

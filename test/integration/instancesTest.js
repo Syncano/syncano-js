@@ -1,5 +1,4 @@
 import should from 'should/as-function';
-import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import {suffix, credentials, createCleaner} from './utils';
@@ -10,16 +9,22 @@ describe('Instance', function() {
 
   const cleaner = createCleaner();
   let connection = null;
-  let Instance = null;
+  let Model = null;
   const instanceName = suffix.get('name');
   const data = {
     name: instanceName,
     description: suffix.get('description')
   };
+  let objects = null;
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
-    Instance = connection.Instance;
+    Model = connection.Instance;
+
+    objects = [
+      Model({ name: `${instanceName}_1`}),
+      Model({ name: `${instanceName}_2`})
+    ];
   });
 
   afterEach(function() {
@@ -27,23 +32,23 @@ describe('Instance', function() {
   });
 
   it('should be validated', function() {
-    should(Instance().save()).be.rejectedWith(ValidationError);
+    should(Model().save()).be.rejectedWith(ValidationError);
   });
 
   it('should validate "name"', function() {
-    should(Instance({name: {}}).save()).be.rejectedWith(/name/);
+    should(Model({name: {}}).save()).be.rejectedWith(/name/);
   });
 
   it('should validate "description"', function() {
-    should(Instance({name: instanceName, description: 123}).save()).be.rejectedWith(/description/);
+    should(Model({name: instanceName, description: 123}).save()).be.rejectedWith(/description/);
   });
 
   it('should validate "metadata"', function() {
-    should(Instance({name: instanceName, metadata: 123}).save()).be.rejectedWith(/metadata/);
+    should(Model({name: instanceName, metadata: 123}).save()).be.rejectedWith(/metadata/);
   });
 
   it('should be able to save via model instance', function() {
-    return Instance(data).save()
+    return Model(data).save()
       .then(cleaner.mark)
       .then((instance) => {
         should(instance).be.a.Object();
@@ -58,7 +63,7 @@ describe('Instance', function() {
   });
 
   it('should be able to set global config via model instance', function() {
-    return Instance(data).save()
+    return Model(data).save()
       .then(cleaner.mark)
       .then((instance) => {
         return instance.setGlobalConfig({ var1: 'value1', var2: 'value2' });
@@ -74,7 +79,7 @@ describe('Instance', function() {
   it('should be able to get global config via model instance', function() {
     let tempInstance = null;
 
-    return Instance(data).save()
+    return Model(data).save()
       .then(cleaner.mark)
       .then((instance) => {
         tempInstance = instance;
@@ -92,7 +97,7 @@ describe('Instance', function() {
   });
 
   it('should be able to update via model instance', function() {
-    return Instance(data).save()
+    return Model(data).save()
       .then(cleaner.mark)
       .then((instance) => {
         should(instance).be.an.Object();
@@ -111,7 +116,7 @@ describe('Instance', function() {
 
   it('should be able to rename via model instance', function() {
     const newInstanceName = suffix.get('name');
-    return Instance(data).save()
+    return Model(data).save()
       .then(cleaner.mark)
       .then((instance) => {
         should(instance).be.an.Object();
@@ -126,7 +131,7 @@ describe('Instance', function() {
   });
 
   it('should be able to delete via model instance', function() {
-    return Instance(data).save()
+    return Model(data).save()
       .then((instance) => {
         should(instance).be.an.Object();
         should(instance).have.property('name').which.is.String().equal(data.name);
@@ -139,23 +144,23 @@ describe('Instance', function() {
   describe('#please()', function() {
 
     it('should be able to list instances', function() {
-      return Instance.please().list().then((instances) => {
+      return Model.please().list().then((instances) => {
         should(instances).be.an.Array();
       });
     });
 
     it('should be able to list classes as template', function() {
-      return Instance.please().create(data)
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then(() => {
-          return Instance.please().list().templateResponse('objects_html_table').then((response) => {
+          return Model.please().list().templateResponse('objects_html_table').then((response) => {
             should(response).be.html;
           });
         })
     });
 
     it('should be able to create an instance', function() {
-      return Instance.please().create(data)
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((instance) => {
           should(instance).be.a.Object();
@@ -170,10 +175,10 @@ describe('Instance', function() {
     });
 
     it('should be able to set global config', function() {
-      return Instance.please().create(data)
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((instance) => {
-          return Instance.please().setGlobalConfig(instance, { var1: 'value1', var2: 'value2' });
+          return Model.please().setGlobalConfig(instance, { var1: 'value1', var2: 'value2' });
         })
         .then((response) => {
           should(response).be.an.Object();
@@ -186,15 +191,15 @@ describe('Instance', function() {
     it('should be able to get global config', function() {
       let tempInstance = null;
 
-      return Instance.please().create(data)
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((instance) => {
           tempInstance = instance
 
-          return Instance.please().setGlobalConfig(tempInstance, { var1: 'value1', var2: 'value2' });
+          return Model.please().setGlobalConfig(tempInstance, { var1: 'value1', var2: 'value2' });
         })
         .then(() => {
-          return Instance.please().getGlobalConfig(tempInstance);
+          return Model.please().getGlobalConfig(tempInstance);
         })
         .then((response) => {
           should(response).be.an.Object();
@@ -204,13 +209,8 @@ describe('Instance', function() {
         })
     });
 
-    it('should be able to bulk create an objects', function() {
-      const objects = [
-        Instance({name: instanceName}),
-        Instance({name: `${instanceName}1`})
-      ];
-
-      return Instance.please().bulkCreate(objects)
+    it('should be able to bulk create objects', function() {
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((result) => {
           should(result).be.an.Array().with.length(2);
@@ -218,7 +218,7 @@ describe('Instance', function() {
     });
 
     it('should be able to get an instance', function() {
-      return Instance.please().create(data)
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((instance) => {
           should(instance).be.an.Object();
@@ -226,7 +226,7 @@ describe('Instance', function() {
           return instance;
         })
         .then(() => {
-          return Instance
+          return Model
             .please()
             .get(data)
             .request();
@@ -245,15 +245,14 @@ describe('Instance', function() {
     });
 
     it('should be able to delete an instance', function() {
-      return Instance.please().create({name: instanceName})
+      return Model.please().create({name: instanceName})
         .then((instance) => {
           should(instance).be.an.Object();
           should(instance).have.property('name').which.is.String().equal(instanceName);
           return instance;
         })
         .then(() => {
-          return connection
-            .Instance
+          return Model
             .please()
             .delete({name: instanceName})
             .request();
@@ -261,7 +260,7 @@ describe('Instance', function() {
     });
 
     it('should be able to get or create instance (CREATE)', function() {
-      return Instance.please().getOrCreate({name: instanceName}, {description: 'test'})
+      return Model.please().getOrCreate({name: instanceName}, {description: 'test'})
         .then(cleaner.mark)
         .then((instance) => {
           should(instance).be.an.Object();
@@ -276,14 +275,14 @@ describe('Instance', function() {
     });
 
     it('should be able to get or create instance (GET)', function() {
-      return Instance.please().create(data)
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((instance) => {
           should(instance).be.an.Object();
           should(instance).have.property('name').which.is.String().equal(data.name);
           should(instance).have.property('description').which.is.String().equal(data.description);
 
-          return Instance.please().getOrCreate({name: instanceName}, {description: 'newTest'});
+          return Model.please().getOrCreate({name: instanceName}, {description: 'newTest'});
         })
         .then((instance) => {
           should(instance).be.an.Object();
@@ -294,14 +293,14 @@ describe('Instance', function() {
 
     it('should be able to rename an instance', function() {
       const newInstanceName = suffix.get('name');
-      return Instance.please().create(data)
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((instance) => {
           should(instance).be.an.Object();
           should(instance).have.property('name').which.is.String().equal(data.name);
           should(instance).have.property('description').which.is.String().equal(data.description);
 
-          return Instance.please().rename({name: instance.name}, {new_name: newInstanceName});
+          return Model.please().rename({name: instance.name}, {new_name: newInstanceName});
         })
         .then((instance) => {
           should(instance).have.property('name').which.is.String().equal(newInstanceName);
@@ -309,14 +308,14 @@ describe('Instance', function() {
     });
 
     it('should be able to update an instance', function() {
-      return Instance.please().create(data)
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((instance) => {
           should(instance).be.an.Object();
           should(instance).have.property('name').which.is.String().equal(data.name);
           should(instance).have.property('description').which.is.String().equal(data.description);
 
-          return Instance.please().update({name: instance.name}, {description: 'newTest'});
+          return Model.please().update({name: instance.name}, {description: 'newTest'});
         })
         .then((instance) => {
           should(instance).be.an.Object();
@@ -326,14 +325,14 @@ describe('Instance', function() {
     });
 
     it('should be able to update or create instance (UPDATE)', function() {
-      return Instance.please().create(data)
+      return Model.please().create(data)
         .then(cleaner.mark)
         .then((instance) => {
           should(instance).be.an.Object();
           should(instance).have.property('name').which.is.String().equal(data.name);
           should(instance).have.property('description').which.is.String().equal(data.description);
 
-          return Instance.please().updateOrCreate({name: instance.name}, {description: 'newTest'});
+          return Model.please().updateOrCreate({name: instance.name}, {description: 'newTest'});
         })
         .then((instance) => {
           should(instance).be.an.Object();
@@ -343,10 +342,10 @@ describe('Instance', function() {
     });
 
     it('should be able to update or create instance (CREATE)', function() {
-      let object = {description: 'updateTest'};
-      let defaults = {description: 'createTest'};
+      const object = {description: 'updateTest'};
+      const defaults = {description: 'createTest'};
 
-      return Instance.please().updateOrCreate(data, object, defaults)
+      return Model.please().updateOrCreate(data, object, defaults)
         .then(cleaner.mark)
         .then((instance) => {
           should(instance).be.an.Object();
@@ -361,16 +360,10 @@ describe('Instance', function() {
     });
 
     it('should be able to get first instance (SUCCESS)', function() {
-      const names = [
-        `${instanceName}_1`,
-        `${instanceName}_2`
-      ];
-
-      return Promise
-        .mapSeries(names, (name) => Instance.please().create({name}))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then(() => {
-          return Instance.please().first();
+          return Model.please().first();
         })
         .then((instance) => {
           should(instance).be.an.Object();
@@ -378,17 +371,11 @@ describe('Instance', function() {
     });
 
     it('should be able to change page size', function() {
-      const names = [
-        `${instanceName}_1`,
-        `${instanceName}_2`
-      ];
-
-      return Promise
-        .mapSeries(names, (name) => Instance.please().create({name: name}))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((instances) => {
           should(instances).be.an.Array().with.length(2);
-          return Instance.please().pageSize(1);
+          return Model.please().pageSize(1);
         })
         .then((instances) => {
           should(instances).be.an.Array().with.length(1);
@@ -396,14 +383,9 @@ describe('Instance', function() {
     });
 
     it.skip('should be able to change ordering', function() {
-      const names = [
-        `${instanceName}_1`,
-        `${instanceName}_2`
-      ];
       let ascInstances = null;
 
-      return Promise
-        .mapSeries(names, (name) => Instance.please().create({name: name}))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((instances) => {
           should(instances).be.an.Array().with.length(2);
@@ -412,7 +394,7 @@ describe('Instance', function() {
         .then((instances) => {
           should(instances).be.an.Array().with.length(2);
           ascInstances = instances;
-          return Instance.please().ordering('desc');
+          return Model.please().ordering('desc');
         }).then((descInstances) => {
           const ascNames = _.map(ascInstances, 'name');
           const descNames = _.map(descInstances, 'name');
@@ -426,14 +408,12 @@ describe('Instance', function() {
     });
 
     it('should be able to get raw data', function() {
-      return Instance.please().list().raw().then((response) => {
+      return Model.please().list().raw().then((response) => {
         should(response).be.a.Object();
         should(response).have.property('objects').which.is.Array();
         should(response).have.property('next').which.is.null();
         should(response).have.property('prev').which.is.null();
       });
     });
-
   });
-
 });

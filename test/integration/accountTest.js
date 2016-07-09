@@ -9,7 +9,7 @@ describe('Account', function() {
 
   let connection = null;
   let Instance = null;
-  let Account = null;
+  let Model = null;
   const username = suffix.get('account');
   const email = `${username}@internal.com`;
   const data = {
@@ -24,7 +24,7 @@ describe('Account', function() {
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
-    Account = connection.Account;
+    Model = connection.Account;
 
     return Instance.please().create({name: username});
   });
@@ -34,57 +34,57 @@ describe('Account', function() {
   });
 
   it('has "register" method', function() {
-    should(Account).have.property('register').which.is.Function();
+    should(Model).have.property('register').which.is.Function();
   });
 
   it('has "login" method', function() {
-    should(Account).have.property('login').which.is.Function();
+    should(Model).have.property('login').which.is.Function();
   });
 
   it('has "update" method', function() {
-    should(Account).have.property('update').which.is.Function();
+    should(Model).have.property('update').which.is.Function();
   });
 
   it('has "getUserDetails" method', function() {
-    should(Account).have.property('getUserDetails').which.is.Function();
+    should(Model).have.property('getUserDetails').which.is.Function();
   });
 
   it('has "activate" method', function() {
-    should(Account).have.property('activate').which.is.Function();
+    should(Model).have.property('activate').which.is.Function();
   });
 
   it('has "changePassword" method', function() {
-    should(Account).have.property('changePassword').which.is.Function();
+    should(Model).have.property('changePassword').which.is.Function();
   });
 
   it('has "resetPassword" method', function() {
-    should(Account).have.property('resetPassword').which.is.Function();
+    should(Model).have.property('resetPassword').which.is.Function();
   });
 
   it('has "confirmPasswordReset" method', function() {
-    should(Account).have.property('confirmPasswordReset').which.is.Function();
+    should(Model).have.property('confirmPasswordReset').which.is.Function();
   });
 
   it('has "setPassword" method', function() {
-    should(Account).have.property('setPassword').which.is.Function();
+    should(Model).have.property('setPassword').which.is.Function();
   });
 
   it('has "resetKey" method', function() {
-    should(Account).have.property('resetKey').which.is.Function();
+    should(Model).have.property('resetKey').which.is.Function();
   });
 
   it('has "socialLogin" method', function() {
-    should(Account).have.property('socialLogin').which.is.Function();
+    should(Model).have.property('socialLogin').which.is.Function();
   });
 
   it('has "resendEmail" method', function() {
-    should(Account).have.property('resendEmail').which.is.Function();
+    should(Model).have.property('resendEmail').which.is.Function();
   });
 
   describe('#register()', function() {
 
     it('should register a new user', function() {
-      return Account.register(data).then((user) => {
+      return Model.register(data).then((user) => {
         should(user).be.an.Object();
         should(user).have.property('id').which.is.Number();
         should(user).have.property('first_name').which.is.String().equal(data.first_name);
@@ -101,7 +101,7 @@ describe('Account', function() {
   describe('#login()', function() {
 
     it('should login user', function() {
-      return Account.login(data, false).then((user) => {
+      return Model.login(data, false).then((user) => {
         should(user).be.an.Object();
         should(user).have.property('id').which.is.Number();
         should(user).have.property('first_name').which.is.String().equal(data.first_name);
@@ -118,7 +118,7 @@ describe('Account', function() {
   describe('#update()', function() {
 
     it('should update user data', function() {
-      return Account.update(_.assign({}, data, {first_name: 'a', last_name: 'b'}), false).then((user) => {
+      return Model.update(_.assign({}, data, {first_name: 'a', last_name: 'b'}), false).then((user) => {
         should(user).be.an.Object();
         should(user).have.property('first_name').which.is.String().equal('a');
         should(user).have.property('last_name').which.is.String().equal('b');
@@ -129,7 +129,7 @@ describe('Account', function() {
   describe('#getUserDetails()', function() {
 
     it('should get user data', function() {
-      return Account.getUserDetails().then((user) => {
+      return Model.getUserDetails().then((user) => {
         should(user).be.an.Object();
         should(user).have.property('id').which.is.Number();
         should(user).have.property('first_name').which.is.String().equal('a');

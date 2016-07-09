@@ -268,7 +268,7 @@ describe('ScriptEndpoint', function() {
         });
     });
 
-    it('should be able to bulk create an objects', function() {
+    it('should be able to bulk create objects', function() {
       const objects = [
         Model(ModelData),
         Model(_.assign({}, ModelData, {name: `${ModelName}1`}))

@@ -441,6 +441,5 @@ describe('Solution', function() {
           should(version).have.property('type').which.is.String().equal('stable');
         });
     });
-
   });
 });
