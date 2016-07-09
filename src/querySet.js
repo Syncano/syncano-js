@@ -192,7 +192,7 @@ const QuerySetRequest = stampit().compose(Request)
       if (!_.includes(allowedMethods, method)) {
         return Promise.reject(new Error(`Invalid request method: "${this.method}".`));
       }
-
+      
       return this.makeRequest(method, path, options).then((body) => [this.serialize(body), body]);
     },
 

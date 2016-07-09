@@ -96,7 +96,5 @@ describe('ScriptTrace', function() {
         should(response).have.property('prev').which.is.null();
       });
     });
-
   });
-
 });

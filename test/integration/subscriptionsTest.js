@@ -37,7 +37,6 @@ describe('Subscription', function() {
 
     it('should be able to get a Model', function() {
       return Model.please().list().then((Models) => {
-
         return Model.please().get({id: Models[0].id })
       })
       .then((Model) => {
@@ -49,8 +48,5 @@ describe('Subscription', function() {
         should(Model).have.property('plan').which.is.String().equal('builder');
       })
     });
-
   });
-
-
 });

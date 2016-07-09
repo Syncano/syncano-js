@@ -36,6 +36,4 @@ describe('HourlyUsage', function() {
     });
 
   });
-
-
 });

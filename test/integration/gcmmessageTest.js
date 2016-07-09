@@ -114,7 +114,7 @@ describe('GCMMessage', function() {
         });
     });
 
-    it('should be able to bulk create an objects', function() {
+    it('should be able to bulk create objects', function() {
       return Model.please().bulkCreate(objects)
         .then((result) => {
           should(result).be.an.Array().with.length(2);

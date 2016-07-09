@@ -112,7 +112,5 @@ describe.skip('ScheduleTrace', function() {
         should(response).have.property('prev').which.is.null();
       });
     });
-
   });
-
 });

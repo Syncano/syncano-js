@@ -44,8 +44,5 @@ describe('Plan', function() {
         should(Model).have.property('links').which.is.Object();
       });
     });
-
   });
-
-
 });
