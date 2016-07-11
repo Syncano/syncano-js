@@ -1,7 +1,6 @@
 import stampit from 'stampit';
-import _ from 'lodash';
 import {Meta, Model} from './base';
-import {BaseQuerySet, Create, BulkCreate, Get, GetOrCreate, List} from '../querySet';
+import {BaseQuerySet, Create, BulkCreate, Get, GetOrCreate, List, SendToDevice, SendToDevices} from '../querySet';
 
 const GCMMessageQuerySet = stampit().compose(
   BaseQuerySet,
@@ -9,19 +8,10 @@ const GCMMessageQuerySet = stampit().compose(
   BulkCreate,
   Get,
   List,
-  GetOrCreate
-).methods({
-
-  sendToDevice(properties = {}, content = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = {content};
-    this.method = 'POST';
-    this.endpoint = 'deviceMessage';
-
-    return this;
-  }
-
-});
+  GetOrCreate,
+  SendToDevice,
+  SendToDevices
+);
 
 const GCMMessageMeta = Meta({
   name: 'gcmmessage',
@@ -32,7 +22,7 @@ const GCMMessageMeta = Meta({
       'path': '/v1.1/instances/{instanceName}/push_notifications/gcm/messages/{id}/'
     },
     'list': {
-      'methods': ['get'],
+      'methods': ['get', 'post'],
       'path': '/v1.1/instances/{instanceName}/push_notifications/gcm/messages/'
     },
     'deviceMessage': {

@@ -172,6 +172,30 @@ export const Meta = stampit()
     }
   });
 
+export const Rename = stampit().methods({
+  /**
+  * Method used for making requests to the 'rename' endpoint in models.
+  * @memberOf Model
+  * @instance
+
+  * @param {Object} payload object containing the payload to be sent
+  * @returns {Promise}
+
+  * @example {@lang javascript}
+  * Model.rename({ new_name: 'new_name'}).then(function(model) {});
+  */
+  rename(payload = { new_name: this.name }) {
+    const meta = this.getMeta();
+    const path = meta.resolveEndpointPath('rename', this);
+
+    return this.makeRequest('POST', path, {payload})
+      .then((response) => {
+        return this.serialize(response);
+      })
+  }
+
+});
+
 /**
  * Base {@link https://github.com/stampit-org/stampit|stamp} for all models which wraps all raw JavaScript objects.
  * **Not** meant to be used directly more like mixin in other {@link https://github.com/stampit-org/stampit|stamps}.
@@ -245,6 +269,13 @@ export const Model = stampit({
     please(properties = {}) {
       const querySet = this.getQuerySet();
       const defaultProps = _.assign({}, this.getDefaultProperties(), properties);
+      const {mapDefaults} = this.getMeta();
+      _.forOwn(defaultProps, (v, k) => {
+        if(_.has(mapDefaults, k)) {
+          _.set(defaultProps, [mapDefaults[k]], v)
+          _.unset(defaultProps, k);
+        }
+      });
       return querySet({
         model: this,
         properties: defaultProps,

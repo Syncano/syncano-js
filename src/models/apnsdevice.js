@@ -18,6 +18,11 @@ const APNSDeviceQuerySet = stampit().compose(
   sendMessage(properties = {}, content = {}) {
     const {APNSMessage} = this.getConfig();
     return APNSMessage.please().sendToDevice(_.assign({}, this.properties, properties), content);
+  },
+
+  sendMessages(properties = {}, content = {}) {
+    const {APNSMessage} = this.getConfig();
+    return APNSMessage.please().sendToDevices(_.assign({}, this.properties, properties), content)
   }
 
 });

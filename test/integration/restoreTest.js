@@ -8,7 +8,7 @@ describe.skip('Restore', function() {
 
   let connection = null;
   let Instance = null;
-  let Restore = null;
+  let Model = null;
   let FullBackup = null;
   let backupId = null;
   let restoreId = null;
@@ -24,7 +24,7 @@ describe.skip('Restore', function() {
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
-    Restore = connection.Restore;
+    Model = connection.Restore;
     FullBackup = connection.FullBackup;
 
     return Instance.please()
@@ -46,13 +46,13 @@ describe.skip('Restore', function() {
   describe('#please()', function() {
 
     it('should be able to list restores', function() {
-      return Restore.please().list({instanceName}).then((keys) => {
+      return Model.please().list({instanceName}).then((keys) => {
         should(keys).be.an.Array();
       });
     });
 
     it("should be able to restore instance from backup", function() {
-      return Restore.please().restore({instanceName}, {backup: backupId})
+      return Model.please().restore({instanceName}, {backup: backupId})
         .then((restore) => {
           restoreId = restore.id;
           should(restore).be.an.Object();
@@ -68,7 +68,7 @@ describe.skip('Restore', function() {
     });
 
     it('should be able to get restore details', function() {
-      return Restore.please().get({instanceName, id: restoreId})
+      return Model.please().get({instanceName, id: restoreId})
         .then((restore) => {
           should(restore).be.an.Object();
           should(restore).have.property('id').which.is.Number();

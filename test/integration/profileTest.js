@@ -56,8 +56,5 @@ describe('Profile', function() {
         should(Model).have.property('first_name').which.is.String().equal('John Doe');
       });
     });
-
   });
-
-
 });

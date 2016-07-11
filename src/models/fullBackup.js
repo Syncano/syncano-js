@@ -1,22 +1,15 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
-import {BaseQuerySet, List, Get, Delete, Create} from '../querySet';
+import {BaseQuerySet, List, Get, Delete, Create, ListAll} from '../querySet';
 
 const FullBackupQuerySet = stampit().compose(
   BaseQuerySet,
   List,
   Get,
   Delete,
-  Create
-).methods({
-
-  listAll() {
-    this.resultSetEndpoints = ['list', 'all'];
-    this.method = 'GET';
-    this.endpoint = 'all';
-    return this;
-  }
-})
+  Create,
+  ListAll
+);
 
 const FullBackupMeta = Meta({
   name: 'fullBackup',

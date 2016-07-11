@@ -1,5 +1,4 @@
 import should from 'should/as-function';
-import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
@@ -11,7 +10,9 @@ describe('ApiKey', function() {
   const cleaner = createCleaner();
   let connection = null;
   let Instance = null;
-  let ApiKey = null;
+  let Model = null;
+  let objects = null;
+  let descriptions = null;
   const instanceName = suffix.get('ApiKey');
   const description = suffix.get('description');
   const data = {
@@ -22,7 +23,15 @@ describe('ApiKey', function() {
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
-    ApiKey = connection.ApiKey;
+    Model = connection.ApiKey;
+    descriptions = [
+      Model({description: 'description_1', instanceName }),
+      Model({description: 'description_2', instanceName })
+    ];
+    objects = [
+      Model(data),
+      Model(data)
+    ];
 
     return Instance.please().create({name: instanceName});
   });
@@ -36,31 +45,31 @@ describe('ApiKey', function() {
   });
 
   it('should be validated', function() {
-    should(ApiKey().save()).be.rejectedWith(ValidationError);
+    should(Model().save()).be.rejectedWith(ValidationError);
   });
 
   it('should require "instanceName"', function() {
-    should(ApiKey({}).save()).be.rejectedWith(/instanceName/);
+    should(Model({}).save()).be.rejectedWith(/instanceName/);
   });
 
   it('should validate "description"', function() {
-    should(ApiKey({instanceName, description: 123}).save()).be.rejectedWith(/description/);
+    should(Model({instanceName, description: 123}).save()).be.rejectedWith(/description/);
   });
 
   it('should validate "ignore_acl"', function() {
-    should(ApiKey({instanceName, ignore_acl: 123}).save()).be.rejectedWith(/ignore_acl/);
+    should(Model({instanceName, ignore_acl: 123}).save()).be.rejectedWith(/ignore_acl/);
   });
 
   it('should validate "allow_user_create"', function() {
-    should(ApiKey({instanceName, allow_user_create: 123}).save()).be.rejectedWith(/allow_user_create/);
+    should(Model({instanceName, allow_user_create: 123}).save()).be.rejectedWith(/allow_user_create/);
   });
 
   it('should validate "allow_anonymous_read"', function() {
-    should(ApiKey({instanceName, allow_anonymous_read: 123}).save()).be.rejectedWith(/allow_anonymous_read/);
+    should(Model({instanceName, allow_anonymous_read: 123}).save()).be.rejectedWith(/allow_anonymous_read/);
   });
 
   it('should be able to save via model instance', function() {
-    return ApiKey(data).save()
+    return Model(data).save()
       .then(cleaner.mark)
       .then((apk) => {
         should(apk).be.an.Object();
@@ -77,7 +86,7 @@ describe('ApiKey', function() {
   });
 
   it('should be able to update via model instance', function() {
-    return ApiKey(data).save()
+    return Model(data).save()
       .then(cleaner.mark)
       .then((apk) => {
         should(apk).have.property('instanceName').which.is.String().equal(data.instanceName);
@@ -101,7 +110,7 @@ describe('ApiKey', function() {
   });
 
   it('should be able to delete via model instance', function() {
-    return ApiKey(data).save()
+    return Model(data).save()
       .then((apk) => {
         should(apk).have.property('instanceName').which.is.String().equal(data.instanceName);
         should(apk).have.property('description').which.is.String().equal(data.description);
@@ -112,7 +121,7 @@ describe('ApiKey', function() {
 
   it('should be able to reset key via model instance', function() {
     let apiKey, keyId;
-    return ApiKey(data).save()
+    return Model(data).save()
       .then(cleaner.mark)
       .then((apk) => {
         should(apk).have.property('instanceName').which.is.String().equal(data.instanceName);
@@ -132,13 +141,13 @@ describe('ApiKey', function() {
   describe('#please()', function() {
 
     it('should be able to list api keys', function() {
-      return ApiKey.please().list({instanceName}).then((keys) => {
+      return Model.please().list({instanceName}).then((keys) => {
         should(keys).be.an.Array();
       });
     });
 
     it('should be able to create an api key', function() {
-      return ApiKey.please().create({instanceName})
+      return Model.please().create({instanceName})
         .then(cleaner.mark)
         .then((apk) => {
           should(apk).be.an.Object();
@@ -155,12 +164,7 @@ describe('ApiKey', function() {
     });
 
     it('should be able to bulk create a api keys', function() {
-      const objects = [
-        ApiKey(data),
-        ApiKey(data)
-      ];
-
-      return ApiKey.please().bulkCreate(objects)
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((result) => {
           should(result).be.an.Array().with.length(2);
@@ -170,7 +174,7 @@ describe('ApiKey', function() {
     it('should be able to get an api key', function() {
       let keyId = null;
 
-      return ApiKey.please().create({instanceName})
+      return Model.please().create({instanceName})
         .then(cleaner.mark)
         .then((apk) => {
           should(apk).have.property('instanceName').which.is.String().equal(instanceName);
@@ -179,7 +183,7 @@ describe('ApiKey', function() {
           return apk;
         })
         .then(() => {
-          return ApiKey
+          return Model
             .please()
             .get({id: keyId, instanceName})
             .request();
@@ -202,7 +206,7 @@ describe('ApiKey', function() {
     it('should be able to delete an api key', function() {
       let keyId = null;
 
-      return ApiKey.please().create({instanceName})
+      return Model.please().create({instanceName})
         .then((apk) => {
           should(apk).be.an.Object();
           should(apk).have.property('instanceName').which.is.String().equal(instanceName);
@@ -210,7 +214,7 @@ describe('ApiKey', function() {
           return apk;
         })
         .then(() => {
-          return ApiKey
+          return Model
             .please()
             .delete({id: keyId, instanceName})
             .request();
@@ -218,14 +222,14 @@ describe('ApiKey', function() {
     });
 
     it('should be able to update an api key', function() {
-      return ApiKey.please().create({instanceName, description: 'test'})
+      return Model.please().create({instanceName, description: 'test'})
         .then(cleaner.mark)
         .then((apk) => {
           should(apk).be.an.Object();
           should(apk).have.property('instanceName').which.is.String().equal(instanceName);
           should(apk).have.property('description').which.is.String().equal('test');
 
-          return ApiKey.please().update({id: apk.id, instanceName}, {description: 'newTest'});
+          return Model.please().update({id: apk.id, instanceName}, {description: 'newTest'});
         })
         .then((apk) => {
           should(apk).be.an.Object();
@@ -236,7 +240,7 @@ describe('ApiKey', function() {
 
     it('should be able to reset an api key', function() {
       let apiKey, keyId;
-      return ApiKey.please().create({instanceName, description: 'test'})
+      return Model.please().create({instanceName, description: 'test'})
         .then(cleaner.mark)
         .then((apk) => {
           should(apk).be.an.Object();
@@ -246,7 +250,7 @@ describe('ApiKey', function() {
           apiKey = apk.api_key;
           keyId = apk.id;
 
-          return ApiKey.please().reset({id: apk.id, instanceName});
+          return Model.please().reset({id: apk.id, instanceName});
         })
         .then((apk) => {
           should(apk.id).be.equal(keyId);
@@ -255,16 +259,10 @@ describe('ApiKey', function() {
     });
 
     it('should be able to get first api key', function() {
-      const descriptions = [
-        'description_1',
-        'description_2'
-      ];
-
-      return Promise
-        .mapSeries(descriptions, (desc) => ApiKey.please().create({description: desc, instanceName}))
+      return Model.please().bulkCreate(descriptions)
         .then(cleaner.mark)
         .then(() => {
-          return ApiKey.please().first({instanceName});
+          return Model.please().first({instanceName});
         })
         .then((apk) => {
           should(apk).be.an.Object();
@@ -272,17 +270,11 @@ describe('ApiKey', function() {
     });
 
     it('should be able to change page size', function() {
-      const descriptions = [
-        'description_1',
-        'description_2'
-      ];
-
-      return Promise
-        .mapSeries(descriptions, (desc) => ApiKey.please().create({description: desc, instanceName}))
+      return Model.please().bulkCreate(descriptions)
         .then(cleaner.mark)
         .then((keys) => {
             should(keys).be.an.Array().with.length(2);
-            return ApiKey.please({instanceName}).pageSize(1);
+            return Model.please({instanceName}).pageSize(1);
         })
         .then((keys) => {
           should(keys).be.an.Array().with.length(1);
@@ -290,23 +282,18 @@ describe('ApiKey', function() {
     });
 
     it('should be able to change ordering', function() {
-      const descriptions = [
-        'description_1',
-        'description_2'
-      ];
       let asc = null;
 
-      return Promise
-        .mapSeries(descriptions, (desc) => ApiKey.please().create({description: desc, instanceName}))
+      return Model.please().bulkCreate(descriptions)
         .then(cleaner.mark)
         .then((keys) => {
           should(keys).be.an.Array().with.length(2);
-          return ApiKey.please({instanceName}).ordering('asc');
+          return Model.please({instanceName}).ordering('asc');
         })
         .then((keys) => {
           should(keys).be.an.Array().with.length(2);
           asc = keys;
-          return ApiKey.please({instanceName}).ordering('desc');
+          return Model.please({instanceName}).ordering('desc');
         })
         .then((desc) => {
           const asdDescs = _.map(asc, 'description');
@@ -321,7 +308,7 @@ describe('ApiKey', function() {
     });
 
     it('should be able to get raw data', function() {
-      return ApiKey.please().list({instanceName}).raw().then((response) => {
+      return Model.please().list({instanceName}).raw().then((response) => {
         should(response).be.a.Object();
         should(response).have.property('objects').which.is.Array();
         should(response).have.property('next').which.is.null();

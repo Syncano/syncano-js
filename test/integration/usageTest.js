@@ -1,11 +1,10 @@
 import should from 'should/as-function';
 import Syncano from '../../src/syncano';
-import {suffix, credentials, createCleaner} from './utils';
+import {suffix, credentials} from './utils';
 
 describe('Usage', function() {
   this.timeout(15000);
 
-  const cleaner = createCleaner();
   let connection = null;
   let Model = null;
   let Instance = null;
@@ -23,21 +22,15 @@ describe('Usage', function() {
     return Instance.please().delete({name: instanceName});
   });
 
-  afterEach(function() {
-    return cleaner.clean();
-  });
-
   describe('#please()', function() {
 
     it('should be able to get a Model', function() {
-      return Model.please().get().then((Model) => {
-        should(Model).have.property('links').which.is.Object();
-        should(Model.links).have.property('hourly').which.is.String().equal('/v1.1/usage/hourly/');
-        should(Model.links).have.property('daily').which.is.String().equal('/v1.1/usage/daily/');
-      });
+      return Model.please().get()
+        .then((Model) => {
+          should(Model).have.property('links').which.is.Object();
+          should(Model.links).have.property('hourly').which.is.String().equal('/v1.1/usage/hourly/');
+          should(Model.links).have.property('daily').which.is.String().equal('/v1.1/usage/daily/');
+        });
     });
-
   });
-
-
 });

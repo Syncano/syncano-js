@@ -192,7 +192,7 @@ const QuerySetRequest = stampit().compose(Request)
       if (!_.includes(allowedMethods, method)) {
         return Promise.reject(new Error(`Invalid request method: "${this.method}".`));
       }
-
+      
       return this.makeRequest(method, path, options).then((body) => [this.serialize(body), body]);
     },
 
@@ -262,6 +262,66 @@ export const Create = stampit().methods({
     const instance = this.model(attrs);
 
     return instance.save();
+  }
+});
+
+export const SendToDevice = stampit().methods({
+
+  sendToDevice(properties = {}, content = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = {content};
+    this.method = 'POST';
+    this.endpoint = 'deviceMessage';
+
+    return this;
+  }
+
+});
+
+export const SendToDevices = stampit().methods({
+
+  sendToDevices(properties = {}, content = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.payload = {content};
+    this.method = 'POST';
+    this.endpoint = 'list';
+
+    return this;
+  }
+
+});
+
+export const ListAll = stampit().methods({
+  listAll() {
+    this.resultSetEndpoints = ['list', 'all'];
+    this.method = 'GET';
+    this.endpoint = 'all';
+    return this;
+  }
+})
+
+export const Rename = stampit().methods({
+  /**
+  * A convenience method for renaming an object that support the action.
+  * @memberOf QuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} payload object containing the payload to be sent
+  * @returns {QuerySet}
+
+  * @example {@lang javascript}
+  * Model.please().fetchData({name: 'model_name', instanceName: 'test-one'}, { new_name: 'new_name'}).then(function(model) {});
+
+  */
+  rename(properties = {}, payload = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'POST';
+    this.endpoint = 'rename';
+    this.payload = payload;
+
+    return this;
   }
 });
 
@@ -785,7 +845,9 @@ const AllObjects = stampit()
     path: null,
     abort: false,
     model: null,
-    query: {}
+    query: {},
+    pages: null,
+    currentPage: 0
   })
   .methods({
 
@@ -799,6 +861,8 @@ const AllObjects = stampit()
 
     start() {
 
+      this.currentPage = 0;
+
       const pageLoop = () => {
 
         if(this.abort === true) {
@@ -810,7 +874,8 @@ const AllObjects = stampit()
           .then((page) => {
             const serializedPage = this.model.please().asResultSet(page);
             this.emit('page', serializedPage);
-            if(serializedPage.hasNext() === true) {
+            this.currentPage++;
+            if(serializedPage.hasNext() === true && (!_.isEmpty(this, 'pages') && this.currentPage < this.pages)) {
               this.path = page.next;
             } else {
               this.abort = true;
@@ -868,7 +933,7 @@ const AllObjects = stampit()
   */
 const All = stampit().methods({
 
-  all(properties = {}, query = {}, start = true) {
+  all(properties = {}, query = {}, start = true, pages = 0) {
     this.properties = _.assign({}, this.properties, properties);
 
     const config = this.getConfig();
@@ -879,6 +944,7 @@ const All = stampit().methods({
     options.path = path;
     options.model = this.model;
     options.query = query;
+    options.pages = pages;
 
     const allObjects = AllObjects.setConfig(config)(options);
 

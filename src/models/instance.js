@@ -1,19 +1,9 @@
 import stampit from 'stampit';
 import _ from 'lodash';
-import {Meta, Model} from './base';
-import QuerySet from '../querySet';
+import {Meta, Model, Rename} from './base';
+import QuerySet, {Rename as QsRename} from '../querySet';
 
-const InstanceQuerySet = stampit().compose(QuerySet).methods({
-
-  rename(properties = {}, object = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = object;
-
-    this.method = 'POST';
-    this.endpoint = 'rename';
-    return this;
-  },
-
+const InstanceQuerySet = stampit().compose(QuerySet, QsRename).methods({
   setGlobalConfig(properties = {}, config = {}){
     this.properties = _.assign({}, this.properties, properties);
     this.payload = {config};
@@ -58,7 +48,10 @@ const InstanceMeta = Meta({
     'Admin', 'Class', 'Script', 'Schedule', 'InstanceInvitation', 'ApiKey'
     , 'Trigger', 'ScriptEndpoint', 'User', 'Group', 'GCMDevice', 'Channel'
     , 'APNSDevice', 'Template'
-  ]
+  ],
+  mapDefaults: {
+    instanceName: 'name'
+  }
 });
 
 const InstanceConstraints = {
@@ -100,14 +93,8 @@ const InstanceConstraints = {
 const Instance = stampit()
   .compose(Model)
   .setMeta(InstanceMeta)
+  .compose(Rename)
   .methods({
-
-    rename(payload = { new_name: this.name }) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('rename', this);
-
-      return this.makeRequest('POST', path, {payload});
-    },
 
     setGlobalConfig(config = {}) {
       const payload = {config};

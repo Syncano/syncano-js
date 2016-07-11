@@ -33,6 +33,7 @@ describe('Trigger', function() {
     instanceName: instanceName,
     description: 'test'
   };
+  let objects = null;
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
@@ -48,6 +49,10 @@ describe('Trigger', function() {
       }).then((script) => {
         data.script = script.id;
         data2.script = script.id;
+        objects = [
+          Model(data),
+          Model(data2)
+        ];
         return connection.Class(classData).save();
       })
     });
@@ -177,11 +182,6 @@ describe('Trigger', function() {
     });
 
     it('should be able to bulk create objects', function() {
-      const objects = [
-        Model(data),
-        Model(data2)
-      ];
-
       return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((result) => {
@@ -232,11 +232,6 @@ describe('Trigger', function() {
     });
 
     it('should be able to get first object (SUCCESS)', function() {
-      const objects = [
-        Model(data),
-        Model(data2)
-      ];
-
       return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then(() => {
@@ -248,11 +243,6 @@ describe('Trigger', function() {
     });
 
     it('should be able to change page size', function() {
-      const objects = [
-        Model(data),
-        Model(data2)
-      ];
-
       return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((objects) => {
@@ -265,10 +255,6 @@ describe('Trigger', function() {
     });
 
     it('should be able to change ordering', function() {
-      const objects = [
-        Model(data),
-        Model(data2)
-      ];
       let asc = null;
 
       return Model.please().bulkCreate(objects)

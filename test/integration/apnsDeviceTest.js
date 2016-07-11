@@ -1,5 +1,4 @@
 import should from 'should/as-function';
-import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
@@ -26,12 +25,17 @@ describe('APNS Device', function() {
     instanceName,
     username: 'testuser',
     password: 'y5k8Y4&-'
-  }
-
+  };
+  let objects = null;
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
     Model = connection.APNSDevice;
+
+    objects = [
+      Model({ registration_id: hex.getRandom(64), instanceName, label: deviceLabel, user: data.user, device_id: devId}),
+      Model({ registration_id: hex.getRandom(64), instanceName, label: deviceLabel, user: data.user, device_id: devId})
+    ];
 
     return Instance.please().create({name: instanceName}).then(() => {
       return connection.User.please().create(userData).then((user) => {
@@ -321,13 +325,8 @@ describe('APNS Device', function() {
       });
 
     it('should be able to get first Model (SUCCESS)', function() {
-      const regIds = [
-        hex.getRandom(64),
-        hex.getRandom(64)
-      ];
 
-      return Promise
-        .mapSeries(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user: data.user, device_id: devId}))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then(() => {
           return Model.please().first({instanceName});
@@ -338,13 +337,7 @@ describe('APNS Device', function() {
     });
 
     it('should be able to change page size', function() {
-      const regIds = [
-        hex.getRandom(64),
-        hex.getRandom(64)
-      ];
-
-      return Promise
-        .mapSeries(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user: data.user, device_id: devId}))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((apns) => {
           should(apns).be.an.Array().with.length(2);
@@ -356,14 +349,9 @@ describe('APNS Device', function() {
     });
 
     it('should be able to change ordering', function() {
-      const regIds = [
-        hex.getRandom(64),
-        hex.getRandom(64)
-      ];
       let asc = null;
 
-      return Promise
-      .mapSeries(regIds, (id) => Model.please().create({registration_id: id, instanceName, label: deviceLabel, user: data.user, device_id: devId}))
+      return Model.please().bulkCreate(objects)
       .then(cleaner.mark)
       .then((apns) => {
           should(apns).be.an.Array().with.length(2);
@@ -422,6 +410,20 @@ describe('APNS Device', function() {
         });
     });
 
+    it('should be able to send messages directly from device', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then(() => {
+          return connection.APNSConfig.please().update({instanceName}, {
+            development_certificate: Syncano.file(__dirname + '/certificates/ApplePushDevelopment.p12'),
+            development_bundle_identifier: 'com.syncano.testAPNS'
+          });
+        })
+        .then(() => {
+          return Model
+            .please()
+            .sendMessages({instanceName}, {environment: 'development', aps: {alert: 'message'}, registration_ids: [data.registration_id]}).request();
+        })
+    });
   });
-
 });

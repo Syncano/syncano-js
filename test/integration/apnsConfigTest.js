@@ -116,7 +116,5 @@ describe('APNSConfig', function() {
           should(object).have.property('development_bundle_identifier').which.is.String().equal('com.syncano.testAPNS');
         });
     });
-
   });
-
 });

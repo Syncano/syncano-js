@@ -1,5 +1,4 @@
 import should from 'should/as-function';
-import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
@@ -32,6 +31,7 @@ describe('Channel', function() {
     instanceName: instanceName,
     channel: channelName
   };
+  let objects = null;
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
@@ -39,6 +39,10 @@ describe('Channel', function() {
     Model = connection.Channel;
     Class = connection.Class;
     dataObject = connection.DataObject;
+    objects = [
+      Model({name: `${channelName}_1`, instanceName}),
+      Model({name: `${channelName}_2`, instanceName})
+    ];
 
     return Instance.please().create({name: instanceName}).then(() => {
       return Class.please().create(classData);
@@ -244,7 +248,7 @@ describe('Channel', function() {
         });
     });
 
-    it('should be able to bulk create an objects', function() {
+    it('should be able to bulk create objects', function() {
       const objects = [
         Model(data),
         Model(_.assign({}, data, {name: `${channelName}_1`}))
@@ -384,7 +388,6 @@ describe('Channel', function() {
     });
 
     it('should be able to poll for dataobject events', function() {
-
       return Model(data).save()
         .then(cleaner.mark)
         .then((chn) => {
@@ -462,9 +465,9 @@ describe('Channel', function() {
     });
 
     it('should be able to update or create Model (CREATE)', function() {
-      let properties = {name: channelName, instanceName};
-      let object = {description: 'updateTest'};
-      let defaults = {
+      const properties = {name: channelName, instanceName};
+      const object = {description: 'updateTest'};
+      const defaults = {
           description: 'createTest'
       };
 
@@ -487,13 +490,7 @@ describe('Channel', function() {
     });
 
     it('should be able to get first Model (SUCCESS)', function() {
-      const names = [
-        `${channelName}_1`,
-        `${channelName}_2`
-      ];
-
-      return Promise
-        .mapSeries(names, (name) => Model.please().create({name, instanceName}))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then(() => {
           return Model.please().first({instanceName});
@@ -504,13 +501,7 @@ describe('Channel', function() {
     });
 
     it('should be able to change page size', function() {
-      const names = [
-        `${channelName}_1`,
-        `${channelName}_2`
-      ];
-
-      return Promise
-        .mapSeries(names, (name) => Model.please().create({name, instanceName}))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((chns) => {
           should(chns).be.an.Array().with.length(2);
@@ -522,14 +513,9 @@ describe('Channel', function() {
     });
 
     it('should be able to change ordering', function() {
-      const names = [
-        `${channelName}_1`,
-        `${channelName}_2`
-      ];
       let asc = null;
 
-      return Promise
-        .mapSeries(names, (name) => Model.please().create({name, instanceName}))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((chns) => {
           should(chns).be.an.Array().with.length(2);
@@ -560,6 +546,5 @@ describe('Channel', function() {
         should(response).have.property('prev').which.is.null();
       });
     });
-
   });
 });

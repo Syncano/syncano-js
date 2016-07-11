@@ -1,10 +1,8 @@
 import should from 'should/as-function';
-import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner, hex} from './utils';
-
 
 describe('GCMDevice', function() {
   this.timeout(15000);
@@ -22,12 +20,18 @@ describe('GCMDevice', function() {
     registration_id: registrationId,
     label: deviceLabel,
     device_id: devId
-  }
+  };
+  let objects = null;
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
     Model = connection.GCMDevice;
+
+    objects = [
+      Model({instanceName, registration_id: `${registrationId}1`, label: deviceLabel, device_id: devId}),
+      Model({instanceName, registration_id: `${registrationId}2`, label: deviceLabel, device_id: devId})
+    ];
 
     return Instance.please().create({name: instanceName});
   });
@@ -129,7 +133,7 @@ describe('GCMDevice', function() {
       });
     });
 
-    it('should be able to bulk create an objects', function() {
+    it('should be able to bulk create objects', function() {
       const objects = [
         Model(data),
         Model(_.assign({}, data, {registration_id: `${registrationId}1`}))
@@ -249,9 +253,9 @@ describe('GCMDevice', function() {
     });
 
     it('should be able to update or create a Model (CREATE)', function() {
-      let properties = {registration_id: registrationId, instanceName};
-      let object = {label: 'new label'};
-      let defaults = {
+      const properties = {registration_id: registrationId, instanceName};
+      const object = {label: 'new label'};
+      const defaults = {
           label: 'label',
           registration_id: registrationId
       };
@@ -267,13 +271,7 @@ describe('GCMDevice', function() {
       });
 
     it('should be able to get first Model (SUCCESS)', function() {
-      const ids = [
-        `${registrationId}1`,
-        `${registrationId}2`
-      ];
-
-      return Promise
-        .mapSeries(ids, (id) => Model.please().create(_.assign({}, data, {registration_id: id})))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then(() => {
           return Model.please().first(data);
@@ -284,13 +282,7 @@ describe('GCMDevice', function() {
     });
 
     it('should be able to change page size', function() {
-      const ids = [
-        `${registrationId}1`,
-        `${registrationId}2`
-      ];
-
-      return Promise
-        .mapSeries(ids, (id) => Model.please().create(_.assign({}, data, {registration_id: id})))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((objects) => {
           should(objects).be.an.Array().with.length(2);
@@ -302,14 +294,9 @@ describe('GCMDevice', function() {
     });
 
     it('should be able to change ordering', function() {
-      const ids = [
-        `${registrationId}1`,
-        `${registrationId}2`
-      ];
       let asc = null;
 
-      return Promise
-        .mapSeries(ids, (id) => Model.please().create(_.assign({}, data, {registration_id: id})))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((objects) => {
           should(objects).be.an.Array().with.length(2);
@@ -367,6 +354,17 @@ describe('GCMDevice', function() {
         });
     });
 
+    it('should be able to send messages directly from device', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then(() => {
+          return connection.GCMConfig.please().update({instanceName}, {
+            development_api_key: suffix.get('key')
+          })
+        })
+        .then(() => {
+          return Model.please().sendMessages({instanceName}, {environment: 'development', registration_ids: [data.registration_id]}).request();
+        })
+    });
   });
-
 });

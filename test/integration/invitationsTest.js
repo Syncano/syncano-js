@@ -1,5 +1,4 @@
 import should from 'should/as-function';
-import Promise from 'bluebird';
 import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
@@ -21,14 +20,19 @@ describe('Instance Invitation', function() {
     role: 'read',
     instanceName
   };
+  let objects = null;
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
     Model = connection.InstanceInvitation;
 
-    return Instance.please().create({name: instanceName});
+    objects = [
+      Model({email: email, role: 'read', instanceName}),
+      Model({email: email2, role: 'read', instanceName})
+    ];
 
+    return Instance.please().create({name: instanceName});
   });
 
   after(function() {
@@ -122,12 +126,7 @@ describe('Instance Invitation', function() {
         });
     });
 
-    it('should be able to bulk create an objects', function() {
-      const objects = [
-        Model(data),
-        Model(_.assign({}, data, {email: email2}))
-      ];
-
+    it('should be able to bulk create objects', function() {
       return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((result) => {
@@ -236,14 +235,7 @@ describe('Instance Invitation', function() {
     });
 
     it('should be able to get first Model (SUCCESS)', function() {
-      const admins = [
-        email,
-        email2
-        ];
-
-
-      return Promise
-        .mapSeries(admins, (admin) => Model.please().create({email: admin, role: 'read', instanceName}))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then(() => {
           return Model.please().first({instanceName});
@@ -254,14 +246,7 @@ describe('Instance Invitation', function() {
     });
 
     it('should be able to change page size', function() {
-      const admins = [
-        email,
-        email2
-        ];
-
-
-      return Promise
-        .mapSeries(admins, (admin) => Model.please().create({email: admin, role: 'read', instanceName}))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((inv) => {
           should(inv).be.an.Array().with.length(2);
@@ -273,14 +258,9 @@ describe('Instance Invitation', function() {
     });
 
     it('should be able to change ordering', function() {
-      const admins = [
-        email,
-        email2
-        ];
       let asc = null;
 
-      return Promise
-        .mapSeries(admins, (admin) => Model.please().create({email: admin, role: 'read', instanceName}))
+      return Model.please().bulkCreate(objects)
         .then(cleaner.mark)
         .then((inv) => {
           should(inv).be.an.Array().with.length(2);
@@ -311,6 +291,5 @@ describe('Instance Invitation', function() {
         should(response).have.property('prev').which.is.null();
       });
     });
-
   });
 });

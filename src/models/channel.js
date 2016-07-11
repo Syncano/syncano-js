@@ -8,7 +8,7 @@ import QuerySet from '../querySet';
 const ChannelQuerySet = stampit().compose(QuerySet).methods({
 
   /**
-    * Puslishes to a channel.
+    * Publishes to a channel.
 
     * @memberOf QuerySet
     * @instance

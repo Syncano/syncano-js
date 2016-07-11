@@ -161,7 +161,7 @@ describe('Schedule', function() {
         });
     });
 
-    it('should be able to bulk create an objects', function() {
+    it('should be able to bulk create objects', function() {
       const objects = [
         Model(data),
         Model(data)

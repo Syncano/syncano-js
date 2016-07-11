@@ -1,11 +1,10 @@
 import should from 'should/as-function';
 import Syncano from '../../src/syncano';
-import {suffix, credentials, createCleaner} from './utils';
+import {suffix, credentials} from './utils';
 
 describe('DailyUsage', function() {
   this.timeout(15000);
 
-  const cleaner = createCleaner();
   let connection = null;
   let Model = null;
   let Instance = null;
@@ -22,11 +21,6 @@ describe('DailyUsage', function() {
   after(function() {
     return Instance.please().delete({name: instanceName});
   });
-
-  afterEach(function() {
-    return cleaner.clean();
-  });
-
   describe('#please()', function() {
 
     it('should be able to list Models', function() {
@@ -34,8 +28,5 @@ describe('DailyUsage', function() {
         should(Models).be.an.Array();
       });
     });
-
   });
-
-
 });
