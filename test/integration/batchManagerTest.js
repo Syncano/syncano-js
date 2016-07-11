@@ -68,23 +68,23 @@ describe('BatchManager', function() {
    });
 
   it('should be able to batch update objects', function() {
-   const updateObjects = _.map(_.take(Objects, 2), (obj) => {
-     return _.assign({}, obj, { object: Model({instanceName, className, id: obj.object.id, name: 'new_name'}), action: 'update'})
-   });
-   return new Promise((resolve) => {
-     setInterval(() => resolve(), 1000);
-   })
-   .then(() => {
-     return Manager.addObjects(updateObjects).batch()
-   })
-   .then(() => {
-     return Model.please().list({instanceName, className}).pageSize(2);
-   })
-   .then((objects) => {
-     should(objects).be.an.Array().with.length(2);
-     should(objects[0]).have.property('name').which.is.String().equal('new_name');
-     should(objects[1]).have.property('name').which.is.String().equal('new_name');
-   })
+    const updateObjects = _.map(_.take(Objects, 2), (obj) => {
+      return _.assign({}, obj, { object: Model({instanceName, className, id: obj.object.id, name: 'new_name'}), action: 'update'})
+    });
+    return new Promise((resolve) => {
+      setInterval(() => resolve(), 1000);
+    })
+    .then(() => {
+      return Manager.addObjects(updateObjects).batch()
+    })
+    .then(() => {
+      return Model.please().list({instanceName, className}).pageSize(2);
+    })
+    .then((objects) => {
+      should(objects).be.an.Array().with.length(2);
+      should(objects[0]).have.property('name').which.is.String().equal('new_name');
+      should(objects[1]).have.property('name').which.is.String().equal('new_name');
+    })
   });
 
   it('should be able to batch different actions', function() {
