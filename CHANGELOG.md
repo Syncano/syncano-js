@@ -5,10 +5,8 @@
     * Properties from defaults are mapped to appropriate model props
     * Refactors and code reorganizations
 * **1.0.21** - 2016-06-30
-    * `clearCache()` and `rename()` methods for DataEnpoint
-    * `all()` method for querySets
+    * * BatchManager for batch requests
 * **1.0.20** - 2016-06-29
-    * BatchManager for batch requests
     * `clearCache()` and `rename()` methods for DataEnpoint
     * `all()` method for querySets
 * **1.0.19** - 2016-06-20
