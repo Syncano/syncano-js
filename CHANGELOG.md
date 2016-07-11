@@ -1,4 +1,9 @@
 ### Change Log
+* **1.0.22** - 2016-07-11
+    * Ability to download a specified number of pages with the `all()` method
+    * `sendMessages()` methods for devices
+    * Properties from defaults are mapped to appropriate model props
+    * Refactors and code reorganizations
 * **1.0.21** - 2016-06-30
     * `clearCache()` and `rename()` methods for DataEnpoint
     * `all()` method for querySets
