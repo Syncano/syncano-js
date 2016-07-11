@@ -31,7 +31,7 @@ const Syncano = stampit()
   .init(function() {
     this.Account = Account.setConfig(this)();
     this.Monitor = Pinger.setConfig(this)();
-    this.BatchManager = BatchManager();
+    this.BatchManager = BatchManager.setConfig(this);
 
     _.forEach(models, (model, name) => {
       this[name] = model.setConfig(this);

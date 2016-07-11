@@ -406,7 +406,7 @@ export const Model = stampit({
         'updated_at'
       ];
 
-      return _.omit(this, attrs.concat(_.functions(this)));
+      return _.omit(this, attrs.concat(_.functions(this).concat(_.functionsIn(this))));
     }
   }
 })
