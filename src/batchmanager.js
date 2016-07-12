@@ -50,17 +50,19 @@ const BatchManager = stampit()
         return _.has(object, 'object._meta') && _.has(object, 'action');
       })) {
         this.removeObjects();
-        throw new Error('The Batch Manager only accepts properly formatted object models.');
+        throw new Error('The Batch Manager only accepts properly formatted objects.');
       }
+      this.validateObjectsType(_.head(this.objects).object.getMeta().name);
       return this;
     },
 
     addSingleObject(object, action) {
       if(!_.has(object, '_meta')) {
-        throw new Error('The supplied object is not a valid model.');
+        throw new Error('The supplied object is not a valid object.');
       }
       this.validateObjectsLength(1);
       this.objects = _.concat(this.objects, { object, action });
+      this.validateObjectsType(_.head(this.objects).object.getMeta().name);
       return this;
     },
 
@@ -77,6 +79,13 @@ const BatchManager = stampit()
       const existingLength = _.size(this.objects);
       if(_.add(existingLength, length) > this.maxBatchObjects) {
         throw new Error('Only 50 objects can be batched at once.');
+      }
+    },
+
+    validateObjectsType(type) {
+      const sameTypes = _.every(this.objects, (object) => _.eq(object.object.getMeta().name, type));
+      if(!sameTypes) {
+        throw new Error('Only objects of the same type can be batched.');
       }
     },
 

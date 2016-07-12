@@ -51,19 +51,26 @@ describe('BatchManager', function() {
   it('should validate objects added via the #addObjects() method', function() {
     should(() => {
       Manager.addObjects({ something: 'thing' })
-    }).throw(/properly formatted object models/);
+    }).throw(/properly formatted objects/);
   });
 
   it('should validate objects added via the #addObjects() method', function() {
     should(() => {
       Manager.addObjects([{ something: 'thing' }])
-    }).throw(/properly formatted object models/);
+    }).throw(/properly formatted objects/);
   });
 
   it('should validate objects added via the #addSingleObject() method', function() {
     should(() => {
       Manager.addSingleObject({ something: 'thing' }, 'save');
-    }).throw(/not a valid model/);
+    }).throw(/not a valid object/);
+  });
+
+  it('should validate matching object types added for batching', function() {
+    should(() => {
+      Manager.addSingleObject(Model({name: 'test', instanceName, className}), 'save');
+      Manager.addSingleObject(Class({name: 'test_class', instanceName}), 'save');
+    }).throw(/Only objects of the same type can be batched/);
   });
 
   it('should validate max number of objects added to batch', function() {
