@@ -28,21 +28,7 @@ const BatchManager = stampit()
   .compose(Request)
   .props({
     objects: [],
-    batchUrl: '/v1.1/instances/{instance}/batch/',
-    objectsMap: {
-      create: {
-        method: 'POST',
-        endpoint: 'list'
-      },
-      update: {
-        method: 'PATCH',
-        endpoint: 'detail'
-      },
-      delete: {
-        method: 'DELETE',
-        endpoint: 'detail'
-      }
-    }
+    batchUrl: '/v1.1/instances/{instance}/batch/'
   })
   .init(function() {
     if(!_.has(this, 'instanceName') && !_.has(this.getDefaultProperties(), 'instanceName')) {
@@ -79,14 +65,8 @@ const BatchManager = stampit()
       if(_.isEmpty(this.objects)) {
         throw new Error('No objects provided for batching.');
       }
-      const requests = _.map(this.objects, (object) => {
-        return {
-          method: this.objectsMap[object.action].method,
-          path: object.object.getMeta().resolveEndpointPath(this.objectsMap[object.action].endpoint, object.object),
-          body: object.object.toJSON()
-        }
-      });
-      //console.log(requests);
+      const requests = _.map(this.objects, (batch) => batch.object.toBatchObject(batch.action));
+
       return this.makeRequest('POST', this.batchUrl, { payload: {requests}});
     },
 
