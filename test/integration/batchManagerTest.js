@@ -94,12 +94,8 @@ describe('BatchManager', function() {
     return new Promise((resolve) => {
       setInterval(() => resolve(), 1000);
     })
-    .then(() => {
-      return Manager.addObjects(updateObjects).batch()
-    })
-    .then(() => {
-      return Model.please().list({instanceName, className}).pageSize(2);
-    })
+    .then(() => Manager.addObjects(updateObjects).batch())
+    .then(() => Model.please().list({instanceName, className}).pageSize(2))
     .then((objects) => {
       should(objects).be.an.Array().with.length(2);
       should(objects[0]).have.property('name').which.is.String().equal('new_name');
@@ -116,12 +112,8 @@ describe('BatchManager', function() {
     return new Promise((resolve) => {
       setInterval(() => resolve(), 1000);
     })
-    .then(() => {
-      return Manager.addObjects(mixedObjects).batch()
-    })
-    .then(() => {
-      return Model.please().list({instanceName, className});
-    })
+    .then(() => Manager.addObjects(mixedObjects).batch())
+    .then(() => Model.please().list({instanceName, className}))
     .then((objects) => {
       should(objects).be.an.Array().with.length(10);
       should(objects[0]).have.property('name').which.is.String().equal('new_name2');
@@ -137,12 +129,8 @@ describe('BatchManager', function() {
     return new Promise((resolve) => {
       setInterval(() => resolve(), 1000);
     })
-    .then(() => {
-      return Manager.addObjects(removeObjects).batch()
-    })
-    .then(() => {
-      return Model.please().list({instanceName, className});
-    })
+    .then(() => Manager.addObjects(removeObjects).batch())
+    .then(() => Model.please().list({instanceName, className}))
     .then((objects) => {
       should(objects).be.an.Array().with.length(0);
     })
