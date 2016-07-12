@@ -10,7 +10,7 @@ import Request from './request';
 *
 * @example {@lang javascript}
 * const connection = Syncano();
-* const manager = connection.BatchManager;
+* const manager = connection.BatchManager({instanceName});
 * manager.addObjects({ object: DataObject({data}), action: 'save' }, { object: DataObject({other_data}), action: 'create' });
 * manager.batch().then(() => {
 *   // success
@@ -18,7 +18,7 @@ import Request from './request';
 *
 * @example {@lang javascript}
 * const connection = Syncano();
-* const manager = connection.BatchManager;
+* const manager = connection.BatchManager({instanceName});
 * manager.addSingleObject(DataObject({data}), 'create');
 * manager.batch().then(() => {
 *   // success
@@ -28,7 +28,8 @@ const BatchManager = stampit()
   .compose(Request)
   .props({
     objects: [],
-    batchUrl: '/v1.1/instances/{instance}/batch/'
+    batchUrl: '/v1.1/instances/{instance}/batch/',
+    maxBatchObjects: 50
   })
   .init(function() {
     if(!_.has(this, 'instanceName') && !_.has(this.getDefaultProperties(), 'instanceName')) {
@@ -40,6 +41,7 @@ const BatchManager = stampit()
   .methods({
 
     addObjects(...objects) {
+      this.validateObjectsLength(_.size(_.flatten(objects)));
       _.each(objects, (object) => {
           this.objects = _.concat(this.objects, object);
       });
@@ -57,6 +59,7 @@ const BatchManager = stampit()
       if(!_.has(object, '_meta')) {
         throw new Error('The supplied object is not a valid model.');
       }
+      this.validateObjectsLength(1);
       this.objects = _.concat(this.objects, { object, action });
       return this;
     },
@@ -68,6 +71,13 @@ const BatchManager = stampit()
       const requests = _.map(this.objects, (batch) => batch.object.toBatchObject(batch.action));
 
       return this.makeRequest('POST', this.batchUrl, { payload: {requests}});
+    },
+
+    validateObjectsLength(length) {
+      const existingLength = _.size(this.objects);
+      if(_.add(existingLength, length) > this.maxBatchObjects) {
+        throw new Error('Only 50 objects can be batched at once.');
+      }
     },
 
     removeObjects() {

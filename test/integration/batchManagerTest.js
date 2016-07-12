@@ -54,10 +54,23 @@ describe('BatchManager', function() {
     }).throw(/properly formatted object models/);
   });
 
+  it('should validate objects added via the #addObjects() method', function() {
+    should(() => {
+      Manager.addObjects([{ something: 'thing' }])
+    }).throw(/properly formatted object models/);
+  });
+
   it('should validate objects added via the #addSingleObject() method', function() {
     should(() => {
       Manager.addSingleObject({ something: 'thing' }, 'save');
     }).throw(/not a valid model/);
+  });
+
+  it('should validate max number of objects added to batch', function() {
+    should(() => {
+      Manager.addObjects(Objects).addObjects(Objects).addObjects(Objects)
+             .addObjects(Objects).addObjects(Objects).addObjects(Objects);
+    }).throw(/Only 50 objects can be batched at once/);
   });
 
   it('should be able to batch create objects', function() {
