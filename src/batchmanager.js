@@ -1,36 +1,47 @@
 import stampit from 'stampit';
 import _ from 'lodash';
-import Promise from 'bluebird';
+import Request from './request';
 
 /**
-* Manager for handling batch requests to the platform. Supported actions are 'save', 'update', 'delete'. Meant to be used directly form the {@link Syncano} instance.
+* Manager for handling batch requests to the platform. Supported actions are 'create', 'update', 'delete'. Meant to be used directly form the {@link Syncano} instance.
 *
 * @constructor
 * @type {BatchManager}
 *
 * @example {@lang javascript}
 * const connection = Syncano();
-* const manager = connection.BatchManager;
-* manager.addObjects({ object: DataObject({data}), action: 'save' }, { object: DataObject({other_data}), action: 'save' });
+* const manager = connection.BatchManager({instanceName});
+* manager.addObjects({ object: DataObject({data}), action: 'save' }, { object: DataObject({other_data}), action: 'create' });
 * manager.batch().then(() => {
 *   // success
 * })
 *
 * @example {@lang javascript}
 * const connection = Syncano();
-* const manager = connection.BatchManager;
-* manager.addSingleObject(DataObject({data}), 'save');
+* const manager = connection.BatchManager({instanceName});
+* manager.addSingleObject(DataObject({data}), 'create');
 * manager.batch().then(() => {
 *   // success
 * })
 */
 const BatchManager = stampit()
+  .compose(Request)
   .props({
-    objects: []
+    objects: [],
+    batchUrl: '/v1.1/instances/{instance}/batch/',
+    maxBatchObjects: 50
+  })
+  .init(function() {
+    if(!_.has(this, 'instanceName') && !_.has(this.getDefaultProperties(), 'instanceName')) {
+      throw new Error('No instance name specified.');
+    }
+    this.instanceName = this.instanceName || this.getDefaultProperties().instanceName;
+    this.batchUrl = _.replace(this.batchUrl, '{instance}', this.instanceName);
   })
   .methods({
 
     addObjects(...objects) {
+      this.validateObjectsLength(_.size(_.flatten(objects)));
       _.each(objects, (object) => {
           this.objects = _.concat(this.objects, object);
       });
@@ -39,24 +50,43 @@ const BatchManager = stampit()
         return _.has(object, 'object._meta') && _.has(object, 'action');
       })) {
         this.removeObjects();
-        return Promise.reject(new Error('The Batch Manager only accepts properly formatted object models.'));
+        throw new Error('The Batch Manager only accepts properly formatted objects.');
       }
+      this.validateObjectsType(_.head(this.objects).object.getMeta().name);
       return this;
     },
 
     addSingleObject(object, action) {
       if(!_.has(object, '_meta')) {
-        return Promise.reject(new Error('The supplied object is not a valid model.'))
+        throw new Error('The supplied object is not a valid object.');
       }
+      this.validateObjectsLength(1);
       this.objects = _.concat(this.objects, { object, action });
+      this.validateObjectsType(_.head(this.objects).object.getMeta().name);
       return this;
     },
 
     batch() {
       if(_.isEmpty(this.objects)) {
-        return Promise.reject(new Error('No objects provided for batching.'));
+        throw new Error('No objects provided for batching.');
       }
-      return Promise.mapSeries(this.objects, (object) => object.object[object.action]())
+      const requests = _.map(this.objects, (batch) => batch.object.toBatchObject(batch.action));
+
+      return this.makeRequest('POST', this.batchUrl, { payload: {requests}});
+    },
+
+    validateObjectsLength(length) {
+      const existingLength = _.size(this.objects);
+      if(_.add(existingLength, length) > this.maxBatchObjects) {
+        throw new Error('Only 50 objects can be batched at once.');
+      }
+    },
+
+    validateObjectsType(type) {
+      const sameTypes = _.every(this.objects, (object) => _.eq(object.object.getMeta().name, type));
+      if(!sameTypes) {
+        throw new Error('Only objects of the same type can be batched.');
+      }
     },
 
     removeObjects() {

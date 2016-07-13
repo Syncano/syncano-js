@@ -51,7 +51,7 @@ describe('Syncano', function() {
       should(baseObject).have.property('Solution').which.is.Function();
       should(baseObject).have.property('Account').which.is.Object();
       should(baseObject).have.property('Monitor').which.is.Object();
-      should(baseObject).have.property('BatchManager').which.is.Object();
+      should(baseObject).have.property('BatchManager').which.is.Function();
     });
 
     it('shoud have baseUrl and accountKey properties', function() {
@@ -88,11 +88,12 @@ describe('Syncano', function() {
 
   describe('#BatchManager', function() {
     it('should have correct methods', function() {
-      should(baseObject.BatchManager).have.property('addObjects').which.is.Function();
-      should(baseObject.BatchManager).have.property('addSingleObject').which.is.Function();
-      should(baseObject.BatchManager).have.property('batch').which.is.Function();
-      should(baseObject.BatchManager).have.property('removeObjects').which.is.Function();
-      should(baseObject.BatchManager).have.property('getObjects').which.is.Function();
+      const instanceName = testInstance;
+      should(baseObject.BatchManager({instanceName})).have.property('addObjects').which.is.Function();
+      should(baseObject.BatchManager({instanceName})).have.property('addSingleObject').which.is.Function();
+      should(baseObject.BatchManager({instanceName})).have.property('batch').which.is.Function();
+      should(baseObject.BatchManager({instanceName})).have.property('removeObjects').which.is.Function();
+      should(baseObject.BatchManager({instanceName})).have.property('getObjects').which.is.Function();
     });
   });
 

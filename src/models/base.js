@@ -66,7 +66,21 @@ export const Meta = stampit()
     name: null,
     pluralName: null,
     properties: [],
-    endpoints: {}
+    endpoints: {},
+    batchMap: {
+      create: {
+        method: 'POST',
+        endpoint: 'list'
+      },
+      update: {
+        method: 'PATCH',
+        endpoint: 'detail'
+      },
+      delete: {
+        method: 'DELETE',
+        endpoint: 'detail'
+      }
+    }
   })
   .init(function({ instance }) {
     _.forEach(instance.endpoints, (value) => {
@@ -116,6 +130,14 @@ export const Meta = stampit()
       }
 
       return result;
+    },
+
+    resolveActionToPath(action, model) {
+      return this.resolveEndpointPath(this.batchMap[action].endpoint, model);
+    },
+
+    resolveActionToMethod(action) {
+      return this.batchMap[action].method;
     },
 
     /**
@@ -391,6 +413,15 @@ export const Model = stampit({
       return this.makeRequest('DELETE', path);
     },
 
+    toBatchObject(action) {
+      const meta = this.getMeta();
+      return {
+        method: meta.resolveActionToMethod(action),
+        path: meta.resolveActionToPath(action, this),
+        body: this.toJSON()
+      }
+    },
+
     toJSON() {
       const attrs = [
         // Private stuff
@@ -406,7 +437,7 @@ export const Model = stampit({
         'updated_at'
       ];
 
-      return _.omit(this, attrs.concat(_.functions(this)));
+      return _.omit(this, attrs.concat(_.functions(this).concat(_.functionsIn(this))));
     }
   }
 })
