@@ -87,7 +87,10 @@ const ScriptConstraints = {
   },
   runtime_name: {
     presence: true,
-    inclusion: ['golang', 'nodejs_library_v1.0', 'ruby', 'nodejs_library_v0.4', 'python_library_v4.2', 'python_library_v5.0', 'php', 'swift']
+    inclusion: [
+      'golang', 'nodejs_library_v1.0', 'ruby', 'nodejs_library_v0.4',
+      'python_library_v4.2', 'python_library_v5.0', 'python3', 'php', 'swift'
+    ]
   },
   source: {
     string: true
