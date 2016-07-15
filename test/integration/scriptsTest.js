@@ -54,10 +54,6 @@ describe('Script', function() {
     should(Model({label: scriptName, instanceName}).save()).be.rejectedWith(/runtime_name/);
   });
 
-  it('should validate "runtime_name"', function() {
-    should(Model({label: scriptName, instanceName, runtime_name: 'turbopascal'}).save()).be.rejectedWith(/runtime_name/);
-  });
-
   it('should valiate "label"', function() {
     should(Model({label: {}, instanceName}).save()).be.rejectedWith(/label/);
   });
