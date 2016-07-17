@@ -6,6 +6,7 @@ import QuerySet from '../querySet';
 import Request from '../request';
 import {ValidationError} from '../errors';
 import {ConfigMixin, MetaMixin, ConstraintsMixin} from '../utils';
+import {omitBy, pick, mapValues} from 'lodash/fp';
 
 validate.Promise = Promise;
 
@@ -116,8 +117,16 @@ export const Meta = stampit()
     * @returns {Object}
     */
     assignProperties(source, target) {
-      const dateFields = _.mapValues(_.pick(target, ['created_at', 'updated_at', 'executed_at']), (o) =>  new Date(o));
+      const dateFields = this.convertDateFields(target);
       return _.assign({}, this.getObjectProperties(source), target, dateFields);
+    },
+
+    convertDateFields(object) {
+      return _.flow([
+                omitBy(_.isNull),
+                pick(['created_at', 'updated_at', 'executed_at']),
+                mapValues((o) => new Date(o))
+              ])(object);
     },
 
     getPathProperties(path) {
