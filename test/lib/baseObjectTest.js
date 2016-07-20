@@ -52,6 +52,7 @@ describe('Syncano', function() {
       should(baseObject).have.property('Account').which.is.Object();
       should(baseObject).have.property('Monitor').which.is.Object();
       should(baseObject).have.property('BatchManager').which.is.Function();
+      should(baseObject).have.property('Tag').which.is.Function();
     });
 
     it('shoud have baseUrl and accountKey properties', function() {

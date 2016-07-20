@@ -36,6 +36,7 @@ import Plan from './plan';
 import Profile from './profile';
 import Card from './card';
 import Solution from './solution';
+import Tag from './tag';
 
 export default {
   Instance,
@@ -75,5 +76,6 @@ export default {
   Plan,
   Profile,
   Card,
-  Solution
+  Solution,
+  Tag
 };
