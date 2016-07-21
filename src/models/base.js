@@ -6,6 +6,7 @@ import QuerySet from '../querySet';
 import Request from '../request';
 import {ValidationError} from '../errors';
 import {ConfigMixin, MetaMixin, ConstraintsMixin} from '../utils';
+import {omitBy, pick, mapValues} from 'lodash/fp';
 
 validate.Promise = Promise;
 
@@ -66,7 +67,21 @@ export const Meta = stampit()
     name: null,
     pluralName: null,
     properties: [],
-    endpoints: {}
+    endpoints: {},
+    batchMap: {
+      create: {
+        method: 'POST',
+        endpoint: 'list'
+      },
+      update: {
+        method: 'PATCH',
+        endpoint: 'detail'
+      },
+      delete: {
+        method: 'DELETE',
+        endpoint: 'detail'
+      }
+    }
   })
   .init(function({ instance }) {
     _.forEach(instance.endpoints, (value) => {
@@ -102,8 +117,16 @@ export const Meta = stampit()
     * @returns {Object}
     */
     assignProperties(source, target) {
-      const dateFields = _.mapValues(_.pick(target, ['created_at', 'updated_at', 'executed_at']), (o) =>  new Date(o));
+      const dateFields = this.convertDateFields(target);
       return _.assign({}, this.getObjectProperties(source), target, dateFields);
+    },
+
+    convertDateFields(object) {
+      return _.flow([
+                omitBy(_.isNull),
+                pick(['created_at', 'updated_at', 'executed_at']),
+                mapValues((o) => new Date(o))
+              ])(object);
     },
 
     getPathProperties(path) {
@@ -116,6 +139,14 @@ export const Meta = stampit()
       }
 
       return result;
+    },
+
+    resolveActionToPath(action, model) {
+      return this.resolveEndpointPath(this.batchMap[action].endpoint, model);
+    },
+
+    resolveActionToMethod(action) {
+      return this.batchMap[action].method;
     },
 
     /**
@@ -391,6 +422,15 @@ export const Model = stampit({
       return this.makeRequest('DELETE', path);
     },
 
+    toBatchObject(action) {
+      const meta = this.getMeta();
+      return {
+        method: meta.resolveActionToMethod(action),
+        path: meta.resolveActionToPath(action, this),
+        body: this.toJSON()
+      }
+    },
+
     toJSON() {
       const attrs = [
         // Private stuff
@@ -406,7 +446,7 @@ export const Model = stampit({
         'updated_at'
       ];
 
-      return _.omit(this, attrs.concat(_.functions(this)));
+      return _.omit(this, attrs.concat(_.functions(this).concat(_.functionsIn(this))));
     }
   }
 })
