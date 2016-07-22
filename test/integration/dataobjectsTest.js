@@ -174,7 +174,7 @@ describe('DataObject', function() {
   it('should validate "channel_room"', function() {
     should(Model({instanceName, className, channel_room: 2}).save()).be.rejectedWith(/channel_room/);
   });
-  
+
   it('should be able to save via model instance', function() {
     return Model(dataObj).save()
       .then(cleaner.mark)
