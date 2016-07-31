@@ -873,6 +873,7 @@ const AllObjects = stampit()
         return this.request()
           .then((page) => {
             const serializedPage = this.model.please().asResultSet(page);
+            this.emit('page', serializedPage);
             this.currentPage++;
             if(serializedPage.hasNext() === true) {
               this.path = page.next;
