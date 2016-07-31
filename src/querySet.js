@@ -192,7 +192,7 @@ const QuerySetRequest = stampit().compose(Request)
       if (!_.includes(allowedMethods, method)) {
         return Promise.reject(new Error(`Invalid request method: "${this.method}".`));
       }
-      
+
       return this.makeRequest(method, path, options).then((body) => [this.serialize(body), body]);
     },
 
@@ -875,9 +875,10 @@ const AllObjects = stampit()
             const serializedPage = this.model.please().asResultSet(page);
             this.emit('page', serializedPage);
             this.currentPage++;
-            if(serializedPage.hasNext() === true && (!_.isEmpty(this, 'pages') && this.currentPage < this.pages)) {
+            if(serializedPage.hasNext() === true) {
               this.path = page.next;
-            } else {
+            }
+            if(serializedPage.hasNext() === false || (!_.isEmpty(this, 'pages') && this.currentPage == this.pages)) {
               this.abort = true;
             }
             return serializedPage;
