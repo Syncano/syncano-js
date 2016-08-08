@@ -192,7 +192,7 @@ const QuerySetRequest = stampit().compose(Request)
       if (!_.includes(allowedMethods, method)) {
         return Promise.reject(new Error(`Invalid request method: "${this.method}".`));
       }
-      
+
       return this.makeRequest(method, path, options).then((body) => [this.serialize(body), body]);
     },
 
@@ -810,7 +810,7 @@ export const Raw = stampit().methods({
 * @instance
 
 * @constructor
-* @type {ChannelPoll}
+* @type {AllObjects}
 
 * @property {Number} [timeout = 15000] 15 seconds
 * @property {String} [path = null] request path
