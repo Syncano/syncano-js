@@ -193,6 +193,13 @@ const Request = stampit().compose(ConfigMixin, Logger)
         })
         .catch((err) => {
           if (err.status && err.response) {
+
+            if(err.status === 429) {
+              const delay = _.toInteger(err.response.headers['retry-after']) * 1000;
+              return Promise.delay(delay)
+                .then(() => this.makeRequest(methodName, path, requestOptions));
+            }
+
             this.log(`\n${method} ${path}\n${JSON.stringify(options, null, 2)}\n`);
             this.log(`Response ${err.status}:`, err.errors);
 
