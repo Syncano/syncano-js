@@ -847,7 +847,8 @@ const AllObjects = stampit()
     model: null,
     query: {},
     pages: null,
-    currentPage: 0
+    currentPage: 0,
+    result: []
   })
   .methods({
 
@@ -862,22 +863,25 @@ const AllObjects = stampit()
     start() {
 
       this.currentPage = 0;
+      this.result = [];
 
       const pageLoop = () => {
 
         if(this.abort === true) {
-          this.emit('stop');
-          return
+          this.emit('stop', this.result);
+          return this.result;
         }
 
         return this.request()
           .then((page) => {
             const serializedPage = this.model.please().asResultSet(page);
+            this.result = _.concat(this.result, _.reject(serializedPage, _.isFunction));
             this.emit('page', serializedPage);
             this.currentPage++;
-            if(serializedPage.hasNext() === true && (!_.isEmpty(this, 'pages') && this.currentPage < this.pages)) {
+            if(serializedPage.hasNext() === true) {
               this.path = page.next;
-            } else {
+            }
+            if(serializedPage.hasNext() === false || (!_.isEmpty(this, 'pages') && this.currentPage == this.pages)) {
               this.abort = true;
             }
             return serializedPage;
