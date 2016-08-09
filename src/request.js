@@ -195,7 +195,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
           if (err.status && err.response) {
 
             if(err.status === 429) {
-              const delay = _.toInteger(err.response.headers['retry-after']) * 1000;
+              const delay = _.toNumber(err.response.headers['retry-after']) * 1000;
               return Promise.delay(delay)
                 .then(() => this.makeRequest(methodName, path, requestOptions));
             }
