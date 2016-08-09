@@ -810,7 +810,7 @@ export const Raw = stampit().methods({
 * @instance
 
 * @constructor
-* @type {ChannelPoll}
+* @type {AllObjects}
 
 * @property {Number} [timeout = 15000] 15 seconds
 * @property {String} [path = null] request path
