@@ -37,11 +37,13 @@ import Profile from './profile';
 import Card from './card';
 import Solution from './solution';
 import Tag from './tag';
+import CustomSocket from './customsocket';
 
 export default {
   Instance,
   Class,
   Channel,
+  CustomSocket,
   DataObject,
   User,
   Group,
