@@ -29,13 +29,16 @@ const CostomSocketConstraints = {
       minimum: 5
     }
   },
+  name: {
+    presence: true
+  },
   endpoints: {
     presence: true,
     object: true
   },
   dependencies: {
     presence: true,
-    object: true
+    array: true
   }
 };
 
