@@ -3,7 +3,7 @@ import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
-describe.only('CustomSocket', function() {
+describe('CustomSocket', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();
@@ -26,7 +26,7 @@ describe.only('CustomSocket', function() {
         type: 'script',
         runtime_name: 'python_library_v5.0',
         name: 'script2',
-        source: 'print "script2"'
+        source: "print ARGS['POST']['test']"
       }
     ],
     endpoints: {
@@ -35,17 +35,17 @@ describe.only('CustomSocket', function() {
           {
             type: 'script',
             name: 'script1',
-            methods: ['POST']
+            methods: ['GET']
           },
           {
             type: 'script',
             name: 'script2',
-            methods: ['GET']
+            methods: ['POST']
           }
         ]
       }
     }
-  }
+  };
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
@@ -132,6 +132,76 @@ describe.only('CustomSocket', function() {
     return Model(data).save()
       .then((socket) => {
         return socket.delete();
+      })
+  });
+
+  it('should be able to recheck via model instance', function() {
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((socket) => {
+        return socket.recheck();
+      })
+      .then((result) => {
+        should(result).be.an.Object();
+        should(result).have.property('name').which.is.String().equal(name);
+        should(result).have.property('status').which.is.String();
+        should(result).have.property('links').which.is.Object();
+        should(result).have.property('created_at').which.is.String();
+        should(result).have.property('updated_at').which.is.String();
+        should(result).have.property('dependencies').which.is.Array();
+        should(result).have.property('status_info').which.is.String();
+        should(result).have.property('endpoints').which.is.Object();
+        should(result).have.property('metadata').which.is.Object();
+      })
+  });
+
+  it('should be able to get endpoint details via model instance', function() {
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((socket) => {
+        return socket.getEndponintDetails('end1');
+      })
+      .then((result) => {
+        should(result).be.an.Object();
+        should(result).have.property('links').which.is.Object();
+        should(result).have.property('name').which.is.String().equal('end1');
+        should(result).have.property('calls').which.is.Array().with.length(2);
+      })
+  });
+
+  it('should be able to GET endpoint via model instance', function() {
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((socket) => {
+        return socket.get('end1');
+      })
+      .then((result) => {
+        should(result).be.an.Object();
+        should(result).have.property('status').which.is.String().equal('success');
+        should(result).have.property('duration').which.is.Number();
+        should(result).have.property('result').which.is.Object();
+        should(result.result).have.property('stderr').which.is.String().equal('');
+        should(result.result).have.property('stdout').which.is.String().equal('script1');
+        should(result).have.property('executed_at').which.is.String();
+        should(result).have.property('id').which.is.Number();
+      })
+  });
+
+  it('should be able to POST to an endpoint via model instance', function() {
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((socket) => {
+        return socket.post('end1', { test: 'test_script'});
+      })
+      .then((result) => {
+        should(result).be.an.Object();
+        should(result).have.property('status').which.is.String().equal('success');
+        should(result).have.property('duration').which.is.Number();
+        should(result).have.property('result').which.is.Object();
+        should(result.result).have.property('stderr').which.is.String().equal('');
+        should(result.result).have.property('stdout').which.is.String().equal('test_script');
+        should(result).have.property('executed_at').which.is.String();
+        should(result).have.property('id').which.is.Number();
       })
   });
 
