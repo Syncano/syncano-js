@@ -1,9 +1,10 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
-import {BaseQuerySet} from '../querySet';
+import {BaseQuerySet, List} from '../querySet';
 
 const CustomSocketQuerySet = stampit().compose(
-  BaseQuerySet
+  BaseQuerySet,
+  List
 );
 
 const CustomSocketMeta = Meta({
@@ -21,6 +22,23 @@ const CustomSocketMeta = Meta({
   }
 });
 
+const CostomSocketConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  endpoints: {
+    presence: true,
+    object: true
+  },
+  dependencies: {
+    presence: true,
+    object: true
+  }
+};
+
 /**
  * OO wrapper around CustomSocket.
  * @constructor
@@ -30,6 +48,7 @@ const CustomSocketMeta = Meta({
 const CustomSocket = stampit()
   .compose(Model)
   .setQuerySet(CustomSocketQuerySet)
-  .setMeta(CustomSocketMeta);
+  .setMeta(CustomSocketMeta)
+  .setConstraints(CostomSocketConstraints)
 
 export default CustomSocket;
