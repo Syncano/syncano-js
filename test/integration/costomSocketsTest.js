@@ -173,7 +173,7 @@ describe('CustomSocket', function() {
     return Model(data).save()
       .then(cleaner.mark)
       .then((socket) => {
-        return socket.get('end1', { test: 'test_script'});
+        return socket.getRequest('end1', { test: 'test_script'});
       })
       .then((result) => {
         should(result).be.an.Object();
@@ -191,7 +191,7 @@ describe('CustomSocket', function() {
     return Model(data).save()
       .then(cleaner.mark)
       .then((socket) => {
-        return socket.post('end1', { test: 'test_script'});
+        return socket.postRequest('end1', { test: 'test_script'});
       })
       .then((result) => {
         should(result).be.an.Object();
@@ -203,6 +203,161 @@ describe('CustomSocket', function() {
         should(result).have.property('executed_at').which.is.String();
         should(result).have.property('id').which.is.Number();
       })
+  });
+
+  describe('#please()', function() {
+
+    it('should be able to list Models', function() {
+      return Model.please().list({instanceName}).then((Models) => {
+        should(Models).be.an.Array();
+      });
+    });
+
+    it('should be able to create a Model', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((socket) => {
+          should(socket).be.an.Object();
+          should(socket).have.property('instanceName').which.is.String().equal(instanceName);
+          should(socket).have.property('name').which.is.String().equal(name);
+          should(socket).have.property('status').which.is.String();
+          should(socket).have.property('links').which.is.Object();
+          should(socket).have.property('created_at').which.is.Date();
+          should(socket).have.property('updated_at').which.is.Date();
+          should(socket).have.property('dependencies').which.is.Array();
+          should(socket).have.property('status_info').which.is.String();
+          should(socket).have.property('endpoints').which.is.Object();
+          should(socket).have.property('metadata').which.is.Object();
+        });
+    });
+
+    it('should be able to update a Model', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((socket) => {
+          should(socket).be.an.Object();
+          should(socket).have.property('instanceName').which.is.String().equal(instanceName);
+          should(socket).have.property('name').which.is.String().equal(name);
+          should(socket).have.property('status').which.is.String();
+          should(socket).have.property('links').which.is.Object();
+          should(socket).have.property('created_at').which.is.Date();
+          should(socket).have.property('updated_at').which.is.Date();
+          should(socket).have.property('dependencies').which.is.Array();
+          should(socket).have.property('status_info').which.is.String();
+          should(socket).have.property('endpoints').which.is.Object();
+          should(socket).have.property('metadata').which.is.Object();
+
+          return Model.please().update(socket, { dependencies: [
+            {
+              type: 'script',
+              runtime_name: 'python_library_v5.0',
+              name: 'script1',
+              source: 'print "script1"'
+            }]});
+        })
+        .then((socket) => {
+          should(socket.dependencies).be.an.Array().with.length(1);
+        })
+    });
+
+    it('should be able to delete a Model', function() {
+      return Model.please().create(data)
+        .then((socket) => {
+          return Model.please().delete(socket);
+        })
+    });
+
+    it('should be able to get a Model', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((socket) => {
+          return Model.please().get(socket);
+        })
+        .then((socket) => {
+          should(socket).be.an.Object();
+          should(socket).have.property('instanceName').which.is.String().equal(instanceName);
+          should(socket).have.property('name').which.is.String().equal(name);
+          should(socket).have.property('status').which.is.String();
+          should(socket).have.property('links').which.is.Object();
+          should(socket).have.property('created_at').which.is.Date();
+          should(socket).have.property('updated_at').which.is.Date();
+          should(socket).have.property('dependencies').which.is.Array();
+          should(socket).have.property('status_info').which.is.String();
+          should(socket).have.property('endpoints').which.is.Object();
+          should(socket).have.property('metadata').which.is.Object();
+        })
+    });
+
+    it('should be able to recheck', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then(() => {
+          return Model.please().recheck({instanceName, name});
+        })
+        .then((result) => {
+          should(result).be.an.Object();
+          should(result).have.property('name').which.is.String().equal(name);
+          should(result).have.property('status').which.is.String();
+          should(result).have.property('links').which.is.Object();
+          should(result).have.property('created_at').which.is.String();
+          should(result).have.property('updated_at').which.is.String();
+          should(result).have.property('dependencies').which.is.Array();
+          should(result).have.property('status_info').which.is.String();
+          should(result).have.property('endpoints').which.is.Object();
+          should(result).have.property('metadata').which.is.Object();
+        });
+    });
+
+    it('should be able to get endpint details', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then(() => {
+          return Model.please().getEndponintDetails({instanceName, name, endpoint_name: 'end1'});
+        })
+        .then((result) => {
+          should(result).be.an.Object();
+          should(result).have.property('links').which.is.Object();
+          should(result).have.property('name').which.is.String().equal('end1');
+          should(result).have.property('calls').which.is.Array().with.length(2);
+        });
+    });
+
+    it('should be able to GET endpint', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then(() => {
+          return Model.please().getRequest({instanceName, endpoint_name: 'end1'}, { test: 'test_script'})
+        })
+        .then((result) => {
+          should(result).be.an.Object();
+          should(result).have.property('status').which.is.String().equal('success');
+          should(result).have.property('duration').which.is.Number();
+          should(result).have.property('result').which.is.Object();
+          should(result.result).have.property('stderr').which.is.String().equal('');
+          should(result.result).have.property('stdout').which.is.String().equal('test_script');
+          should(result).have.property('executed_at').which.is.String();
+          should(result).have.property('id').which.is.Number();
+        });
+    });
+
+    it('should be able to POST to an endpint', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then(() => {
+          return Model.please().postRequest({instanceName, endpoint_name: 'end1'}, { test: 'test_script'})
+        })
+        .then((result) => {
+          should(result).be.an.Object();
+          should(result).have.property('status').which.is.String().equal('success');
+          should(result).have.property('duration').which.is.Number();
+          should(result).have.property('result').which.is.Object();
+          should(result.result).have.property('stderr').which.is.String().equal('');
+          should(result.result).have.property('stdout').which.is.String().equal('test_script');
+          should(result).have.property('executed_at').which.is.String();
+          should(result).have.property('id').which.is.Number();
+        });
+    });
+
   });
 
 })

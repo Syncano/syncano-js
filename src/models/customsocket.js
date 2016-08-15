@@ -1,12 +1,61 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
-import {BaseQuerySet, List} from '../querySet';
+import {BaseQuerySet, List, Delete, Update, Create, Get} from '../querySet';
 import _ from 'lodash';
 
 const CustomSocketQuerySet = stampit().compose(
   BaseQuerySet,
-  List
-);
+  List,
+  Create,
+  Update,
+  Delete,
+  Get
+)
+.methods({
+
+  recheck(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'POST';
+    this.endpoint = 'recheck';
+    this.raw();
+
+    return this;
+  },
+
+  getEndponintDetails(properties) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'GET';
+    this.endpoint = 'endpointDetail';
+    this.raw();
+
+    return this;
+  },
+
+  getRequest(properties = {}, payload = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'GET';
+    this.endpoint = 'endpoint';
+    this.query = payload;
+    this.raw();
+
+    return this;
+  },
+
+  postRequest(properties = {}, payload = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'POST';
+    this.endpoint = 'endpoint';
+    this.payload = payload;
+    this.raw();
+
+    return this;
+  }
+
+})
 
 const CustomSocketMeta = Meta({
   name: 'customsocket',
@@ -17,7 +66,7 @@ const CustomSocketMeta = Meta({
       'path': '/v1.1/instances/{instanceName}/sockets/{name}/'
     },
     'recheck': {
-      'methods': ['get'],
+      'methods': ['post'],
       'path': '/v1.1/instances/{instanceName}/sockets/{name}/recheck/'
     },
     'list': {
@@ -81,14 +130,14 @@ const CustomSocket = stampit()
       return this.makeRequest('GET', path);
     },
 
-    get(endpoint_name, payload) {
+    getRequest(endpoint_name, payload) {
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('endpoint', _.assign({}, this, {endpoint_name}));
 
       return this.makeRequest('GET', path, {query: payload});
     },
 
-    post(endpoint_name, payload) {
+    postRequest(endpoint_name, payload) {
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('endpoint', _.assign({}, this, {endpoint_name}));
 
