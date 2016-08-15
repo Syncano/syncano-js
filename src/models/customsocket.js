@@ -81,11 +81,11 @@ const CustomSocket = stampit()
       return this.makeRequest('GET', path);
     },
 
-    get(endpoint_name) {
+    get(endpoint_name, payload) {
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('endpoint', _.assign({}, this, {endpoint_name}));
 
-      return this.makeRequest('GET', path);
+      return this.makeRequest('GET', path, {query: payload});
     },
 
     post(endpoint_name, payload) {

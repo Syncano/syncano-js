@@ -20,7 +20,7 @@ describe('CustomSocket', function() {
         type: 'script',
         runtime_name: 'python_library_v5.0',
         name: 'script1',
-        source: 'print "script1"'
+        source: "print ARGS['GET']['test']"
       },
       {
         type: 'script',
@@ -173,7 +173,7 @@ describe('CustomSocket', function() {
     return Model(data).save()
       .then(cleaner.mark)
       .then((socket) => {
-        return socket.get('end1');
+        return socket.get('end1', { test: 'test_script'});
       })
       .then((result) => {
         should(result).be.an.Object();
@@ -181,7 +181,7 @@ describe('CustomSocket', function() {
         should(result).have.property('duration').which.is.Number();
         should(result).have.property('result').which.is.Object();
         should(result.result).have.property('stderr').which.is.String().equal('');
-        should(result.result).have.property('stdout').which.is.String().equal('script1');
+        should(result.result).have.property('stdout').which.is.String().equal('test_script');
         should(result).have.property('executed_at').which.is.String();
         should(result).have.property('id').which.is.Number();
       })
