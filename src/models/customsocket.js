@@ -95,11 +95,9 @@ const CostomSocketConstraints = {
     presence: true
   },
   endpoints: {
-    presence: true,
     object: true
   },
   dependencies: {
-    presence: true,
     array: true
   }
 };

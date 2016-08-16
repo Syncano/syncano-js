@@ -75,16 +75,8 @@ describe('CustomSocket', function() {
     should(Model({ instanceName }).save()).be.rejectedWith(/name/);
   });
 
-  it('should require "endpoints"', function() {
-    should(Model({ instanceName, name }).save()).be.rejectedWith(/endpoints/);
-  });
-
   it('should validate "endpoints"', function() {
     should(Model({ instanceName, name, endpoints: [] }).save()).be.rejectedWith(/endpoints/);
-  });
-
-  it('should require "dependencies"', function() {
-    should(Model({ instanceName, name, endpoints: {} }).save()).be.rejectedWith(/dependencies/);
   });
 
   it('should validate "dependencies"', function() {
