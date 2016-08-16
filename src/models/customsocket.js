@@ -23,7 +23,7 @@ const CustomSocketQuerySet = stampit().compose(
     return this;
   },
 
-  getEndponintDetails(properties) {
+  getEndpointDetails(properties) {
     this.properties = _.assign({}, this.properties, properties);
 
     this.method = 'GET';
@@ -123,7 +123,7 @@ const CustomSocket = stampit()
       return this.makeRequest('POST', path);
     },
 
-    getEndponintDetails(endpoint_name) {
+    getEndpointDetails(endpoint_name) {
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('endpointDetail', _.assign({}, this, {endpoint_name}));
 

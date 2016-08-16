@@ -159,7 +159,7 @@ describe('CustomSocket', function() {
     return Model(data).save()
       .then(cleaner.mark)
       .then((socket) => {
-        return socket.getEndponintDetails('end1');
+        return socket.getEndpointDetails('end1');
       })
       .then((result) => {
         should(result).be.an.Object();
@@ -312,7 +312,7 @@ describe('CustomSocket', function() {
       return Model.please().create(data)
         .then(cleaner.mark)
         .then(() => {
-          return Model.please().getEndponintDetails({instanceName, name, endpoint_name: 'end1'});
+          return Model.please().getEndpointDetails({instanceName, name, endpoint_name: 'end1'});
         })
         .then((result) => {
           should(result).be.an.Object();
