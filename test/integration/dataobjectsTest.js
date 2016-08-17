@@ -174,7 +174,7 @@ describe('DataObject', function() {
   it('should validate "channel_room"', function() {
     should(Model({instanceName, className, channel_room: 2}).save()).be.rejectedWith(/channel_room/);
   });
-  
+
   it('should be able to save via model instance', function() {
     return Model(dataObj).save()
       .then(cleaner.mark)
@@ -537,7 +537,8 @@ describe('DataObject', function() {
             should(page).be.an.Array().with.length(10);
           });
 
-          all.on('stop', function() {
+          all.on('stop', function(pages) {
+            should(pages).be.an.Array().with.length(30);
             done();
           })
         });
@@ -555,8 +556,9 @@ describe('DataObject', function() {
             should(page).be.an.Array().with.length(10);
           });
 
-          all.on('stop', function() {
+          all.on('stop', function(pages) {
             should(currentPage).be.equal(2);
+            should(pages).be.an.Array().with.length(20);
             done();
           })
         });

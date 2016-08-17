@@ -1,4 +1,14 @@
 ### Change Log
+* **1.0.24** - 2016-08-17
+    * Fixed a bug in the `all()` method
+    * The `stop` event from AllObjects returns the full result
+    * Throttled requests are now retried
+    * Initial support for Custom Sockets
+* **1.0.23** - 2016-07-21
+    * BatchManager rewrite
+    * Removed strict script runtime validation
+    * Fixed bug with converting null objects to dates
+    * Tag management
 * **1.0.22** - 2016-07-11
     * Ability to download a specified number of pages with the `all()` method
     * `sendMessages()` methods for devices
