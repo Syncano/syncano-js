@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Tutorial: 04. Connection monitoring</title>
+	<title>Syncano Source: models/customsocket.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -68,31 +68,168 @@
 	<div class="col-md-12">
 	
 		<div id="main">
-			<section class="tutorial-section">
+			
 
-<header>
+		<h1 class="page-title">Source: models/customsocket.js</h1>
     
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
+import {Meta, Model} from './base';
+import {BaseQuerySet, List, Delete, Update, Create, Get} from '../querySet';
+import _ from 'lodash';
 
-    <h2>04. Connection monitoring</h2>
-</header>
+const CustomSocketQuerySet = stampit().compose(
+  BaseQuerySet,
+  List,
+  Create,
+  Update,
+  Delete,
+  Get
+)
+.methods({
 
-<article>
-    <p>This tutorial will show you how to monitor the connection to the platform.</p>
-<h3>Setting up monitoring</h3><p>The main <code>Syncano</code> object has a <code>Monitor</code> property that exposes methods for monitoring the network connection. To set up the monitor, use the <code>startMonitoring</code> method:</p>
-<pre class="prettyprint source"><code>let connection = Syncano();
+  recheck(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
 
-connection.Monitor.startMonitoring();</code></pre><h3>Listening for events</h3><p>The monitor exposes an <code>EventEmitter</code> so you can listen for the <code>connected</code> and <code>disconnected</code> events:</p>
-<pre class="prettyprint source"><code>connection.Monitor.on('connected', () => {
-  // connected to the api
+    this.method = 'POST';
+    this.endpoint = 'recheck';
+    this.raw();
+
+    return this;
+  },
+
+  getEndpointDetails(properties) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'GET';
+    this.endpoint = 'endpointDetail';
+    this.raw();
+
+    return this;
+  },
+
+  getRequest(properties = {}, payload = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'GET';
+    this.endpoint = 'endpoint';
+    this.query = payload;
+    this.raw();
+
+    return this;
+  },
+
+  postRequest(properties = {}, payload = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'POST';
+    this.endpoint = 'endpoint';
+    this.payload = payload;
+    this.raw();
+
+    return this;
+  }
+
+})
+
+const CustomSocketMeta = Meta({
+  name: 'customsocket',
+  pluralName: 'customsockets',
+  endpoints: {
+    'detail': {
+      'methods': ['get', 'put', 'patch', 'delete'],
+      'path': '/v1.1/instances/{instanceName}/sockets/{name}/'
+    },
+    'recheck': {
+      'methods': ['post'],
+      'path': '/v1.1/instances/{instanceName}/sockets/{name}/recheck/'
+    },
+    'list': {
+      'methods': ['post', 'get'],
+      'path': '/v1.1/instances/{instanceName}/sockets/'
+    },
+    'endpointDetail': {
+      'methods': ['post', 'get'],
+      'path': '/v1.1/instances/{instanceName}/sockets/{name}/endpoints/{endpoint_name}/'
+    },
+    'endpoint': {
+      'methods': ['post', 'get'],
+      'path': '/v1.1/instances/{instanceName}/endpoints/sockets/{endpoint_name}/'
+    }
+  }
 });
 
-connection.Monitor.on('disconnected', (error) => {
-  // connection to the api lost
-});</code></pre><h3>Stopping monitoring</h3><p>To stop monitoring the connection, use the <code>stopMonitoring</code> method:</p>
-<pre class="prettyprint source"><code>connection.Monitor.stopMonitoring();</code></pre>
-</article>
+const CostomSocketConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  name: {
+    presence: true
+  },
+  endpoints: {
+    object: true
+  },
+  dependencies: {
+    array: true
+  }
+};
 
+/**
+ * OO wrapper around CustomSocket.
+ * @constructor
+ * @type {CustomSocket}
+
+ */
+const CustomSocket = stampit()
+  .compose(Model)
+  .setQuerySet(CustomSocketQuerySet)
+  .setMeta(CustomSocketMeta)
+  .methods({
+
+    recheck() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('recheck', this);
+
+      return this.makeRequest('POST', path);
+    },
+
+    getEndpointDetails(endpoint_name) {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('endpointDetail', _.assign({}, this, {endpoint_name}));
+
+      return this.makeRequest('GET', path);
+    },
+
+    getRequest(endpoint_name, payload) {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('endpoint', _.assign({}, this, {endpoint_name}));
+
+      return this.makeRequest('GET', path, {query: payload});
+    },
+
+    postRequest(endpoint_name, payload) {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('endpoint', _.assign({}, this, {endpoint_name}));
+
+      return this.makeRequest('POST', path, {payload});
+    }
+
+  })
+  .setConstraints(CostomSocketConstraints)
+
+export default CustomSocket;
+</pre>
+    </article>
 </section>
+
+
+
+
 
 		</div>
 	</div>

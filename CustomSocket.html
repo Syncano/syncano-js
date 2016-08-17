@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Tutorial: 04. Connection monitoring</title>
+	<title>Syncano Class: CustomSocket</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,40 +65,150 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
-			<section class="tutorial-section">
+			
+
+	<h1 class="page-title">Class: CustomSocket</h1>
+<section>
 
 <header>
     
-
-    <h2>04. Connection monitoring</h2>
+        <h2>
+        CustomSocket
+        </h2>
+        
+    
 </header>
 
+
 <article>
-    <p>This tutorial will show you how to monitor the connection to the platform.</p>
-<h3>Setting up monitoring</h3><p>The main <code>Syncano</code> object has a <code>Monitor</code> property that exposes methods for monitoring the network connection. To set up the monitor, use the <code>startMonitoring</code> method:</p>
-<pre class="prettyprint source"><code>let connection = Syncano();
+    <div class="container-overview">
+    
+        
+<hr>
+<dt>
+    <h4 class="name" id="CustomSocket"><span class="type-signature"></span>new CustomSocket()</h4>
+    
+    
+</dt>
+<dd>
 
-connection.Monitor.startMonitoring();</code></pre><h3>Listening for events</h3><p>The monitor exposes an <code>EventEmitter</code> so you can listen for the <code>connected</code> and <code>disconnected</code> events:</p>
-<pre class="prettyprint source"><code>connection.Monitor.on('connected', () => {
-  // connected to the api
-});
+    
+    <div class="description">
+        <p>OO wrapper around CustomSocket.</p>
+    </div>
+    
 
-connection.Monitor.on('disconnected', (error) => {
-  // connection to the api lost
-});</code></pre><h3>Stopping monitoring</h3><p>To stop monitoring the connection, use the <code>stopMonitoring</code> method:</p>
-<pre class="prettyprint source"><code>connection.Monitor.stopMonitoring();</code></pre>
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="models_customsocket.js.html">models/customsocket.js</a>,
+				 <a href="models_customsocket.js.html#sunlight-1-line-111">line 111</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </article>
 
 </section>
+
+
+
 
 		</div>
 	</div>
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>
