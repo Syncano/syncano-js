@@ -185,9 +185,7 @@ describe('DataEndpoint', function() {
       })
       .then((data) => {
         should(data).be.an.Object();
-        should(data).have.property('objects').which.is.Array();
-        should(data.objects[0]).have.property('int').which.is.Number().equal(9);
-        should(data.objects.length).equal(5);
+        should(data).have.property('objects').which.is.Array().with.length(5);
       });
   });
 
@@ -296,7 +294,7 @@ describe('DataEndpoint', function() {
         })
         .then((data) => {
           should(data).be.an.Object();
-          should(data).have.property('objects').which.is.Array().with.length(1);
+          should(data).have.property('objects').which.is.Array().with.length(2);
         })
     });
 
@@ -394,9 +392,7 @@ describe('DataEndpoint', function() {
         })
         .then((data) => {
           should(data).be.an.Object();
-          should(data).have.property('objects').which.is.Array();
-          should(data.objects[0]).have.property('int').which.is.Number().equal(9);
-          should(data.objects.length).equal(5);
+          should(data).have.property('objects').which.is.Array().with.length(5);
         });
     });
 
@@ -449,9 +445,7 @@ describe('DataEndpoint', function() {
         })
         .then((data) => {
           should(data).be.an.Object();
-          should(data).have.property('objects').which.is.Array();
-          should(data.objects[0]).have.property('int').which.is.Number().equal(9);
-          should(data.objects.length).equal(5);
+          should(data).have.property('objects').which.is.Array().with.length(5);
         });
     });
 
