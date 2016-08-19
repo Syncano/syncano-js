@@ -123,6 +123,37 @@ describe('DataEndpoint', function() {
       });
   });
 
+  it('should be able to create a DataObject via model instance', function() {
+    let dataEndpoint = null;
+
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((dta) => {
+        should(dta).be.a.Object();
+        should(dta).have.property('name').which.is.String().equal(data.name);
+        should(dta).have.property('description').which.is.String().equal(data.description);
+        should(dta).have.property('instanceName').which.is.String().equal(data.instanceName);
+        should(dta).have.property('query').which.is.Object();
+        should(dta).have.property('excluded_fields').which.is.Null();
+        should(dta).have.property('order_by').which.is.String().equal(data.order_by);
+        should(dta).have.property('page_size').which.is.Number().equal(data.page_size);
+        should(dta).have.property('expand').which.is.Null();
+        should(dta).have.property('links').which.is.Object();
+        should(dta).have.property('class').which.is.String().equal(data.class);
+
+        dataEndpoint = dta;
+
+        return dataEndpoint.createDataObject({ int: 1})
+      })
+      .then(() => {
+        return dataEndpoint.fetchData();
+      })
+      .then((data) => {
+        should(data).be.an.Object();
+        should(data).have.property('objects').which.is.Array().with.length(1);
+      })
+  });
+
   it('should be able to fetch DataObjects via model instance with filtering', function() {
     return dataObject.please().bulkCreate(dataobjects)
       .then(cleaner.mark)
@@ -154,9 +185,7 @@ describe('DataEndpoint', function() {
       })
       .then((data) => {
         should(data).be.an.Object();
-        should(data).have.property('objects').which.is.Array();
-        should(data.objects[0]).have.property('int').which.is.Number().equal(9);
-        should(data.objects.length).equal(5);
+        should(data).have.property('objects').which.is.Array().with.length(5);
       });
   });
 
@@ -240,6 +269,33 @@ describe('DataEndpoint', function() {
           should(dta).have.property('links').which.is.Object();
           should(dta).have.property('class').which.is.String().equal(data.class)
         });
+    });
+
+    it('should be able to create a DataObject', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((dta) => {
+          should(dta).be.a.Object();
+          should(dta).have.property('name').which.is.String().equal(data.name);
+          should(dta).have.property('description').which.is.String().equal(data.description);
+          should(dta).have.property('instanceName').which.is.String().equal(data.instanceName);
+          should(dta).have.property('query').which.is.Object();
+          should(dta).have.property('excluded_fields').which.is.Null();
+          should(dta).have.property('order_by').which.is.String().equal(data.order_by);
+          should(dta).have.property('page_size').which.is.Number().equal(data.page_size);
+          should(dta).have.property('expand').which.is.Null();
+          should(dta).have.property('links').which.is.Object();
+          should(dta).have.property('class').which.is.String().equal(data.class)
+
+          return Model.please().createDataObject({instanceName, name: dataEndpointName}, { int: 1});
+        })
+        .then(() => {
+          return Model.please().fetchData({instanceName, name: dataEndpointName});
+        })
+        .then((data) => {
+          should(data).be.an.Object();
+          should(data).have.property('objects').which.is.Array().with.length(2);
+        })
     });
 
     it('should be able to rename a Model', function() {
@@ -336,9 +392,7 @@ describe('DataEndpoint', function() {
         })
         .then((data) => {
           should(data).be.an.Object();
-          should(data).have.property('objects').which.is.Array();
-          should(data.objects[0]).have.property('int').which.is.Number().equal(9);
-          should(data.objects.length).equal(5);
+          should(data).have.property('objects').which.is.Array().with.length(5);
         });
     });
 
@@ -391,9 +445,7 @@ describe('DataEndpoint', function() {
         })
         .then((data) => {
           should(data).be.an.Object();
-          should(data).have.property('objects').which.is.Array();
-          should(data.objects[0]).have.property('int').which.is.Number().equal(9);
-          should(data.objects.length).equal(5);
+          should(data).have.property('objects').which.is.Array().with.length(5);
         });
     });
 
