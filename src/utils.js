@@ -1,5 +1,51 @@
 import stampit from 'stampit';
 import EventEmitter from './eventemitter';
+import Promise from 'bluebird';
+import validate from 'validate.js';
+
+/**
+  Validators used in the library.
+**/
+
+validate.Promise = Promise;
+
+validate.validators.object = function(value) {
+  if(value) {
+    if(!validate.isObject(value)) {
+      return "is not an object";
+    }
+  }
+  return null;
+}
+
+validate.validators.array = function(value) {
+  if(value) {
+    if(!validate.isArray(value)) {
+      return "is not an array";
+    }
+  }
+  return null;
+}
+
+validate.validators.boolean = function(value) {
+  if(value) {
+    if(typeof value !== 'boolean') {
+      return "is not a boolean";
+    }
+  }
+  return null;
+}
+
+validate.validators.string = function(value) {
+  if(value) {
+    if(!validate.isString(value)) {
+      return "is not a string";
+    }
+  }
+  return null;
+}
+
+export {validate};
 
 /**
  * Simple wrapper around `EventEmitter`
