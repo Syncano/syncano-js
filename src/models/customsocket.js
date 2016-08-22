@@ -112,6 +112,9 @@ const CustomSocket = stampit()
   .compose(Model)
   .setQuerySet(CustomSocketQuerySet)
   .setMeta(CustomSocketMeta)
+  .props({
+    endpoints: {}
+  })
   .methods({
 
     recheck() {
@@ -119,6 +122,12 @@ const CustomSocket = stampit()
       const path = meta.resolveEndpointPath('recheck', this);
 
       return this.makeRequest('POST', path);
+    },
+
+    addEndpoint(endpoint = {}) {
+      this.endpoints = _.assign({}, this.endpoints, { [endpoint.name]: { calls: endpoint.calls }});
+
+      return this;
     },
 
     getEndpointDetails(endpoint_name) {
