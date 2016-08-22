@@ -1,41 +1,45 @@
 import stampit from 'stampit';
-import {validate} from '../utils';
+import {Meta, Model} from './base';
 import _ from 'lodash';
 
-const Endpoint = stampit()
-.props({
-  calls: [],
-  callConstraints: {
-    name: {
-      presence: true,
-      string: true
-    },
-    methods: {
-      array: true
+const EndpointMeta = Meta({
+  name: 'endpoint',
+  pluralName: 'endpoint',
+  endpoints: {
+    'call': {
+      'methods': ['post', 'get'],
+      'path': '/v1.1/instances/{instanceName}/endpoints/sockets/{name}/'
     }
   }
-})
-.init(function({instance}) {
-  if(!validate.isString(instance.name)) throw new Error('Endpoint name must be a string.');
-})
-.methods({
-
-  addScriptCall({ name, methods }) {
-    const call = { name, methods, type: 'script' };
-    this.validate(call, this.callConstraints);
-    this.calls = _.concat(this.calls, call);
-  },
-
-  validate(object, constraints) {
-    const errors = validate(object, constraints);
-    const message = _.map(errors, (value, key) => {
-      return `"${key}" ${value.join(', ')}`;
-    }).join('\n');
-    if (!_.isEmpty(errors)) {
-      throw new Error(message);
-    }
-  }
-
 });
+
+const EndpointConstraints = {
+  name: {
+    string: true,
+    presence: true
+  }
+};
+
+/**
+ * OO wrapper around Endpoint {@link # endpoint}.
+ * @constructor
+ * @type {Backup}
+
+ * @property {String} name
+ */
+const Endpoint = stampit()
+  .compose(Model)
+  .setMeta(EndpointMeta)
+  .setConstraints(EndpointConstraints)
+  .props({
+    scriptCalls: []
+  })
+  .methods({
+
+    addScriptCall({ name, calls }) {
+      this.scriptCalls = _.concat(this.scriptCalls, { name, calls, type: 'script'});
+    }
+
+  })
 
 export default Endpoint;

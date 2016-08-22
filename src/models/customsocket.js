@@ -113,7 +113,8 @@ const CustomSocket = stampit()
   .setQuerySet(CustomSocketQuerySet)
   .setMeta(CustomSocketMeta)
   .props({
-    endpoints: {}
+    endpoints: {},
+    endpointObjects: []
   })
   .methods({
 
@@ -125,7 +126,8 @@ const CustomSocket = stampit()
     },
 
     addEndpoint(endpoint = {}) {
-      this.endpoints = _.assign({}, this.endpoints, { [endpoint.name]: { calls: endpoint.calls }});
+      this.endpoints = _.assign({}, this.endpoints, { [endpoint.name]: { calls: endpoint.scriptCalls }});
+      this.endpointObjects = _.concat(this.endpointObjects, endpoint);
 
       return this;
     },

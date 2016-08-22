@@ -38,6 +38,7 @@ import Card from './card';
 import Solution from './solution';
 import Tag from './tag';
 import CustomSocket from './customsocket';
+import Endpoint from './endpoint';
 
 export default {
   Instance,
@@ -79,5 +80,6 @@ export default {
   Profile,
   Card,
   Solution,
-  Tag
+  Tag,
+  Endpoint
 };

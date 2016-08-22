@@ -2,7 +2,6 @@ import stampit from 'stampit';
 import _ from 'lodash';
 import Promise from 'bluebird';
 import models from './models';
-import Endpoint from './models/endpoint';
 import Account from './account';
 import Pinger from './pinger';
 import SyncanoFile from './file';
@@ -37,8 +36,6 @@ const Syncano = stampit()
     _.forEach(models, (model, name) => {
       this[name] = model.setConfig(this);
     });
-
-    this.Endpoint = Endpoint;
   })
   .refs({
     baseUrl: 'https://api.syncano.io',
