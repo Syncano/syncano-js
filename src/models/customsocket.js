@@ -24,14 +24,9 @@ const CustomSocketQuerySet = stampit().compose(
   },
 
   runEndpoint(properties = {}, method = 'GET', payload = {}) {
+    const {Endpoint} = this.getConfig();
     this.properties = _.assign({}, this.properties, properties);
-
-    this.method = method;
-    this.endpoint = 'endpoint';
-    this.query = payload;
-    this.raw();
-
-    return this;
+    return Endpoint.please().run(this.properties, method, payload);
   }
 
 })
@@ -51,10 +46,6 @@ const CustomSocketMeta = Meta({
     'list': {
       'methods': ['post', 'get'],
       'path': '/v1.1/instances/{instanceName}/sockets/'
-    },
-    'endpoint': {
-      'methods': ['post', 'get', 'delete', 'patch', 'put'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/sockets/{endpoint_name}/'
     }
   }
 });
@@ -111,10 +102,8 @@ const CustomSocket = stampit()
     },
 
     runEndpoint(endpoint_name, method, payload) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('endpoint', _.assign({}, this, {endpoint_name}));
-
-      return this.makeRequest(method, path, {query: payload})
+      const {Endpoint} = this.getConfig();
+      return Endpoint.please().run({ socket_name: this.name, endpoint_name, instanceName: this.instanceName}, method, payload);
     }
 
   })

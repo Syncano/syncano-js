@@ -290,7 +290,7 @@ describe('CustomSocket', function() {
       return Model.please().create(data)
         .then(cleaner.mark)
         .then(() => {
-          return Model.please().runEndpoint({instanceName, endpoint_name: 'end1'}, 'GET', { test: 'test_script'})
+          return Model.please().runEndpoint({socket_name: name, instanceName, endpoint_name: 'end1'}, 'GET', { test: 'test_script'})
         })
         .then((result) => {
           should(result).be.an.Object();
@@ -308,7 +308,7 @@ describe('CustomSocket', function() {
       return Model.please().create(data)
         .then(cleaner.mark)
         .then(() => {
-          return Model.please().runEndpoint({instanceName, endpoint_name: 'end1'}, 'POST', { test: 'test_script'})
+          return Model.please().runEndpoint({socket_name: name, instanceName, endpoint_name: 'end1'}, 'POST', { test: 'test_script'})
         })
         .then((result) => {
           should(result).be.an.Object();
