@@ -23,33 +23,12 @@ const CustomSocketQuerySet = stampit().compose(
     return this;
   },
 
-  getEndpointDetails(properties) {
+  runEndpoint(properties = {}, method = 'GET', payload = {}) {
     this.properties = _.assign({}, this.properties, properties);
 
-    this.method = 'GET';
-    this.endpoint = 'endpointDetail';
-    this.raw();
-
-    return this;
-  },
-
-  getRequest(properties = {}, payload = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-
-    this.method = 'GET';
+    this.method = method;
     this.endpoint = 'endpoint';
     this.query = payload;
-    this.raw();
-
-    return this;
-  },
-
-  postRequest(properties = {}, payload = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-
-    this.method = 'POST';
-    this.endpoint = 'endpoint';
-    this.payload = payload;
     this.raw();
 
     return this;
@@ -73,12 +52,8 @@ const CustomSocketMeta = Meta({
       'methods': ['post', 'get'],
       'path': '/v1.1/instances/{instanceName}/sockets/'
     },
-    'endpointDetail': {
-      'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/sockets/{name}/endpoints/{endpoint_name}/'
-    },
     'endpoint': {
-      'methods': ['post', 'get'],
+      'methods': ['post', 'get', 'delete', 'patch', 'put'],
       'path': '/v1.1/instances/{instanceName}/endpoints/sockets/{endpoint_name}/'
     }
   }
@@ -130,30 +105,16 @@ const CustomSocket = stampit()
       this.endpointObjects = _.concat(this.endpointObjects, endpoint);
     },
 
-    removeEndpoint(endpoint = {}) {
-      _.unset(this.endpoints, endpoint.name);
-      this.endpointObjects = _.reject(this.endpointObjects, { name: endpoint.name});
+    removeEndpoint(name) {
+      _.unset(this.endpoints, name);
+      this.endpointObjects = _.reject(this.endpointObjects, { name });
     },
 
-    getEndpointDetails(endpoint_name) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('endpointDetail', _.assign({}, this, {endpoint_name}));
-
-      return this.makeRequest('GET', path);
-    },
-
-    getRequest(endpoint_name, payload) {
+    runEndpoint(endpoint_name, method, payload) {
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('endpoint', _.assign({}, this, {endpoint_name}));
 
-      return this.makeRequest('GET', path, {query: payload});
-    },
-
-    postRequest(endpoint_name, payload) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('endpoint', _.assign({}, this, {endpoint_name}));
-
-      return this.makeRequest('POST', path, {payload});
+      return this.makeRequest(method, path, {query: payload})
     }
 
   })
