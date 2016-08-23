@@ -128,8 +128,11 @@ const CustomSocket = stampit()
     addEndpoint(endpoint = {}) {
       this.endpoints = _.assign({}, this.endpoints, { [endpoint.name]: { calls: endpoint.scriptCalls }});
       this.endpointObjects = _.concat(this.endpointObjects, endpoint);
+    },
 
-      return this;
+    removeEndpoint(endpoint = {}) {
+      _.unset(this.endpoints, endpoint.name);
+      this.endpointObjects = _.reject(this.endpointObjects, { name: endpoint.name});
     },
 
     getEndpointDetails(endpoint_name) {
