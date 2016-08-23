@@ -79,7 +79,8 @@ const CustomSocket = stampit()
   .setQuerySet(CustomSocketQuerySet)
   .setMeta(CustomSocketMeta)
   .props({
-    endpointObjects: []
+    endpointObjects: [],
+    dependencyObjects: []
   })
   .methods({
 
@@ -98,11 +99,33 @@ const CustomSocket = stampit()
       this.endpointObjects = _.reject(this.endpointObjects, { name });
     },
 
+    addDependency(script = {}) {
+      this.dependencyObjects = _.concat(this.dependencyObjects, script);
+    },
+
+    removeDependency(label) {
+      this.dependencyObjects = _.concat(this.dependencyObjects, { label });
+    },
+
     runEndpoint(endpoint_name, method, payload) {
       const {Endpoint} = this.getConfig();
       return Endpoint.please().run({ socket_name: this.name, endpoint_name, instanceName: this.instanceName}, method, payload);
-    }
+    },
 
+    install() {
+      _.each(this.endpointObjects, (endpoint) => {
+        this.endpoints = _.assign({}, this.endpoints, { [endpoint.name]: { calls: endpoint.scriptCalls } })
+      });
+      this.dependencies = _.map(this.dependencyObjects, ({label, runtime_name, source}) => {
+        return { name: label, runtime_name, source, type: 'script'}
+      });
+      return this.save()
+        .then((result) => {
+          _.each(this.endpointObjects, (endpoint) => {
+            endpoint.socket_name = result.name;
+          });
+        })
+    }
   })
   .setConstraints(CostomSocketConstraints)
 
