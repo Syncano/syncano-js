@@ -27,6 +27,17 @@ const CustomSocketQuerySet = stampit().compose(
     const {Endpoint} = this.getConfig();
     this.properties = _.assign({}, this.properties, properties);
     return Endpoint.please().run(this.properties, method, payload);
+  },
+
+  installFromUrl(properties = {}, url) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'POST';
+    this.endpoint = 'install';
+    this.payload = { name: this.properties.instanceName, install_url: url };
+    this.raw();
+
+    return this;
   }
 
 })
@@ -46,6 +57,10 @@ const CustomSocketMeta = Meta({
     'list': {
       'methods': ['post', 'get'],
       'path': '/v1.1/instances/{instanceName}/sockets/'
+    },
+    'install': {
+      'methods': ['post'],
+      'path': '/v1.1/instances/{instanceName}/sockets/install/'
     }
   }
 });

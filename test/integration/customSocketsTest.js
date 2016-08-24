@@ -12,6 +12,7 @@ describe('CustomSocket', function() {
   let Instance = null;
   const instanceName = suffix.get('CustomSocket');
   const name = suffix.get('socket');
+  const installUrl = 'https://raw.githubusercontent.com/Syncano/custom-socket-test/master/socket.yml';
   const data = {
     instanceName,
     name,
@@ -202,6 +203,24 @@ describe('CustomSocket', function() {
           should(socket).have.property('links').which.is.Object();
           should(socket).have.property('created_at').which.is.Date();
           should(socket).have.property('updated_at').which.is.Date();
+          should(socket).have.property('dependencies').which.is.Array();
+          should(socket).have.property('status_info').which.is.String();
+          should(socket).have.property('endpoints').which.is.Object();
+          should(socket).have.property('metadata').which.is.Object();
+        });
+    });
+
+    it.skip('should be able to install socket from url', function() {
+      return Model.please().installFromUrl({instanceName}, installUrl)
+        .then((response) => {
+          should(response).be.an.Object();
+          should(response).have.property('instanceName').which.is.String().equal(instanceName);
+          should(socket).have.property('name').which.is.String();
+          should(socket).have.property('status').which.is.String().equal('processing');
+          should(socket).have.property('install_url').which.is.String().equal(installUrl);
+          should(links).have.property('install_url').which.is.Object();
+          should(socket).have.property('created_at').which.is.String();
+          should(socket).have.property('updated_at').which.is.String();
           should(socket).have.property('dependencies').which.is.Array();
           should(socket).have.property('status_info').which.is.String();
           should(socket).have.property('endpoints').which.is.Object();
