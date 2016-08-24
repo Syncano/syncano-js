@@ -12,6 +12,7 @@ describe('CustomSocket', function() {
   let Instance = null;
   const instanceName = suffix.get('CustomSocket');
   const name = suffix.get('socket');
+  const installUrl = 'https://raw.githubusercontent.com/Syncano/custom-socket-test/master/socket.yml';
   const data = {
     instanceName,
     name,
@@ -147,25 +148,11 @@ describe('CustomSocket', function() {
       })
   });
 
-  it('should be able to get endpoint details via model instance', function() {
-    return Model(data).save()
-      .then(cleaner.mark)
-      .then((socket) => {
-        return socket.getEndpointDetails('end1');
-      })
-      .then((result) => {
-        should(result).be.an.Object();
-        should(result).have.property('links').which.is.Object();
-        should(result).have.property('name').which.is.String().equal('end1');
-        should(result).have.property('calls').which.is.Array().with.length(2);
-      })
-  });
-
   it('should be able to GET endpoint via model instance', function() {
     return Model(data).save()
       .then(cleaner.mark)
       .then((socket) => {
-        return socket.getRequest('end1', { test: 'test_script'});
+        return socket.runEndpoint('end1', 'GET', { test: 'test_script'});
       })
       .then((result) => {
         should(result).be.an.Object();
@@ -183,7 +170,7 @@ describe('CustomSocket', function() {
     return Model(data).save()
       .then(cleaner.mark)
       .then((socket) => {
-        return socket.postRequest('end1', { test: 'test_script'});
+        return socket.runEndpoint('end1', 'POST', { test: 'test_script'});
       })
       .then((result) => {
         should(result).be.an.Object();
@@ -216,6 +203,24 @@ describe('CustomSocket', function() {
           should(socket).have.property('links').which.is.Object();
           should(socket).have.property('created_at').which.is.Date();
           should(socket).have.property('updated_at').which.is.Date();
+          should(socket).have.property('dependencies').which.is.Array();
+          should(socket).have.property('status_info').which.is.String();
+          should(socket).have.property('endpoints').which.is.Object();
+          should(socket).have.property('metadata').which.is.Object();
+        });
+    });
+
+    it.skip('should be able to install socket from url', function() {
+      return Model.please().installFromUrl({instanceName}, installUrl)
+        .then((response) => {
+          should(response).be.an.Object();
+          should(response).have.property('instanceName').which.is.String().equal(instanceName);
+          should(socket).have.property('name').which.is.String();
+          should(socket).have.property('status').which.is.String().equal('processing');
+          should(socket).have.property('install_url').which.is.String().equal(installUrl);
+          should(links).have.property('install_url').which.is.Object();
+          should(socket).have.property('created_at').which.is.String();
+          should(socket).have.property('updated_at').which.is.String();
           should(socket).have.property('dependencies').which.is.Array();
           should(socket).have.property('status_info').which.is.String();
           should(socket).have.property('endpoints').which.is.Object();
@@ -300,25 +305,11 @@ describe('CustomSocket', function() {
         });
     });
 
-    it('should be able to get endpint details', function() {
-      return Model.please().create(data)
-        .then(cleaner.mark)
-        .then(() => {
-          return Model.please().getEndpointDetails({instanceName, name, endpoint_name: 'end1'});
-        })
-        .then((result) => {
-          should(result).be.an.Object();
-          should(result).have.property('links').which.is.Object();
-          should(result).have.property('name').which.is.String().equal('end1');
-          should(result).have.property('calls').which.is.Array().with.length(2);
-        });
-    });
-
     it('should be able to GET endpint', function() {
       return Model.please().create(data)
         .then(cleaner.mark)
         .then(() => {
-          return Model.please().getRequest({instanceName, endpoint_name: 'end1'}, { test: 'test_script'})
+          return Model.please().runEndpoint({socket_name: name, instanceName, endpoint_name: 'end1'}, 'GET', { test: 'test_script'})
         })
         .then((result) => {
           should(result).be.an.Object();
@@ -336,7 +327,7 @@ describe('CustomSocket', function() {
       return Model.please().create(data)
         .then(cleaner.mark)
         .then(() => {
-          return Model.please().postRequest({instanceName, endpoint_name: 'end1'}, { test: 'test_script'})
+          return Model.please().runEndpoint({socket_name: name, instanceName, endpoint_name: 'end1'}, 'POST', { test: 'test_script'})
         })
         .then((result) => {
           should(result).be.an.Object();
