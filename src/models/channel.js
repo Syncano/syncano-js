@@ -287,8 +287,11 @@ export const ChannelPoll = stampit()
       return this.stop;
     },
 
-    stop() {
+    stop(removeListeners = false) {
       this.abort = true;
+      if(removeListeners) {
+        this.removeAllListeners();
+      }
       return this;
     }
 
