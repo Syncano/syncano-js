@@ -8,23 +8,32 @@ export default function EventEmitter() {
     this.events = {};
 }
 
-EventEmitter.prototype.on = function (event, listener) {
+EventEmitter.prototype.on = function(event, listener) {
     if (!_.isArray(this.events[event])) {
         this.events[event] = [];
     }
     this.events[event].push(listener);
 };
 
-EventEmitter.prototype.removeListener = function (event, listener) {
+EventEmitter.prototype.removeListener = function(event, listener) {
     if (_.isArray(this.events[event])) {
         _.pull(this.events[event], listener);
     }
 };
 
-EventEmitter.prototype.emit = function (event) {
+EventEmitter.prototype.removeListeners = function(event) {
+  if (_.isArray(this.events[event])) {
+    this.events[event] = [];
+  }
+};
+
+EventEmitter.prototype.removeAllListeners = function() {
+  this.events = {};
+};
+
+EventEmitter.prototype.emit = function(event, ...args) {
     if (_.isArray(this.events[event])) {
-        const listeners = this.events[event].slice();
-        const args = [].slice.call(arguments, 1);
+        const listeners = this.events[event];
         _.forEach(listeners, (listener) => listener.apply(this, args));
     }
 };

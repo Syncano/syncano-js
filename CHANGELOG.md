@@ -1,4 +1,9 @@
 ### Change Log
+* **1.0.25** - 2016-08-28
+    * Added ability to create DataObjects using DataEndpoints
+    * Added Endpoint model and helper methods for CustomSockets
+    * Small enhancements for Channel polling
+    * DataObjects are now serialized when fetcher through DataEndpoints
 * **1.0.24** - 2016-08-17
     * Fixed a bug in the `all()` method
     * The `stop` event from AllObjects returns the full result

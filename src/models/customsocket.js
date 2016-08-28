@@ -23,33 +23,18 @@ const CustomSocketQuerySet = stampit().compose(
     return this;
   },
 
-  getEndpointDetails(properties) {
+  runEndpoint(properties = {}, method = 'GET', payload = {}) {
+    const {Endpoint} = this.getConfig();
     this.properties = _.assign({}, this.properties, properties);
-
-    this.method = 'GET';
-    this.endpoint = 'endpointDetail';
-    this.raw();
-
-    return this;
+    return Endpoint.please().run(this.properties, method, payload);
   },
 
-  getRequest(properties = {}, payload = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-
-    this.method = 'GET';
-    this.endpoint = 'endpoint';
-    this.query = payload;
-    this.raw();
-
-    return this;
-  },
-
-  postRequest(properties = {}, payload = {}) {
+  installFromUrl(properties = {}, url) {
     this.properties = _.assign({}, this.properties, properties);
 
     this.method = 'POST';
-    this.endpoint = 'endpoint';
-    this.payload = payload;
+    this.endpoint = 'install';
+    this.payload = { name: this.properties.instanceName, install_url: url };
     this.raw();
 
     return this;
@@ -73,13 +58,9 @@ const CustomSocketMeta = Meta({
       'methods': ['post', 'get'],
       'path': '/v1.1/instances/{instanceName}/sockets/'
     },
-    'endpointDetail': {
-      'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/sockets/{name}/endpoints/{endpoint_name}/'
-    },
-    'endpoint': {
-      'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/sockets/{endpoint_name}/'
+    'install': {
+      'methods': ['post'],
+      'path': '/v1.1/instances/{instanceName}/sockets/install/'
     }
   }
 });
@@ -112,6 +93,10 @@ const CustomSocket = stampit()
   .compose(Model)
   .setQuerySet(CustomSocketQuerySet)
   .setMeta(CustomSocketMeta)
+  .props({
+    endpointObjects: [],
+    dependencyObjects: []
+  })
   .methods({
 
     recheck() {
@@ -121,27 +106,41 @@ const CustomSocket = stampit()
       return this.makeRequest('POST', path);
     },
 
-    getEndpointDetails(endpoint_name) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('endpointDetail', _.assign({}, this, {endpoint_name}));
-
-      return this.makeRequest('GET', path);
+    addEndpoint(endpoint = {}) {
+      this.endpointObjects = _.concat(this.endpointObjects, endpoint);
     },
 
-    getRequest(endpoint_name, payload) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('endpoint', _.assign({}, this, {endpoint_name}));
-
-      return this.makeRequest('GET', path, {query: payload});
+    removeEndpoint(name) {
+      this.endpointObjects = _.reject(this.endpointObjects, { name });
     },
 
-    postRequest(endpoint_name, payload) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('endpoint', _.assign({}, this, {endpoint_name}));
+    addDependency(script = {}) {
+      this.dependencyObjects = _.concat(this.dependencyObjects, script);
+    },
 
-      return this.makeRequest('POST', path, {payload});
+    removeDependency(label) {
+      this.dependencyObjects = _.concat(this.dependencyObjects, { label });
+    },
+
+    runEndpoint(endpoint_name, method, payload) {
+      const {Endpoint} = this.getConfig();
+      return Endpoint.please().run({ socket_name: this.name, endpoint_name, instanceName: this.instanceName}, method, payload);
+    },
+
+    install() {
+      _.each(this.endpointObjects, (endpoint) => {
+        this.endpoints = _.assign({}, this.endpoints, { [endpoint.name]: { calls: endpoint.scriptCalls } })
+      });
+      this.dependencies = _.map(this.dependencyObjects, ({label, runtime_name, source}) => {
+        return { name: label, runtime_name, source, type: 'script'}
+      });
+      return this.save()
+        .then((result) => {
+          _.each(this.endpointObjects, (endpoint) => {
+            endpoint.socket_name = result.name;
+          });
+        })
     }
-
   })
   .setConstraints(CostomSocketConstraints)
 

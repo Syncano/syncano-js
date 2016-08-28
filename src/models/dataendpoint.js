@@ -25,13 +25,14 @@ const DataEndpointQerySet = stampit().compose(QuerySet, Filter, QsRename).method
     this.endpoint = 'get';
     this._serialize = false;
 
-    return this;
+    return this.then((response) => this.getConfig().DataObject.please().asResultSet(response));
   },
   /**
   * Clears cache of DataEndpoint.
   * @memberOf DataEndpointQerySet
   * @instance
 
+  * @param {Object} properties lookup properties used for path resolving
   * @returns {DataEndpointQerySet}
 
   * @example {@lang javascript}
@@ -43,6 +44,28 @@ const DataEndpointQerySet = stampit().compose(QuerySet, Filter, QsRename).method
 
     this.method = 'POST';
     this.endpoint = 'clear_cache';
+
+    return this;
+  },
+  /**
+  * Creates a DataObject in a DataEndpoint.
+  * @memberOf DataEndpointQerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Object} paylod DataObject data
+  * @returns {DataEndpointQerySet}
+
+  * @example {@lang javascript}
+  * DataEndpoint.please().createDataObject({name: 'dataViewName', instanceName: 'test-one'}, { field: 'value' });
+
+  */
+  createDataObject(properties = {}, payload ={}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'POST';
+    this.endpoint = 'post';
+    this.payload = payload;
 
     return this;
   }
@@ -60,6 +83,10 @@ const DataEndpointMeta = Meta({
     'list': {
       'methods': ['post', 'get'],
       'path': '/v1.1/instances/{instanceName}/endpoints/data/'
+    },
+    'post': {
+      'methods': ['post'],
+      'path': '/v1.1/instances/{instanceName}/endpoints/data/{name}/post/'
     },
     'get': {
       'methods': ['get'],
@@ -158,7 +185,8 @@ const DataEndpoint = stampit()
       if(!_.isEmpty(cache_key)) query.cache_key = cache_key;
       if(!_.isEmpty(filters)) query.query = JSON.stringify(filters)
 
-      return this.makeRequest('GET', path, {query});
+      return this.makeRequest('GET', path, {query})
+        .then((response) => this.getConfig().DataObject.please().asResultSet(response));
     },
     /**
     * Clears cache of DataEndpoint.
@@ -176,6 +204,24 @@ const DataEndpoint = stampit()
       const path = meta.resolveEndpointPath('clear_cache', this);
 
       return this.makeRequest('POST', path);
+    },
+    /**
+    * Creates a DataObject in a DataEndpoint.
+    * @memberOf DataEndpointQerySet
+    * @instance
+
+    * @param {Object} paylod DataObject data
+    * @returns {DataEndpointQerySet}
+
+    * @example {@lang javascript}
+    * DataEndpoint.createDataObject({ field: 'value' });
+
+    */
+    createDataObject(payload = {}) {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('post', this);
+
+      return this.makeRequest('POST', path, {payload})
     }
 
   });
