@@ -149,8 +149,9 @@ describe('DataEndpoint', function() {
         return dataEndpoint.fetchData();
       })
       .then((data) => {
-        should(data).be.an.Object();
-        should(data).have.property('objects').which.is.Array().with.length(1);
+        should(data).be.an.Array().with.length(1);
+        should(data[0]).be.an.Object();
+        should(data[0]).have.property('int').which.is.Number().equal(1);
       })
   });
 
@@ -166,9 +167,8 @@ describe('DataEndpoint', function() {
         return dta.fetchData(null, { int: { _eq: 5 } });
       })
       .then((data) => {
-        should(data).be.an.Object();
-        should(data).have.property('objects').which.is.Array().with.length(1);
-        should(data.objects[0]).have.property('int').which.is.Number().equal(5);
+        should(data).be.an.Array().with.length(1);
+        should(data[0]).have.property('int').which.is.Number().equal(5);
       });
   });
 
@@ -184,8 +184,8 @@ describe('DataEndpoint', function() {
         return dta.fetchData('123');
       })
       .then((data) => {
-        should(data).be.an.Object();
-        should(data).have.property('objects').which.is.Array().with.length(5);
+        should(data).be.an.Array().with.length(5);
+        should(data[0]).have.property('int').which.is.Number().equal(9);
       });
   });
 
@@ -293,8 +293,9 @@ describe('DataEndpoint', function() {
           return Model.please().fetchData({instanceName, name: dataEndpointName});
         })
         .then((data) => {
-          should(data).be.an.Object();
-          should(data).have.property('objects').which.is.Array().with.length(2);
+          should(data).be.an.Array().with.length(2);
+          should(data[0]).be.an.Object();
+          should(data[0]).have.property('int').which.is.Number().equal(1);
         })
     });
 
@@ -391,8 +392,7 @@ describe('DataEndpoint', function() {
             .fetchData({name: dataEndpointName, instanceName})
         })
         .then((data) => {
-          should(data).be.an.Object();
-          should(data).have.property('objects').which.is.Array().with.length(5);
+          should(data).be.an.Array().with.length(5);
         });
     });
 
@@ -417,9 +417,8 @@ describe('DataEndpoint', function() {
             .fetchData({name: dataEndpointName, instanceName})
         })
         .then((data) => {
-          should(data).be.an.Object();
-          should(data).have.property('objects').which.is.Array().with.length(1);
-          should(data.objects[0]).have.property('int').which.is.Number().equal(5);
+          should(data).be.an.Array().with.length(1);
+          should(data[0]).have.property('int').which.is.Number().equal(5);
         });
     });
 
@@ -440,12 +439,11 @@ describe('DataEndpoint', function() {
         .then(() => {
           return Model
             .please()
-            .fetchData({name: dataEndpointName, instanceName})
             .cacheKey('123')
+            .fetchData({name: dataEndpointName, instanceName})
         })
         .then((data) => {
-          should(data).be.an.Object();
-          should(data).have.property('objects').which.is.Array().with.length(5);
+          should(data).be.an.Array().with.length(5);
         });
     });
 

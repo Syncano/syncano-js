@@ -25,7 +25,7 @@ const DataEndpointQerySet = stampit().compose(QuerySet, Filter, QsRename).method
     this.endpoint = 'get';
     this._serialize = false;
 
-    return this;
+    return this.then((response) => this.getConfig().DataObject.please().asResultSet(response));
   },
   /**
   * Clears cache of DataEndpoint.
@@ -185,7 +185,8 @@ const DataEndpoint = stampit()
       if(!_.isEmpty(cache_key)) query.cache_key = cache_key;
       if(!_.isEmpty(filters)) query.query = JSON.stringify(filters)
 
-      return this.makeRequest('GET', path, {query});
+      return this.makeRequest('GET', path, {query})
+        .then((response) => this.getConfig().DataObject.please().asResultSet(response));
     },
     /**
     * Clears cache of DataEndpoint.
@@ -220,7 +221,7 @@ const DataEndpoint = stampit()
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('post', this);
 
-      return this.makeRequest('POST', path, payload);
+      return this.makeRequest('POST', path, {payload})
     }
 
   });
