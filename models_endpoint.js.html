@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Source: models/apnsconfig.js</title>
+	<title>Syncano Source: models/endpoint.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -70,89 +70,92 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: models/apnsconfig.js</h1>
+		<h1 class="page-title">Source: models/endpoint.js</h1>
     
 <section>
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
-import _ from 'lodash';
 import {Meta, Model} from './base';
-import {BaseQuerySet, Update, Get} from '../querySet';
+import _ from 'lodash';
+import {BaseQuerySet} from '../querySet';
 
-const APNSConfigQuerySet = stampit().compose(
-  BaseQuerySet,
-  Update,
-  Get
-).methods({
+const EndpointQuerySet = stampit().compose(BaseQuerySet)
+.methods({
 
-  removeCertificate(properties = {}, payload = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = payload;
-    this.method = 'POST';
-    this.endpoint = 'removeCertificate';
+  run(properties = {}, method = 'GET', payload = {}) {
+    this.properties = _.assign({}, this.properies, { socket_name: properties.socket_name, name: properties.endpoint_name, instanceName: properties.instanceName});
+
+    this.method = method;
+    this.endpoint = 'run';
+    if(method == 'POST') {
+      this.payload = payload;
+    } else {
+      this.query = payload;
+    }
+    this.raw();
+
     return this;
   }
 
-});
+})
 
-const APNSConfigMeta = Meta({
-  name: 'apnsconfig',
-  pluralName: 'apnsconfig',
+const EndpointMeta = Meta({
+  name: 'endpoint',
+  pluralName: 'endpoint',
   endpoints: {
-    'detail': {
-      'methods': ['post', 'get', 'patch', 'put'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/config/'
-    },
-    'removeCertificate': {
-      'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/config/remove_certificate/'
+    'run': {
+      'methods': ['post', 'get', 'delete', 'patch', 'put'],
+      'path': '/v1.1/instances/{instanceName}/endpoints/sockets/{socket_name}/{name}/'
     }
   }
 });
 
-const APNSConfigConstraints = {
-  instanceName: {
-    presence: true,
-    length: {
-      minimum: 5
-    }
+const EndpointConstraints = {
+  name: {
+    string: true,
+    presence: true
   }
 };
 
 /**
- * OO wrapper around instance APNS config {@link # endpoint}.
+ * OO wrapper around Endpoint {@link # endpoint}.
  * @constructor
- * @type {APNSConfig}
+ * @type {Endpoint}
 
- * @property {String} instanceName
- * @property {File} production_certificate
- * @property {String} [production_certificate_name = null]
- * @property {String} production_bundle_identifier
- * @property {String} [production_expiration_date = null]
- * @property {String} development_certificate_name
- * @property {File} development_certificate
- * @property {String} development_bundle_identifier
- * @property {String} [development_expiration_date = null]
- * @property {Object} [links = {}]
+ * @property {String} name
  */
-const APNSConfig = stampit()
+const Endpoint = stampit()
   .compose(Model)
-  .setMeta(APNSConfigMeta)
-  .setQuerySet(APNSConfigQuerySet)
-  .setConstraints(APNSConfigConstraints)
+  .setMeta(EndpointMeta)
+  .setConstraints(EndpointConstraints)
+  .setQuerySet(EndpointQuerySet)
+  .props({
+    scriptCalls: []
+  })
   .methods({
 
-    removeCertificate(payload = {}) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('removeCertificate', this);
+    addScriptCall({ name, methods }) {
+      this.scriptCalls = _.concat(this.scriptCalls, { name, methods, type: 'script'});
+    },
 
-      return this.makeRequest('POST', path, {payload}).then((body) => this.serialize(body));
+    run(method = 'GET', payload = {}) {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('run', this);
+      let data = null;
+
+      if(method === 'POST') {
+        data = {payload};
+      } else {
+        data = {query: payload};
+      }
+
+      return this.makeRequest(method, path, data);
     }
 
-  });
+  })
 
-export default APNSConfig;
+export default Endpoint;
 </pre>
     </article>
 </section>

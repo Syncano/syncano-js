@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Source: models/apnsconfig.js</title>
+	<title>Syncano Class: Endpoint</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,98 +65,190 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: models/apnsconfig.js</h1>
-    
+	<h1 class="page-title">Class: Endpoint</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
-import _ from 'lodash';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Update, Get} from '../querySet';
 
-const APNSConfigQuerySet = stampit().compose(
-  BaseQuerySet,
-  Update,
-  Get
-).methods({
+<header>
+    
+        <h2>
+        Endpoint
+        </h2>
+        
+    
+</header>
 
-  removeCertificate(properties = {}, payload = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = payload;
-    this.method = 'POST';
-    this.endpoint = 'removeCertificate';
-    return this;
-  }
 
-});
+<article>
+    <div class="container-overview">
+    
+        
+<hr>
+<dt>
+    <h4 class="name" id="Endpoint"><span class="type-signature"></span>new Endpoint()</h4>
+    
+    
+</dt>
+<dd>
 
-const APNSConfigMeta = Meta({
-  name: 'apnsconfig',
-  pluralName: 'apnsconfig',
-  endpoints: {
-    'detail': {
-      'methods': ['post', 'get', 'patch', 'put'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/config/'
-    },
-    'removeCertificate': {
-      'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/config/remove_certificate/'
-    }
-  }
-});
+    
+    <div class="description">
+        <p>OO wrapper around Endpoint endpoint.</p>
+    </div>
+    
 
-const APNSConfigConstraints = {
-  instanceName: {
-    presence: true,
-    length: {
-      minimum: 5
-    }
-  }
-};
+    
 
-/**
- * OO wrapper around instance APNS config {@link # endpoint}.
- * @constructor
- * @type {APNSConfig}
+    
 
- * @property {String} instanceName
- * @property {File} production_certificate
- * @property {String} [production_certificate_name = null]
- * @property {String} production_bundle_identifier
- * @property {String} [production_expiration_date = null]
- * @property {String} development_certificate_name
- * @property {File} development_certificate
- * @property {String} development_bundle_identifier
- * @property {String} [development_expiration_date = null]
- * @property {Object} [links = {}]
- */
-const APNSConfig = stampit()
-  .compose(Model)
-  .setMeta(APNSConfigMeta)
-  .setQuerySet(APNSConfigQuerySet)
-  .setConstraints(APNSConfigConstraints)
-  .methods({
+    
+    
 
-    removeCertificate(payload = {}) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('removeCertificate', this);
+    
+<dl class="details">
+    
 
-      return this.makeRequest('POST', path, {payload}).then((body) => this.serialize(body));
-    }
+    <h5 class="subsection-title">Properties:</h5>
 
-  });
+    <dl>
 
-export default APNSConfig;
-</pre>
-    </article>
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+</dl>
+
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="models_endpoint.js.html">models/endpoint.js</a>,
+				 <a href="models_endpoint.js.html#sunlight-1-line-51">line 51</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -166,6 +258,10 @@ export default APNSConfig;
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>
