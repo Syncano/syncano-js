@@ -1,6 +1,6 @@
 {
   "name": "syncano",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "A library to intereact with the Syncano API.",
   "homepage": "https://github.com/Syncano/syncano-js",
   "authors": [
