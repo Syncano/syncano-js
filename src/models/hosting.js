@@ -37,15 +37,37 @@ const HostingMeta = Meta({
   }
 });
 
+const HostingConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  label: {
+    string: true
+  },
+  description: {
+    string: true
+  },
+  domains: {
+    array: true
+  }
+};
+
 /**
  * OO wrapper around Hosting.
  * @constructor
  * @type {Hosting}
 
+ * @property {String} label
+ * @property {String} description
+ * @property {Array} domains
  */
 const Hosting = stampit()
   .compose(Model)
   .setQuerySet(HostingQuerySet)
+  .setConstraints(HostingConstraints)
   .setMeta(HostingMeta);
 
 export default Hosting;
