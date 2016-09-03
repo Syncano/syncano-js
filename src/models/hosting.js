@@ -29,10 +29,6 @@ const HostingMeta = Meta({
     'fileList': {
       'methods': ['post', 'get'],
       'path': '/v1.1/instances/{instanceName}/hosting/{id}/files/'
-    },
-    'fileDetail': {
-      'methods': ['get', 'put', 'patch', 'delete'],
-      'path': '/v1.1/instances/{instanceName}/hosting/{id}/files/{fileId}/'
     }
   }
 });
@@ -82,7 +78,28 @@ const Hosting = stampit()
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('fileList', this);
 
-      return this.makeRequest('GET', path);
+      return this.makeRequest('GET', path)
+        .then((response) => this.getConfig().HostingFile.please().asResultSet(response));
+    },
+
+    uploadFile(payload = {}) {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('fileList', this);
+
+      return this.makeRequest('POST', path, {payload})
+        .then((response) => this.getConfig().HostingFile.fromJSON(response, this));
+    },
+
+    deleteFile(file_id) {
+      const {HostingFile} = this.getConfig();
+
+      return HostingFile.please().delete({ instanceName: this.instanceName, hostingId: this.id, id: file_id});
+    },
+
+    getFileDetails(file_id) {
+      const {HostingFile} = this.getConfig();
+
+      return HostingFile.please().get({ instanceName: this.instanceName, hostingId: this.id, id: file_id});
     }
 
   });

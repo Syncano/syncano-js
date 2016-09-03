@@ -221,7 +221,7 @@ const DataEndpoint = stampit()
       const meta = this.getMeta();
       const path = meta.resolveEndpointPath('post', this);
 
-      return this.makeRequest('POST', path, {payload})
+      return this.makeRequest('POST', path, {payload});
     }
 
   });

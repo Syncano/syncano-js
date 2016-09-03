@@ -15,7 +15,7 @@ describe('Hosting', function() {
     instanceName,
     label: 'test hosting',
     description: 'test hosting desc',
-    domains: ['test.com']
+    domains: ['test.com.pl']
   }
 
   before(function() {
@@ -61,7 +61,6 @@ describe('Hosting', function() {
         should(hosting).be.an.Object();
         should(hosting).have.property('instanceName').which.is.String().equal(data.instanceName);
         should(hosting).have.property('id').which.is.Number();
-        should(hosting).have.property('fileId').which.is.Undefined();
         should(hosting).have.property('description').which.is.String().equal(data.description);
         should(hosting).have.property('links').which.is.Object();
         should(hosting).have.property('created_at').which.is.Date();
@@ -123,7 +122,7 @@ describe('Hosting', function() {
       })
   });
 
-  it.skip('should be able to list files via model instance', function() {
+  it('should be able to list files via model instance', function() {
     return Model(data).save()
       .then(cleaner.mark)
       .then((hosting) => {
@@ -133,6 +132,77 @@ describe('Hosting', function() {
         should(hosting).have.property('domains').which.is.Array().with.length(1);
 
         return hosting.listFiles();
+      })
+      .then((files) => {
+        should(files).be.an.Array();
+      })
+  });
+
+  it('should be able to upload file via model instance', function() {
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((hosting) => {
+        should(hosting).be.an.Object();
+        should(hosting).have.property('description').which.is.String().equal(data.description);
+        should(hosting).have.property('label').which.is.String().equal(data.label);
+        should(hosting).have.property('domains').which.is.Array().with.length(1);
+
+        return hosting.uploadFile({ path: 'file.txt', file: Syncano.file(__dirname + '/files/dummy.txt') });
+      })
+      .then((file) => {
+        should(file).be.an.Object();
+        should(file).have.property('instanceName').which.is.String().equal(instanceName);
+        should(file).have.property('id').which.is.Number();
+        should(file).have.property('path').which.is.String().equal('file.txt');
+        should(file).have.property('links').which.is.Object();
+        should(file).have.property('size').which.is.Number();
+      })
+  });
+
+  it('should be able to get file details via model instance', function() {
+    let tempHosting = null;
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((hosting) => {
+        tempHosting = hosting;
+
+        should(tempHosting).be.an.Object();
+        should(tempHosting).have.property('description').which.is.String().equal(data.description);
+        should(tempHosting).have.property('label').which.is.String().equal(data.label);
+        should(tempHosting).have.property('domains').which.is.Array().with.length(1);
+
+        return tempHosting.uploadFile({ path: 'file.txt', file: Syncano.file(__dirname + '/files/dummy.txt') });
+      })
+      .then((file) => {
+        return tempHosting.getFileDetails(file.id);
+      })
+      .then((file) => {
+        should(file).be.an.Object();
+        should(file).have.property('instanceName').which.is.String().equal(instanceName);
+        should(file).have.property('hostingId').which.is.Number().equal(tempHosting.id);
+        should(file).have.property('id').which.is.Number();
+        should(file).have.property('path').which.is.String().equal('file.txt');
+        should(file).have.property('links').which.is.Object();
+        should(file).have.property('size').which.is.Number();
+      })
+  });
+
+  it('should be able to delete file via model instance', function() {
+    let tempHosting = null;
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((hosting) => {
+        tempHosting = hosting;
+
+        should(tempHosting).be.an.Object();
+        should(tempHosting).have.property('description').which.is.String().equal(data.description);
+        should(tempHosting).have.property('label').which.is.String().equal(data.label);
+        should(tempHosting).have.property('domains').which.is.Array().with.length(1);
+
+        return tempHosting.uploadFile({ path: 'file.txt', file: Syncano.file(__dirname + '/files/dummy.txt') });
+      })
+      .then((file) => {
+        return tempHosting.deleteFile(file.id);
       })
   });
 

@@ -16,7 +16,7 @@ const HostingFileMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['get', 'put', 'patch', 'delete'],
-      'path': '/v1.1/instances/{instanceName}/hosting/{hostingId}/files/{fileId}/'
+      'path': '/v1.1/instances/{instanceName}/hosting/{hostingId}/files/{id}/'
     }
   }
 });
