@@ -134,8 +134,6 @@ describe('Hosting', function() {
 
         return hosting.listFiles();
       })
-      .then((files) => {
-      })
   });
 
 });
