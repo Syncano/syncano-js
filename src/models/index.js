@@ -40,6 +40,7 @@ import Tag from './tag';
 import CustomSocket from './customsocket';
 import Endpoint from './endpoint';
 import Hosting from './hosting';
+import HostingFile from './hostingfile';
 
 export default {
   Instance,
@@ -83,5 +84,6 @@ export default {
   Solution,
   Tag,
   Endpoint,
-  Hosting
+  Hosting,
+  HostingFile
 };

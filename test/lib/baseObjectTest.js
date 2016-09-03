@@ -56,6 +56,7 @@ describe('Syncano', function() {
       should(baseObject).have.property('Tag').which.is.Function();
       should(baseObject).have.property('Endpoint').which.is.Function();
       should(baseObject).have.property('Hosting').which.is.Function();
+      should(baseObject).have.property('HostingFile').which.is.Function();
     });
 
     it('shoud have baseUrl and accountKey properties', function() {
