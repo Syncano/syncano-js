@@ -68,6 +68,23 @@ const Hosting = stampit()
   .compose(Model)
   .setQuerySet(HostingQuerySet)
   .setConstraints(HostingConstraints)
-  .setMeta(HostingMeta);
+  .setMeta(HostingMeta)
+  .methods({
+
+    setDefault() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('setDefault', this);
+
+      return this.makeRequest('POST', path).then((body) => this.serialize(body));
+    },
+
+    listFiles() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('fileList', this);
+
+      return this.makeRequest('GET', path);
+    }
+
+  });
 
 export default Hosting;
