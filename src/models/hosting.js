@@ -37,13 +37,13 @@ const HostingQuerySet = stampit().compose(
   getFileDetails(properties = {}) {
     const {HostingFile} = this.getConfig();
 
-    return HostingFile.please().get({ instanceName: properties.instanceName, hostingId: properties.id, id: properties.file_id});
+    return HostingFile.please().get({ instanceName: properties.instanceName, hostingId: properties.id, id: properties.fileId});
   },
 
   deleteFile(properties = {}) {
     const {HostingFile} = this.getConfig();
 
-    return HostingFile.please().delete({ instanceName: properties.instanceName, hostingId: properties.id, id: properties.file_id});
+    return HostingFile.please().delete({ instanceName: properties.instanceName, hostingId: properties.id, id: properties.fileId});
   }
 
 });

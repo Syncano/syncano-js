@@ -327,7 +327,7 @@ describe('Hosting', function() {
           return Model.please().uploadFile(hosting, { path: 'file.txt', file: Syncano.file(__dirname + '/files/dummy.txt') });
         })
         .then((file) => {
-          return Model.please().getFileDetails({ instanceName, id: file.hostingId, file_id: file.id});
+          return Model.please().getFileDetails({ instanceName, id: file.hostingId, fileId: file.id});
         })
         .then((file) => {
           should(file).be.an.Object();
@@ -352,7 +352,7 @@ describe('Hosting', function() {
           return Model.please().uploadFile(hosting, { path: 'file.txt', file: Syncano.file(__dirname + '/files/dummy.txt') });
         })
         .then((file) => {
-          return Model.please().deleteFile({ instanceName, id: file.hostingId, file_id: file.id});
+          return Model.please().deleteFile({ instanceName, id: file.hostingId, fileId: file.id});
         })
     });
 
