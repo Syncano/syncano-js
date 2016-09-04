@@ -1,14 +1,52 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
-import {BaseQuerySet, Get, Update, Create, Delete} from '../querySet';
+import _ from 'lodash';
+import {BaseQuerySet, Get, Update, Create, Delete, List} from '../querySet';
 
 const HostingQuerySet = stampit().compose(
   BaseQuerySet,
   Get,
   Update,
   Create,
-  Delete
-);
+  Delete,
+  List
+)
+.methods({
+
+  setDefault(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'POST';
+    this.endpoint = 'setDefault';
+
+    return this;
+  },
+
+  listFiles(properties = {}) {
+    const {HostingFile} = this.getConfig();
+
+    return HostingFile.please().list({instanceName: properties.instanceName, hostingId: properties.id});
+  },
+
+  uploadFile(properties = {}, payload = {}) {
+    const {HostingFile} = this.getConfig();
+
+    return HostingFile.please().upload({instanceName: properties.instanceName, hostingId: properties.id}, payload);
+  },
+
+  getFileDetails(properties = {}) {
+    const {HostingFile} = this.getConfig();
+
+    return HostingFile.please().get({ instanceName: properties.instanceName, hostingId: properties.id, id: properties.file_id});
+  },
+
+  deleteFile(properties = {}) {
+    const {HostingFile} = this.getConfig();
+
+    return HostingFile.please().delete({ instanceName: properties.instanceName, hostingId: properties.id, id: properties.file_id});
+  }
+
+});
 
 const HostingMeta = Meta({
   name: 'hosting',
@@ -23,12 +61,8 @@ const HostingMeta = Meta({
       'path': '/v1.1/instances/{instanceName}/hosting/{id}/set_default/'
     },
     'list': {
-      'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/hosting/'
-    },
-    'fileList': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/hosting/{id}/files/'
+      'path': '/v1.1/instances/{instanceName}/hosting/'
     }
   }
 });
@@ -75,19 +109,15 @@ const Hosting = stampit()
     },
 
     listFiles() {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('fileList', this);
+      const {HostingFile} = this.getConfig();
 
-      return this.makeRequest('GET', path)
-        .then((response) => this.getConfig().HostingFile.please().asResultSet(response));
+      return HostingFile.please().list({instanceName: this.instanceName, hostingId: this.id});
     },
 
     uploadFile(payload = {}) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('fileList', this);
+      const {HostingFile} = this.getConfig();
 
-      return this.makeRequest('POST', path, {payload})
-        .then((response) => this.getConfig().HostingFile.fromJSON(response, this));
+      return HostingFile.please().upload({instanceName: this.instanceName, hostingId: this.id}, payload);
     },
 
     deleteFile(file_id) {

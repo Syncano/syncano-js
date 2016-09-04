@@ -1,7 +1,7 @@
 import Syncano from '../../src/syncano';
 import should from 'should/as-function';
 import {ValidationError} from '../../src/errors';
-import {suffix, credentials, createCleaner} from './utils';
+import {suffix, credentials, hex, createCleaner} from './utils';
 
 describe('Hosting', function() {
   this.timeout(15000);
@@ -15,7 +15,7 @@ describe('Hosting', function() {
     instanceName,
     label: 'test hosting',
     description: 'test hosting desc',
-    domains: ['test.com.pl']
+    domains: [`${hex.getRandom(5)}.com`]
   }
 
   before(function() {
@@ -184,7 +184,7 @@ describe('Hosting', function() {
         should(file).have.property('path').which.is.String().equal('file.txt');
         should(file).have.property('links').which.is.Object();
         should(file).have.property('size').which.is.Number();
-      })
+      });
   });
 
   it('should be able to delete file via model instance', function() {
@@ -204,6 +204,158 @@ describe('Hosting', function() {
       .then((file) => {
         return tempHosting.deleteFile(file.id);
       })
+  });
+
+  describe('#please()', function() {
+
+    it('should be able to list Models', function() {
+      return Model.please().list({instanceName}).then((Models) => {
+        should(Models).be.an.Array();
+      });
+    });
+
+    it('should be able to create a Model', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((hosting) => {
+          should(hosting).be.an.Object();
+          should(hosting).have.property('instanceName').which.is.String().equal(data.instanceName);
+          should(hosting).have.property('id').which.is.Number();
+          should(hosting).have.property('description').which.is.String().equal(data.description);
+          should(hosting).have.property('links').which.is.Object();
+          should(hosting).have.property('created_at').which.is.Date();
+          should(hosting).have.property('updated_at').which.is.Date();
+          should(hosting).have.property('label').which.is.String().equal(data.label);
+          should(hosting).have.property('domains').which.is.Array().with.length(1);
+          should(hosting.domains[0]).be.a.String().equal(data.domains[0]);
+        });
+    });
+
+    it('should be able to update a Model', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((hosting) => {
+          should(hosting).be.an.Object();
+          should(hosting).have.property('label').which.is.String().equal(data.label);
+          should(hosting).have.property('description').which.is.String().equal(data.description);
+
+          return Model.please().update({id: hosting.id, instanceName}, {description: 'new desc'});
+        })
+        .then((hosting) => {
+          should(hosting).be.an.Object();
+          should(hosting).have.property('label').which.is.String().equal(data.label);
+          should(hosting).have.property('description').which.is.String().equal('new desc');
+        });
+    });
+
+    it('should be able to delete a Model', function() {
+      return Model.please().create(data)
+        .then((hosting) => {
+          should(hosting).be.an.Object();
+          should(hosting).have.property('label').which.is.String().equal(data.label);
+          should(hosting).have.property('description').which.is.String().equal(data.description);
+
+          return Model.please().delete({id: hosting.id, instanceName});
+        });
+    });
+
+    it('should be able to set default', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((hosting) => {
+          should(hosting).be.an.Object();
+          should(hosting).have.property('label').which.is.String().equal(data.label);
+          should(hosting).have.property('description').which.is.String().equal(data.description);
+
+          return Model.please().setDefault({id: hosting.id, instanceName});
+        })
+        .then((hosting) => {
+          should(hosting).be.an.Object();
+          should(hosting).have.property('description').which.is.String().equal(data.description);
+          should(hosting).have.property('label').which.is.String().equal(data.label);
+          should(hosting).have.property('domains').which.is.Array().with.length(2);
+          should(hosting.domains[0]).be.a.String().equal(data.domains[0]);
+          should(hosting.domains[1]).be.a.String().equal('default');
+        });
+    });
+
+    it('should be able to list files', function() {
+      return Model.please().create(data)
+        .then(cleaner.mark)
+        .then((hosting) => {
+          should(hosting).be.an.Object();
+          should(hosting).have.property('label').which.is.String().equal(data.label);
+          should(hosting).have.property('description').which.is.String().equal(data.description);
+
+          return Model.please().listFiles({id: hosting.id, instanceName});
+        })
+        .then((files) => {
+          should(files).be.an.Array();
+        });
+    });
+
+    it('should be able to upload file', function() {
+      return Model(data).save()
+        .then(cleaner.mark)
+        .then((hosting) => {
+          should(hosting).be.an.Object();
+          should(hosting).have.property('description').which.is.String().equal(data.description);
+          should(hosting).have.property('label').which.is.String().equal(data.label);
+          should(hosting).have.property('domains').which.is.Array().with.length(1);
+
+          return Model.please().uploadFile(hosting, { path: 'file.txt', file: Syncano.file(__dirname + '/files/dummy.txt') });
+        })
+        .then((file) => {
+          should(file).be.an.Object();
+          should(file).have.property('instanceName').which.is.String().equal(instanceName);
+          should(file).have.property('id').which.is.Number();
+          should(file).have.property('path').which.is.String().equal('file.txt');
+          should(file).have.property('links').which.is.Object();
+          should(file).have.property('size').which.is.Number();
+        })
+    });
+
+    it('should be able to get file details', function() {
+      return Model(data).save()
+        .then(cleaner.mark)
+        .then((hosting) => {
+          should(hosting).be.an.Object();
+          should(hosting).have.property('description').which.is.String().equal(data.description);
+          should(hosting).have.property('label').which.is.String().equal(data.label);
+          should(hosting).have.property('domains').which.is.Array().with.length(1);
+
+          return Model.please().uploadFile(hosting, { path: 'file.txt', file: Syncano.file(__dirname + '/files/dummy.txt') });
+        })
+        .then((file) => {
+          return Model.please().getFileDetails({ instanceName, id: file.hostingId, file_id: file.id});
+        })
+        .then((file) => {
+          should(file).be.an.Object();
+          should(file).have.property('instanceName').which.is.String().equal(instanceName);
+          should(file).have.property('hostingId').which.is.Number();
+          should(file).have.property('id').which.is.Number();
+          should(file).have.property('path').which.is.String().equal('file.txt');
+          should(file).have.property('links').which.is.Object();
+          should(file).have.property('size').which.is.Number();
+        });
+    });
+
+    it('should be able to delete file', function() {
+      return Model(data).save()
+        .then(cleaner.mark)
+        .then((hosting) => {
+          should(hosting).be.an.Object();
+          should(hosting).have.property('description').which.is.String().equal(data.description);
+          should(hosting).have.property('label').which.is.String().equal(data.label);
+          should(hosting).have.property('domains').which.is.Array().with.length(1);
+
+          return Model.please().uploadFile(hosting, { path: 'file.txt', file: Syncano.file(__dirname + '/files/dummy.txt') });
+        })
+        .then((file) => {
+          return Model.please().deleteFile({ instanceName, id: file.hostingId, file_id: file.id});
+        })
+    });
+
   });
 
 });

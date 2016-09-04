@@ -1,14 +1,32 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
-import {BaseQuerySet, Get, Update, Create, Delete} from '../querySet';
+import _ from 'lodash';
+import {BaseQuerySet, Get, Update, Create, Delete, List} from '../querySet';
 
 const HostingFileQuerySet = stampit().compose(
   BaseQuerySet,
   Get,
   Update,
   Create,
-  Delete
-);
+  Delete,
+  List
+)
+.methods({
+
+  upload(properties = {}, payload = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'POST';
+    this.endpoint = 'list';
+    this.payload = payload;
+    this.raw();
+
+    return this.then((response) => {
+      return this.model.fromJSON(response, this.properties);
+    });
+  }
+
+})
 
 const HostingFileMeta = Meta({
   name: 'hostingfile',
@@ -17,6 +35,10 @@ const HostingFileMeta = Meta({
     'detail': {
       'methods': ['get', 'put', 'patch', 'delete'],
       'path': '/v1.1/instances/{instanceName}/hosting/{hostingId}/files/{id}/'
+    },
+    'list': {
+      'methods': ['post', 'get'],
+      'path': '/v1.1/instances/{instanceName}/hosting/{hostingId}/files/'
     }
   }
 });
