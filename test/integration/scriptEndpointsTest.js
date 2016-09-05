@@ -175,7 +175,7 @@ describe('ScriptEndpoint', function() {
       });
   });
 
-  it('should be able to run *public* script via model instance', function() {
+  it.skip('should be able to run *public* script via model instance', function() {
     return Model(ModelData).save()
       .then(cleaner.mark)
       .then((scriptendpoint) => {
