@@ -159,6 +159,34 @@ describe('Hosting', function() {
       })
   });
 
+  it('should be able to update file via model instance', function() {
+    let tempHosting = null;
+    let fileSize = null;
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((hosting) => {
+        tempHosting = hosting;
+        should(tempHosting).be.an.Object();
+        should(tempHosting).have.property('description').which.is.String().equal(data.description);
+        should(tempHosting).have.property('label').which.is.String().equal(data.label);
+        should(tempHosting).have.property('domains').which.is.Array().with.length(1);
+
+        return tempHosting.uploadFile({ path: 'file.txt', file: Syncano.file(__dirname + '/files/dummy.txt') });
+      })
+      .then((file) => {
+        fileSize = file.size;
+        return tempHosting.updateFile(file.id, { file: Syncano.file(__dirname + '/certificates/ApplePushDevelopment.p12')});
+      })
+      .then((file) => {
+        should(file).be.an.Object();
+        should(file).have.property('instanceName').which.is.String().equal(instanceName);
+        should(file).have.property('id').which.is.Number();
+        should(file).have.property('path').which.is.String().equal('file.txt');
+        should(file).have.property('links').which.is.Object();
+        should(file).have.property('size').which.is.Number().not.equal(fileSize);
+      })
+  });
+
   it('should be able to get file details via model instance', function() {
     let tempHosting = null;
     return Model(data).save()
@@ -312,6 +340,34 @@ describe('Hosting', function() {
           should(file).have.property('path').which.is.String().equal('file.txt');
           should(file).have.property('links').which.is.Object();
           should(file).have.property('size').which.is.Number();
+        })
+    });
+
+    it('should be able to update file', function() {
+      let fileSize = null;
+      let tempHosting = null;
+      return Model(data).save()
+        .then(cleaner.mark)
+        .then((hosting) => {
+          tempHosting = hosting;
+          should(tempHosting).be.an.Object();
+          should(tempHosting).have.property('description').which.is.String().equal(data.description);
+          should(tempHosting).have.property('label').which.is.String().equal(data.label);
+          should(tempHosting).have.property('domains').which.is.Array().with.length(1);
+
+          return Model.please().uploadFile(tempHosting, { path: 'file.txt', file: Syncano.file(__dirname + '/files/dummy.txt') });
+        })
+        .then((file) => {
+          fileSize = file.size;
+          return Model.please().updateFile({instanceName, id: tempHosting.id, fileId: file.id}, { file: Syncano.file(__dirname + '/certificates/ApplePushDevelopment.p12')});
+        })
+        .then((file) => {
+          should(file).be.an.Object();
+          should(file).have.property('instanceName').which.is.String().equal(instanceName);
+          should(file).have.property('id').which.is.Number();
+          should(file).have.property('path').which.is.String().equal('file.txt');
+          should(file).have.property('links').which.is.Object();
+          should(file).have.property('size').which.is.Number().not.equal(fileSize);
         })
     });
 

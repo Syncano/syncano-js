@@ -34,6 +34,12 @@ const HostingQuerySet = stampit().compose(
     return HostingFile.please().upload({instanceName: properties.instanceName, hostingId: properties.id}, payload);
   },
 
+  updateFile(properties = {}, payload = {}) {
+    const {HostingFile} = this.getConfig();
+
+    return HostingFile.please().update({instanceName: properties.instanceName, hostingId: properties.id, id: properties.fileId}, payload);
+  },
+
   getFileDetails(properties = {}) {
     const {HostingFile} = this.getConfig();
 
@@ -118,6 +124,12 @@ const Hosting = stampit()
       const {HostingFile} = this.getConfig();
 
       return HostingFile.please().upload({instanceName: this.instanceName, hostingId: this.id}, payload);
+    },
+
+    updateFile(file_id, payload = {}) {
+      const {HostingFile} = this.getConfig();
+
+      return HostingFile.please().update({instanceName: this.instanceName, hostingId: this.id, id: file_id}, payload);
     },
 
     deleteFile(file_id) {

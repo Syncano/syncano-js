@@ -1,14 +1,14 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
 import _ from 'lodash';
-import {BaseQuerySet, Get, Update, Create, Delete, List} from '../querySet';
+import {BaseQuerySet, Get, Create, Update, Delete, List} from '../querySet';
 
 const HostingFileQuerySet = stampit().compose(
   BaseQuerySet,
   Get,
-  Update,
   Create,
   Delete,
+  Update,
   List
 )
 .methods({
@@ -58,7 +58,7 @@ const HostingFileConstraints = {
     presence: true,
     string: true
   },
-  file_object: {
+  file: {
     presence: true
   }
 }
