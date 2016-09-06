@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Syncano Class: Invoice</title>
+	<title>Syncano Source: models/hosting.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,416 +65,169 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Invoice</h1>
+		<h1 class="page-title">Source: models/hosting.js</h1>
+    
 <section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">import stampit from 'stampit';
+import {Meta, Model} from './base';
+import _ from 'lodash';
+import {BaseQuerySet, Get, Update, Create, Delete, List} from '../querySet';
+
+const HostingQuerySet = stampit().compose(
+  BaseQuerySet,
+  Get,
+  Update,
+  Create,
+  Delete,
+  List
+)
+.methods({
+
+  setDefault(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'POST';
+    this.endpoint = 'setDefault';
+
+    return this;
+  },
+
+  listFiles(properties = {}) {
+    const {HostingFile} = this.getConfig();
+
+    return HostingFile.please().list({instanceName: properties.instanceName, hostingId: properties.id});
+  },
+
+  uploadFile(properties = {}, payload = {}) {
+    const {HostingFile} = this.getConfig();
+
+    return HostingFile.please().upload({instanceName: properties.instanceName, hostingId: properties.id}, payload);
+  },
+
+  updateFile(properties = {}, payload = {}) {
+    const {HostingFile} = this.getConfig();
+
+    return HostingFile.please().update({instanceName: properties.instanceName, hostingId: properties.id, id: properties.fileId}, payload);
+  },
+
+  getFileDetails(properties = {}) {
+    const {HostingFile} = this.getConfig();
+
+    return HostingFile.please().get({ instanceName: properties.instanceName, hostingId: properties.id, id: properties.fileId});
+  },
+
+  deleteFile(properties = {}) {
+    const {HostingFile} = this.getConfig();
+
+    return HostingFile.please().delete({ instanceName: properties.instanceName, hostingId: properties.id, id: properties.fileId});
+  }
+
+});
+
+const HostingMeta = Meta({
+  name: 'hosting',
+  pluralName: 'hostings',
+  endpoints: {
+    'detail': {
+      'methods': ['get', 'put', 'patch', 'delete'],
+      'path': '/v1.1/instances/{instanceName}/hosting/{id}/'
+    },
+    'setDefault': {
+      'methods': ['post'],
+      'path': '/v1.1/instances/{instanceName}/hosting/{id}/set_default/'
+    },
+    'list': {
+      'methods': ['post', 'get'],
+      'path': '/v1.1/instances/{instanceName}/hosting/'
+    }
+  }
+});
+
+const HostingConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  label: {
+    string: true
+  },
+  description: {
+    string: true
+  },
+  domains: {
+    array: true
+  }
+};
+
+/**
+ * OO wrapper around Hosting.
+ * @constructor
+ * @type {Hosting}
+
+ * @property {String} label
+ * @property {String} description
+ * @property {Array} domains
+ */
+const Hosting = stampit()
+  .compose(Model)
+  .setQuerySet(HostingQuerySet)
+  .setConstraints(HostingConstraints)
+  .setMeta(HostingMeta)
+  .methods({
 
-<header>
-    
-        <h2>
-        Invoice
-        </h2>
-        
-    
-</header>
+    setDefault() {
+      const meta = this.getMeta();
+      const path = meta.resolveEndpointPath('setDefault', this);
 
+      return this.makeRequest('POST', path).then((body) => this.serialize(body));
+    },
 
-<article>
-    <div class="container-overview">
-    
-        
-<hr>
-<dt>
-    <h4 class="name" id="Invoice"><span class="type-signature"></span>new Invoice()</h4>
-    
-    
-</dt>
-<dd>
+    listFiles() {
+      const {HostingFile} = this.getConfig();
 
-    
-    <div class="description">
-        <p>OO wrapper around Invoice.</p>
-    </div>
-    
+      return HostingFile.please().list({instanceName: this.instanceName, hostingId: this.id});
+    },
 
-    
+    uploadFile(payload = {}) {
+      const {HostingFile} = this.getConfig();
 
-    
+      return HostingFile.please().upload({instanceName: this.instanceName, hostingId: this.id}, payload);
+    },
 
-    
-    
+    updateFile(file_id, payload = {}) {
+      const {HostingFile} = this.getConfig();
 
-    
-<dl class="details">
-    
+      return HostingFile.please().update({instanceName: this.instanceName, hostingId: this.id, id: file_id}, payload);
+    },
 
-    <h5 class="subsection-title">Properties:</h5>
+    deleteFile(file_id) {
+      const {HostingFile} = this.getConfig();
 
-    <dl>
+      return HostingFile.please().delete({ instanceName: this.instanceName, hostingId: this.id, id: file_id});
+    },
 
-<table class="props table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
+    getFileDetails(file_id) {
+      const {HostingFile} = this.getConfig();
 
-        <th>Type</th>
+      return HostingFile.please().get({ instanceName: this.instanceName, hostingId: this.id, id: file_id});
+    }
 
-        
-        <th>Argument</th>
-        
+  });
 
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>status</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>items</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>period</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>amount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>id</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>created_at</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Date</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    null
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>updated_at</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Date</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    null
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-</dl>
-
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="models_invoice.js.html">models/invoice.js</a>,
-				 <a href="models_invoice.js.html#sunlight-1-line-65">line 65</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
+export default Hosting;
+</pre>
+    </article>
 </section>
+
 
 
 
@@ -484,10 +237,6 @@
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>
