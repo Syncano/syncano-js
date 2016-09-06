@@ -39,6 +39,8 @@ import Solution from './solution';
 import Tag from './tag';
 import CustomSocket from './customsocket';
 import Endpoint from './endpoint';
+import Hosting from './hosting';
+import HostingFile from './hostingfile';
 
 export default {
   Instance,
@@ -81,5 +83,7 @@ export default {
   Card,
   Solution,
   Tag,
-  Endpoint
+  Endpoint,
+  Hosting,
+  HostingFile
 };
