@@ -159,6 +159,27 @@ describe('Hosting', function() {
       })
   });
 
+  it('should be able to upload multiple files via model instance', function() {
+    return Model(data).save()
+      .then(cleaner.mark)
+      .then((hosting) => {
+        should(hosting).be.an.Object();
+        should(hosting).have.property('description').which.is.String().equal(data.description);
+        should(hosting).have.property('label').which.is.String().equal(data.label);
+        should(hosting).have.property('domains').which.is.Array().with.length(1);
+
+        return hosting.uploadFiles([
+          { path: 'file.txt', file: Syncano.file(__dirname + '/files/dummy.txt') },
+          { path: 'file2.txt', file: Syncano.file(__dirname + '/files/dummy.txt') }
+        ]);
+      })
+      .then((files) => {
+        should(files).be.an.Array().with.length(2);
+        should(files[0]).have.property('path').which.is.String().equal('file.txt');
+        should(files[1]).have.property('path').which.is.String().equal('file2.txt');
+      })
+  });
+
   it('should be able to update file via model instance', function() {
     let tempHosting = null;
     let fileSize = null;
@@ -340,6 +361,27 @@ describe('Hosting', function() {
           should(file).have.property('path').which.is.String().equal('file.txt');
           should(file).have.property('links').which.is.Object();
           should(file).have.property('size').which.is.Number();
+        })
+    });
+
+    it('should be able to upload multiple files', function() {
+      return Model(data).save()
+        .then(cleaner.mark)
+        .then((hosting) => {
+          should(hosting).be.an.Object();
+          should(hosting).have.property('description').which.is.String().equal(data.description);
+          should(hosting).have.property('label').which.is.String().equal(data.label);
+          should(hosting).have.property('domains').which.is.Array().with.length(1);
+
+          return Model.please().uploadFiles(hosting, [
+            { path: 'file.txt', file: Syncano.file(__dirname + '/files/dummy.txt') },
+            { path: 'file2.txt', file: Syncano.file(__dirname + '/files/dummy.txt') }
+          ]);
+        })
+        .then((files) => {
+          should(files).be.an.Array().with.length(2);
+          should(files[0]).have.property('path').which.is.String().equal('file.txt');
+          should(files[1]).have.property('path').which.is.String().equal('file2.txt');
         })
     });
 

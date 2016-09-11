@@ -1,6 +1,7 @@
 import stampit from 'stampit';
 import {Meta, Model} from './base';
 import _ from 'lodash';
+import Promise from 'bluebird';
 import {BaseQuerySet, Get, Update, Create, Delete, List} from '../querySet';
 
 const HostingQuerySet = stampit().compose(
@@ -32,6 +33,12 @@ const HostingQuerySet = stampit().compose(
     const {HostingFile} = this.getConfig();
 
     return HostingFile.please().upload({instanceName: properties.instanceName, hostingId: properties.id}, payload);
+  },
+
+  uploadFiles(properties = {}, files = []) {
+    const {HostingFile} = this.getConfig();
+
+    return Promise.mapSeries(files, (f) => HostingFile.please().upload({instanceName: properties.instanceName, hostingId: properties.id}, f));
   },
 
   updateFile(properties = {}, payload = {}) {
@@ -124,6 +131,12 @@ const Hosting = stampit()
       const {HostingFile} = this.getConfig();
 
       return HostingFile.please().upload({instanceName: this.instanceName, hostingId: this.id}, payload);
+    },
+
+    uploadFiles(files = []) {
+      const {HostingFile} = this.getConfig();
+
+      return Promise.mapSeries(files, (f) => HostingFile.please().upload({instanceName: this.instanceName, hostingId: this.id}, f));
     },
 
     updateFile(file_id, payload = {}) {
