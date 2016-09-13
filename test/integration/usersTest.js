@@ -464,7 +464,6 @@ describe('User', function() {
           return Model.please().getGroups({ instanceName, user: userId})
         })
         .then((groups) => {
-          console.log(groups);
           should(groups).be.an.Array().with.length(1);
         })
     });
