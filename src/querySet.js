@@ -153,10 +153,10 @@ const QuerySetRequest = stampit().compose(Request)
     * @param {String} lookupField additional field to search for data
     * @returns {ResultSet}
     */
-    asResultSet(response, lookupField) {
+    asResultSet(response, lookupField, additionalProps = {}) {
       const objects = _.map(response.objects, (object) => {
         const obj = lookupField ? object[lookupField] : object;
-        return this.model.fromJSON(obj, this.properties)
+        return this.model.fromJSON(obj, _.assign({}, this.properties, additionalProps));
       });
       return ResultSet(this, response, objects);
     },

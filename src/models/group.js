@@ -77,9 +77,7 @@ const GroupQuerySet = stampit().compose(QuerySet).methods({
     this.method = 'GET';
     this.endpoint = 'userGroups';
 
-    return this.then((response) => {
-      return this.model.please().asResultSet(response, 'group');
-    });
+    return this.then((response) => this.model.please().asResultSet(response, 'group', properties));
   },
 
   getUserGroup(properties = {}, group = {}) {
@@ -135,7 +133,7 @@ const GroupMeta = Meta({
     },
     'userGroup': {
       'methods': ['get', 'delete'],
-      'path': '/v1.1/instances/{instanceName}/users/{user}/groups/{group}/'
+      'path': '/v1.1/instances/{instanceName}/users/{user}/groups/{id}/'
     }
   }
 });

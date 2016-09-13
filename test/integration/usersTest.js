@@ -199,7 +199,7 @@ describe('User', function() {
         return tempUser.addGroup({ group: groupId });
       })
       .then(() => {
-        return tempUser.getGroup({ group: groupId})
+        return tempUser.getGroup({ id: groupId})
       })
       .then(() => {
         return tempUser.getGroups()
@@ -229,7 +229,7 @@ describe('User', function() {
       })
       .then((groups) => {
         should(groups).be.an.Array().with.length(1);
-        return tempUser.deleteGroup({ group: groupId });
+        return tempUser.deleteGroup({ id: groupId });
       })
       .then(() => {
         return tempUser.getGroups()
@@ -488,7 +488,7 @@ describe('User', function() {
       })
       .then((groups) => {
         should(groups).be.an.Array().with.length(1);
-        return Model.please().deleteGroup({ instanceName, user: userId}, {group: groupId})
+        return Model.please().deleteGroup({ instanceName, user: userId}, {id: groupId})
       })
       .then(() => {
         return Model.please().getGroups({ instanceName, user: userId})
@@ -514,7 +514,7 @@ describe('User', function() {
         return Model.please().addGroup({ instanceName, user: tempUser.id}, {group: groupId})
       })
       .then(() => {
-        return Model.please().getGroup({ instanceName, user: tempUser.id, group: groupId})
+        return Model.please().getGroup({ instanceName, user: tempUser.id, id: groupId})
       })
       .then((group) => {
         should(group).be.an.Object();
