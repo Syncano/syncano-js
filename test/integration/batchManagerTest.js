@@ -66,13 +66,6 @@ describe('BatchManager', function() {
     }).throw(/not a valid object/);
   });
 
-  it('should validate matching object types added for batching', function() {
-    should(() => {
-      Manager.addSingleObject(Model({name: 'test', instanceName, className}), 'save');
-      Manager.addSingleObject(Class({name: 'test_class', instanceName}), 'save');
-    }).throw(/Only objects of the same type can be batched/);
-  });
-
   it('should validate max number of objects added to batch', function() {
     should(() => {
       Manager.addObjects(Objects).addObjects(Objects).addObjects(Objects)
