@@ -11,7 +11,7 @@ describe('ScriptTrace', function() {
   let Model = null;
   let Instance = null;
 
-  const instanceName = suffix.get('ScriptTrace');
+  const instanceName = suffix.getHyphened('ScriptTrace');
   const data = {instanceName};
 
   before(function() {

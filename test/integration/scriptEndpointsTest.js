@@ -13,7 +13,7 @@ describe('ScriptEndpoint', function() {
   let Script = null;
   let Instance = null;
 
-  const instanceName = suffix.get('ScriptEndpoint');
+  const instanceName = suffix.getHyphened('ScriptEndpoint');
   const ModelName = suffix.get('scriptendpoint');
   const runtimeName = 'python_library_v4.2';
   const scriptLabel = suffix.get('script');

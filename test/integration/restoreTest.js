@@ -12,7 +12,7 @@ describe.skip('Restore', function() {
   let FullBackup = null;
   let backupId = null;
   let restoreId = null;
-  const instanceName = suffix.get('restore');
+  const instanceName = suffix.getHyphened('restore');
   const description = suffix.get('description');
   const label = suffix.get('label');
   const backupData = {

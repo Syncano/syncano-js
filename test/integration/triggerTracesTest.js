@@ -10,7 +10,7 @@ describe.skip('TriggerTrace', function() {
   let connection = null;
   let Instance = null;
   let Model = null;
-  const instanceName = suffix.get('script');
+  const instanceName = suffix.getHyphened('script');
   const scriptName = suffix.get('script');
   const className = suffix.get('class');
   const triggerData = {

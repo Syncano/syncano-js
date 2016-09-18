@@ -13,7 +13,7 @@ describe('ApiKey', function() {
   let Model = null;
   let objects = null;
   let descriptions = null;
-  const instanceName = suffix.get('ApiKey');
+  const instanceName = suffix.getHyphened('ApiKey');
   const description = suffix.get('description');
   const data = {
     instanceName: instanceName,

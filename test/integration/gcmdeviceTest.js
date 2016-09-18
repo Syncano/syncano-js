@@ -11,7 +11,7 @@ describe('GCMDevice', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('GCMDevice');
+  const instanceName = suffix.getHyphened('GCMDevice');
   const registrationId = hex.getRandom(64);
   const deviceLabel = suffix.get('gcm');
   const devId = '10000000001';

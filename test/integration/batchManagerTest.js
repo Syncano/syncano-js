@@ -13,7 +13,7 @@ describe('BatchManager', function() {
   let Objects = null;
   let Instance = null;
   let Manager = null;
-  const instanceName = suffix.get('name');
+  const instanceName = suffix.getHyphened('name');
   const className = suffix.get('class');
   const classData = {
     name: className,
@@ -64,13 +64,6 @@ describe('BatchManager', function() {
     should(() => {
       Manager.addSingleObject({ something: 'thing' }, 'save');
     }).throw(/not a valid object/);
-  });
-
-  it('should validate matching object types added for batching', function() {
-    should(() => {
-      Manager.addSingleObject(Model({name: 'test', instanceName, className}), 'save');
-      Manager.addSingleObject(Class({name: 'test_class', instanceName}), 'save');
-    }).throw(/Only objects of the same type can be batched/);
   });
 
   it('should validate max number of objects added to batch', function() {

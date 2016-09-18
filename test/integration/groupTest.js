@@ -12,7 +12,7 @@ describe('Group', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('Group');
+  const instanceName = suffix.getHyphened('Group');
   const groupLabel = suffix.get('group');
   const data = {
     instanceName,

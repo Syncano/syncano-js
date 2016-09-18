@@ -8,6 +8,9 @@ export const suffix = {
   value: crypto.createHash('md5').update(hashData).digest('hex'),
   get(text) {
     return `${text.toString()}_${this.value}`;
+  },
+  getHyphened(text) {
+    return `${text.toString()}-${this.value}`;
   }
 };
 

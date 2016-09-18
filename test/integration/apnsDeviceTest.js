@@ -11,7 +11,7 @@ describe('APNS Device', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('APNSDevice');
+  const instanceName = suffix.getHyphened('APNSDevice');
   const deviceLabel = suffix.get('apns');
   const devId = 'd8a46770-c20b-11e5-a837-0800200c9a66';
   const registrationId = hex.getRandom(64);

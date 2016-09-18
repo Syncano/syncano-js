@@ -9,7 +9,7 @@ describe('Profile', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('Profile');
+  const instanceName = suffix.getHyphened('Profile');
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
