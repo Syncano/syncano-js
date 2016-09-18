@@ -8,7 +8,7 @@ import {suffix, credentials} from './utils';
 describe('GCMMessage', function() {
   this.timeout(15000);
 
-  const instanceName = suffix.get('GCMMessage');
+  const instanceName = suffix.getHyphened('GCMMessage');
   const data = {
     instanceName,
     content: {

@@ -13,7 +13,7 @@ describe('DataEndpoint', function() {
   let Instance = null;
   let Class = null;
   let dataObject = null;
-  const instanceName = suffix.get('DataEndpoint');
+  const instanceName = suffix.getHyphened('DataEndpoint');
   const dataEndpointName = suffix.get('dataendpoint');
   const className = suffix.get('class');
   const data = {

@@ -10,7 +10,7 @@ describe('CustomSocket', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('CustomSocket');
+  const instanceName = suffix.getHyphened('CustomSocket');
   const name = suffix.get('socket');
   const installUrl = 'https://raw.githubusercontent.com/Syncano/custom-socket-test/master/socket.yml';
   const data = {

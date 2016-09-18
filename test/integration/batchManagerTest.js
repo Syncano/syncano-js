@@ -13,7 +13,7 @@ describe('BatchManager', function() {
   let Objects = null;
   let Instance = null;
   let Manager = null;
-  const instanceName = suffix.get('name');
+  const instanceName = suffix.getHyphened('name');
   const className = suffix.get('class');
   const classData = {
     name: className,

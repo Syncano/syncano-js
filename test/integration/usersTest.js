@@ -12,7 +12,7 @@ describe('User', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('User');
+  const instanceName = suffix.getHyphened('User');
   const data = {
     instanceName,
     username: 'testuser',

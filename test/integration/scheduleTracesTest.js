@@ -10,7 +10,7 @@ describe.skip('ScheduleTrace', function() {
 
   let Instance = null;
   let Model = null;
-  const instanceName = suffix.get('ScheduleTrace');
+  const instanceName = suffix.getHyphened('ScheduleTrace');
   let data = {
     instanceName,
     scheduleId: null

@@ -10,7 +10,7 @@ describe('Instance', function() {
   const cleaner = createCleaner();
   let connection = null;
   let Model = null;
-  const instanceName = suffix.get('name');
+  const instanceName = suffix.getHyphened('name');
   const data = {
     name: instanceName,
     description: suffix.get('description')

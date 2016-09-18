@@ -10,7 +10,7 @@ describe('Solution', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('Solution');
+  const instanceName = suffix.getHyphened('Solution');
   const solutionData = {
     label: 'test-solution',
     description: 'my test solution',

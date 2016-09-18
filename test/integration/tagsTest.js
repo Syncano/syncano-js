@@ -8,7 +8,7 @@ describe('Tag', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('Tag');
+  const instanceName = suffix.getHyphened('Tag');
 
   before(function() {
     connection = Syncano(credentials.getCredentials());

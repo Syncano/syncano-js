@@ -10,7 +10,7 @@ describe('Script', function() {
   let connection = null;
   let Instance = null;
   let Model = null;
-  const instanceName = suffix.get('Script');
+  const instanceName = suffix.getHyphened('Script');
   const scriptName = suffix.get('script');
   const runtimeName = 'python_library_v4.2';
   const data = {

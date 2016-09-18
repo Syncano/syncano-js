@@ -10,7 +10,7 @@ describe('Hosting', function() {
   let connection = null;
   let Instance = null;
   let Model = null;
-  const instanceName = suffix.get('hosting');
+  const instanceName = suffix.getHyphened('hosting');
   const data = {
     instanceName,
     label: 'test hosting',

@@ -9,7 +9,7 @@ describe('APNSConfig', function() {
   let connection = null;
   let Instance = null;
   let Model = null;
-  const instanceName = suffix.get('APNSConfig');
+  const instanceName = suffix.getHyphened('APNSConfig');
   const data = {instanceName};
 
   before(function() {

@@ -11,7 +11,7 @@ describe.skip('FullBackup', function() {
   let backupId = null;
   let Instance = null;
   let Model = null;
-  const instanceName = suffix.get('fullbackup');
+  const instanceName = suffix.getHyphened('fullbackup');
   const description = suffix.get('description');
   const label = suffix.get('label');
   const data = {

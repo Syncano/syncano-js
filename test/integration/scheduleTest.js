@@ -11,7 +11,7 @@ describe('Schedule', function() {
   const cleaner = createCleaner();
   let Instance = null;
   let Model = null;
-  const instanceName = suffix.get('Schedule');
+  const instanceName = suffix.getHyphened('Schedule');
   let data = {
     instanceName,
     label: instanceName,
