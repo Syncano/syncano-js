@@ -22,8 +22,8 @@ describe('Instance', function() {
     Model = connection.Instance;
 
     objects = [
-      Model({ name: `${instanceName}_1`}),
-      Model({ name: `${instanceName}_2`})
+      Model({ name: `${instanceName}-1`}),
+      Model({ name: `${instanceName}-2`})
     ];
   });
 
