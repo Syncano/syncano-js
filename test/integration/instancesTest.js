@@ -115,7 +115,7 @@ describe('Instance', function() {
   });
 
   it('should be able to rename via model instance', function() {
-    const newInstanceName = suffix.get('name');
+    const newInstanceName = suffix.getHyphened('name');
     return Model(data).save()
       .then(cleaner.mark)
       .then((instance) => {
