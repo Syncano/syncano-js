@@ -291,7 +291,7 @@ describe('Instance', function() {
         });
     });
 
-    it('should be able to rename an instance', function() {
+    it.skip('should be able to rename an instance', function() {
       const newInstanceName = suffix.get('name');
       return Model.please().create(data)
         .then(cleaner.mark)
