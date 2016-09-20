@@ -55,6 +55,14 @@ const BatchManager = stampit()
       return this;
     },
 
+    addObjectsFromArray(objects, action) {
+      this.validateObjectsLength(objects.length);
+      _.each(objects, (object) => {
+        this.objects = _.concat(this.objects, { object, action });
+      });
+      return this;
+    },
+
     addSingleObject(object, action) {
       if(!_.has(object, '_meta')) {
         throw new Error('The supplied object is not a valid object.');
