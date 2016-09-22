@@ -211,7 +211,7 @@ describe('CustomSocket', function() {
     });
 
     it.skip('should be able to install socket from url', function() {
-      return Model.please().installFromUrl({instanceName}, installUrl)
+      return Model.please().installFromUrl({instanceName}, 'mysocket', installUrl)
         .then((response) => {
           should(response).be.an.Object();
           should(response).have.property('instanceName').which.is.String().equal(instanceName);
