@@ -1,4 +1,11 @@
-### Change Log
+### Changelog
+* **1.0.27** - 2016-09-23
+    * Support for uploading muliple files to Hosting
+    * Fixed respons serialization in user groups
+    * BatchManager update and fixes
+    * Fixed `installFromUrl()` method in CustomSocket
+* **1.0.26** - 2016-09-06
+    * Hosting support
 * **1.0.25** - 2016-08-28
     * Added ability to create DataObjects using DataEndpoints
     * Added Endpoint model and helper methods for CustomSockets
