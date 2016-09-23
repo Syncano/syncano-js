@@ -52,7 +52,14 @@ const BatchManager = stampit()
         this.removeObjects();
         throw new Error('The Batch Manager only accepts properly formatted objects.');
       }
-      this.validateObjectsType(_.head(this.objects).object.getMeta().name);
+      return this;
+    },
+
+    addObjectsFromArray(objects, action) {
+      this.validateObjectsLength(objects.length);
+      _.each(objects, (object) => {
+        this.objects = _.concat(this.objects, { object, action });
+      });
       return this;
     },
 
@@ -62,7 +69,6 @@ const BatchManager = stampit()
       }
       this.validateObjectsLength(1);
       this.objects = _.concat(this.objects, { object, action });
-      this.validateObjectsType(_.head(this.objects).object.getMeta().name);
       return this;
     },
 
@@ -79,13 +85,6 @@ const BatchManager = stampit()
       const existingLength = _.size(this.objects);
       if(_.add(existingLength, length) > this.maxBatchObjects) {
         throw new Error('Only 50 objects can be batched at once.');
-      }
-    },
-
-    validateObjectsType(type) {
-      const sameTypes = _.every(this.objects, (object) => _.eq(object.object.getMeta().name, type));
-      if(!sameTypes) {
-        throw new Error('Only objects of the same type can be batched.');
       }
     },
 

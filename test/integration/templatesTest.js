@@ -11,7 +11,7 @@ describe('Template', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('Template');
+  const instanceName = suffix.getHyphened('Template');
   const templateName = suffix.get('template');
   const templateContent = "<h1>{{ title }}</h1>";
   const contentType = 'text/html';

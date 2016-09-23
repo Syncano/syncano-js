@@ -10,7 +10,7 @@ describe('Card', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('Card');
+  const instanceName = suffix.getHyphened('Card');
   const stripe = Stripe(process.env.STRIPE_KEY);
   let token = null;
 

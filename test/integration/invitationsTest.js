@@ -12,7 +12,7 @@ describe('Instance Invitation', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('Invitation');
+  const instanceName = suffix.getHyphened('Invitation');
   const email = Date.now() + '@invitation.com';
   const email2 = Date.now() + '@devitation.com';
   const data = {

@@ -10,7 +10,7 @@ describe('Account', function() {
   let connection = null;
   let Instance = null;
   let Model = null;
-  const username = suffix.get('account');
+  const username = suffix.getHyphened('account');
   const email = `${username}@internal.com`;
   const data = {
     email,

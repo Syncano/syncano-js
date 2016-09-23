@@ -10,7 +10,7 @@ describe('CustomSocket', function() {
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.get('CustomSocket');
+  const instanceName = suffix.getHyphened('CustomSocket');
   const name = suffix.get('socket');
   const installUrl = 'https://raw.githubusercontent.com/Syncano/custom-socket-test/master/socket.yml';
   const data = {
@@ -211,7 +211,7 @@ describe('CustomSocket', function() {
     });
 
     it.skip('should be able to install socket from url', function() {
-      return Model.please().installFromUrl({instanceName}, installUrl)
+      return Model.please().installFromUrl({instanceName}, 'mysocket', installUrl)
         .then((response) => {
           should(response).be.an.Object();
           should(response).have.property('instanceName').which.is.String().equal(instanceName);

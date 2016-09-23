@@ -8,7 +8,7 @@ import {suffix, credentials} from './utils';
 describe('APNSMessage', function() {
   this.timeout(15000);
 
-  const instanceName = suffix.get('APNSMessage');
+  const instanceName = suffix.getHyphened('APNSMessage');
   const data = {
     instanceName,
     content: {

@@ -14,7 +14,7 @@ describe('Channel', function() {
   let Instance = null;
   let Class = null;
   let dataObject = null;
-  const instanceName = suffix.get('Channel');
+  const instanceName = suffix.getHyphened('Channel');
   const channelName = suffix.get('channel');
   const className = suffix.get('class');
   const data = {

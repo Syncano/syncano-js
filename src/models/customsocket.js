@@ -29,12 +29,12 @@ const CustomSocketQuerySet = stampit().compose(
     return Endpoint.please().run(this.properties, method, payload);
   },
 
-  installFromUrl(properties = {}, url) {
+  installFromUrl(properties = {}, name, url) {
     this.properties = _.assign({}, this.properties, properties);
 
     this.method = 'POST';
     this.endpoint = 'install';
-    this.payload = { name: this.properties.instanceName, install_url: url };
+    this.payload = { name: name, install_url: url };
     this.raw();
 
     return this;
