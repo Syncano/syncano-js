@@ -180,6 +180,12 @@ const Request = stampit().compose(ConfigMixin, Logger)
         }, request.type('form'));
       }
 
+      request.on('progress', (e) => {
+        if(_.isFunction(this.getConfig().progressCallback)) {
+          this.getConfig().progressCallback(e);
+        }
+      });
+
       return Promise.promisify(request.end, {context: request})()
         .then((response) => {
           if (!response.ok) {
