@@ -20,7 +20,8 @@ describe('Request', function() {
       'send',
       'attach',
       'field',
-      'end'
+      'end',
+      'on'
     ];
 
     stubs = _.reduce(methods, (result, method) => {
