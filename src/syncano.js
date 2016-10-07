@@ -39,6 +39,7 @@ const Syncano = stampit()
   })
   .refs({
     baseUrl: 'https://api.syncano.io',
+    progressCallback: null,
     accountKey: null,
     userKey: null,
     apiKey: null,
@@ -69,6 +70,21 @@ const Syncano = stampit()
       }
       return this;
     },
+
+    /**
+     * Sets progressCallback
+     *
+     * @memberOf Syncano
+     * @instance
+     *
+     * @param {Function} callback Function to be called on 'progress' event
+     * @returns {Syncano}
+     */
+    onProgress(callback) {
+      this.progressCallback = callback;
+      return this;
+    },
+
     /**
     * Gets *instanceName*.
 
