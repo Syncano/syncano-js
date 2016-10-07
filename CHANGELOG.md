@@ -1,4 +1,6 @@
 ### Changelog
+* **1.0.28** - 2016-10-07
+    * Support for listening to request progress via the `onProgress` method
 * **1.0.27** - 2016-09-23
     * Support for uploading muliple files to Hosting
     * Fixed respons serialization in user groups
