@@ -149,7 +149,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
       }, {});
 
       let handler = this.getRequestHandler();
-      let request = handler('POST', this.buildUrl(path))
+      let request = handler((method === 'DELETE' ? method : 'POST'), this.buildUrl(path))
         .timeout(options.timeout)
         .query(options.query);
 
