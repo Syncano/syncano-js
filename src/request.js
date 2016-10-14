@@ -122,24 +122,6 @@ const Request = stampit().compose(ConfigMixin, Logger)
         return Promise.reject(new Error('"path" is required.'));
       }
 
-      if (!_.isUndefined(config)) {
-        if (!_.isEmpty(config.getAccountKey())) {
-          options.payload = _.assign({}, options.payload, { '_api_key': config.getAccountKey() });
-        }
-
-        // Yes, we will replace account key
-        if (!_.isEmpty(config.getApiKey())) {
-          options.payload = _.assign({}, options.payload, { '_api_key': config.getApiKey() });
-        }
-
-        if (!_.isEmpty(config.getUserKey())) {
-          options.payload = _.assign({}, options.payload, { '_user_key': config.getUserKey() });
-        }
-      }
-
-      // Pass method with payload
-      options.payload = _.assign({}, options.payload, { '_method': method })
-
       // Grab files
       const files = _.reduce(options.payload, (result, value, key) => {
         if (value instanceof SyncanoFile) {
@@ -148,8 +130,40 @@ const Request = stampit().compose(ConfigMixin, Logger)
         return result;
       }, {});
 
+      if (!_.isUndefined(config)) {
+        if (!_.isEmpty(config.getAccountKey())) {
+          if(_.isEmpty(files)) {
+            options.payload = _.assign({}, options.payload, { '_api_key': config.getAccountKey() });
+          } else {
+            options.headers['X-API-KEY'] = config.getAccountKey();
+          }
+        }
+
+        // Yes, we will replace account key
+        if (!_.isEmpty(config.getApiKey())) {
+          if(_.isEmpty(files)) {
+            options.payload = _.assign({}, options.payload, { '_api_key': config.getApiKey() });
+          } else {
+            options.headers['X-API-KEY'] = config.getApiKey();
+          }
+        }
+
+        if (!_.isEmpty(config.getUserKey())) {
+          if(_.isEmpty(files)) {
+            options.payload = _.assign({}, options.payload, { '_user_key': config.getUserKey() });
+          } else {
+            options.headers['X-USER-KEY'] = config.getUserKey();
+          }
+        }
+      }
+
+      // Pass method with payload
+      if(_.isEmpty(files)) {
+        options.payload = _.assign({}, options.payload, { '_method': method });
+      }
+
       let handler = this.getRequestHandler();
-      let request = handler((method === 'DELETE' ? method : 'POST'), this.buildUrl(path))
+      let request = handler((_.isEmpty(files) ? 'POST' : method), this.buildUrl(path))
         .timeout(options.timeout)
         .query(options.query);
 
@@ -171,6 +185,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
 
         request = request
           .type('form')
+          .set(options.headers)
           .send(JSON.stringify(options.payload));
 
       } else if (IS_NODE === true) {
@@ -180,6 +195,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
           }
           return result;
         }, request.type('form'));
+        request = request.set(options.headers);
       }
 
       request.on('progress', (e) => {
