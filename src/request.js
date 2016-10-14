@@ -105,7 +105,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
       const config = this.getConfig();
       let method = (methodName || '').toUpperCase();
       let options = _.defaults({}, requestOptions, {
-        type: 'json',
+        type: 'text/plain',
         accept: 'json',
         timeout: 15000,
         headers: {},
@@ -124,22 +124,21 @@ const Request = stampit().compose(ConfigMixin, Logger)
 
       if (!_.isUndefined(config)) {
         if (!_.isEmpty(config.getAccountKey())) {
-          options.headers['X-API-KEY'] = config.getAccountKey();
+          options.payload = _.assign({}, options.payload, { '_api_key': config.getAccountKey() });
         }
 
         // Yes, we will replace account key
         if (!_.isEmpty(config.getApiKey())) {
-          options.headers['X-API-KEY'] = config.getApiKey();
+          options.payload = _.assign({}, options.payload, { '_api_key': config.getApiKey() });
         }
 
         if (!_.isEmpty(config.getUserKey())) {
-          options.headers['X-USER-KEY'] = config.getUserKey();
-        }
-
-        if (!_.isEmpty(config.getSocialToken())) {
-          options.headers['Authorization'] = `Token ${config.getSocialToken()}`;
+          options.payload = _.assign({}, options.payload, { '_user_key': config.getUserKey() });
         }
       }
+
+      // Pass method with payload
+      options.payload = _.assign({}, options.payload, { '_method': method })
 
       // Grab files
       const files = _.reduce(options.payload, (result, value, key) => {
@@ -150,16 +149,20 @@ const Request = stampit().compose(ConfigMixin, Logger)
       }, {});
 
       let handler = this.getRequestHandler();
-      let request = handler(method, this.buildUrl(path))
-        .accept(options.accept)
+      let request = handler('POST', this.buildUrl(path))
         .timeout(options.timeout)
-        .set(options.headers)
         .query(options.query);
+
+        // If there's a social token, we need the header
+        if (!_.isEmpty(config.getSocialToken())) {
+          request = request.set('Authorization', `Token ${config.getSocialToken()}`)
+        }
 
       if (_.isEmpty(files)) {
         request = request
+          .set('Content-Type', 'text/plain')
           .type(options.type)
-          .send(options.payload);
+          .send(JSON.stringify(options.payload));
       } else if (IS_NODE === false && typeof FormData !== 'undefined' && typeof File !== 'undefined') {
         options.type = null;
         options.payload = _.reduce(options.payload, (formData, value, key) => {
@@ -169,7 +172,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
 
         request = request
           .type(options.type)
-          .send(options.payload);
+          .send(JSON.stringify(options.payload));
 
       } else if (IS_NODE === true) {
         request = _.reduce(options.payload, (result, value, key) => {
