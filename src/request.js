@@ -161,7 +161,6 @@ const Request = stampit().compose(ConfigMixin, Logger)
       if (_.isEmpty(files)) {
         request = request
           .set('Content-Type', 'text/plain')
-          .type(options.type)
           .send(JSON.stringify(options.payload));
       } else if (IS_NODE === false && typeof FormData !== 'undefined' && typeof File !== 'undefined') {
         options.type = null;
@@ -171,7 +170,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
         }, new FormData());
 
         request = request
-          .type(options.type)
+          .type('form')
           .send(JSON.stringify(options.payload));
 
       } else if (IS_NODE === true) {
