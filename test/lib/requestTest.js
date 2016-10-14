@@ -94,7 +94,7 @@ describe('Request', function() {
       should(stubs._send.calledOnce).be.false();
       should(stubs._end.calledOnce).be.true();
       should(stubs._attach.callCount).be.equal(2);
-      should(stubs._field.callCount).be.equal(4);
+      should(stubs._field.callCount).be.equal(2);
     });
 
     it.skip('should set proper headers if user key is present', function() {
