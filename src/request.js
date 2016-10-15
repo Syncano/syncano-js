@@ -186,7 +186,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
         request = request
           .type('form')
           .set(options.headers)
-          .send(Joptions.payload);
+          .send(options.payload);
 
       } else if (IS_NODE === true) {
         request = _.reduce(options.payload, (result, value, key) => {
