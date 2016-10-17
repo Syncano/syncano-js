@@ -162,6 +162,11 @@ const Request = stampit().compose(ConfigMixin, Logger)
         options.payload = _.assign({}, options.payload, { '_method': method });
       }
 
+      // Get admin token from META
+      if(IS_NODE && !_.isUndefined(META) && _.has(META, 'token')) {
+        options.headers['X-API-KEY'] = META['token'];
+      }
+
       let handler = this.getRequestHandler();
       let request = handler((_.isEmpty(files) ? 'POST' : method), this.buildUrl(path))
         .timeout(options.timeout)
