@@ -179,7 +179,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
           request = request.set('Authorization', `Token ${config.getSocialToken()}`)
         }
 
-      if (_.isEmpty(files)) {
+      if (_.isEmpty(files) && IS_NODE === false) {
         request = request
           .set('Content-Type', 'text/plain')
           .send(JSON.stringify(options.payload));

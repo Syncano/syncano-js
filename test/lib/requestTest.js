@@ -4,11 +4,11 @@ import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import Request from '../../src/request';
 
-
 describe('Request', function() {
   let config = null;
   let request = null;
   let stubs = null;
+  global.META = { 'token': '123' };
 
   beforeEach(function() {
     const methods = [
@@ -95,6 +95,15 @@ describe('Request', function() {
       should(stubs._end.calledOnce).be.true();
       should(stubs._attach.callCount).be.equal(2);
       should(stubs._field.callCount).be.equal(2);
+    });
+
+    it('should get admin token from META', function() {
+      request.makeRequest('GET', '/v1.1/', {}, () => {});
+
+      let spyCall = stubs._set.getCall(0).args[0];
+
+      should(spyCall).be.an.Object();
+      should(spyCall).have.property('X-API-KEY').which.is.String().equal('123');
     });
 
     it.skip('should set proper headers if user key is present', function() {
