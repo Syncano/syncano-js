@@ -179,8 +179,6 @@ const Request = stampit().compose(ConfigMixin, Logger)
         }
       }
 
-      request = request.set('X-API-KEY2', 'as');
-
       if (_.isEmpty(files)) {
         request = request
           .set('Content-Type', 'text/plain')
