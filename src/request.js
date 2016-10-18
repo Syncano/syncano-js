@@ -163,8 +163,10 @@ const Request = stampit().compose(ConfigMixin, Logger)
       }
 
       // Get admin token from META
-      if(IS_NODE && !_.isUndefined(META) && _.has(META, 'token')) {
-        options.headers['X-API-KEY'] = META['token'];
+      if(IS_NODE && !_.isUndefined(global)) {
+        if(_.has(global, ['META', 'token'])) {
+          options.headers['X-API-KEY'] = META['token'];
+        }
       }
 
       let handler = this.getRequestHandler();
