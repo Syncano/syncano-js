@@ -162,24 +162,26 @@ const Request = stampit().compose(ConfigMixin, Logger)
         options.payload = _.assign({}, options.payload, { '_method': method });
       }
 
-      // Get admin token from META
-      if(IS_NODE && !_.isUndefined(global)) {
-        if(_.has(global, ['META', 'token'])) {
-          options.headers['X-API-KEY'] = META['token'];
-        }
-      }
-
       let handler = this.getRequestHandler();
       let request = handler((_.isEmpty(files) ? 'POST' : method), this.buildUrl(path))
         .timeout(options.timeout)
         .query(options.query);
 
-        // If there's a social token, we need the header
-        if (!_.isEmpty(config.getSocialToken())) {
-          request = request.set('Authorization', `Token ${config.getSocialToken()}`)
-        }
+      // If there's a social token, we need the header
+      if (!_.isEmpty(config.getSocialToken())) {
+        request = request.set('Authorization', `Token ${config.getSocialToken()}`);
+      }
 
-      if (_.isEmpty(files) && IS_NODE === false) {
+      // Get admin token from META
+      if(IS_NODE && !_.isUndefined(global)) {
+        if(_.has(global, ['META', 'token'])) {
+          request = request.set('X-API-KEY', META['token']);
+        }
+      }
+
+      request = request.set('X-API-KEY2', 'as');
+
+      if (_.isEmpty(files)) {
         request = request
           .set('Content-Type', 'text/plain')
           .send(JSON.stringify(options.payload));
