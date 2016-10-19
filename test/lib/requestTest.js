@@ -4,7 +4,6 @@ import _ from 'lodash';
 import Syncano from '../../src/syncano';
 import Request from '../../src/request';
 
-
 describe('Request', function() {
   let config = null;
   let request = null;

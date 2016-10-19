@@ -167,10 +167,17 @@ const Request = stampit().compose(ConfigMixin, Logger)
         .timeout(options.timeout)
         .query(options.query);
 
-        // If there's a social token, we need the header
-        if (!_.isEmpty(config.getSocialToken())) {
-          request = request.set('Authorization', `Token ${config.getSocialToken()}`)
+      // If there's a social token, we need the header
+      if (!_.isEmpty(config.getSocialToken())) {
+        request = request.set('Authorization', `Token ${config.getSocialToken()}`);
+      }
+
+      // Get admin token from META
+      if(IS_NODE && !_.isUndefined(global)) {
+        if(_.has(global, ['META', 'token'])) {
+          request = request.set('X-API-KEY', META['token']);
         }
+      }
 
       if (_.isEmpty(files)) {
         request = request
