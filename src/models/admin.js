@@ -16,11 +16,11 @@ const AdminMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1.1/instances/{instanceName}/admins/{id}/'
+      'path': '/v2/instances/{instanceName}/admins/{id}/'
     },
     'list': {
       'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/admins/'
+      'path': '/v2/instances/{instanceName}/admins/'
     }
   }
 });

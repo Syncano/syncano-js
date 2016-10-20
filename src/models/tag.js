@@ -14,11 +14,11 @@ const TagMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['get'],
-      'path': '/v1.1/marketplace/tags/{name}/'
+      'path': '/v2/marketplace/tags/{name}/'
     },
     'list': {
       'methods': ['get'],
-      'path': '/v1.1/marketplace/tags/'
+      'path': '/v2/marketplace/tags/'
     }
   }
 });

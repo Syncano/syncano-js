@@ -25,11 +25,11 @@ const APNSConfigMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['post', 'get', 'patch', 'put'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/config/'
+      'path': '/v2/instances/{instanceName}/push_notifications/apns/config/'
     },
     'removeCertificate': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/config/remove_certificate/'
+      'path': '/v2/instances/{instanceName}/push_notifications/apns/config/remove_certificate/'
     }
   }
 });

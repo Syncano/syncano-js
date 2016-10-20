@@ -28,8 +28,8 @@ describe('Usage', function() {
       return Model.please().get()
         .then((Model) => {
           should(Model).have.property('links').which.is.Object();
-          should(Model.links).have.property('hourly').which.is.String().equal('/v1.1/usage/hourly/');
-          should(Model.links).have.property('daily').which.is.String().equal('/v1.1/usage/daily/');
+          should(Model.links).have.property('hourly').which.is.String().equal('/v2/usage/hourly/');
+          should(Model.links).have.property('daily').which.is.String().equal('/v2/usage/daily/');
         });
     });
   });

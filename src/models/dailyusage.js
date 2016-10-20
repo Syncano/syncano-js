@@ -17,7 +17,7 @@ const DailyUsageMeta = Meta({
   endpoints: {
     'list': {
       'methods': ['get'],
-      'path': '/v1.1/usage/daily/'
+      'path': '/v2/usage/daily/'
     }
   }
 });

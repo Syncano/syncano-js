@@ -17,17 +17,17 @@ import _ from 'lodash';
 const Account = stampit().compose(Request)
   .props({
     _account: {
-      registerPath: '/v1.1/account/register/',
-      loginPath: '/v1.1/account/auth/',
-      socialLoginPath: '/v1.1/account/auth/{backend}/',
-      updatePath: '/v1.1/account/',
-      activatePath: '/v1.1/account/activate/',
-      emailPath: '/v1.1/account/resend_email/',
-      resetKeyPath: '/v1.1/account/reset_key/',
-      changePasswordPath: '/v1.1/account/password/',
-      setPasswordPath: '/v1.1/account/password/set/',
-      resetPasswordPath: '/v1.1/account/password/reset/',
-      resetPasswordConfimPath: '/v1.1/account/password/reset/confirm/'
+      registerPath: '/v2/account/register/',
+      loginPath: '/v2/account/auth/',
+      socialLoginPath: '/v2/account/auth/{backend}/',
+      updatePath: '/v2/account/',
+      activatePath: '/v2/account/activate/',
+      emailPath: '/v2/account/resend_email/',
+      resetKeyPath: '/v2/account/reset_key/',
+      changePasswordPath: '/v2/account/password/',
+      setPasswordPath: '/v2/account/password/set/',
+      resetPasswordPath: '/v2/account/password/reset/',
+      resetPasswordConfimPath: '/v2/account/password/reset/confirm/'
     }
   })
   .methods({

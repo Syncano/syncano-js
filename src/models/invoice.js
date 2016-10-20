@@ -33,19 +33,19 @@ const InvoiceMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['get'],
-      'path': '/v1.1/billing/invoices/{id}/'
+      'path': '/v2/billing/invoices/{id}/'
     },
     'list': {
       'methods': ['get'],
-      'path': '/v1.1/billing/invoices/'
+      'path': '/v2/billing/invoices/'
     },
     'pdf': {
       'methods': ['get'],
-      'path': '/v1.1/billing/invoices/{id}/pdf/'
+      'path': '/v2/billing/invoices/{id}/pdf/'
     },
     'retryPayment': {
       'methods': ['post'],
-      'path': '/v1.1/billing/invoices/{id}/retry_payment/'
+      'path': '/v2/billing/invoices/{id}/retry_payment/'
     }
   }
 });

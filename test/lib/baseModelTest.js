@@ -30,7 +30,7 @@ describe('Meta', function() {
 
     it('shoud return path', function() {
       let path = meta.resolveEndpointPath('detail', model);
-      should(path).equal(`/v1.1/instances/${instanceName}/`);
+      should(path).equal(`/v2/instances/${instanceName}/`);
     });
 
   });
@@ -122,7 +122,7 @@ describe('Model', function() {
     })
 
     it('should save model', function() {
-      api.post('/v1.1/instances/', '*').reply(201, {
+      api.post('/v2/instances/', '*').reply(201, {
         name: instanceName,
         links: {}
       });
@@ -134,7 +134,7 @@ describe('Model', function() {
     });
 
     it.skip('should update model', function() {
-      api.put(`/v1.1/instances/${instanceName}/`, '*').reply(201, {
+      api.put(`/v2/instances/${instanceName}/`, '*').reply(201, {
         name: instanceName,
         links: {}
       });
@@ -146,7 +146,7 @@ describe('Model', function() {
     });
 
     it('should throw error when server response is error', function() {
-      api.post('/v1.1/instances/', '*').reply(404);
+      api.post('/v2/instances/', '*').reply(404);
       should(model({name: instanceName}).save()).rejectedWith(Error);
     });
 
@@ -158,12 +158,12 @@ describe('Model', function() {
     });
 
     it.skip('should delete model record', function() {
-      api.delete(`/v1.1/instances/${instanceName}/`, '*').reply(204);
+      api.delete(`/v2/instances/${instanceName}/`, '*').reply(204);
       should(model({name: instanceName}).delete()).be.fulfilled();
     });
 
     it('should throw error when server response is error', function() {
-      api.delete('/v1.1/instances/${instanceName}/', '*').reply(404);
+      api.delete('/v2/instances/${instanceName}/', '*').reply(404);
       should(model({name: instanceName}).delete()).rejectedWith(Error);
     });
   })

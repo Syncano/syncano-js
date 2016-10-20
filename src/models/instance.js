@@ -29,19 +29,19 @@ const InstanceMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1.1/instances/{name}/'
+      'path': '/v2/instances/{name}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/'
+      'path': '/v2/instances/'
     },
     'rename': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{name}/rename/'
+      'path': '/v2/instances/{name}/rename/'
     },
     'config': {
       'methods': ['get', 'put', 'patch'],
-      'path': '/v1.1/instances/{name}/snippets/config/'
+      'path': '/v2/instances/{name}/snippets/config/'
     }
   },
   relatedModels: [

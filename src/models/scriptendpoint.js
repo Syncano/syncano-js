@@ -95,23 +95,23 @@ const ScriptEndpointMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{name}/'
+      'path': '/v2/instances/{instanceName}/endpoints/scripts/{name}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/'
+      'path': '/v2/instances/{instanceName}/endpoints/scripts/'
     },
     'run': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{name}/run/'
+      'path': '/v2/instances/{instanceName}/endpoints/scripts/{name}/run/'
     },
     'reset': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{name}/reset_link/'
+      'path': '/v2/instances/{instanceName}/endpoints/scripts/{name}/reset_link/'
     },
     'public': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/p/{public_link}/{name}/'
+      'path': '/v2/instances/{instanceName}/endpoints/scripts/p/{public_link}/{name}/'
     }
   },
   relatedModels: ['ScriptEndpointTrace']

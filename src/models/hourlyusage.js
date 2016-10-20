@@ -17,7 +17,7 @@ const HourlyUsageMeta = Meta({
   endpoints: {
     'list': {
       'methods': ['get'],
-      'path': '/v1.1/usage/hourly/'
+      'path': '/v2/usage/hourly/'
     }
   }
 });

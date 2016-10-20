@@ -79,35 +79,35 @@ const SolutionMeta = Meta({
   endpoints: {
     'list': {
       'methods': ['get'],
-      'path': '/v1.1/marketplace/solutions/'
+      'path': '/v2/marketplace/solutions/'
     },
     'detail': {
       'methods': ['get', 'post', 'patch', 'put', 'delete'],
-      'path': '/v1.1/marketplace/solutions/{id}/'
+      'path': '/v2/marketplace/solutions/{id}/'
     },
     'star': {
       'methods': ['post'],
-      'path': '/v1.1/marketplace/solutions/{id}/star/'
+      'path': '/v2/marketplace/solutions/{id}/star/'
     },
     'unstar': {
       'methods': ['post'],
-      'path': '/v1.1/marketplace/solutions/{id}/unstar/'
+      'path': '/v2/marketplace/solutions/{id}/unstar/'
     },
     'versions': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/marketplace/solutions/{id}/versions/'
+      'path': '/v2/marketplace/solutions/{id}/versions/'
     },
     'createFromInstance': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/marketplace/solutions/{id}/versions/create_from_instance/'
+      'path': '/v2/marketplace/solutions/{id}/versions/create_from_instance/'
     },
     'versionDetail': {
       'methods': ['get'],
-      'path': '/v1.1/marketplace/solutions/{id}/versions/{version_id}/'
+      'path': '/v2/marketplace/solutions/{id}/versions/{version_id}/'
     },
     'versionInstall': {
       'methods': ['post'],
-      'path': '/v1.1/marketplace/solutions/{id}/versions/{version_id}/install/'
+      'path': '/v2/marketplace/solutions/{id}/versions/{version_id}/install/'
     }
   }
 });

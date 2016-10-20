@@ -33,11 +33,11 @@ const APNSDeviceMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/devices/{registration_id}/'
+      'path': '/v2/instances/{instanceName}/push_notifications/apns/devices/{registration_id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/devices/'
+      'path': '/v2/instances/{instanceName}/push_notifications/apns/devices/'
     }
   }
 });

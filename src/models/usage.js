@@ -13,7 +13,7 @@ const UsageMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['get'],
-      'path': '/v1.1/usage/'
+      'path': '/v2/usage/'
     }
   }
 });

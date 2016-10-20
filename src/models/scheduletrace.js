@@ -14,11 +14,11 @@ const ScheduleTraceMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1.1/instances/{instanceName}/schedules/{scheduleId}/traces/{id}/'
+      'path': '/v2/instances/{instanceName}/schedules/{scheduleId}/traces/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/schedules/{scheduleId}/traces/'
+      'path': '/v2/instances/{instanceName}/schedules/{scheduleId}/traces/'
     }
   }
 });

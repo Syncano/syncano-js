@@ -29,7 +29,7 @@ const EndpointMeta = Meta({
   endpoints: {
     'run': {
       'methods': ['post', 'get', 'delete', 'patch', 'put'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/sockets/{socket_name}/{name}/'
+      'path': '/v2/instances/{instanceName}/endpoints/sockets/{socket_name}/{name}/'
     }
   }
 });

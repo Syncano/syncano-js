@@ -818,7 +818,7 @@ export const Raw = stampit().methods({
 
 * @example {@lang javascript}
 * var all = AllObjects.setConfig(config)({
-*   path: '/v1.1/instances/some-instance/classes/some-class/objects/'
+*   path: '/v2/instances/some-instance/classes/some-class/objects/'
 * });
 *
 * all.on('start', function() {

@@ -17,15 +17,15 @@ const PartialBackupMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'get'],
-      'path': '/v1.1/instances/{instanceName}/backups/partial/{id}/'
+      'path': '/v2/instances/{instanceName}/backups/partial/{id}/'
     },
     'list': {
       'methods': ['get', 'post'],
-      'path': '/v1.1/instances/{instanceName}/backups/partial/'
+      'path': '/v2/instances/{instanceName}/backups/partial/'
     },
     'all': {
       'methods': ['get'],
-      'path': '/v1.1/backups/partial/'
+      'path': '/v2/backups/partial/'
     }
   }
 });

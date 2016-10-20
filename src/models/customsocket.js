@@ -48,19 +48,19 @@ const CustomSocketMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['get', 'put', 'patch', 'delete'],
-      'path': '/v1.1/instances/{instanceName}/sockets/{name}/'
+      'path': '/v2/instances/{instanceName}/sockets/{name}/'
     },
     'recheck': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/sockets/{name}/recheck/'
+      'path': '/v2/instances/{instanceName}/sockets/{name}/recheck/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/sockets/'
+      'path': '/v2/instances/{instanceName}/sockets/'
     },
     'install': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/sockets/install/'
+      'path': '/v2/instances/{instanceName}/sockets/install/'
     }
   }
 });

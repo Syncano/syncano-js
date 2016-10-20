@@ -16,11 +16,11 @@ const CardMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['get', 'put', 'patch', 'delete'],
-      'path': '/v1.1/billing/card/'
+      'path': '/v2/billing/card/'
     },
     'list': {
       'methods': ['post'],
-      'path': '/v1.1/billing/card/'
+      'path': '/v2/billing/card/'
     }
   }
 });

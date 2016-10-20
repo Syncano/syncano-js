@@ -26,15 +26,15 @@ const PlanMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['get'],
-      'path': '/v1.1/billing/plans/{name}/'
+      'path': '/v2/billing/plans/{name}/'
     },
     'list': {
       'methods': ['get'],
-      'path': '/v1.1/billing/plans/'
+      'path': '/v2/billing/plans/'
     },
     'subscribe': {
       'methods': ['post'],
-      'path': '/v1.1/billing/plans/{name}/subscribe/'
+      'path': '/v2/billing/plans/{name}/subscribe/'
     }
   }
 });

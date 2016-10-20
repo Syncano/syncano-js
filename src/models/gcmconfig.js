@@ -14,7 +14,7 @@ const GCMConfigMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['post', 'get', 'patch', 'put'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/gcm/config/'
+      'path': '/v2/instances/{instanceName}/push_notifications/gcm/config/'
     }
   }
 });

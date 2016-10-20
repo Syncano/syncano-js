@@ -78,27 +78,27 @@ const DataEndpointMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/data/{name}/'
+      'path': '/v2/instances/{instanceName}/endpoints/data/{name}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/data/'
+      'path': '/v2/instances/{instanceName}/endpoints/data/'
     },
     'post': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/data/{name}/post/'
+      'path': '/v2/instances/{instanceName}/endpoints/data/{name}/post/'
     },
     'get': {
       'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/data/{name}/get/'
+      'path': '/v2/instances/{instanceName}/endpoints/data/{name}/get/'
     },
     'rename': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/data/{name}/rename/'
+      'path': '/v2/instances/{instanceName}/endpoints/data/{name}/rename/'
     },
     'clear_cache': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/data/{name}/clear_cache/'
+      'path': '/v2/instances/{instanceName}/endpoints/data/{name}/clear_cache/'
     }
   }
 });

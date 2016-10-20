@@ -121,19 +121,19 @@ const GroupMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1.1/instances/{instanceName}/groups/{id}/'
+      'path': '/v2/instances/{instanceName}/groups/{id}/'
     },
     'list': {
       'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/groups/'
+      'path': '/v2/instances/{instanceName}/groups/'
     },
     'userGroups': {
       'methods': ['get', 'post'],
-      'path': '/v1.1/instances/{instanceName}/users/{user}/groups/'
+      'path': '/v2/instances/{instanceName}/users/{user}/groups/'
     },
     'userGroup': {
       'methods': ['get', 'delete'],
-      'path': '/v1.1/instances/{instanceName}/users/{user}/groups/{id}/'
+      'path': '/v2/instances/{instanceName}/users/{user}/groups/{id}/'
     }
   }
 });

@@ -20,11 +20,11 @@ describe('QuerySet', function() {
       endpoints: {
         'detail': {
           'methods': ['delete', 'patch', 'put', 'get'],
-          'path': '/v1.1/dummyyyy/{name}/'
+          'path': '/v2/dummyyyy/{name}/'
         },
         'list': {
           'methods': ['post', 'get'],
-          'path': '/v1.1/dummyyyy/'
+          'path': '/v2/dummyyyy/'
         }
       }
     });
