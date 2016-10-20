@@ -53,12 +53,6 @@ const ApiKeyConstraints = {
   },
   ignore_acl: {
     boolean: true
-  },
-  allow_user_create: {
-    boolean: true
-  },
-  allow_anonymous_read: {
-    boolean: true
   }
 };
 

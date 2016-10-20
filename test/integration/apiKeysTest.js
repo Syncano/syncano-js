@@ -60,14 +60,6 @@ describe('ApiKey', function() {
     should(Model({instanceName, ignore_acl: 123}).save()).be.rejectedWith(/ignore_acl/);
   });
 
-  it('should validate "allow_user_create"', function() {
-    should(Model({instanceName, allow_user_create: 123}).save()).be.rejectedWith(/allow_user_create/);
-  });
-
-  it('should validate "allow_anonymous_read"', function() {
-    should(Model({instanceName, allow_anonymous_read: 123}).save()).be.rejectedWith(/allow_anonymous_read/);
-  });
-
   it('should be able to save via model instance', function() {
     return Model(data).save()
       .then(cleaner.mark)
@@ -79,8 +71,6 @@ describe('ApiKey', function() {
         should(apk).have.property('links').which.is.Object();
         should(apk).have.property('id').which.is.Number();
         should(apk).have.property('ignore_acl').which.is.Boolean().equal(false);
-        should(apk).have.property('allow_anonymous_read').which.is.Boolean().equal(false);
-        should(apk).have.property('allow_user_create').which.is.Boolean().equal(false);
         should(apk).have.property('api_key').which.is.String();
       });
   });
@@ -92,20 +82,14 @@ describe('ApiKey', function() {
         should(apk).have.property('instanceName').which.is.String().equal(data.instanceName);
         should(apk).have.property('description').which.is.String().equal(data.description);
         should(apk).have.property('ignore_acl').which.is.Boolean().equal(false);
-        should(apk).have.property('allow_anonymous_read').which.is.Boolean().equal(false);
-        should(apk).have.property('allow_user_create').which.is.Boolean().equal(false);
 
         apk.description = 'new description';
         apk.ignore_acl = true;
-        apk.allow_anonymous_read = true;
-        apk.allow_user_create = true;
         return apk.save();
       })
       .then((apk) => {
         should(apk).have.property('description').which.is.String().equal('new description');
         should(apk).have.property('ignore_acl').which.is.Boolean().equal(true);
-        should(apk).have.property('allow_anonymous_read').which.is.Boolean().equal(true);
-        should(apk).have.property('allow_user_create').which.is.Boolean().equal(true);
       });
   });
 
@@ -157,8 +141,6 @@ describe('ApiKey', function() {
           should(apk).have.property('links').which.is.Object();
           should(apk).have.property('id').which.is.Number();
           should(apk).have.property('ignore_acl').which.is.Boolean().equal(false);
-          should(apk).have.property('allow_anonymous_read').which.is.Boolean().equal(false);
-          should(apk).have.property('allow_user_create').which.is.Boolean().equal(false);
           should(apk).have.property('api_key').which.is.String();
         });
     });
@@ -197,7 +179,6 @@ describe('ApiKey', function() {
           should(apk).have.property('links').which.is.Object();
           should(apk).have.property('id').which.is.Number();
           should(apk).have.property('ignore_acl').which.is.Boolean().equal(false);
-          should(apk).have.property('allow_anonymous_read').which.is.Boolean().equal(false);
           should(apk).have.property('allow_user_create').which.is.Boolean().equal(false);
           should(apk).have.property('api_key').which.is.String();
         });
