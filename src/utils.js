@@ -45,6 +45,14 @@ validate.validators.string = function(value) {
   return null;
 }
 
+validate.validators.file = function(value) {
+  if(value) {
+    if(!(value instanceof SyncanoFile)) {
+      return "is not a file"
+    }
+  }
+}
+
 export {validate};
 
 /**

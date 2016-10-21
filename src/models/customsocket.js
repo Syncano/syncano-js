@@ -75,11 +75,11 @@ const CostomSocketConstraints = {
   name: {
     presence: true
   },
-  endpoints: {
-    object: true
+  install_url: {
+    string: true
   },
-  dependencies: {
-    array: true
+  zip_file: {
+    file: true
   }
 };
 
@@ -93,10 +93,6 @@ const CustomSocket = stampit()
   .compose(Model)
   .setQuerySet(CustomSocketQuerySet)
   .setMeta(CustomSocketMeta)
-  .props({
-    endpointObjects: [],
-    dependencyObjects: []
-  })
   .methods({
 
     recheck() {
@@ -104,22 +100,6 @@ const CustomSocket = stampit()
       const path = meta.resolveEndpointPath('recheck', this);
 
       return this.makeRequest('POST', path);
-    },
-
-    addEndpoint(endpoint = {}) {
-      this.endpointObjects = _.concat(this.endpointObjects, endpoint);
-    },
-
-    removeEndpoint(name) {
-      this.endpointObjects = _.reject(this.endpointObjects, { name });
-    },
-
-    addDependency(script = {}) {
-      this.dependencyObjects = _.concat(this.dependencyObjects, script);
-    },
-
-    removeDependency(label) {
-      this.dependencyObjects = _.concat(this.dependencyObjects, { label });
     },
 
     runEndpoint(endpoint_name, method, payload) {

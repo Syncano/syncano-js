@@ -13,39 +13,10 @@ describe('CustomSocket', function() {
   const instanceName = suffix.getHyphened('CustomSocket');
   const name = suffix.get('socket');
   const installUrl = 'https://raw.githubusercontent.com/Syncano/custom-socket-test/master/socket.yml';
-  const data = {
+  const installUrlData = {
     instanceName,
     name,
-    dependencies: [
-      {
-        type: 'script',
-        runtime_name: 'python_library_v5.0',
-        name: 'script1',
-        source: "print ARGS['GET']['test']"
-      },
-      {
-        type: 'script',
-        runtime_name: 'python_library_v5.0',
-        name: 'script2',
-        source: "print ARGS['POST']['test']"
-      }
-    ],
-    endpoints: {
-      end1: {
-        calls: [
-          {
-            type: 'script',
-            name: 'script1',
-            methods: ['GET']
-          },
-          {
-            type: 'script',
-            name: 'script2',
-            methods: ['POST']
-          }
-        ]
-      }
-    }
+    install_url: installUrl
   };
 
   before(function() {
@@ -76,16 +47,16 @@ describe('CustomSocket', function() {
     should(Model({ instanceName }).save()).be.rejectedWith(/name/);
   });
 
-  it('should validate "endpoints"', function() {
-    should(Model({ instanceName, name, endpoints: [] }).save()).be.rejectedWith(/endpoints/);
+  it('should validate "install_url"', function() {
+    should(Model({ instanceName, name, install_url: {} }).save()).be.rejectedWith(/install_url/);
   });
 
-  it('should validate "dependencies"', function() {
-    should(Model({ instanceName, name, endpoints: {}, dependencies: 'dep' }).save()).be.rejectedWith(/dependencies/);
+  it('should validate "zip_file"', function() {
+    should(Model({ instanceName, name, zip_file: ''}).save()).be.rejectedWith(/zip_file/);
   });
 
-  it('should be able to save via model instance', function() {
-    return Model(data).save()
+  it('should be able to save with install_url via model instance', function() {
+    return Model(installUrlData).save()
       .then(cleaner.mark)
       .then((socket) => {
         should(socket).be.an.Object();
