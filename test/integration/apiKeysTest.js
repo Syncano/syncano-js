@@ -179,7 +179,6 @@ describe('ApiKey', function() {
           should(apk).have.property('links').which.is.Object();
           should(apk).have.property('id').which.is.Number();
           should(apk).have.property('ignore_acl').which.is.Boolean().equal(false);
-          should(apk).have.property('allow_user_create').which.is.Boolean().equal(false);
           should(apk).have.property('api_key').which.is.String();
         });
     });
