@@ -227,21 +227,6 @@ const DataobjectConstraints = {
     presence: true,
     string: true
   },
-  owner: {
-    numericality: true
-  },
-  owner_permissions: {
-    inclusion: ['none', 'read', 'write', 'full']
-  },
-  group: {
-    numericality: true
-  },
-  group_permissions: {
-    inclusion: ['none', 'read', 'write', 'full']
-  },
-  other_permissions: {
-    inclusion: ['none', 'read', 'write', 'full']
-  },
   channel: {
     string: true
   },

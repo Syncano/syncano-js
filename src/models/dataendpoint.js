@@ -22,7 +22,7 @@ const DataEndpointQerySet = stampit().compose(QuerySet, Filter, QsRename).method
     this.properties = _.assign({}, this.properties, properties);
 
     this.method = 'GET';
-    this.endpoint = 'get';
+    this.endpoint = 'data';
     this._serialize = false;
 
     return this.then((response) => this.getConfig().DataObject.please().asResultSet(response));
@@ -64,7 +64,7 @@ const DataEndpointQerySet = stampit().compose(QuerySet, Filter, QsRename).method
     this.properties = _.assign({}, this.properties, properties);
 
     this.method = 'POST';
-    this.endpoint = 'post';
+    this.endpoint = 'data';
     this.payload = payload;
 
     return this;
@@ -78,19 +78,15 @@ const DataEndpointMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/endpoints/data/{name}/'
+      'path': '/v2/instances/{instanceName}/endpoints/data/{name}/edit/'
     },
     'list': {
       'methods': ['post', 'get'],
       'path': '/v2/instances/{instanceName}/endpoints/data/'
     },
-    'post': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/endpoints/data/{name}/post/'
-    },
-    'get': {
-      'methods': ['get'],
-      'path': '/v2/instances/{instanceName}/endpoints/data/{name}/get/'
+    'data': {
+      'methods': ['post', 'get'],
+      'path': '/v2/instances/{instanceName}/endpoints/data/{name}/'
     },
     'rename': {
       'methods': ['post'],
@@ -179,7 +175,7 @@ const DataEndpoint = stampit()
     */
     fetchData(cache_key, filters = {}) {
       const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('get', this);
+      const path = meta.resolveEndpointPath('data', this);
 
       const query = {};
       if(!_.isEmpty(cache_key)) query.cache_key = cache_key;
@@ -219,7 +215,7 @@ const DataEndpoint = stampit()
     */
     createDataObject(payload = {}) {
       const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('post', this);
+      const path = meta.resolveEndpointPath('data', this);
 
       return this.makeRequest('POST', path, {payload});
     }
