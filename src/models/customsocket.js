@@ -77,9 +77,6 @@ const CostomSocketConstraints = {
   },
   install_url: {
     string: true
-  },
-  zip_file: {
-    file: true
   }
 };
 

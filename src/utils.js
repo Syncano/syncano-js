@@ -2,6 +2,7 @@ import stampit from 'stampit';
 import EventEmitter from './eventemitter';
 import Promise from 'bluebird';
 import validate from 'validate.js';
+import SyncanoFile from './file';
 
 /**
   Validators used in the library.
