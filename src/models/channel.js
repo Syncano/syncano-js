@@ -164,17 +164,8 @@ const channelConstraints = {
   type: {
     inclusion: ['default', 'separate_rooms']
   },
-  group: {
-    numericality: true
-  },
-  group_permissions: {
-    inclusion: ['none', 'subscribe', 'publish']
-  },
-  other_permissions: {
-    inclusion: ['none', 'subscribe', 'publish']
-  },
-  custom_publish: {
-    boolean: true
+  acl: {
+    object: true
   }
 };
 
