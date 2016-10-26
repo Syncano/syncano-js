@@ -175,77 +175,6 @@ describe('ScriptEndpoint', function() {
       });
   });
 
-  it.skip('should be able to run *public* script via model instance', function() {
-    return Model(ModelData).save()
-      .then(cleaner.mark)
-      .then((scriptendpoint) => {
-        should(scriptendpoint).be.a.Object();
-        should(scriptendpoint).have.property('name').which.is.String().equal(ModelData.name);
-        should(scriptendpoint).have.property('instanceName').which.is.String().equal(ModelData.instanceName);
-        should(scriptendpoint).have.property('description').which.is.String().equal(ModelData.description);
-        should(scriptendpoint).have.property('script').which.is.Number().equal(ModelData.script);
-        should(scriptendpoint).have.property('links').which.is.Object();
-
-        return scriptendpoint.runPublic();
-      }).then((trace) => {
-        should(trace).be.a.Object();
-        should(trace).have.property('id').which.is.Number();
-        should(trace).have.property('status').which.is.String();
-        should(trace).have.property('duration').which.is.Number();
-        should(trace).have.property('result').which.is.Object();
-        should(trace).have.property('executed_at').which.is.Date();
-      });
-  });
-
-  it('should be able to run *public* script via model instance with cache_key', function() {
-    return Model(ModelData).save()
-      .then(cleaner.mark)
-      .then((scriptendpoint) => {
-        should(scriptendpoint).be.a.Object();
-        should(scriptendpoint).have.property('name').which.is.String().equal(ModelData.name);
-        should(scriptendpoint).have.property('instanceName').which.is.String().equal(ModelData.instanceName);
-        should(scriptendpoint).have.property('description').which.is.String().equal(ModelData.description);
-        should(scriptendpoint).have.property('script').which.is.Number().equal(ModelData.script);
-        should(scriptendpoint).have.property('links').which.is.Object();
-
-        return scriptendpoint.runPublic({}, '123');
-      }).then((trace) => {
-        should(trace).be.a.Object();
-        should(trace).have.property('id').which.is.Number();
-        should(trace).have.property('status').which.is.String();
-        should(trace).have.property('duration').which.is.Number();
-        should(trace).have.property('result').which.is.Object();
-        should(trace).have.property('executed_at').which.is.Date();
-      });
-  });
-
-  it('should be able to reset via model instance', function() {
-    let publicLink = null;
-
-    return Model(ModelData).save()
-      .then(cleaner.mark)
-      .then((scriptendpoint) => {
-        should(scriptendpoint).be.a.Object();
-        should(scriptendpoint).have.property('name').which.is.String().equal(ModelData.name);
-        should(scriptendpoint).have.property('instanceName').which.is.String().equal(ModelData.instanceName);
-        should(scriptendpoint).have.property('description').which.is.String().equal(ModelData.description);
-        should(scriptendpoint).have.property('script').which.is.Number().equal(ModelData.script);
-        should(scriptendpoint).have.property('links').which.is.Object();
-        should(scriptendpoint).have.property('public_link').which.is.String();
-
-        publicLink = scriptendpoint.public_link;
-        return scriptendpoint.reset();
-      }).then((scriptendpoint) => {
-        should(scriptendpoint).be.a.Object();
-        should(scriptendpoint).have.property('name').which.is.String().equal(ModelData.name);
-        should(scriptendpoint).have.property('instanceName').which.is.String().equal(ModelData.instanceName);
-        should(scriptendpoint).have.property('description').which.is.String().equal(ModelData.description);
-        should(scriptendpoint).have.property('codebox').which.is.Number().equal(ModelData.script);
-        should(scriptendpoint).have.property('links').which.is.Object();
-        should(scriptendpoint).have.property('public_link').which.is.String().not.equal(publicLink);
-      });
-  });
-
   describe('#please()', function() {
 
     it('should be able to list Models', function() {
@@ -264,7 +193,6 @@ describe('ScriptEndpoint', function() {
           should(scriptendpoint).have.property('description').which.is.String().equal(ModelData.description);
           should(scriptendpoint).have.property('script').which.is.Number().equal(ModelData.script);
           should(scriptendpoint).have.property('links').which.is.Object();
-          should(scriptendpoint).have.property('public_link').which.is.String();
         });
     });
 
@@ -509,78 +437,5 @@ describe('ScriptEndpoint', function() {
           should(trace).have.property('executed_at').which.is.Date();
       });
     });
-
-
-  it('should be able to run *public* script', function() {
-    return Model(ModelData).save()
-      .then(cleaner.mark)
-      .then((scriptendpoint) => {
-        should(scriptendpoint).be.a.Object();
-        should(scriptendpoint).have.property('name').which.is.String().equal(ModelData.name);
-        should(scriptendpoint).have.property('instanceName').which.is.String().equal(ModelData.instanceName);
-        should(scriptendpoint).have.property('description').which.is.String().equal(ModelData.description);
-        should(scriptendpoint).have.property('script').which.is.Number().equal(ModelData.script);
-        should(scriptendpoint).have.property('links').which.is.Object();
-
-        return Model.please().runPublic(scriptendpoint);
-      }).then((trace) => {
-        should(trace).be.a.Object();
-        should(trace).have.property('id').which.is.Number();
-        should(trace).have.property('status').which.is.String();
-        should(trace).have.property('duration').which.is.Number();
-        should(trace).have.property('result').which.is.Object();
-        should(trace).have.property('executed_at').which.is.Date();
-      });
   });
-
-  it('should be able to run *public* script with cache_key', function() {
-    return Model(ModelData).save()
-      .then(cleaner.mark)
-      .then((scriptendpoint) => {
-        should(scriptendpoint).be.a.Object();
-        should(scriptendpoint).have.property('name').which.is.String().equal(ModelData.name);
-        should(scriptendpoint).have.property('instanceName').which.is.String().equal(ModelData.instanceName);
-        should(scriptendpoint).have.property('description').which.is.String().equal(ModelData.description);
-        should(scriptendpoint).have.property('script').which.is.Number().equal(ModelData.script);
-        should(scriptendpoint).have.property('links').which.is.Object();
-
-        return Model.please().cacheKey('123').runPublic(scriptendpoint);
-      }).then((trace) => {
-        should(trace).be.a.Object();
-        should(trace).have.property('id').which.is.Number();
-        should(trace).have.property('status').which.is.String();
-        should(trace).have.property('duration').which.is.Number();
-        should(trace).have.property('result').which.is.Object();
-        should(trace).have.property('executed_at').which.is.Date();
-      });
-  });
-
-  it('should be able to reset', function() {
-    let publicLink = null;
-
-    return Model(ModelData).save()
-      .then(cleaner.mark)
-      .then((scriptendpoint) => {
-        should(scriptendpoint).be.a.Object();
-        should(scriptendpoint).have.property('name').which.is.String().equal(ModelData.name);
-        should(scriptendpoint).have.property('instanceName').which.is.String().equal(ModelData.instanceName);
-        should(scriptendpoint).have.property('description').which.is.String().equal(ModelData.description);
-        should(scriptendpoint).have.property('script').which.is.Number().equal(ModelData.script);
-        should(scriptendpoint).have.property('links').which.is.Object();
-        should(scriptendpoint).have.property('public_link').which.is.String();
-
-        return Model.please().reset(scriptendpoint);
-      }).then((scriptendpoint) => {
-        should(scriptendpoint).be.a.Object();
-        should(scriptendpoint).have.property('name').which.is.String().equal(ModelData.name);
-        should(scriptendpoint).have.property('instanceName').which.is.String().equal(ModelData.instanceName);
-        should(scriptendpoint).have.property('description').which.is.String().equal(ModelData.description);
-        should(scriptendpoint).have.property('codebox').which.is.Number().equal(ModelData.script);
-        should(scriptendpoint).have.property('links').which.is.Object();
-        should(scriptendpoint).have.property('public_link').which.is.String().not.equal(publicLink);
-      });
-  });
-
-  });
-
 });
