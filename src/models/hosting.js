@@ -87,7 +87,7 @@ const HostingConstraints = {
       minimum: 5
     }
   },
-  label: {
+  name: {
     string: true
   },
   description: {
@@ -95,6 +95,9 @@ const HostingConstraints = {
   },
   domains: {
     array: true
+  },
+  is_active: {
+    boolean: true
   }
 };
 
