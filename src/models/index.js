@@ -35,8 +35,6 @@ import HourlyUsage from './hourlyusage';
 import Plan from './plan';
 import Profile from './profile';
 import Card from './card';
-import Solution from './solution';
-import Tag from './tag';
 import CustomSocket from './customsocket';
 import Endpoint from './endpoint';
 import Hosting from './hosting';
@@ -81,8 +79,6 @@ export default {
   Plan,
   Profile,
   Card,
-  Solution,
-  Tag,
   Endpoint,
   Hosting,
   HostingFile
