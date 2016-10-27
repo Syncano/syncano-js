@@ -31,17 +31,13 @@ const TriggerConstraints = {
   description: {
     string: true
   },
-  signal: {
+  signals: {
     presence: true,
-    inclusion: ['post_update', 'post_create', 'post_delete']
+    array: true
   },
-  script: {
+  event: {
     presence: true,
-    numericality: true
-  },
-  class: {
-    presence: true,
-    string: true
+    object: true
   }
 };
 
