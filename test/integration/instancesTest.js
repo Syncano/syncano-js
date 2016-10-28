@@ -117,7 +117,6 @@ describe('Instance', function() {
   it('should be able to rename via model instance', function() {
     const newInstanceName = suffix.getHyphened('name');
     return Model(data).save()
-      .then(cleaner.mark)
       .then((instance) => {
         should(instance).be.an.Object();
         should(instance).have.property('name').which.is.String().equal(data.name);
@@ -125,6 +124,7 @@ describe('Instance', function() {
 
         return instance.rename({ new_name: newInstanceName })
       })
+      .then(cleaner.mark)
       .then((instance) => {
         should(instance).have.property('name').which.is.String().equal(newInstanceName);
       });
@@ -294,7 +294,6 @@ describe('Instance', function() {
     it.skip('should be able to rename an instance', function() {
       const newInstanceName = suffix.get('name');
       return Model.please().create(data)
-        .then(cleaner.mark)
         .then((instance) => {
           should(instance).be.an.Object();
           should(instance).have.property('name').which.is.String().equal(data.name);
@@ -302,6 +301,7 @@ describe('Instance', function() {
 
           return Model.please().rename({name: instance.name}, {new_name: newInstanceName});
         })
+        .then(cleaner.mark)
         .then((instance) => {
           should(instance).have.property('name').which.is.String().equal(newInstanceName);
         });
