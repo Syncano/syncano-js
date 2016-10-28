@@ -16,8 +16,8 @@ before(function() {
   return Syncano(credentials)
     .Account
     .register({
-      email: `syncano.bot+${suffix.value}@syncano.com`,
-      password: suffix.value,
+      email: `syncano.bot+${suffix.getValue()}@syncano.com`,
+      password: suffix.getValue(),
       first_name: 'bot',
       last_name: 'js'
     }).then((user) => {

@@ -2,15 +2,18 @@ import crypto from 'crypto';
 import Promise from 'bluebird';
 import  _  from 'lodash';
 
-const hashData = `_${new Date().getTime()}_${_.random(0, 99999)}`;
-
 export const suffix = {
-  value: crypto.createHash('md5').update(hashData).digest('hex'),
   get(text) {
-    return `${text.toString()}_${this.value}`;
+    return `${text.toString()}_${this.getValue()}`;
+  },
+  getHash() {
+    return `_${new Date().getTime()}_${_.random(0, 99999)}`;
+  },
+  getValue() {
+    return crypto.createHash('md5').update(this.getHash()).digest('hex');
   },
   getHyphened(text) {
-    return `${text.toString()}-${this.value}`;
+    return `${text.toString()}-${this.getValue()}`;
   }
 };
 
