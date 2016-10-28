@@ -60,19 +60,19 @@ const ScriptMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1.1/instances/{instanceName}/snippets/scripts/{id}/'
+      'path': '/v2/instances/{instanceName}/snippets/scripts/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/snippets/scripts/'
+      'path': '/v2/instances/{instanceName}/snippets/scripts/'
     },
     'runtimes': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/snippets/scripts/runtimes/'
+      'path': '/v2/instances/{instanceName}/snippets/scripts/runtimes/'
     },
     'run': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/snippets/scripts/{id}/run/'
+      'path': '/v2/instances/{instanceName}/snippets/scripts/{id}/run/'
     }
   },
   relatedModels: [ 'ScriptTrace' ]

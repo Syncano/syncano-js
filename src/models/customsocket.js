@@ -48,19 +48,19 @@ const CustomSocketMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['get', 'put', 'patch', 'delete'],
-      'path': '/v1.1/instances/{instanceName}/sockets/{name}/'
+      'path': '/v2/instances/{instanceName}/sockets/{name}/'
     },
     'recheck': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/sockets/{name}/recheck/'
+      'path': '/v2/instances/{instanceName}/sockets/{name}/recheck/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/sockets/'
+      'path': '/v2/instances/{instanceName}/sockets/'
     },
     'install': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/sockets/install/'
+      'path': '/v2/instances/{instanceName}/sockets/install/'
     }
   }
 });
@@ -75,11 +75,8 @@ const CostomSocketConstraints = {
   name: {
     presence: true
   },
-  endpoints: {
-    object: true
-  },
-  dependencies: {
-    array: true
+  install_url: {
+    string: true
   }
 };
 
@@ -93,10 +90,6 @@ const CustomSocket = stampit()
   .compose(Model)
   .setQuerySet(CustomSocketQuerySet)
   .setMeta(CustomSocketMeta)
-  .props({
-    endpointObjects: [],
-    dependencyObjects: []
-  })
   .methods({
 
     recheck() {
@@ -104,22 +97,6 @@ const CustomSocket = stampit()
       const path = meta.resolveEndpointPath('recheck', this);
 
       return this.makeRequest('POST', path);
-    },
-
-    addEndpoint(endpoint = {}) {
-      this.endpointObjects = _.concat(this.endpointObjects, endpoint);
-    },
-
-    removeEndpoint(name) {
-      this.endpointObjects = _.reject(this.endpointObjects, { name });
-    },
-
-    addDependency(script = {}) {
-      this.dependencyObjects = _.concat(this.dependencyObjects, script);
-    },
-
-    removeDependency(label) {
-      this.dependencyObjects = _.concat(this.dependencyObjects, { label });
     },
 
     runEndpoint(endpoint_name, method, payload) {

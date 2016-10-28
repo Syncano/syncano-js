@@ -28,7 +28,7 @@ const BatchManager = stampit()
   .compose(Request)
   .props({
     objects: [],
-    batchUrl: '/v1.1/instances/{instance}/batch/',
+    batchUrl: '/v2/instances/{instance}/batch/',
     maxBatchObjects: 50
   })
   .init(function() {

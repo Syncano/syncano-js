@@ -34,59 +34,7 @@ const ScriptEndpointQuerySet = stampit().compose(QuerySet).methods({
         webhookName: this.properties.name
       });
     });
-  },
-
-  /**
-  * Runs `public` ScriptEndpoint matching the given lookup properties.
-  * @memberOf ScriptEndpointQuerySet
-  * @instance
-
-  * @param {Object} properties lookup properties used for path resolving
-  * @param {Object} payload the payload to be sent
-  * @returns {Promise}
-
-  * @example {@lang javascript}
-  * ScriptEndpoint.please().runPublic({public_link: '44cfc5552eacc', instanceName: 'test-one'}).then(function(trace) {});
-
-  */
-  runPublic(properties = {}, payload = {}) {
-    const {ScriptEndpointTrace} = this.getConfig();
-
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'POST';
-    this.endpoint = 'public';
-    this.payload = payload;
-    this._serialize = false;
-
-    return this.then((trace) => {
-      return ScriptEndpointTrace.fromJSON(trace, {
-        instanceName: this.properties.instanceName,
-        webhookName: this.properties.name
-      });
-    });
-  },
-
-  /**
-  * Resets ScriptEndpoint matching the given lookup properties.
-  * @memberOf ScriptEndpointQuerySet
-  * @instance
-
-  * @param {Object} properties lookup properties used for path resolving
-  * @returns {ScriptEndpointQuerySet}
-
-  * @example {@lang javascript}
-  * ScriptEndpoint.please().reset({name: 'test', instanceName: 'test-one'}).then(function(trace) {});
-
-  */
-  reset(properties = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-
-    this.method = 'POST';
-    this.endpoint = 'reset';
-
-    return this;
   }
-
 });
 
 const ScriptEndpointMeta = Meta({
@@ -95,23 +43,15 @@ const ScriptEndpointMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{name}/'
+      'path': '/v2/instances/{instanceName}/endpoints/scripts/{name}/edit/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/'
+      'path': '/v2/instances/{instanceName}/endpoints/scripts/'
     },
     'run': {
-      'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{name}/run/'
-    },
-    'reset': {
-      'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{name}/reset_link/'
-    },
-    'public': {
-      'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/p/{public_link}/{name}/'
+      'methods': ['post', 'get'],
+      'path': '/v2/instances/{instanceName}/endpoints/scripts/{name}/'
     }
   },
   relatedModels: ['ScriptEndpointTrace']
@@ -190,55 +130,7 @@ const ScriptEndpoint = stampit()
             webhookName: this.name
           });
         });
-    },
-
-    /**
-    * Runs current `public` ScriptEndpoint.
-    * @memberOf ScriptEndpoint
-    * @instance
-
-    * @param {Object} [payload = {}]
-    * @returns {Promise}
-
-    * @example {@lang javascript}
-    * ScriptEndpoint.please().get({instanceName: 'test-one', id: 1}).then(function(codebox) {
-        codebox.runPublic({some: 'variable'}).then(function(trace) {});
-      });
-    */
-    runPublic(payload = {}, cache_key) {
-      const {ScriptEndpointTrace} = this.getConfig();
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('public', this);
-
-      if(!_.isEmpty(cache_key)) _.assign(payload, { query: {cache_key} })
-
-      return this.makeRequest('POST', path, {payload}, cache_key)
-        .then((body) => {
-          return ScriptEndpointTrace.fromJSON(body, {
-            instanceName: this.instanceName,
-            webhookName: this.name
-          });
-        });
-    },
-
-    /**
-    * Resets current ScriptEndpoint.
-    * @memberOf ScriptEndpoint
-    * @instance
-    * @returns {Promise}
-
-    * @example {@lang javascript}
-    * ScriptEndpoint.please().get({instanceName: 'test-one', name: 'test'}).then(function(webhook) {
-        webhook.reset().then(function() {});
-      });
-    */
-    reset() {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('reset', this);
-
-      return this.makeRequest('POST', path).then((body) => this.serialize(body));
     }
-
   });
 
 export default ScriptEndpoint;

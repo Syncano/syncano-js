@@ -14,7 +14,7 @@ const ProfileMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['get', 'put', 'patch'],
-      'path': '/v1.1/billing/profile/'
+      'path': '/v2/billing/profile/'
     }
   }
 });

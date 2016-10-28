@@ -77,20 +77,8 @@ describe('Channel', function() {
     should(Model({name: {}, instanceName, type: 'some_type'}).save()).be.rejectedWith(/type/);
   });
 
-  it('should validate "group"', function() {
-    should(Model({name: {}, instanceName, group: 'some_group'}).save()).be.rejectedWith(/group/);
-  });
-
-  it('should validate "group_permissions"', function() {
-    should(Model({name: {}, instanceName, group_permissions: 'dunno'}).save()).be.rejectedWith(/group_permissions/);
-  });
-
-  it('should validate "other_permissions"', function() {
-    should(Model({name: {}, instanceName, other_permissions: 'dunno'}).save()).be.rejectedWith(/other_permissions/);
-  });
-
-  it('should validate "custom_publish"', function() {
-    should(Model({name: {}, instanceName, custom_publish: 'maybe'}).save()).be.rejectedWith(/custom_publish/);
+  it('should validate "acl"', function() {
+    should(Model({name: {}, instanceName, type: 'separate_rooms', acl: 'sth'}).save()).be.rejectedWith(/acl/);
   });
 
   it('should be able to save via model instance', function() {
@@ -105,10 +93,6 @@ describe('Channel', function() {
         should(chn).have.property('created_at').which.is.Date();
         should(chn).have.property('updated_at').which.is.Date();
         should(chn).have.property('links').which.is.Object();
-        should(chn).have.property('group').which.is.Null()
-        should(chn).have.property('group_permissions').which.is.String().equal('none');
-        should(chn).have.property('other_permissions').which.is.String().equal('none');
-        should(chn).have.property('custom_publish').which.is.Boolean().equal(false);
       });
   });
 
@@ -161,7 +145,7 @@ describe('Channel', function() {
   });
 
   it('should be able to poll for messages', function() {
-    return Model(Object.assign({}, data, { custom_publish: true })).save()
+    return Model(data).save()
       .then(cleaner.mark)
       .then((chn) => {
         let poll = chn.poll();
@@ -241,10 +225,6 @@ describe('Channel', function() {
           should(chn).have.property('created_at').which.is.Date();
           should(chn).have.property('updated_at').which.is.Date();
           should(chn).have.property('links').which.is.Object();
-          should(chn).have.property('group').which.is.Null()
-          should(chn).have.property('group_permissions').which.is.String().equal('none');
-          should(chn).have.property('other_permissions').which.is.String().equal('none');
-          should(chn).have.property('custom_publish').which.is.Boolean().equal(false);
         });
     });
 
@@ -285,10 +265,6 @@ describe('Channel', function() {
           should(chn).have.property('created_at').which.is.Date();
           should(chn).have.property('updated_at').which.is.Date();
           should(chn).have.property('links').which.is.Object();
-          should(chn).have.property('group').which.is.Null()
-          should(chn).have.property('group_permissions').which.is.String().equal('none');
-          should(chn).have.property('other_permissions').which.is.String().equal('none');
-          should(chn).have.property('custom_publish').which.is.Boolean().equal(false);
         });
     });
 
@@ -320,10 +296,6 @@ describe('Channel', function() {
           should(chn).have.property('created_at').which.is.Date();
           should(chn).have.property('updated_at').which.is.Date();
           should(chn).have.property('links').which.is.Object();
-          should(chn).have.property('group').which.is.Null()
-          should(chn).have.property('group_permissions').which.is.String().equal('none');
-          should(chn).have.property('other_permissions').which.is.String().equal('none');
-          should(chn).have.property('custom_publish').which.is.Boolean().equal(false);
         });
     });
 
@@ -366,7 +338,7 @@ describe('Channel', function() {
     });
 
     it('should be able to poll for messages', function() {
-      return Model(Object.assign({}, data, { custom_publish: true })).save()
+      return Model(data).save()
         .then(cleaner.mark)
         .then((chn) => {
           const poll = Model.please().poll({instanceName, name: chn.name});
@@ -482,10 +454,6 @@ describe('Channel', function() {
           should(chn).have.property('created_at').which.is.Date();
           should(chn).have.property('updated_at').which.is.Date();
           should(chn).have.property('links').which.is.Object();
-          should(chn).have.property('group').which.is.Null()
-          should(chn).have.property('group_permissions').which.is.String().equal('none');
-          should(chn).have.property('other_permissions').which.is.String().equal('none');
-          should(chn).have.property('custom_publish').which.is.Boolean().equal(false);
         });
     });
 

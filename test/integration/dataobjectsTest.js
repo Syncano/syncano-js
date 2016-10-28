@@ -147,26 +147,6 @@ describe('DataObject', function() {
     should(Model({instanceName}).save()).be.rejectedWith(/className/);
   });
 
-  it('should validate "owner"', function() {
-    should(Model({instanceName, className, owner: 'me'}).save()).be.rejectedWith(/owner/);
-  });
-
-  it('should validate "owner_permissions"', function() {
-    should(Model({instanceName, className, owner_permissions: 'maybe'}).save()).be.rejectedWith(/owner_permissions/);
-  });
-
-  it('should validate "group"', function() {
-    should(Model({instanceName, className, group: 'some_group'}).save()).be.rejectedWith(/group/);
-  });
-
-  it('should validate "group_permissions"', function() {
-    should(Model({instanceName, className, group_permissions: 'meh'}).save()).be.rejectedWith(/group_permissions/);
-  });
-
-  it('should validate "other_permissions"', function() {
-    should(Model({instanceName, className, other_permissions: 'meh'}).save()).be.rejectedWith(/other_permissions/);
-  });
-
   it('should validate "channel"', function() {
     should(Model({instanceName, className, channel: 1}).save()).be.rejectedWith(/channel/);
   });
@@ -185,11 +165,9 @@ describe('DataObject', function() {
         should(dataobj).have.property('created_at').which.is.Date();
         should(dataobj).have.property('updated_at').which.is.Date();
         should(dataobj).have.property('links').which.is.Object();
+        should(dataobj).have.property('channel_room').which.is.Null();
         should(dataobj).have.property('channel').which.is.Null();
-        should(dataobj).have.property('owner').which.is.Null();
-        should(dataobj).have.property('group_permissions').which.is.String().equal('none');
-        should(dataobj).have.property('other_permissions').which.is.String().equal('none');
-        should(dataobj).have.property('owner_permissions').which.is.String().equal('full');
+        should(dataobj).have.property('acl').which.is.Object();
         should(dataobj).have.property('title').which.is.String().equal('Pulp');
         should(dataobj).have.property('author').which.is.String().equal('Bukowski');
         should(dataobj).have.property('reads').which.is.Number().equal(0);
@@ -207,10 +185,8 @@ describe('DataObject', function() {
         should(object).have.property('updated_at').which.is.Date();
         should(object).have.property('links').which.is.Object();
         should(object).have.property('channel').which.is.Null();
-        should(object).have.property('owner').which.is.Null();
-        should(object).have.property('group_permissions').which.is.String().equal('none');
-        should(object).have.property('other_permissions').which.is.String().equal('none');
-        should(object).have.property('owner_permissions').which.is.String().equal('full');
+        should(object).have.property('channel_room').which.is.Null();
+        should(object).have.property('acl').which.is.Object();
         should(object).have.property('someobj').which.is.Object();
         should(object.someobj).have.property('age').which.is.Number().equal(18);
         should(object.someobj).have.property('height').which.is.Number().equal(181);
@@ -227,11 +203,8 @@ describe('DataObject', function() {
         should(object).have.property('created_at').which.is.Date();
         should(object).have.property('updated_at').which.is.Date();
         should(object).have.property('links').which.is.Object();
-        should(object).have.property('channel').which.is.Null();
-        should(object).have.property('owner').which.is.Null();
-        should(object).have.property('group_permissions').which.is.String().equal('none');
-        should(object).have.property('other_permissions').which.is.String().equal('none');
-        should(object).have.property('owner_permissions').which.is.String().equal('full');
+        should(object).have.property('channel_room').which.is.Null();
+        should(object).have.property('acl').which.is.Object();
         should(object).have.property('name').which.is.String().equal('John');
         should(object).have.property('numbers').which.is.Array().with.length(5);
       })
@@ -248,10 +221,8 @@ describe('DataObject', function() {
         should(object).have.property('updated_at').which.is.Date();
         should(object).have.property('links').which.is.Object();
         should(object).have.property('channel').which.is.Null();
-        should(object).have.property('owner').which.is.Null();
-        should(object).have.property('group_permissions').which.is.String().equal('none');
-        should(object).have.property('other_permissions').which.is.String().equal('none');
-        should(object).have.property('owner_permissions').which.is.String().equal('full');
+        should(object).have.property('channel_room').which.is.Null();
+        should(object).have.property('acl').which.is.Object();
         should(object).have.property('name').which.is.String().equal('John');
         should(object).have.property('numbers').which.is.Array().with.length(5);
 
@@ -273,10 +244,8 @@ describe('DataObject', function() {
         should(object).have.property('updated_at').which.is.Date();
         should(object).have.property('links').which.is.Object();
         should(object).have.property('channel').which.is.Null();
-        should(object).have.property('owner').which.is.Null();
-        should(object).have.property('group_permissions').which.is.String().equal('none');
-        should(object).have.property('other_permissions').which.is.String().equal('none');
-        should(object).have.property('owner_permissions').which.is.String().equal('full');
+        should(object).have.property('channel_room').which.is.Null();
+        should(object).have.property('acl').which.is.Object();
         should(object).have.property('name').which.is.String().equal('John');
         should(object).have.property('numbers').which.is.Array().with.length(5);
 
@@ -298,10 +267,8 @@ describe('DataObject', function() {
         should(object).have.property('updated_at').which.is.Date();
         should(object).have.property('links').which.is.Object();
         should(object).have.property('channel').which.is.Null();
-        should(object).have.property('owner').which.is.Null();
-        should(object).have.property('group_permissions').which.is.String().equal('none');
-        should(object).have.property('other_permissions').which.is.String().equal('none');
-        should(object).have.property('owner_permissions').which.is.String().equal('full');
+        should(object).have.property('channel_room').which.is.Null();
+        should(object).have.property('acl').which.is.Object();
         should(object).have.property('name').which.is.String().equal('John');
         should(object).have.property('numbers').which.is.Array().with.length(5);
 
@@ -323,10 +290,8 @@ describe('DataObject', function() {
         should(dataobj).have.property('updated_at').which.is.Date();
         should(dataobj).have.property('links').which.is.Object();
         should(dataobj).have.property('channel').which.is.Null();
-        should(dataobj).have.property('owner').which.is.Null();
-        should(dataobj).have.property('group_permissions').which.is.String().equal('none');
-        should(dataobj).have.property('other_permissions').which.is.String().equal('none');
-        should(dataobj).have.property('owner_permissions').which.is.String().equal('full');
+        should(dataobj).have.property('channel_room').which.is.Null();
+        should(dataobj).have.property('acl').which.is.Object();
         should(dataobj).have.property('coordinates').which.is.Object();
         should(dataobj).have.property('location_name').which.is.String().equal(location1.location_name);
         should(dataobj.coordinates).have.property('type').which.is.String().equal('geopoint');
@@ -575,10 +540,8 @@ describe('DataObject', function() {
           should(object).have.property('updated_at').which.is.Date();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('channel').which.is.Null();
-          should(object).have.property('owner').which.is.Null();
-          should(object).have.property('group_permissions').which.is.String().equal('none');
-          should(object).have.property('other_permissions').which.is.String().equal('none');
-          should(object).have.property('owner_permissions').which.is.String().equal('full');
+          should(object).have.property('channel_room').which.is.Null();
+          should(object).have.property('acl').which.is.Object();
           should(object).have.property('name').which.is.String().equal('John');
           should(object).have.property('numbers').which.is.Array().with.length(5);
         })
@@ -595,10 +558,8 @@ describe('DataObject', function() {
           should(object).have.property('updated_at').which.is.Date();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('channel').which.is.Null();
-          should(object).have.property('owner').which.is.Null();
-          should(object).have.property('group_permissions').which.is.String().equal('none');
-          should(object).have.property('other_permissions').which.is.String().equal('none');
-          should(object).have.property('owner_permissions').which.is.String().equal('full');
+          should(object).have.property('channel_room').which.is.Null();
+          should(object).have.property('acl').which.is.Object();
           should(object).have.property('name').which.is.String().equal('John');
           should(object).have.property('numbers').which.is.Array().with.length(5);
 
@@ -620,10 +581,8 @@ describe('DataObject', function() {
           should(object).have.property('updated_at').which.is.Date();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('channel').which.is.Null();
-          should(object).have.property('owner').which.is.Null();
-          should(object).have.property('group_permissions').which.is.String().equal('none');
-          should(object).have.property('other_permissions').which.is.String().equal('none');
-          should(object).have.property('owner_permissions').which.is.String().equal('full');
+          should(object).have.property('channel_room').which.is.Null();
+          should(object).have.property('acl').which.is.Object();
           should(object).have.property('name').which.is.String().equal('John');
           should(object).have.property('numbers').which.is.Array().with.length(5);
 
@@ -645,10 +604,8 @@ describe('DataObject', function() {
           should(object).have.property('updated_at').which.is.Date();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('channel').which.is.Null();
-          should(object).have.property('owner').which.is.Null();
-          should(object).have.property('group_permissions').which.is.String().equal('none');
-          should(object).have.property('other_permissions').which.is.String().equal('none');
-          should(object).have.property('owner_permissions').which.is.String().equal('full');
+          should(object).have.property('channel_room').which.is.Null();
+          should(object).have.property('acl').which.is.Object();
           should(object).have.property('name').which.is.String().equal('John');
           should(object).have.property('numbers').which.is.Array().with.length(5);
 
@@ -865,10 +822,8 @@ describe('DataObject', function() {
           should(dataobject).have.property('updated_at').which.is.Date();
           should(dataobject).have.property('links').which.is.Object();
           should(dataobject).have.property('channel').which.is.Null();
-          should(dataobject).have.property('owner').which.is.Null();
-          should(dataobject).have.property('group_permissions').which.is.String().equal('none');
-          should(dataobject).have.property('other_permissions').which.is.String().equal('none');
-          should(dataobject).have.property('owner_permissions').which.is.String().equal('full');
+          should(dataobject).have.property('channel_room').which.is.Null();
+          should(dataobject).have.property('acl').which.is.Object();
           should(dataobject).have.property('title').which.is.String().equal('Pulp');
           should(dataobject).have.property('author').which.is.String().equal('Bukowski');
         });
@@ -884,11 +839,8 @@ describe('DataObject', function() {
           should(dataobj).have.property('created_at').which.is.Date();
           should(dataobj).have.property('updated_at').which.is.Date();
           should(dataobj).have.property('links').which.is.Object();
-          should(dataobj).have.property('channel').which.is.Null();
-          should(dataobj).have.property('owner').which.is.Null();
-          should(dataobj).have.property('group_permissions').which.is.String().equal('none');
-          should(dataobj).have.property('other_permissions').which.is.String().equal('none');
-          should(dataobj).have.property('owner_permissions').which.is.String().equal('full');
+          should(dataobj).have.property('channel_room').which.is.Null();
+          should(dataobj).have.property('acl').which.is.Object();
           should(dataobj).have.property('coordinates').which.is.Object();
           should(dataobj).have.property('location_name').which.is.String().equal(location1.location_name);
           should(dataobj.coordinates).have.property('type').which.is.String().equal('geopoint');
@@ -948,10 +900,8 @@ describe('DataObject', function() {
         should(dataobject).have.property('updated_at').which.is.Date();
         should(dataobject).have.property('links').which.is.Object();
         should(dataobject).have.property('channel').which.is.Null();
-        should(dataobject).have.property('owner').which.is.Null();
-        should(dataobject).have.property('group_permissions').which.is.String().equal('none');
-        should(dataobject).have.property('other_permissions').which.is.String().equal('none');
-        should(dataobject).have.property('owner_permissions').which.is.String().equal('full');
+        should(dataobject).have.property('channel_room').which.is.Null();
+        should(dataobject).have.property('acl').which.is.Object();
         should(dataobject).have.property('title').which.is.String().equal('Pulp');
         should(dataobject).have.property('author').which.is.String().equal('Bukowski');
       });

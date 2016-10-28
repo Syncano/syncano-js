@@ -4,7 +4,6 @@ import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
-
 describe('Group', function() {
   this.timeout(15000);
 
@@ -21,10 +20,13 @@ describe('Group', function() {
   };
   const userData = {
     instanceName,
-    username: 'testuser',
     password: 'y5k8Y4&-'
   };
   let objects = null;
+
+  beforeEach(function() {
+    userData.username = suffix.get('user');
+  })
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
@@ -131,11 +133,8 @@ describe('Group', function() {
       .then((user) => {
         should(user).be.a.Object();
         should(user).have.property('instanceName').which.is.String().equal(instanceName);
-        should(user).have.property('profile').which.is.Object();
         should(user).have.property('links').which.is.Object();
-        should(user).have.property('groups').which.is.Array();
         should(user).have.property('username').which.is.String().equal(userData.username);
-        should(user).have.property('user_key').which.is.String();
       });
   });
 
@@ -277,11 +276,8 @@ describe('Group', function() {
         .then((user) => {
           should(user).be.a.Object();
           should(user).have.property('instanceName').which.is.String().equal(instanceName);
-          should(user).have.property('profile').which.is.Object();
           should(user).have.property('links').which.is.Object();
-          should(user).have.property('groups').which.is.Array();
           should(user).have.property('username').which.is.String().equal(userData.username);
-          should(user).have.property('user_key').which.is.String();
         });
     });
 

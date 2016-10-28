@@ -229,35 +229,35 @@ const UserMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1.1/instances/{instanceName}/users/{id}/'
+      'path': '/v2/instances/{instanceName}/users/{id}/'
     },
     'reset_key': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/users/{id}/reset_key/'
+      'path': '/v2/instances/{instanceName}/users/{id}/reset_key/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/users/'
+      'path': '/v2/instances/{instanceName}/users/'
     },
     'login': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/user/auth/'
+      'path': '/v2/instances/{instanceName}/users/auth/'
     },
     'socialLogin': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/user/auth/{backend}/'
+      'path': '/v2/instances/{instanceName}/users/auth/{backend}/proxy/'
     },
     'user': {
       'methods': ['get', 'post', 'patch'],
-      'path': '/v1.1/instances/{instanceName}/user/'
+      'path': '/v2/instances/{instanceName}/users/me/'
     },
     'groupUsers': {
       'methods': ['get', 'post'],
-      'path': '/v1.1/instances/{instanceName}/groups/{id}/users/'
+      'path': '/v2/instances/{instanceName}/groups/{id}/users/'
     },
     'groupUser': {
       'methods': ['get', 'delete'],
-      'path': '/v1.1/instances/{instanceName}/groups/{id}/users/{user}/'
+      'path': '/v2/instances/{instanceName}/groups/{id}/users/{user}/'
     }
   }
 });
@@ -275,27 +275,6 @@ const UserConstraints = {
   },
   password: {
     presence: true,
-    string: true
-  },
-  profile: {
-    object: true
-  },
-  'profile.owner_permissions': {
-    inclusion: ['none', 'read', 'write', 'full']
-  },
-  'profile.group': {
-    numericality: true
-  },
-  'profile.group_permissions': {
-    inclusion: ['none', 'read', 'write', 'full']
-  },
-  'profile.other_permissions': {
-    inclusion: ['none', 'read', 'write', 'full']
-  },
-  'profile.channel': {
-    string: true
-  },
-  'profile.channel_room': {
     string: true
   }
 };

@@ -25,15 +25,15 @@ const RestoreMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/restores/{id}/'
+      'path': '/v2/instances/{instanceName}/restores/{id}/'
     },
     'list': {
       'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/restores/'
+      'path': '/v2/instances/{instanceName}/restores/'
     },
     'restore': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/restores/'
+      'path': '/v2/instances/{instanceName}/restores/'
     }
   }
 });

@@ -17,15 +17,15 @@ const FullBackupMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'get'],
-      'path': '/v1.1/instances/{instanceName}/backups/full/{id}/'
+      'path': '/v2/instances/{instanceName}/backups/full/{id}/'
     },
     'list': {
       'methods': ['get', 'post'],
-      'path': '/v1.1/instances/{instanceName}/backups/full/'
+      'path': '/v2/instances/{instanceName}/backups/full/'
     },
     'all': {
       'methods': ['get'],
-      'path': '/v1.1/backups/full/'
+      'path': '/v2/backups/full/'
     }
   }
 });

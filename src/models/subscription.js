@@ -25,15 +25,15 @@ const SubscriptionMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['get'],
-      'path': '/v1.1/billing/subscriptions/{id}/'
+      'path': '/v2/billing/subscriptions/{id}/'
     },
     'list': {
       'methods': ['get'],
-      'path': '/v1.1/billing/subscriptions/'
+      'path': '/v2/billing/subscriptions/'
     },
     'cancel': {
       'methods': ['post'],
-      'path': '/v1.1/billing/subscriptions/{id}/cancel/'
+      'path': '/v2/billing/subscriptions/{id}/cancel/'
     }
   }
 });

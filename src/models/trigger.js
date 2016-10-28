@@ -7,11 +7,11 @@ const TriggerMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1.1/instances/{instanceName}/triggers/{id}/'
+      'path': '/v2/instances/{instanceName}/triggers/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/triggers/'
+      'path': '/v2/instances/{instanceName}/triggers/'
     }
   },
   relatedModels: [ 'TriggerTrace' ]
@@ -31,17 +31,13 @@ const TriggerConstraints = {
   description: {
     string: true
   },
-  signal: {
+  signals: {
     presence: true,
-    inclusion: ['post_update', 'post_create', 'post_delete']
+    array: true
   },
-  script: {
+  event: {
     presence: true,
-    numericality: true
-  },
-  class: {
-    presence: true,
-    string: true
+    object: true
   }
 };
 

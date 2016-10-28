@@ -19,15 +19,15 @@ const APNSMessageMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'get'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/messages/{id}/'
+      'path': '/v2/instances/{instanceName}/push_notifications/apns/messages/{id}/'
     },
     'list': {
       'methods': ['get', 'post'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/messages/'
+      'path': '/v2/instances/{instanceName}/push_notifications/apns/messages/'
     },
     'deviceMessage': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/apns/devices/{registration_id}/send_message/'
+      'path': '/v2/instances/{instanceName}/push_notifications/apns/devices/{registration_id}/send_message/'
     }
   }
 });

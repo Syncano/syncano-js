@@ -14,11 +14,11 @@ const ScriptEndpointTraceMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{scriptEndpointName}/traces/{id}/'
+      'path': '/v2/instances/{instanceName}/endpoints/scripts/{scriptEndpointName}/traces/{id}/'
     },
     'list': {
       'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/endpoints/scripts/{scriptEndpointName}/traces/'
+      'path': '/v2/instances/{instanceName}/endpoints/scripts/{scriptEndpointName}/traces/'
     }
   }
 });

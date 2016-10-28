@@ -18,15 +18,21 @@ describe('Trigger', function() {
     instanceName: instanceName,
     label: 'my trigger',
     description: 'my description',
-    signal: 'post_create',
-    class: className
+    signals: ['create'],
+    event: {
+      class: className,
+      source: 'dataobject'
+    }
   };
   const data2 = {
     instanceName: instanceName,
     label: 'my trigger2',
     description: 'my description2',
-    signal: 'post_create',
-    class: className
+    signals: ['create'],
+    event: {
+      class: className,
+      source: 'dataobject'
+    }
   };
   const classData = {
     name: className,
@@ -82,28 +88,28 @@ describe('Trigger', function() {
     should(Model({class: className, instanceName, label: {}}).save()).be.rejectedWith(/label/);
   });
 
-  it('should require "class"', function() {
-    should(Model({instanceName}).save()).be.rejectedWith(/class/);
+  it('should require "signals"', function() {
+    should(Model({instanceName}).save()).be.rejectedWith(/signals/);
   });
 
-  it('should validate "class"', function() {
-    should(Model({instanceName, class: 1337}).save()).be.rejectedWith(/class/);
+  it('should validate "signals"', function() {
+    should(Model({instanceName, class: 1337}).save()).be.rejectedWith(/signals/);
   });
 
-  it('should require "signal"', function() {
-    should(Model({class: className, instanceName, label: 'my trigger'}).save()).be.rejectedWith(/signal/);
+  it('should require "event"', function() {
+    should(Model({signals: ['create'], instanceName, label: 'my trigger'}).save()).be.rejectedWith(/event/);
   });
 
-  it('should validate "signal"', function() {
-    should(Model({class: className, instanceName, label: 'my trigger', signal: 'dunno'}).save()).be.rejectedWith(/signal/);
+  it('should validate "event"', function() {
+    should(Model({signals: ['create'], instanceName, label: 'my trigger', event: 'dunno'}).save()).be.rejectedWith(/event/);
   });
 
   it('should require "script"', function() {
-    should(Model({class: className, instanceName, label: 'my trigger', signal: 'post_create'}).save()).be.rejectedWith(/script/);
+    should(Model({signals: ['create'], instanceName, label: 'my trigger', event: { class: className }}).save()).be.rejectedWith(/script/);
   });
 
   it('should validate "script"', function() {
-    should(Model({class: className, instanceName, label: 'my trigger', signal: 'post_create', script: 'first'}).save()).be.rejectedWith(/script/);
+    should(Model({signals: ['create'], instanceName, label: 'my trigger', event: { class: className }, script: 'first'}).save()).be.rejectedWith(/script/);
   });
 
   it('should be able to save via model instance', function() {
@@ -116,8 +122,8 @@ describe('Trigger', function() {
         should(trigger).have.property('description').which.is.String().equal(data.description);
         should(trigger).have.property('label').which.is.String().equal(data.label);
         should(trigger).have.property('instanceName').which.is.String().equal(data.instanceName);
-        should(trigger).have.property('class').which.is.String().equal(data.class);
-        should(trigger).have.property('signal').which.is.String().equal(data.signal);
+        should(trigger).have.property('event').which.is.Object();
+        should(trigger).have.property('signals').which.is.Array();
         should(trigger).have.property('created_at').which.is.Date();
         should(trigger).have.property('updated_at').which.is.Date();
         should(trigger).have.property('links').which.is.Object();
@@ -172,8 +178,8 @@ describe('Trigger', function() {
           should(object).have.property('description').which.is.String().equal(data.description);
           should(object).have.property('label').which.is.String().equal(data.label);
           should(object).have.property('instanceName').which.is.String().equal(data.instanceName);
-          should(object).have.property('class').which.is.String().equal(data.class);
-          should(object).have.property('signal').which.is.String().equal(data.signal);
+          should(object).have.property('event').which.is.Object();
+          should(object).have.property('signals').which.is.Array();
           should(object).have.property('created_at').which.is.Date();
           should(object).have.property('updated_at').which.is.Date();
           should(object).have.property('links').which.is.Object();
@@ -199,8 +205,8 @@ describe('Trigger', function() {
           should(object).have.property('description').which.is.String().equal(data.description);
           should(object).have.property('label').which.is.String().equal(data.label);
           should(object).have.property('instanceName').which.is.String().equal(data.instanceName);
-          should(object).have.property('class').which.is.String().equal(data.class);
-          should(object).have.property('signal').which.is.String().equal(data.signal);
+          should(object).have.property('event').which.is.Object();
+          should(object).have.property('signals').which.is.Array();
           should(object).have.property('created_at').which.is.Date();
           should(object).have.property('updated_at').which.is.Date();
           should(object).have.property('links').which.is.Object();
@@ -222,8 +228,8 @@ describe('Trigger', function() {
           should(object).have.property('description').which.is.String().equal(data.description);
           should(object).have.property('label').which.is.String().equal(data.label);
           should(object).have.property('instanceName').which.is.String().equal(data.instanceName);
-          should(object).have.property('class').which.is.String().equal(data.class);
-          should(object).have.property('signal').which.is.String().equal(data.signal);
+          should(object).have.property('event').which.is.Object();
+          should(object).have.property('signals').which.is.Array();
           should(object).have.property('created_at').which.is.Date();
           should(object).have.property('updated_at').which.is.Date();
           should(object).have.property('links').which.is.Object();

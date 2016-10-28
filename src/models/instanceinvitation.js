@@ -29,15 +29,15 @@ const InstanceInvitationMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'get'],
-      'path': '/v1.1/instances/{instanceName}/invitations/{id}/'
+      'path': '/v2/instances/{instanceName}/invitations/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/invitations/'
+      'path': '/v2/instances/{instanceName}/invitations/'
     },
     'resend': {
       'methods': ['post'],
-      'path':  '/v1.1/instances/{instanceName}/invitations/{id}/resend/'
+      'path':  '/v2/instances/{instanceName}/invitations/{id}/resend/'
     }
   }
 });

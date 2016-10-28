@@ -123,23 +123,23 @@ const ChannelMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v1.1/instances/{instanceName}/channels/{name}/'
+      'path': '/v2/instances/{instanceName}/channels/{name}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/channels/'
+      'path': '/v2/instances/{instanceName}/channels/'
     },
     'poll': {
       'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/channels/{name}/poll/'
+      'path': '/v2/instances/{instanceName}/channels/{name}/poll/'
     },
     'publish': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/channels/{name}/publish/'
+      'path': '/v2/instances/{instanceName}/channels/{name}/publish/'
     },
     'history': {
       'methods': ['get'],
-      'path': '/v1.1/instances/{instanceName}/channels/{name}/history/'
+      'path': '/v2/instances/{instanceName}/channels/{name}/history/'
     }
   }
 });
@@ -164,17 +164,8 @@ const channelConstraints = {
   type: {
     inclusion: ['default', 'separate_rooms']
   },
-  group: {
-    numericality: true
-  },
-  group_permissions: {
-    inclusion: ['none', 'subscribe', 'publish']
-  },
-  other_permissions: {
-    inclusion: ['none', 'subscribe', 'publish']
-  },
-  custom_publish: {
-    boolean: true
+  acl: {
+    object: true
   }
 };
 
@@ -193,7 +184,7 @@ const channelConstraints = {
 
   * @example {@lang javascript}
   * var poll = ChannelPoll.setConfig(config)({
-  *   path: '/v1.1/instances/some-instance/channels/some-channel/poll/'
+  *   path: '/v2/instances/some-instance/channels/some-channel/poll/'
   * });
   *
   * poll.on('start', function() {

@@ -112,7 +112,7 @@ export const Meta = stampit()
     },
 
     /**
-    * Resolves endpoint path e.g: `/v1.1/instances/{name}/` will be converted to `/v1.1/instances/someName/`.
+    * Resolves endpoint path e.g: `/v2/instances/{name}/` will be converted to `/v2/instances/someName/`.
 
     * @memberOf Meta
     * @instance

@@ -30,15 +30,15 @@ const InvitationMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'get'],
-      'path': '/v1.1/account/invitations/{id}/'
+      'path': '/v2/account/invitations/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/account/invitations/'
+      'path': '/v2/account/invitations/'
     },
     'accept': {
       'methods': ['post'],
-      'path': '/v1.1/account/invitations/accept/'
+      'path': '/v2/account/invitations/accept/'
     }
   }
 });

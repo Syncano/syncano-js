@@ -19,15 +19,15 @@ const GCMMessageMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'get'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/gcm/messages/{id}/'
+      'path': '/v2/instances/{instanceName}/push_notifications/gcm/messages/{id}/'
     },
     'list': {
       'methods': ['get', 'post'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/gcm/messages/'
+      'path': '/v2/instances/{instanceName}/push_notifications/gcm/messages/'
     },
     'deviceMessage': {
       'methods': ['post'],
-      'path': '/v1.1/instances/{instanceName}/push_notifications/gcm/devices/{registration_id}/send_message/'
+      'path': '/v2/instances/{instanceName}/push_notifications/gcm/devices/{registration_id}/send_message/'
     }
   }
 });

@@ -342,7 +342,7 @@ describe('Class', function() {
           return Model.please({instanceName}).ordering('asc');
         })
         .then((classes) => {
-          should(classes).be.an.Array().with.length(3);
+          should(classes).be.an.Array().with.length(2);
           asc = classes;
           return Model.please({instanceName}).ordering('desc');
         }).then((desc) => {
@@ -350,7 +350,7 @@ describe('Class', function() {
           const descNames = _.map(desc, 'name');
           descNames.reverse();
 
-          should(desc).be.an.Array().with.length(3);
+          should(desc).be.an.Array().with.length(2);
 
           _.forEach(ascNames, (ascName, index) => {
             should(ascName).be.equal(descNames[index]);

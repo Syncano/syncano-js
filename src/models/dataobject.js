@@ -207,11 +207,11 @@ const DataObjectMeta = Meta({
   endpoints: {
     'detail': {
       'methods': ['delete', 'patch', 'post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/classes/{className}/objects/{id}/'
+      'path': '/v2/instances/{instanceName}/classes/{className}/objects/{id}/'
     },
     'list': {
       'methods': ['post', 'get'],
-      'path': '/v1.1/instances/{instanceName}/classes/{className}/objects/'
+      'path': '/v2/instances/{instanceName}/classes/{className}/objects/'
     }
   }
 });
@@ -226,21 +226,6 @@ const DataobjectConstraints = {
   className: {
     presence: true,
     string: true
-  },
-  owner: {
-    numericality: true
-  },
-  owner_permissions: {
-    inclusion: ['none', 'read', 'write', 'full']
-  },
-  group: {
-    numericality: true
-  },
-  group_permissions: {
-    inclusion: ['none', 'read', 'write', 'full']
-  },
-  other_permissions: {
-    inclusion: ['none', 'read', 'write', 'full']
   },
   channel: {
     string: true

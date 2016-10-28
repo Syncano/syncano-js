@@ -79,7 +79,7 @@ describe('Request', function() {
     });
 
     it('should change request type if attachment is present', function() {
-      request.makeRequest('GET', '/v1.1/', {payload: {
+      request.makeRequest('GET', '/v2/', {payload: {
         a: Syncano.file(1),
         b: Syncano.file(2),
         c: 2,
@@ -98,7 +98,7 @@ describe('Request', function() {
 
     it.skip('should set proper headers if user key is present', function() {
       request.getConfig().setUserKey('321');
-      request.makeRequest('GET', '/v1.1/', {}, () => {});
+      request.makeRequest('GET', '/v2/', {}, () => {});
 
       should(stubs._init.calledOnce).be.true();
       should(stubs._type.calledOnce).be.true();
@@ -112,7 +112,7 @@ describe('Request', function() {
 
     it.skip('should set proper headers if api key is present', function() {
       request.getConfig().setApiKey('321');
-      request.makeRequest('GET', '/v1.1/', {}, () => {});
+      request.makeRequest('GET', '/v2/', {}, () => {});
 
       should(stubs._init.calledOnce).be.true();
       should(stubs._type.calledOnce).be.true();
@@ -132,7 +132,7 @@ describe('Request', function() {
 
     it.skip('should set proper headers if social token is present', function() {
       request.getConfig().setSocialToken('456').setAccountKey('123');
-      request.makeRequest('GET', '/v1.1/', {}, () => {});
+      request.makeRequest('GET', '/v2/', {}, () => {});
 
       should(stubs._init.calledOnce).be.true();
       should(stubs._type.calledOnce).be.true();
@@ -151,7 +151,7 @@ describe('Request', function() {
 
     it.skip('should set proper headers if accunt key is present', function() {
       request.getConfig().setAccountKey('111');
-      request.makeRequest('GET', '/v1.1/', {}, () => {});
+      request.makeRequest('GET', '/v2/', {}, () => {});
 
       should(stubs._init.calledOnce).be.true();
       should(stubs._type.calledOnce).be.true();
@@ -169,9 +169,9 @@ describe('Request', function() {
     });
 
     it.skip('should set defaults', function() {
-      request.makeRequest('GET', '/v1.1/', {}, () => {});
+      request.makeRequest('GET', '/v2/', {}, () => {});
 
-      should(stubs._init.withArgs('GET', 'https://api.syncano.io/v1.1/').calledOnce).be.true();
+      should(stubs._init.withArgs('GET', 'https://api.syncano.io/v2/').calledOnce).be.true();
       should(stubs._timeout.withArgs(15000).calledOnce).be.true();
       should(stubs._query.calledOnce).be.true();
       should(stubs._send.calledOnce).be.true();
