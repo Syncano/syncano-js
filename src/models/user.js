@@ -241,15 +241,15 @@ const UserMeta = Meta({
     },
     'login': {
       'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/user/auth/'
+      'path': '/v2/instances/{instanceName}/users/auth/'
     },
     'socialLogin': {
       'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/user/auth/{backend}/'
+      'path': '/v2/instances/{instanceName}/users/auth/{backend}/proxy/'
     },
     'user': {
       'methods': ['get', 'post', 'patch'],
-      'path': '/v2/instances/{instanceName}/user/'
+      'path': '/v2/instances/{instanceName}/users/me/'
     },
     'groupUsers': {
       'methods': ['get', 'post'],
@@ -275,27 +275,6 @@ const UserConstraints = {
   },
   password: {
     presence: true,
-    string: true
-  },
-  profile: {
-    object: true
-  },
-  'profile.owner_permissions': {
-    inclusion: ['none', 'read', 'write', 'full']
-  },
-  'profile.group': {
-    numericality: true
-  },
-  'profile.group_permissions': {
-    inclusion: ['none', 'read', 'write', 'full']
-  },
-  'profile.other_permissions': {
-    inclusion: ['none', 'read', 'write', 'full']
-  },
-  'profile.channel': {
-    string: true
-  },
-  'profile.channel_room': {
     string: true
   }
 };

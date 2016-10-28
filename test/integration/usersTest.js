@@ -15,25 +15,27 @@ describe('User', function() {
   const instanceName = suffix.getHyphened('User');
   const data = {
     instanceName,
-    username: 'testuser',
     password: 'y5k8Y4&-'
   };
   const data2 = {
     instanceName,
-    username: 'testuser2',
     password: 'x5Z2f8*='
   };
   let objects = null;
+
+  beforeEach(function() {
+    data.username = suffix.get('user');
+    data2.username = suffix.get('user');
+    objects = [
+      Model(data),
+      Model(data2)
+    ];
+  });
 
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
     Model = connection.User;
-
-    objects = [
-      Model(data),
-      Model(data2)
-    ];
 
     return Instance.please().create({name: instanceName});
   });
@@ -70,45 +72,15 @@ describe('User', function() {
     should(Model({username: data.username, instanceName, password: 1337}).save()).be.rejectedWith(/password/);
   });
 
-  it('should validate "profile"', function() {
-    should(Model({username: data.username, instanceName, password: data.password, profile: 'my_profile'}).save()).be.rejectedWith(/profile/);
-  });
-
-  it('should validate "profile.owner_permissions"', function() {
-    should(Model({username: data.username, instanceName, password: data.password, profile: { owner_permissions: 'some'}}).save()).be.rejectedWith(/owner_permissions/);
-  });
-
-  it('should validate "profile.group"', function() {
-    should(Model({username: data.username, instanceName, password: data.password, profile: { group: 'some'}}).save()).be.rejectedWith(/group/);
-  });
-
-  it('should validate "profile.group_permissions"', function() {
-    should(Model({username: data.username, instanceName, password: data.password, profile: { group_permissions: 'some'}}).save()).be.rejectedWith(/group_permissions/);
-  });
-
-  it('should validate "profile.other_permissions"', function() {
-    should(Model({username: data.username, instanceName, password: data.password, profile: { other_permissions: 'some'}}).save()).be.rejectedWith(/other_permissions/);
-  });
-
-  it('should validate "profile.channel"', function() {
-    should(Model({username: data.username, instanceName, password: data.password, profile: { channel: 1}}).save()).be.rejectedWith(/channel/);
-  });
-
-  it('should validate "profile.channel_room"', function() {
-    should(Model({username: data.username, instanceName, password: data.password, profile: { channel_room: 1}}).save()).be.rejectedWith(/channel_room/);
-  });
-
   it('should be able to save via model instance', function() {
     return Model(data).save()
       .then(cleaner.mark)
       .then((object) => {
         should(object).be.a.Object();
         should(object).have.property('instanceName').which.is.String().equal(instanceName);
-        should(object).have.property('profile').which.is.Object();
         should(object).have.property('links').which.is.Object();
         should(object).have.property('groups').which.is.Array();
         should(object).have.property('username').which.is.String().equal(data.username);
-        should(object).have.property('user_key').which.is.String();
       });
   });
 
@@ -117,35 +89,25 @@ describe('User', function() {
       .then((object) => {
         should(object).be.a.Object();
         should(object).have.property('instanceName').which.is.String().equal(instanceName);
-        should(object).have.property('profile').which.is.Object();
         should(object).have.property('links').which.is.Object();
         should(object).have.property('groups').which.is.Array();
         should(object).have.property('username').which.is.String().equal(data.username);
-        should(object).have.property('user_key').which.is.String();
 
         return object.delete();
       });
   });
 
   it('should be able to reset key via model instance', function() {
-    let userKey = null;
-
     return Model(data).save()
       .then(cleaner.mark)
       .then((object) => {
         should(object).be.a.Object();
         should(object).have.property('instanceName').which.is.String().equal(instanceName);
-        should(object).have.property('profile').which.is.Object();
         should(object).have.property('links').which.is.Object();
         should(object).have.property('groups').which.is.Array();
         should(object).have.property('username').which.is.String().equal(data.username);
-        should(object).have.property('user_key').which.is.String();
-
-        userKey = object.user_key;
 
         return object.resetKey();
-      }).then((object) => {
-        should(object).have.property('user_key').which.is.String().not.equal(userKey);
       });
   });
 
@@ -160,7 +122,7 @@ describe('User', function() {
       })
   });
 
-  it('should be able to add group via model instance', function() {
+  it.skip('should be able to add group via model instance', function() {
     let groupId = null;
 
     return connection.Group({ instanceName, label: 'group-label', description: 'group-desc'}).save()
@@ -183,7 +145,7 @@ describe('User', function() {
       });
   });
 
-  it('should be able to get group via model instance', function() {
+  it.skip('should be able to get group via model instance', function() {
     let groupId = null;
     let tempUser = null;
 
@@ -209,7 +171,7 @@ describe('User', function() {
       })
   });
 
-  it('should be able to delete group via model instance', function() {
+  it.skip('should be able to delete group via model instance', function() {
     let groupId = null;
     let tempUser = null;
 
@@ -263,11 +225,9 @@ describe('User', function() {
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
-          should(object).have.property('profile').which.is.Object();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('groups').which.is.Array();
           should(object).have.property('username').which.is.String().equal(data.username);
-          should(object).have.property('user_key').which.is.String();
         });
     });
 
@@ -277,7 +237,6 @@ describe('User', function() {
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
-          should(object).have.property('profile').which.is.Object();
           should(object).have.property('links').which.is.Object();
 
           return Model.please().update({id: object.id, instanceName}, {username: 'dummyTest'});
@@ -285,7 +244,6 @@ describe('User', function() {
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
-          should(object).have.property('profile').which.is.Object();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('username').which.is.String().equal('dummyTest');
         })
@@ -296,17 +254,15 @@ describe('User', function() {
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
-          should(object).have.property('profile').which.is.Object();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('groups').which.is.Array();
           should(object).have.property('username').which.is.String().equal(data.username);
-          should(object).have.property('user_key').which.is.String();
 
           return Model.please().delete({id: object.id, instanceName});
         });
     });
 
-    it('should be able to update an object (userKey & apiKey)', function() {
+    it.skip('should be able to update an object (userKey & apiKey)', function() {
       let accountKey = null;
       let apiKey = null;
 
@@ -319,7 +275,6 @@ describe('User', function() {
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
-          should(object).have.property('profile').which.is.Object();
           should(object).have.property('links').which.is.Object();
 
           accountKey = connection.getAccountKey();
@@ -332,7 +287,6 @@ describe('User', function() {
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
-          should(object).have.property('profile').which.is.Object();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('username').which.is.String().equal('dummyTest');
 
@@ -343,24 +297,17 @@ describe('User', function() {
     });
 
     it('should be able to reset key in object', function() {
-      let userKey = null;
 
       return Model.please().create(data)
         .then(cleaner.mark)
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
-          should(object).have.property('profile').which.is.Object();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('groups').which.is.Array();
           should(object).have.property('username').which.is.String().equal(data.username);
-          should(object).have.property('user_key').which.is.String();
-
-          userKey = object.user_key;
 
           return Model.please().resetKey(_.assign({id: object.id}, data));
-        }).then((object) => {
-          should(object).have.property('user_key').which.is.String().not.equal(userKey);
         });
     });
 
@@ -370,11 +317,9 @@ describe('User', function() {
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
-          should(object).have.property('profile').which.is.Object();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('groups').which.is.Array();
           should(object).have.property('username').which.is.String().equal(data.username);
-          should(object).have.property('user_key').which.is.String();
 
           return Model.please().login(data, data);
         });
@@ -393,11 +338,9 @@ describe('User', function() {
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
-          should(object).have.property('profile').which.is.Object();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('groups').which.is.Array();
           should(object).have.property('username').which.is.String().equal(data.username);
-          should(object).have.property('user_key').which.is.String();
 
           return Model.please().login(data, data);
         })
@@ -407,11 +350,9 @@ describe('User', function() {
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
-          should(object).have.property('profile').which.is.Object();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('groups').which.is.Array();
           should(object).have.property('username').which.is.String().equal(data.username);
-          should(object).have.property('user_key').which.is.String();
 
           connection.setAccountKey(credentials.accountKey);
           connection.setApiKey('');
@@ -424,17 +365,15 @@ describe('User', function() {
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
-          should(object).have.property('profile').which.is.Object();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('groups').which.is.Array();
           should(object).have.property('username').which.is.String().equal(data.username);
-          should(object).have.property('user_key').which.is.String();
 
           return Model.please().socialLogin({instanceName, backend: 'facebbok'}, {access_token: '123'});
         });
     });
 
-    it('should be able to get groups', function() {
+    it.skip('should be able to get groups', function() {
       return Model.please().create(data)
         .then(cleaner.mark)
         .then((object) => {
@@ -445,7 +384,7 @@ describe('User', function() {
         })
     });
 
-    it('should be able to add group', function() {
+    it.skip('should be able to add group', function() {
       let groupId = null;
       let userId = null;
 
@@ -468,7 +407,7 @@ describe('User', function() {
         })
     });
 
-    it('should be able to delete group', function() {
+    it.skip('should be able to delete group', function() {
       let groupId = null;
       let userId = null;
 
@@ -498,7 +437,7 @@ describe('User', function() {
       })
     });
 
-    it('should be able to get group', function() {
+    it.skip('should be able to get group', function() {
       let groupId = null;
       let tempUser = null;
 
@@ -540,11 +479,9 @@ describe('User', function() {
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
-          should(object).have.property('profile').which.is.Object();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('groups').which.is.Array();
           should(object).have.property('username').which.is.String().equal(data.username);
-          should(object).have.property('user_key').which.is.String();
 
           return object;
         })
@@ -558,15 +495,13 @@ describe('User', function() {
           should(response).be.an.Object();
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
-          should(object).have.property('profile').which.is.Object();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('groups').which.is.Array();
           should(object).have.property('username').which.is.String().equal(data.username);
-          should(object).have.property('user_key').which.is.String();
         });
     });
 
-    it('should be able to get an object (userKey & apiKey)', function() {
+    it.skip('should be able to get an object (userKey & apiKey)', function() {
       let accountKey = null;
       let apiKey = null;
 
@@ -580,7 +515,6 @@ describe('User', function() {
         .then((object) => {
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
-          should(object).have.property('profile').which.is.Object();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('groups').which.is.Array();
           should(object).have.property('username').which.is.String().equal(data.username);
@@ -603,7 +537,6 @@ describe('User', function() {
           should(response).be.an.Object();
           should(object).be.a.Object();
           should(object).have.property('instanceName').which.is.String().equal(instanceName);
-          should(object).have.property('profile').which.is.Object();
           should(object).have.property('links').which.is.Object();
           should(object).have.property('groups').which.is.Array();
           should(object).have.property('username').which.is.String().equal(data.username);
@@ -636,32 +569,6 @@ describe('User', function() {
         })
         .then((objects) => {
           should(objects).be.an.Array().with.length(1);
-        });
-    });
-
-    it('should be able to change ordering', function() {
-      let asc = null;
-
-      return Model.please().bulkCreate(objects)
-        .then(cleaner.mark)
-        .then((objects) => {
-          should(objects).be.an.Array().with.length(2);
-          return Model.please(data).ordering('asc');
-        })
-        .then((objects) => {
-          should(objects).be.an.Array().with.length(2);
-          asc = objects;
-          return Model.please(data).ordering('desc');
-        }).then((desc) => {
-          const ascNames = _.map(asc, 'username');
-          const descNames = _.map(desc, 'username');
-          descNames.reverse();
-
-          should(desc).be.an.Array().with.length(2);
-
-          _.forEach(ascNames, (ascName, index) => {
-            should(ascName).be.equal(descNames[index]);
-          });
         });
     });
 
