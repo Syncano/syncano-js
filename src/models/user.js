@@ -12,6 +12,48 @@ const UserQuerySet = stampit().compose(
   List
 ).methods({
   /**
+  * Gets user profile schema
+  * @memberOf UserQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @returns {Promise}
+
+  * @example {@lang javascript}
+  * User.please().getSchema({instanceName: 'test-one'}).then(function(schema) {});
+
+  */
+  getSchema(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'GET';
+    this.endpoint = 'schema';
+    this.raw();
+
+    return this;
+  },
+  /**
+  * Updates user profile schema
+  * @memberOf UserQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @param {Array} schema the schema fields
+  * @returns {Promise}
+
+  * @example {@lang javascript}
+  * User.please().updateSchema({instanceName: 'test-one'}, [{ name: 'age', type: 'integer'}]).then(function(schema) {});
+
+  */
+  updateSchema(properties = {}, schema = []) {
+    this.properties = _.assign({}, this.properties, properties);
+    this.method = 'PATCH';
+    this.endpoint = 'schema';
+    this.raw();
+    this.payload = {schema};
+
+    return this;
+  },
+  /**
   * Gets a user's groups.
   * @memberOf UserQuerySet
   * @instance
@@ -258,6 +300,10 @@ const UserMeta = Meta({
     'groupUser': {
       'methods': ['get', 'delete'],
       'path': '/v2/instances/{instanceName}/groups/{id}/users/{user}/'
+    },
+    'schema': {
+      'methods': ['get', 'put', 'patch'],
+      'path': '/v2/instances/{instanceName}/users/schema/'
     }
   }
 });

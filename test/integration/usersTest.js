@@ -373,6 +373,27 @@ describe('User', function() {
         });
     });
 
+    it('should be able to get schema', function() {
+      return Model.please().getSchema({instanceName})
+        .then((schema) => {
+          should(schema).be.an.Object();
+          should(schema).have.property('schema').which.is.Array();
+        })
+    });
+
+    it('should be able to update schema', function() {
+      return Model.please().updateSchema({instanceName}, [{ name: 'age', type: 'integer'}])
+        .then(() => {
+          return Model.please().getSchema({instanceName})
+        })
+        .then((schema) => {
+          should(schema).be.an.Object();
+          should(schema).have.property('schema').which.is.Array().with.length(1);
+          should(schema.schema[0]).have.property('type').which.is.String().equal('integer');
+          should(schema.schema[0]).have.property('name').which.is.String().equal('age');
+        })
+    });
+
     it.skip('should be able to get groups', function() {
       return Model.please().create(data)
         .then(cleaner.mark)
