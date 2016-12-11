@@ -3,14 +3,14 @@ import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
-describe('CustomSocket', function() {
+describe('Socket', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();
   let connection = null;
   let Model = null;
   let Instance = null;
-  const instanceName = suffix.getHyphened('CustomSocket');
+  const instanceName = suffix.getHyphened('Socket');
   const name = suffix.get('socket');
   const installUrl = 'https://raw.githubusercontent.com/Syncano/custom-socket-test/master/socket.yml';
   const data = {
@@ -22,7 +22,7 @@ describe('CustomSocket', function() {
   before(function() {
     connection = Syncano(credentials.getCredentials());
     Instance = connection.Instance;
-    Model = connection.CustomSocket;
+    Model = connection.Socket;
 
     return Instance.please().create({name: instanceName});
   });

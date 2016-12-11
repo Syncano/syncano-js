@@ -17,7 +17,7 @@ describe('Syncano', function() {
       should(baseObject).have.property('Instance').which.is.Function();
       should(baseObject).have.property('Class').which.is.Function();
       should(baseObject).have.property('Channel').which.is.Function();
-      should(baseObject).have.property('CustomSocket').which.is.Function();
+      should(baseObject).have.property('Socket').which.is.Function();
       should(baseObject).have.property('DataObject').which.is.Function();
       should(baseObject).have.property('User').which.is.Function();
       should(baseObject).have.property('Group').which.is.Function();
