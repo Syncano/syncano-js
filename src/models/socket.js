@@ -3,7 +3,7 @@ import {Meta, Model} from './base';
 import {BaseQuerySet, List, Delete, Update, Create, Get} from '../querySet';
 import _ from 'lodash';
 
-const CustomSocketQuerySet = stampit().compose(
+const SocketQuerySet = stampit().compose(
   BaseQuerySet,
   List,
   Create,
@@ -42,9 +42,9 @@ const CustomSocketQuerySet = stampit().compose(
 
 })
 
-const CustomSocketMeta = Meta({
-  name: 'customsocket',
-  pluralName: 'customsockets',
+const SocketMeta = Meta({
+  name: 'socket',
+  pluralName: 'sockets',
   endpoints: {
     'detail': {
       'methods': ['get', 'put', 'patch', 'delete'],
@@ -81,15 +81,15 @@ const CostomSocketConstraints = {
 };
 
 /**
- * OO wrapper around CustomSocket.
+ * OO wrapper around Socket.
  * @constructor
- * @type {CustomSocket}
+ * @type {Socket}
 
  */
-const CustomSocket = stampit()
+const Socket = stampit()
   .compose(Model)
-  .setQuerySet(CustomSocketQuerySet)
-  .setMeta(CustomSocketMeta)
+  .setQuerySet(SocketQuerySet)
+  .setMeta(SocketMeta)
   .methods({
 
     recheck() {
@@ -121,4 +121,4 @@ const CustomSocket = stampit()
   })
   .setConstraints(CostomSocketConstraints)
 
-export default CustomSocket;
+export default Socket;

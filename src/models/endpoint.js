@@ -19,6 +19,28 @@ const EndpointQuerySet = stampit().compose(BaseQuerySet)
     this.raw();
 
     return this;
+  },
+
+  /**
+  * Fetches Endpoints of given Socket.
+  * @memberOf EndpointQuerySet
+  * @instance
+
+  * @param {Object} properties lookup properties used for path resolving
+  * @returns {EndpointQerySet}
+
+  * @example {@lang javascript}
+  * Endpoint.please().list({socket_name: 'my_socket', instanceName: 'test-one'}).then(function(endpoints) {});
+
+  */
+  list(properties = {}) {
+    this.properties = _.assign({}, this.properties, properties);
+
+    this.method = 'GET';
+    this.endpoint = 'list';
+    this._serialize = false;
+
+    return this.then((response) => this.model.please().asResultSet(response));
   }
 
 })
@@ -30,14 +52,30 @@ const EndpointMeta = Meta({
     'run': {
       'methods': ['post', 'get', 'delete', 'patch', 'put'],
       'path': '/v2/instances/{instanceName}/endpoints/sockets/{socket_name}/{name}/'
+    },
+    'list': {
+      'methods': ['get'],
+      'path': '/v2/instances/{instanceName}/endpoints/sockets/{socket_name}/'
     }
   }
 });
 
 const EndpointConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
   name: {
     string: true,
     presence: true
+  },
+  metadata: {
+    object: true
+  },
+  acl: {
+    object: true
   }
 };
 

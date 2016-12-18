@@ -35,7 +35,7 @@ import HourlyUsage from './hourlyusage';
 import Plan from './plan';
 import Profile from './profile';
 import Card from './card';
-import CustomSocket from './customsocket';
+import Socket from './socket';
 import Endpoint from './endpoint';
 import Hosting from './hosting';
 import HostingFile from './hostingfile';
@@ -44,7 +44,7 @@ export default {
   Instance,
   Class,
   Channel,
-  CustomSocket,
+  Socket,
   DataObject,
   User,
   Group,

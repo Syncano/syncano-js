@@ -5,12 +5,12 @@
     * Support for uploading muliple files to Hosting
     * Fixed respons serialization in user groups
     * BatchManager update and fixes
-    * Fixed `installFromUrl()` method in CustomSocket
+    * Fixed `installFromUrl()` method in Socket
 * **1.0.26** - 2016-09-06
     * Hosting support
 * **1.0.25** - 2016-08-28
     * Added ability to create DataObjects using DataEndpoints
-    * Added Endpoint model and helper methods for CustomSockets
+    * Added Endpoint model and helper methods for Sockets
     * Small enhancements for Channel polling
     * DataObjects are now serialized when fetcher through DataEndpoints
 * **1.0.24** - 2016-08-17
