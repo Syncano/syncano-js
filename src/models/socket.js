@@ -65,7 +65,7 @@ const SocketMeta = Meta({
   }
 });
 
-const CostomSocketConstraints = {
+const SocketConstraints = {
   instanceName: {
     presence: true,
     length: {
@@ -119,6 +119,6 @@ const Socket = stampit()
         })
     }
   })
-  .setConstraints(CostomSocketConstraints)
+  .setConstraints(SocketConstraints)
 
 export default Socket;

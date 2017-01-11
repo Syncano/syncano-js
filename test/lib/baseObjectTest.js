@@ -14,6 +14,7 @@ describe('Syncano', function() {
   describe('#init()', function() {
 
     it('should have model factories automatically injected as properties', function() {
+      this.timeout(3500);
       should(baseObject).have.property('Instance').which.is.Function();
       should(baseObject).have.property('Class').which.is.Function();
       should(baseObject).have.property('Channel').which.is.Function();
