@@ -57,7 +57,8 @@ const EndpointMeta = Meta({
       'methods': ['get'],
       'path': '/v2/instances/{instanceName}/endpoints/sockets/{socket_name}/'
     }
-  }
+  },
+  relatedModels: [ 'EndpointTrace' ]
 });
 
 const EndpointConstraints = {

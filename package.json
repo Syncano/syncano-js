@@ -1,20 +1,10 @@
 {
   "name": "syncano",
-  "version": "1.0.28",
+  "version": "2.0.0",
   "description": "A library to intereact with the Syncano API.",
   "main": "lib/syncano.js",
-  "author": "Kelly Andrews",
-  "contributors": [
-    {
-      "name": "Jakub Bilko",
-      "email": "jakub.bilko@syncano.com"
-    },
-    {
-      "name": "Daniel Kopka",
-      "email": "daniel.kopka@syncano.com"
-    }
-  ],
-  "license": "ISC",
+  "author": "Syncano Inc.",
+  "license": "MIT",
   "scripts": {
     "clean": "npm-run-all clean:*",
     "clean:lib": "rimraf ./lib",
