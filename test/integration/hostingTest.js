@@ -13,7 +13,7 @@ describe('Hosting', function() {
   const instanceName = suffix.getHyphened('hosting');
   const data = {
     instanceName,
-    label: 'test hosting',
+    name: 'hosting',
     description: 'test hosting desc',
     domains: [`${hex.getRandom(5)}.com`]
   }
@@ -65,8 +65,7 @@ describe('Hosting', function() {
         should(hosting).have.property('links').which.is.Object();
         should(hosting).have.property('created_at').which.is.Date();
         should(hosting).have.property('updated_at').which.is.Date();
-        should(hosting).have.property('label').which.is.String().equal(data.label);
-        should(hosting).have.property('domains').which.is.Array().with.length(1);
+        should(hosting).have.property('domains').which.is.Array().with.length(2);
         should(hosting.domains[0]).be.a.String().equal(data.domains[0]);
       });
   });
