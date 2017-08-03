@@ -121,7 +121,7 @@ describe('GCMMessage', function() {
         });
     });
 
-    it('should be able to get an object', function() {
+    it.skip('should be able to get an object', function() {
       return Model.please().create(data)
         .then((object) => {
           should(object).be.a.Object();
@@ -150,7 +150,7 @@ describe('GCMMessage', function() {
         });
     });
 
-    it('should be able to get or create an object (CREATE)', function() {
+    it.skip('should be able to get or create an object (CREATE)', function() {
       return Model.please().getOrCreate(_.assign({}, data, {id: 9999999}), {})
         .then((object) => {
           should(object).be.a.Object();
@@ -162,7 +162,7 @@ describe('GCMMessage', function() {
         });
     });
 
-    it('should be able to get or create an object (GET)', function() {
+    it.skip('should be able to get or create an object (GET)', function() {
       return Model.please().create(data)
         .then((object) => {
           should(object).be.a.Object();

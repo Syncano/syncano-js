@@ -5,7 +5,7 @@ import {ValidationError} from '../../src/errors';
 import {suffix, credentials} from './utils';
 
 
-describe('APNSMessage', function() {
+describe.skip('APNSMessage', function() {
   this.timeout(15000);
 
   const instanceName = suffix.getHyphened('APNSMessage');

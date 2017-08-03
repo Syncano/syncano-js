@@ -32,7 +32,7 @@ describe('APNSConfig', function() {
     should(Model().save()).be.rejectedWith(/instanceName/);
   });
 
-  it('should be able to remove certificate via model instance', function() {
+  it.skip('should be able to remove certificate via model instance', function() {
     return Model.please()
         .update(data, {
           production_certificate_name: instanceName,
@@ -76,7 +76,7 @@ describe('APNSConfig', function() {
         });
     });
 
-    it('should be able to update a Model', function() {
+    it.skip('should be able to update a Model', function() {
       return Model.please()
         .update(data, {
           production_certificate_name: instanceName,
@@ -93,7 +93,7 @@ describe('APNSConfig', function() {
         });
     });
 
-    it('should be able to remove certificate', function() {
+    it.skip('should be able to remove certificate', function() {
       return Model.please()
         .update(data, {
           development_certificate: Syncano.file(__dirname + '/certificates/ApplePushDevelopment.p12'),
