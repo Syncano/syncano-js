@@ -3,7 +3,7 @@ import Syncano from '../../src/syncano';
 import {ValidationError} from '../../src/errors';
 import {suffix, credentials, createCleaner} from './utils';
 
-describe('CustomSocket', function() {
+describe.skip('CustomSocket', function() {
   this.timeout(15000);
 
   const cleaner = createCleaner();

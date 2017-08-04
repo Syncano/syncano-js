@@ -522,7 +522,7 @@ describe('Channel', function() {
           return Model.please({instanceName}).ordering('asc');
         })
         .then((chns) => {
-          should(chns).be.an.Array().with.length(2);
+          should(chns).be.an.Array().with.length(4);
           asc = chns;
           return Model.please({instanceName}).ordering('desc');
         }).then((desc) => {
@@ -530,7 +530,7 @@ describe('Channel', function() {
           const descNames = _.map(desc, 'name');
           descNames.reverse();
 
-          should(desc).be.an.Array().with.length(2);
+          should(desc).be.an.Array().with.length(4);
 
           _.forEach(ascNames, (ascName, index) => {
             should(ascName).be.equal(descNames[index]);
