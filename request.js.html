@@ -45,16 +45,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -182,7 +184,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
       const config = this.getConfig();
       let method = (methodName || '').toUpperCase();
       let options = _.defaults({}, requestOptions, {
-        type: 'json',
+        type: 'text/plain',
         accept: 'json',
         timeout: 15000,
         headers: {},
@@ -199,25 +201,6 @@ const Request = stampit().compose(ConfigMixin, Logger)
         return Promise.reject(new Error('"path" is required.'));
       }
 
-      if (!_.isUndefined(config)) {
-        if (!_.isEmpty(config.getAccountKey())) {
-          options.headers['X-API-KEY'] = config.getAccountKey();
-        }
-
-        // Yes, we will replace account key
-        if (!_.isEmpty(config.getApiKey())) {
-          options.headers['X-API-KEY'] = config.getApiKey();
-        }
-
-        if (!_.isEmpty(config.getUserKey())) {
-          options.headers['X-USER-KEY'] = config.getUserKey();
-        }
-
-        if (!_.isEmpty(config.getSocialToken())) {
-          options.headers['Authorization'] = `Token ${config.getSocialToken()}`;
-        }
-      }
-
       // Grab files
       const files = _.reduce(options.payload, (result, value, key) => {
         if (value instanceof SyncanoFile) {
@@ -226,17 +209,59 @@ const Request = stampit().compose(ConfigMixin, Logger)
         return result;
       }, {});
 
+      if (!_.isUndefined(config)) {
+        if (!_.isEmpty(config.getAccountKey())) {
+          if(_.isEmpty(files)) {
+            options.payload = _.assign({}, options.payload, { '_api_key': config.getAccountKey() });
+          } else {
+            options.headers['X-API-KEY'] = config.getAccountKey();
+          }
+        }
+
+        // Yes, we will replace account key
+        if (!_.isEmpty(config.getApiKey())) {
+          if(_.isEmpty(files)) {
+            options.payload = _.assign({}, options.payload, { '_api_key': config.getApiKey() });
+          } else {
+            options.headers['X-API-KEY'] = config.getApiKey();
+          }
+        }
+
+        if (!_.isEmpty(config.getUserKey())) {
+          if(_.isEmpty(files)) {
+            options.payload = _.assign({}, options.payload, { '_user_key': config.getUserKey() });
+          } else {
+            options.headers['X-USER-KEY'] = config.getUserKey();
+          }
+        }
+      }
+
+      // Pass method with payload
+      if(_.isEmpty(files)) {
+        options.payload = _.assign({}, options.payload, { '_method': method });
+      }
+
       let handler = this.getRequestHandler();
-      let request = handler(method, this.buildUrl(path))
-        .accept(options.accept)
+      let request = handler((_.isEmpty(files) ? 'POST' : method), this.buildUrl(path))
         .timeout(options.timeout)
-        .set(options.headers)
         .query(options.query);
+
+      // If there's a social token, we need the header
+      if (!_.isEmpty(config.getSocialToken())) {
+        request = request.set('Authorization', `Token ${config.getSocialToken()}`);
+      }
+
+      // Get admin token from META
+      if(IS_NODE &amp;&amp; !_.isUndefined(global)) {
+        if(_.has(global, ['META', 'token'])) {
+          request = request.set('X-API-KEY', META['token']);
+        }
+      }
 
       if (_.isEmpty(files)) {
         request = request
-          .type(options.type)
-          .send(options.payload);
+          .set('Content-Type', 'text/plain')
+          .send(JSON.stringify(options.payload));
       } else if (IS_NODE === false &amp;&amp; typeof FormData !== 'undefined' &amp;&amp; typeof File !== 'undefined') {
         options.type = null;
         options.payload = _.reduce(options.payload, (formData, value, key) => {
@@ -245,7 +270,8 @@ const Request = stampit().compose(ConfigMixin, Logger)
         }, new FormData());
 
         request = request
-          .type(options.type)
+          .type('form')
+          .set(options.headers)
           .send(options.payload);
 
       } else if (IS_NODE === true) {
@@ -255,6 +281,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
           }
           return result;
         }, request.type('form'));
+        request = request.set(options.headers);
       }
 
       request.on('progress', (e) => {
@@ -338,20 +365,22 @@ export default Request;
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -361,9 +390,9 @@ export default Request;
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a>
 	
-		on Fri Oct 7th 2016
+		on Fri Aug 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -371,7 +400,9 @@ export default Request;
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -381,7 +412,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -417,8 +448,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -444,11 +474,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>
