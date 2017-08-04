@@ -133,7 +133,7 @@ describe('Model', function() {
       });
     });
 
-    it('should update model', function() {
+    it.skip('should update model', function() {
       api.put(`/v1.1/instances/${instanceName}/`, '*').reply(201, {
         name: instanceName,
         links: {}
@@ -157,7 +157,7 @@ describe('Model', function() {
       should(modelSingle()).have.property('delete').which.is.Function();
     });
 
-    it('should delete model record', function() {
+    it.skip('should delete model record', function() {
       api.delete(`/v1.1/instances/${instanceName}/`, '*').reply(204);
       should(model({name: instanceName}).delete()).be.fulfilled();
     });

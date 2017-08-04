@@ -41,7 +41,7 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
     const payload = {};
     payload[_.keys(object)[0]] = { _add: object[_.keys(object)[0]] };
     this.properties = _.assign({}, this.properties, properties);
-    this.payload = JSON.stringify(payload);
+    this.payload = payload;
 
     this.method = 'PATCH';
     this.endpoint = 'detail';
@@ -65,7 +65,7 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
     const payload = {};
     payload[_.keys(object)[0]] = { _addunique: object[_.keys(object)[0]] };
     this.properties = _.assign({}, this.properties, properties);
-    this.payload = JSON.stringify(payload);
+    this.payload = payload;
 
     this.method = 'PATCH';
     this.endpoint = 'detail';
@@ -127,7 +127,7 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
     const payload = {};
     payload[_.keys(object)[0]] = { _remove: object[_.keys(object)[0]] };
     this.properties = _.assign({}, this.properties, properties);
-    this.payload = JSON.stringify(payload);
+    this.payload = payload;
 
     this.method = 'PATCH';
     this.endpoint = 'detail';
@@ -151,7 +151,7 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
     const payload = {};
     payload[_.keys(object)[0]] = { _increment: object[_.keys(object)[0]] };
     this.properties = _.assign({}, this.properties, properties);
-    this.payload = JSON.stringify(payload);
+    this.payload = payload;
 
     this.method = 'PATCH';
     this.endpoint = 'detail';

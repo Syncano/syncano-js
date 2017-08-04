@@ -383,7 +383,7 @@ describe('APNS Device', function() {
       });
     });
 
-    it('should be able to send message directly from device', function() {
+    it.skip('should be able to send message directly from device', function() {
       return Model.please().create(data)
         .then(cleaner.mark)
         .then(() => {
@@ -410,7 +410,7 @@ describe('APNS Device', function() {
         });
     });
 
-    it('should be able to send messages directly from device', function() {
+    it.skip('should be able to send messages directly from device', function() {
       return Model.please().create(data)
         .then(cleaner.mark)
         .then(() => {
