@@ -23,7 +23,7 @@ describe('Card', function() {
       card: {
         number: '4242424242424242',
         exp_month: 12,
-        exp_year: 2017,
+        exp_year: 2030,
         cvc: 123
       }
     }, (err, resp) => {
@@ -63,7 +63,7 @@ describe('Card', function() {
           should(Model).have.property('dynamic_last4').which.is.Null();
           should(Model).have.property('exp_month').which.is.Number().equal(12);
           should(Model).have.property('last4').which.is.String().equal('4242');
-          should(Model).have.property('exp_year').which.is.Number().equal(2017);
+          should(Model).have.property('exp_year').which.is.Number().equal(2030);
           should(Model).have.property('funding').which.is.String().equal('credit');
           should(Model).have.property('brand').which.is.String().equal('Visa');
           should(Model).have.property('cvc_check').which.is.String().equal('pass');
@@ -89,7 +89,7 @@ describe('Card', function() {
           should(Model).have.property('dynamic_last4').which.is.Null();
           should(Model).have.property('exp_month').which.is.Number().equal(12);
           should(Model).have.property('last4').which.is.String().equal('4242');
-          should(Model).have.property('exp_year').which.is.Number().equal(2017);
+          should(Model).have.property('exp_year').which.is.Number().equal(2030);
           should(Model).have.property('funding').which.is.String().equal('credit');
           should(Model).have.property('brand').which.is.String().equal('Visa');
           should(Model).have.property('cvc_check').which.is.String().equal('pass');

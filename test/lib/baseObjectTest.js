@@ -51,7 +51,6 @@ describe('Syncano', function() {
       should(baseObject).have.property('Card').which.is.Function();
       should(baseObject).have.property('Solution').which.is.Function();
       should(baseObject).have.property('Account').which.is.Object();
-      should(baseObject).have.property('Monitor').which.is.Object();
       should(baseObject).have.property('BatchManager').which.is.Function();
       should(baseObject).have.property('Tag').which.is.Function();
       should(baseObject).have.property('Endpoint').which.is.Function();

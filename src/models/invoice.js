@@ -1,4 +1,5 @@
 import stampit from 'stampit';
+import _ from 'lodash';
 import {Meta, Model} from './base';
 import {BaseQuerySet, Get, List} from '../querySet';
 
