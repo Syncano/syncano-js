@@ -9,7 +9,7 @@ import SyncanoFile from './file';
 const IS_NODE = typeof module !== 'undefined' && module.exports && typeof __webpack_require__ === 'undefined';
 
 /**
- * Base request object **not** meant to be used directly more like mixin in other {@link https://github.com/stampit-org/stampit|stamps}.
+ * Base request object **not** meant to be used directly, more like mixin in other {@link https://github.com/stampit-org/stampit|stamps}.
 
  * @constructor
  * @type {Request}
